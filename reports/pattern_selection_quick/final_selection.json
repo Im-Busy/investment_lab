@@ -1,0 +1,32 @@
+{
+  "final_patterns": [],
+  "filtered_patterns": [
+    "Floor Pivot Breakout"
+  ],
+  "excluded_patterns": [
+    "Market Structure Low",
+    "Matching Lows",
+    "NR7ID",
+    "n-Bar Decline"
+  ],
+  "non_redundant_patterns": [
+    "Floor Pivot Breakout"
+  ],
+  "summary": {
+    "total_patterns_tested": 5,
+    "passed_phase1_filter": 1,
+    "excluded_phase1": 4,
+    "redundant_pairs_found": 0,
+    "after_redundancy_removal": 1,
+    "final_selected_patterns": 0,
+    "execution_time_seconds": 75.57226943969727,
+    "phase_timings": {
+      "phase1": 1.438800573348999,
+      "phase2": 0.0019197463989257812,
+      "phase3": 74.13154244422913
+    }
+  },
+  "role_distribution": {
+    "Neutral": 1
+  }
+}

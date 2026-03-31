@@ -1,0 +1,2 @@
+pattern_name,baseline_sharpe,ablated_sharpe,delta_sharpe,baseline_return,ablated_return,delta_return,contribution_rank,role,keep
+Floor Pivot Breakout,,0.9299351452606401,,0.0,4.902313375914746,-4.902313375914746,1,Neutral,False

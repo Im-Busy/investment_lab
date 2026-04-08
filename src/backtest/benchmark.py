@@ -9,8 +9,8 @@ from dataclasses import dataclass
 from typing import Any, Dict
 
 import numpy as np
-import pandas as pd
-from scipy import stats
+import pandas as pd  # type: ignore[import-untyped]
+from scipy import stats  # type: ignore[import-untyped]
 
 
 @dataclass
@@ -70,27 +70,27 @@ class BenchmarkComparison:
         # =================================================================
 
         # Total returns (compound)
-        metrics["strategy_total_return"] = (1 + strat).prod() - 1
-        metrics["benchmark_total_return"] = (1 + bench).prod() - 1
+        metrics["strategy_total_return"] = (1 + strat).prod() - 1  # type: ignore[operator, arg-type]
+        metrics["benchmark_total_return"] = (1 + bench).prod() - 1  # type: ignore[operator, arg-type]
         metrics["excess_return"] = (
             metrics["strategy_total_return"] - metrics["benchmark_total_return"]
-        )
+        )  # type: ignore[operator]
 
         # Annualized returns
         total_days = len(strat)
         years = total_days / periods_per_year
         metrics["strategy_annualized_return"] = (1 + metrics["strategy_total_return"]) ** (
             1 / years
-        ) - 1
+        ) - 1  # type: ignore[operator, arg-type]
         metrics["benchmark_annualized_return"] = (1 + metrics["benchmark_total_return"]) ** (
             1 / years
-        ) - 1
+        ) - 1  # type: ignore[operator, arg-type]
 
         # Relative strength
         if metrics["benchmark_total_return"] != 0:
             metrics["relative_strength"] = (1 + metrics["strategy_total_return"]) / (
                 1 + metrics["benchmark_total_return"]
-            ) - 1
+            ) - 1  # type: ignore[operator, arg-type]
         else:
             metrics["relative_strength"] = 0
 
@@ -195,7 +195,7 @@ class BenchmarkComparison:
         # Standard error of alpha
         if metrics["beta"] != 0 and len(excess_returns) > 2:
             # Regression-based standard error
-            residuals = excess_returns - metrics["alpha"] / periods_per_year
+            residuals = excess_returns - (metrics["alpha"] / periods_per_year)  # type: ignore[operator]
             residual_std = np.std(residuals, ddof=2)
             se_alpha = residual_std / np.sqrt(len(excess_returns))
 

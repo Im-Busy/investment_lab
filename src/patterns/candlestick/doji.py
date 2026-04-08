@@ -144,17 +144,17 @@ class Doji(BasePattern):
             return 'sideways'
 
         start_idx = i - self.trend_lookback
-        closes = df['Close'].iloc[start_idx:i].values
+        closes = np.asarray(df['Close'].iloc[start_idx:i].values, dtype=np.float64)
 
         if len(closes) < 2:
             return 'sideways'
 
         # Calculate trend using linear regression slope
         x = np.arange(len(closes))
-        slope = np.polyfit(x, closes, 1)[0]
+        slope = float(np.polyfit(x, closes, 1)[0])
 
         # Normalize slope by average price
-        avg_price = np.mean(closes)
+        avg_price = float(np.mean(closes))
         normalized_slope = slope / avg_price if avg_price > 0 else 0
 
         # Threshold for trend determination (0.1% per bar)
@@ -231,7 +231,7 @@ class Doji(BasePattern):
             return False
 
         current_volume = float(df['Volume'].iloc[i])
-        return current_volume > avg_volume * threshold
+        return bool(current_volume > avg_volume * threshold)
 
     def detect(
         self,
@@ -277,6 +277,12 @@ class Doji(BasePattern):
         # Check for confirmation if required
         confirmed = False
         if self.require_confirmation:
+            if doji_type is None:
+                return PatternResult(
+                    detected=False,
+                    pattern_name=self.name,
+                    pattern_type=self.pattern_type,
+                )
             confirmed = self._check_confirmation(df, i, doji_type, trend)
 
         # Determine potential signal direction based on Doji type and trend
@@ -314,12 +320,6 @@ class Doji(BasePattern):
                 pattern_name=self.name,
                 pattern_type=self.pattern_type,
                 signal=None,
-                metadata={
-                    'doji_type': doji_type,
-                    'trend': trend,
-                    'confirmed': False,
-                    'requires_confirmation': True,
-                },
             )
 
         # Generate trade signal
@@ -329,11 +329,6 @@ class Doji(BasePattern):
                 pattern_name=self.name,
                 pattern_type=self.pattern_type,
                 signal=None,
-                metadata={
-                    'doji_type': doji_type,
-                    'trend': trend,
-                    'confirmed': True,
-                },
             )
 
         # Calculate entry, stop, and target
@@ -378,11 +373,6 @@ class Doji(BasePattern):
             signal=signal,
             start_index=i - 1,
             end_index=i,
-            metadata={
-                'doji_type': doji_type,
-                'trend': trend,
-                'confirmed': True,
-            },
         )
 
     def generate_signal(self, df: pd.DataFrame, i: int) -> Optional[TradeSignal]:
@@ -424,6 +414,6 @@ class Doji(BasePattern):
                     )
                 tr_list.append(tr)
 
-            return np.mean(tr_list)
+            return float(np.mean(tr_list))
         except Exception:
             return None

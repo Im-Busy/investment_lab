@@ -8,8 +8,8 @@ Key Insight: The _pattern_signals_cache in MultiPatternStrategyOptimized already
 signals for all patterns across all bars. We just need to read it out. Zero additional computation.
 """
 
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from dataclasses import dataclass
+from typing import Any, Dict, List, Optional, DefaultDict
 
 import numpy as np
 import pandas as pd
@@ -193,7 +193,7 @@ class SignalEventLog:
         total_bars = len(self._events_by_bar)
 
         # Count detections per pattern
-        pattern_counts = {}
+        pattern_counts: Dict[str, int] = {}
         for event in self.events:
             pattern_counts[event.pattern_name] = pattern_counts.get(event.pattern_name, 0) + 1
 
@@ -301,6 +301,17 @@ class SignalEventLog:
             "unique_bars": unique_bars,
             "avg_events_per_bar": len(self.events) / unique_bars if unique_bars > 0 else 0,
         }
+
+    def export_csv(self, filepath: str) -> None:
+        """
+        Export all signal events to a CSV file.
+
+        Args:
+            filepath: Path to save the CSV file
+        """
+        df = self.to_dataframe()
+        if not df.empty:
+            df.to_csv(filepath, index=False)
 
     def clear(self) -> None:
         """Clear all events and metadata."""

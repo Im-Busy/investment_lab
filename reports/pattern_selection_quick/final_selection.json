@@ -19,14 +19,14 @@
     "redundant_pairs_found": 0,
     "after_redundancy_removal": 1,
     "final_selected_patterns": 0,
-    "execution_time_seconds": 75.57226943969727,
+    "execution_time_seconds": 1.0137600898742676,
     "phase_timings": {
-      "phase1": 1.438800573348999,
-      "phase2": 0.0019197463989257812,
-      "phase3": 74.13154244422913
+      "phase1": 1.0123465061187744,
+      "phase2": 0.0013649463653564453,
+      "phase3": 4.4345855712890625e-05
     }
   },
   "role_distribution": {
-    "Neutral": 1
+    "Noise Generator": 1
   }
 }

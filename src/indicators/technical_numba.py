@@ -355,7 +355,7 @@ def volume_sma_numba(volumes: np.ndarray, period: int) -> np.ndarray:
     Returns:
         NumPy array with volume SMA values (NaN for insufficient data)
     """
-    return sma_numba(volumes, period)
+    return sma_numba(volumes, period)  # type: ignore[no-any-return]
 
 
 @jit(nopython=True, cache=True)

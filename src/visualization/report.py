@@ -242,7 +242,7 @@ class ReportGenerator:
             benchmark_equity = (1 + benchmark).cumprod()
             ax.plot(
                 benchmark_equity.index,
-                benchmark_equity.values,
+                benchmark_equity.values,  # type: ignore[arg-type]
                 label="Benchmark",
                 linewidth=1.5,
                 linestyle="--",
@@ -280,9 +280,9 @@ class ReportGenerator:
         base_name = title.lower().replace(" ", "_")
         tearsheet_path = self.output_dir / f"{base_name}_tearsheet.html"
 
-        return self.tearsheet_gen.from_custom_engine(
+        return Path(self.tearsheet_gen.from_custom_engine(
             equity_curve=equity_curve, title=title, output_path=str(tearsheet_path)
-        )
+        ))
 
     def _extract_results(self, results: Union[Dict[str, Any], Any]) -> tuple:
         """
@@ -324,8 +324,8 @@ class ReportGenerator:
     def _generate_summary(
         self,
         equity_curve: pd.DataFrame,
-        trades: Union[List[Dict[str, Any]], pd.DataFrame],
-        signals: List[Dict[str, Any]],
+        trade_data: Union[List[Dict[str, Any]], pd.DataFrame],
+        signal_data: List[Dict[str, Any]],
     ) -> Dict[str, Any]:
         """
         Generate summary statistics from backtest results.
@@ -338,11 +338,14 @@ class ReportGenerator:
         Returns:
             Dictionary with summary statistics
         """
-        summary = {
+        metrics_dict: Dict[str, Any] = {}
+        trade_stats: Dict[str, Any] = {}
+        sig_stats: Dict[str, Any] = {}
+        summary: Dict[str, Any] = {
             "generated_at": datetime.now().isoformat(),
-            "metrics": {},
-            "trades": {},
-            "signals": {},
+            "metrics": metrics_dict,
+            "trades": trade_stats,
+            "signals": sig_stats,
         }
 
         # Equity metrics
@@ -352,75 +355,77 @@ class ReportGenerator:
             else:
                 equity = equity_curve
 
-            summary["metrics"]["initial_equity"] = float(equity.iloc[0])
-            summary["metrics"]["final_equity"] = float(equity.iloc[-1])
-            summary["metrics"]["total_return"] = float((equity.iloc[-1] / equity.iloc[0] - 1) * 100)
-            summary["metrics"]["max_drawdown"] = float(self._calculate_max_drawdown(equity))
+            metrics_dict["initial_equity"] = float(equity.iloc[0])
+            metrics_dict["final_equity"] = float(equity.iloc[-1])
+            metrics_dict["total_return"] = float((equity.iloc[-1] / equity.iloc[0] - 1) * 100)
+            metrics_dict["max_drawdown"] = float(self._calculate_max_drawdown(equity))
 
             returns = equity.pct_change().dropna()
             if len(returns) > 0:
-                summary["metrics"]["sharpe_ratio"] = (
+                metrics_dict["sharpe_ratio"] = (
                     float(returns.mean() / returns.std() * np.sqrt(252))
                     if returns.std() > 0
                     else 0.0
                 )
 
         # Trade statistics
-        if trades is not None and len(trades) > 0:
+        if trade_data is not None and len(trade_data) > 0:
             # Convert to DataFrame if needed
-            if isinstance(trades, pd.DataFrame):
-                trades_df = trades
+            trades_df: pd.DataFrame
+            if isinstance(trade_data, pd.DataFrame):
+                trades_df = trade_data
             else:
-                trades_df = pd.DataFrame(trades)
+                trades_df = pd.DataFrame(trade_data)
 
-            summary["trades"]["total_trades"] = len(trades_df)
+            trade_stats["total_trades"] = len(trades_df)
 
             if "pnl" in trades_df.columns:
-                winning = trades_df[trades_df["pnl"] > 0]
-                losing = trades_df[trades_df["pnl"] < 0]
+                pnl_col = trades_df["pnl"]
+                winning = trades_df[pnl_col > 0]  # type: ignore[index]
+                losing = trades_df[pnl_col < 0]  # type: ignore[index]
 
-                summary["trades"]["winning_trades"] = len(winning)
-                summary["trades"]["losing_trades"] = len(losing)
-                summary["trades"]["win_rate"] = (
+                trade_stats["winning_trades"] = len(winning)
+                trade_stats["losing_trades"] = len(losing)
+                trade_stats["win_rate"] = (
                     len(winning) / len(trades_df) if len(trades_df) > 0 else 0
                 )
-                summary["trades"]["avg_win"] = (
+                trade_stats["avg_win"] = (
                     float(winning["pnl"].mean()) if len(winning) > 0 else 0
                 )
-                summary["trades"]["avg_loss"] = (
+                trade_stats["avg_loss"] = (
                     float(losing["pnl"].mean()) if len(losing) > 0 else 0
                 )
-                summary["trades"]["total_pnl"] = float(trades_df["pnl"].sum())
+                trade_stats["total_pnl"] = float(trades_df["pnl"].sum())
 
                 total_wins = winning["pnl"].sum() if len(winning) > 0 else 0
                 total_losses = abs(losing["pnl"].sum()) if len(losing) > 0 else 0
-                summary["trades"]["profit_factor"] = (
+                trade_stats["profit_factor"] = (
                     float(total_wins / total_losses) if total_losses > 0 else 0
                 )
 
             if "pattern" in trades_df.columns:
                 pattern_counts = trades_df["pattern"].value_counts().to_dict()
-                summary["trades"]["by_pattern"] = pattern_counts
+                trade_stats["by_pattern"] = pattern_counts
 
             if "direction" in trades_df.columns:
                 direction_counts = trades_df["direction"].value_counts().to_dict()
-                summary["trades"]["by_direction"] = direction_counts
+                trade_stats["by_direction"] = direction_counts
 
         # Signal statistics
-        if signals:
-            signals_df = pd.DataFrame(signals)
-            summary["signals"]["total_signals"] = len(signals)
+        if signal_data:
+            signals_df = pd.DataFrame(signal_data)
+            sig_stats["total_signals"] = len(signal_data)
 
             if "pattern_name" in signals_df.columns:
                 pattern_counts = signals_df["pattern_name"].value_counts().to_dict()
-                summary["signals"]["by_pattern"] = pattern_counts
+                sig_stats["by_pattern"] = pattern_counts
 
             if "direction" in signals_df.columns:
                 direction_counts = signals_df["direction"].value_counts().to_dict()
-                summary["signals"]["by_direction"] = direction_counts
+                sig_stats["by_direction"] = direction_counts
 
             if "confidence" in signals_df.columns:
-                summary["signals"]["avg_confidence"] = float(signals_df["confidence"].mean())
+                sig_stats["avg_confidence"] = float(signals_df["confidence"].mean())
 
         return summary
 

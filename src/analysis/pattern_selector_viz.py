@@ -85,6 +85,7 @@ def plot_correlation_heatmap(
 
     import matplotlib.pyplot as plt
     import seaborn as sns
+    from matplotlib.patches import Rectangle
 
     if correlation_matrix.empty:
         logger.warning("Empty correlation matrix")
@@ -117,10 +118,10 @@ def plot_correlation_heatmap(
         for j in range(i):
             val = correlation_matrix.iloc[i, j]
             try:
-                val_float = float(val)
+                val_float = float(val)  # type: ignore[arg-type]
                 if abs(val_float) > threshold:
                     ax.add_patch(
-                        plt.Rectangle((j, i), 1, 1, fill=False, edgecolor="red", linewidth=2.5)
+                        Rectangle((j, i), 1, 1, fill=False, edgecolor="red", linewidth=2.5)
                     )
             except (ValueError, TypeError):
                 pass
@@ -557,8 +558,8 @@ def plot_role_distribution(
     sizes = list(role_dist.values())
     colors = [color_map.get(label, "#95a5a6") for label in labels]
 
-    # Create pie chart
-    wedges, texts, autotexts = ax.pie(
+    # Create pie chart (with autopct, always returns 3-tuple)
+    wedges, texts, autotexts = ax.pie(  # type: ignore[assignment,misc]
         sizes,
         labels=labels,
         colors=colors,
@@ -798,7 +799,7 @@ def generate_selection_report(
     lines.append(f"**{len(result.final_patterns)} patterns selected for production:**\n")
 
     for i, pattern in enumerate(result.final_patterns, 1):
-        c = next((c for c in result.ablation_contributions if c.pattern_name == pattern), None)
+        c = next((c for c in result.ablation_contributions if c.pattern_name == pattern), None)  # type: ignore[arg-type]
         if c:
             role_name = c.role.value if isinstance(c.role, PatternRole) else c.role
             lines.append(f"{i}. **{pattern}** — {role_name} (δ Sharpe: {c.delta_sharpe:.4f})")

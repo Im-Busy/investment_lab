@@ -17,10 +17,15 @@ import os
 import time
 from dataclasses import asdict, dataclass, field
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional, Type
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type
 
 import numpy as np
 import pandas as pd
+
+from .performance_filter import PerformanceFilter, PerformanceFilterConfig, PerformanceFilterResult
+
+# Import statistical and performance filters
+from .statistical_filter import StatisticalFilter, StatisticalFilterConfig, StatisticalFilterResult
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -227,7 +232,7 @@ class SelectionResult:
 
     def get_role_distribution(self) -> Dict[str, int]:
         """Get distribution of pattern roles."""
-        roles = {}
+        roles: Dict[str, int] = {}
         for c in self.ablation_contributions:
             role_name = c.role.value
             roles[role_name] = roles.get(role_name, 0) + 1
@@ -354,7 +359,7 @@ class PatternSelector:
         from src.strategies.backtest_py.runner import BacktestPyRunner
 
         # Build strategy parameters
-        params = {}
+        params: Dict[str, Any] = {}  # type: ignore[assignment]
 
         if exclude_patterns:
             params["exclude_patterns"] = ",".join(exclude_patterns)
@@ -375,23 +380,23 @@ class PatternSelector:
 
         try:
             results = runner.run(strategy_class=self.strategy_class, **params)
-            
+
             # Extract stats from nested structure
             # BacktestPyRunner.run() returns {"stats": {...}, "equity_curve": ..., "trades": ...}
             stats = results.get("stats", results)
-            
+
             # Extract equity curve - backtesting.py returns a DataFrame with 'Equity' column
             equity_curve_raw = results.get("equity_curve")
             equity_curve = None
             if equity_curve_raw is not None:
                 # Handle DataFrame format from backtesting.py
-                if hasattr(equity_curve_raw, 'Equity'):
+                if hasattr(equity_curve_raw, "Equity"):
                     # It's a DataFrame with 'Equity' column
-                    equity_curve = np.array(equity_curve_raw['Equity'])
+                    equity_curve = np.array(equity_curve_raw["Equity"])
                 elif isinstance(equity_curve_raw, pd.DataFrame):
                     # Try to get Equity column
-                    if 'Equity' in equity_curve_raw.columns:
-                        equity_curve = np.array(equity_curve_raw['Equity'])
+                    if "Equity" in equity_curve_raw.columns:
+                        equity_curve = np.array(equity_curve_raw["Equity"])
                     else:
                         # Use first column
                         equity_curve = np.array(equity_curve_raw.iloc[:, 0])
@@ -403,12 +408,14 @@ class PatternSelector:
                         equity_curve = equity_curve_raw
                 elif isinstance(equity_curve_raw, pd.Series):
                     equity_curve = np.array(equity_curve_raw)
-            
+
             # Map backtesting.py keys to normalized keys expected by SoloBacktestResult
             # backtesting.py uses keys like "# Trades", "Sharpe Ratio", "Win Rate [%]", etc.
             normalized = {
                 "total_trades": stats.get("# Trades", 0),
-                "win_rate": stats.get("Win Rate [%]", 0) / 100.0 if stats.get("Win Rate [%]", 0) != 0 else 0.0,
+                "win_rate": stats.get("Win Rate [%]", 0) / 100.0
+                if stats.get("Win Rate [%]", 0) != 0
+                else 0.0,
                 "total_return": stats.get("Return [%]", 0),
                 "sharpe_ratio": stats.get("Sharpe Ratio", 0),
                 "sortino_ratio": stats.get("Sortino Ratio", 0),
@@ -417,7 +424,7 @@ class PatternSelector:
                 "equity_final": stats.get("Equity Final [$]", self.config.initial_equity),
                 "_equity": equity_curve,
             }
-            
+
             return normalized
         except Exception as e:
             logger.error(f"Backtest failed: {e}")
@@ -511,9 +518,12 @@ class PatternSelector:
     def apply_noise_filter(
         self,
         solo_results: Optional[List[SoloBacktestResult]] = None,
-    ) -> tuple[List[str], List[str]]:
+    ) -> Tuple[List[str], List[str]]:
         """
-        Apply noise filter to solo backtest results.
+        Apply enhanced noise filter with statistical significance testing.
+
+        Uses both StatisticalFilter (Wilson CI, Sharpe SE) and
+        PerformanceFilter (comprehensive metrics) for robust filtering.
 
         Args:
             solo_results: Optional override for solo results
@@ -525,7 +535,7 @@ class PatternSelector:
             solo_results = self.solo_results
 
         print(f"\n{'=' * 60}")
-        print("PHASE 1: Applying Noise Filter")
+        print("PHASE 1: Applying Enhanced Noise Filter")
         print(f"{'=' * 60}")
         print(
             f"  Thresholds: min_trades={self.config.min_trades}, "
@@ -535,46 +545,77 @@ class PatternSelector:
             f"max_drawdown={self.config.max_drawdown:.0%}"
         )
 
+        # Initialize statistical filter
+        stat_filter = StatisticalFilter(
+            StatisticalFilterConfig(
+                min_trades=self.config.min_trades,
+                confidence_level=0.95,
+                max_win_rate_ci_width=0.20,
+                max_sharpe_se=0.5,
+            )
+        )
+
+        # Initialize performance filter
+        perf_filter = PerformanceFilter(
+            PerformanceFilterConfig(
+                min_sharpe_ratio=self.config.min_sharpe,
+                min_profit_factor=self.config.min_profit_factor,
+                min_win_rate=self.config.min_win_rate,
+                max_drawdown_pct=self.config.max_drawdown * 100,
+            )
+        )
+
         filtered_patterns = []
         excluded_patterns = []
 
+        # Store filter results for reporting
+        self._stat_results: List[StatisticalFilterResult] = []
+        self._perf_results: List[PerformanceFilterResult] = []
+
         for result in solo_results:
-            reasons = []
+            all_reasons = []
 
-            # Check each threshold
-            if result.total_trades < self.config.min_trades:
-                reasons.append(
-                    f"Insufficient trades ({result.total_trades} < {self.config.min_trades})"
-                )
+            # Test 1: Statistical Significance
+            stat_result = stat_filter.test_pattern(
+                pattern_name=result.pattern_name,
+                total_trades=result.total_trades,
+                win_rate=result.win_rate,
+                sharpe_ratio=result.sharpe_ratio,
+            )
+            self._stat_results.append(stat_result)
 
-            if result.sharpe_ratio < self.config.min_sharpe:
-                reasons.append(f"Low Sharpe ({result.sharpe_ratio:.3f} < {self.config.min_sharpe})")
+            if not stat_result.is_significant:
+                all_reasons.extend(stat_result.failure_reasons)
 
-            if result.profit_factor < self.config.min_profit_factor:
-                reasons.append(
-                    f"Low Profit Factor ({result.profit_factor:.3f} < {self.config.min_profit_factor})"
-                )
+            # Test 2: Performance Thresholds
+            perf_result = perf_filter.test_pattern(
+                pattern_name=result.pattern_name,
+                total_trades=result.total_trades,
+                win_rate=result.win_rate,
+                sharpe_ratio=result.sharpe_ratio,
+                profit_factor=result.profit_factor,
+                total_return_pct=result.total_return_pct,
+                max_drawdown_pct=result.max_drawdown_pct,
+                sortino_ratio=result.sortino_ratio,
+            )
+            self._perf_results.append(perf_result)
 
-            if result.win_rate < self.config.min_win_rate:
-                reasons.append(
-                    f"Low Win Rate ({result.win_rate:.1%} < {self.config.min_win_rate:.0%})"
-                )
+            if not perf_result.passed:
+                all_reasons.extend(perf_result.failure_reasons)
 
-            if result.max_drawdown_pct > self.config.max_drawdown * 100:
-                reasons.append(
-                    f"High Drawdown ({result.max_drawdown_pct:.1%} > {self.config.max_drawdown:.0%})"
-                )
+            # Remove duplicate reasons
+            all_reasons = list(dict.fromkeys(all_reasons))
 
             # Update result
-            result.filter_reasons = reasons
-            result.passed_filter = len(reasons) == 0
+            result.filter_reasons = all_reasons
+            result.passed_filter = len(all_reasons) == 0
 
             if result.passed_filter:
                 filtered_patterns.append(result.pattern_name)
                 print(f"  [PASS] {result.pattern_name}: PASSED")
             else:
                 excluded_patterns.append(result.pattern_name)
-                print(f"  [FAIL] {result.pattern_name}: EXCLUDED - {'; '.join(reasons)}")
+                print(f"  [FAIL] {result.pattern_name}: EXCLUDED - {'; '.join(all_reasons)}")
 
         print(f"\n  Summary: {len(filtered_patterns)} passed, {len(excluded_patterns)} excluded")
 
@@ -658,7 +699,7 @@ class PatternSelector:
                     continue
 
                 corr_value = correlation_matrix.loc[pattern_a, pattern_b]
-                corr = float(corr_value) if hasattr(corr_value, "__float__") else 0.0
+                corr = float(corr_value) if hasattr(corr_value, "__float__") else 0.0  # type: ignore[arg-type]
 
                 if abs(corr) > self.config.correlation_threshold:
                     # Determine which pattern to keep
@@ -763,6 +804,36 @@ class PatternSelector:
         if not patterns:
             print("  No patterns to analyze")
             return []
+
+        # Edge case: Single pattern - ablation doesn't make sense
+        if len(patterns) == 1:
+            print(f"  Only 1 pattern ({patterns[0]}) - ablation analysis skipped")
+            print("  (Leave-one-out requires at least 2 patterns)")
+            # Still create a contribution result for the single pattern
+            baseline_sharpe = 0.0
+            baseline_return = 0.0
+            # Get solo result for this pattern
+            solo = next((r for r in self.solo_results if r.pattern_name == patterns[0]), None)
+            if solo:
+                baseline_sharpe = solo.sharpe_ratio
+                baseline_return = solo.total_return_pct
+
+            contribution = AblationContribution(
+                pattern_name=patterns[0],
+                baseline_sharpe=baseline_sharpe,
+                ablated_sharpe=0.0,  # No patterns left
+                delta_sharpe=baseline_sharpe,  # Full contribution
+                baseline_return=baseline_return,
+                ablated_return=0.0,
+                delta_return=baseline_return,
+                contribution_rank=1,
+                role=PatternRole.PRIMARY_SIGNAL
+                if baseline_sharpe > 0
+                else PatternRole.NOISE_GENERATOR,
+                keep=baseline_sharpe > 0,
+            )
+            self.ablation_results = [contribution]
+            return self.ablation_results
 
         # Run baseline (all patterns)
         print("  Running baseline backtest (all patterns)...")

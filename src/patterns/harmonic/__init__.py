@@ -9,16 +9,14 @@ Contains harmonic and advanced chart patterns:
 - Bollinger Bands Breakout
 """
 
-from .gartley import GartleyPattern
 from .abc import ABCPattern
-from .symmetric_triangle import SymmetricTriangle
-from .donchian import DonchianChannel
 from .bollinger import BollingerBands
+from .gartley import GartleyPattern
+from .symmetric_triangle import SymmetricTriangle
 
 __all__ = [
-    'GartleyPattern',
-    'ABCPattern',
-    'SymmetricTriangle',
-    'DonchianChannel',
-    'BollingerBands',
+    "GartleyPattern",
+    "ABCPattern",
+    "SymmetricTriangle",
+    "BollingerBands",
 ]

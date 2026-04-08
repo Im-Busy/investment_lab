@@ -68,7 +68,7 @@ def find_local_extrema(
                 break
 
         if is_high:
-            result.iloc[i, result.columns.get_loc("local_high")] = True
+            result.iloc[i, result.columns.get_loc("local_high")] = True  # type: ignore[index]
 
         # Check for local low
         is_low = True
@@ -81,7 +81,7 @@ def find_local_extrema(
                 break
 
         if is_low:
-            result.iloc[i, result.columns.get_loc("local_low")] = True
+            result.iloc[i, result.columns.get_loc("local_low")] = True  # type: ignore[index]
 
     return result
 
@@ -102,8 +102,8 @@ def find_swing_highs(df: pd.DataFrame, lookback: int = 5) -> pd.Series:
     """
     # Use Numba-accelerated version if available
     if NUMBA_AVAILABLE:
-        highs = df["High"].values.astype(np.float64)
-        swing_highs_arr = find_swing_highs_numba(highs, lookback)
+        highs = np.asarray(df["High"].values, dtype=np.float64)
+        swing_highs_arr = find_swing_highs_numba(highs, lookback)  # type: ignore[arg-type]
         return pd.Series(swing_highs_arr, index=df.index)
 
     # Fallback to pure Python implementation
@@ -150,8 +150,8 @@ def find_swing_lows(df: pd.DataFrame, lookback: int = 5) -> pd.Series:
     """
     # Use Numba-accelerated version if available
     if NUMBA_AVAILABLE:
-        lows = df["Low"].values.astype(np.float64)
-        swing_lows_arr = find_swing_lows_numba(lows, lookback)
+        lows = np.asarray(df["Low"].values, dtype=np.float64)
+        swing_lows_arr = find_swing_lows_numba(lows, lookback)  # type: ignore[arg-type]
         return pd.Series(swing_lows_arr, index=df.index)
 
     # Fallback to pure Python implementation
@@ -251,7 +251,7 @@ def find_zigzag_pivots(
         return result
 
     # Initialize
-    pivots = []
+    pivots: list = []  # type: ignore[assignment]
     current_trend = None  # 'up' or 'down'
     last_pivot_price = None
     last_pivot_idx = 0
@@ -266,11 +266,11 @@ def find_zigzag_pivots(
             if high > low:
                 last_pivot_price = high
                 last_pivot_type = "high"
-                result.iloc[i, result.columns.get_loc("pivot_high")] = high
+                result.iloc[i, result.columns.get_loc("pivot_high")] = high  # type: ignore[index]
             else:
                 last_pivot_price = low
                 last_pivot_type = "low"
-                result.iloc[i, result.columns.get_loc("pivot_low")] = low
+                result.iloc[i, result.columns.get_loc("pivot_low")] = low  # type: ignore[index]
             last_pivot_idx = i
             continue
 
@@ -283,7 +283,7 @@ def find_zigzag_pivots(
             # Looking for a low pivot
             if low < last_pivot_price - threshold_val:
                 # Confirmed pivot high at last_pivot_idx
-                result.iloc[last_pivot_idx, result.columns.get_loc("pivot_high")] = last_pivot_price
+                result.iloc[last_pivot_idx, result.columns.get_loc("pivot_high")] = last_pivot_price  # type: ignore[call-overload]
                 # New low pivot
                 last_pivot_price = low
                 last_pivot_type = "low"
@@ -297,7 +297,7 @@ def find_zigzag_pivots(
             # Looking for a high pivot
             if high > last_pivot_price + threshold_val:
                 # Confirmed pivot low at last_pivot_idx
-                result.iloc[last_pivot_idx, result.columns.get_loc("pivot_low")] = last_pivot_price
+                result.iloc[last_pivot_idx, result.columns.get_loc("pivot_low")] = last_pivot_price  # type: ignore[call-overload]
                 # New high pivot
                 last_pivot_price = high
                 last_pivot_type = "high"
@@ -524,7 +524,7 @@ def find_swing_highs_cached(df: pd.DataFrame, lookback: int = 5) -> pd.Series:
     highs = df["High"].values
 
     # Create hashable key
-    key = _make_array_hashable(highs)
+    key = _make_array_hashable(np.asarray(highs))  # type: ignore[arg-type]
 
     try:
         result = _cached_swing_highs_core(key[1] if len(key) == 3 else key[1], len(highs), lookback)
@@ -597,7 +597,7 @@ def find_swing_lows_cached(df: pd.DataFrame, lookback: int = 5) -> pd.Series:
     lows = df["Low"].values
 
     # Create hashable key
-    key = _make_array_hashable(lows)
+    key = _make_array_hashable(np.asarray(lows))  # type: ignore[arg-type]
 
     try:
         result = _cached_swing_lows_core(key[1] if len(key) == 3 else key[1], len(lows), lookback)

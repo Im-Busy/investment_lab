@@ -53,7 +53,7 @@ def sma(data: Union[pd.Series, np.ndarray], period: int) -> pd.Series:
 
     # Use Numba-accelerated version if available
     if NUMBA_AVAILABLE:
-        values = data.values.astype(np.float64)
+        values: np.ndarray = np.asarray(data.values, dtype=np.float64)
         result = sma_numba(values, period)
         return pd.Series(result, index=data.index)
 
@@ -79,7 +79,7 @@ def ema(data: Union[pd.Series, np.ndarray], period: int) -> pd.Series:
 
     # Use Numba-accelerated version if available
     if NUMBA_AVAILABLE:
-        values = data.values.astype(np.float64)
+        values: np.ndarray = np.asarray(data.values, dtype=np.float64)
         result = ema_numba(values, period)
         return pd.Series(result, index=data.index)
 
@@ -101,9 +101,9 @@ def true_range(df: pd.DataFrame) -> pd.Series:
     """
     # Use Numba-accelerated version if available
     if NUMBA_AVAILABLE:
-        highs = df["High"].values.astype(np.float64)
-        lows = df["Low"].values.astype(np.float64)
-        closes = df["Close"].values.astype(np.float64)
+        highs: np.ndarray = np.asarray(df["High"].values, dtype=np.float64)
+        lows: np.ndarray = np.asarray(df["Low"].values, dtype=np.float64)
+        closes: np.ndarray = np.asarray(df["Close"].values, dtype=np.float64)
         result = true_range_numba(highs, lows, closes)
         return pd.Series(result, index=df.index)
 
@@ -126,6 +126,11 @@ def atr(df: pd.DataFrame, period: int = 14) -> pd.Series:
     """
     Average True Range.
 
+    FIXED: Now uses RMA (Wilder) smoothing instead of SMA for consistency
+    with industry-standard implementations (TradingView, ThinkOrSwim, etc.).
+
+    RMA formula: RMA[i] = ((RMA[i-1] * (period - 1)) + TR[i]) / period
+
     PHASE 2 OPTIMIZATION: Uses Numba JIT compilation for 30-50x speedup.
 
     Args:
@@ -137,15 +142,26 @@ def atr(df: pd.DataFrame, period: int = 14) -> pd.Series:
     """
     # Use Numba-accelerated version if available
     if NUMBA_AVAILABLE:
-        highs = df["High"].values.astype(np.float64)
-        lows = df["Low"].values.astype(np.float64)
-        closes = df["Close"].values.astype(np.float64)
+        highs: np.ndarray = np.asarray(df["High"].values, dtype=np.float64)
+        lows: np.ndarray = np.asarray(df["Low"].values, dtype=np.float64)
+        closes: np.ndarray = np.asarray(df["Close"].values, dtype=np.float64)
         result = atr_numba(highs, lows, closes, period)
         return pd.Series(result, index=df.index)
 
-    # Fallback to pandas
+    # FIXED: Fallback to pandas with RMA smoothing
     tr = true_range(df)
-    return tr.rolling(window=period).mean()
+    
+    # First value is SMA of TR
+    atr_values = [np.nan] * (period - 1)
+    atr_values.append(tr.iloc[:period].mean())
+    
+    # Apply RMA formula for subsequent values
+    for i in range(period, len(tr)):
+        rma_prev = atr_values[-1]
+        rma_new = ((rma_prev * (period - 1)) + tr.iloc[i]) / period
+        atr_values.append(rma_new)
+    
+    return pd.Series(atr_values, index=df.index)
 
 
 def average_range(df: pd.DataFrame, period: int = 20) -> pd.Series:
@@ -181,7 +197,7 @@ def rsi(close: Union[pd.Series, np.ndarray], period: int = 14) -> pd.Series:
 
     # Use Numba-accelerated version if available
     if NUMBA_AVAILABLE:
-        values = close.values.astype(np.float64)
+        values: np.ndarray = np.asarray(close.values, dtype=np.float64)
         result = rsi_numba(values, period)
         return pd.Series(result, index=close.index)
 
@@ -204,6 +220,9 @@ def adx(df: pd.DataFrame, period: int = 14) -> pd.Series:
     """
     Average Directional Index.
 
+    FIXED: Now uses RMA (Wilder) smoothing for DM and TR, consistent with
+    industry-standard implementations (TradingView, ThinkOrSwim, etc.).
+
     PHASE 2 OPTIMIZATION: Uses Numba JIT compilation for 30-50x speedup.
 
     Args:
@@ -215,13 +234,13 @@ def adx(df: pd.DataFrame, period: int = 14) -> pd.Series:
     """
     # Use Numba-accelerated version if available
     if NUMBA_AVAILABLE:
-        highs = df["High"].values.astype(np.float64)
-        lows = df["Low"].values.astype(np.float64)
-        closes = df["Close"].values.astype(np.float64)
+        highs = df["High"].to_numpy(dtype=np.float64, na_value=np.nan)
+        lows = df["Low"].to_numpy(dtype=np.float64, na_value=np.nan)
+        closes = df["Close"].to_numpy(dtype=np.float64, na_value=np.nan)
         result = adx_numba(highs, lows, closes, period)
         return pd.Series(result, index=df.index)
 
-    # Fallback to pandas
+    # FIXED: Fallback to pandas with RMA smoothing
     high = df["High"]
     low = df["Low"]
     close = df["Close"]
@@ -237,14 +256,28 @@ def adx(df: pd.DataFrame, period: int = 14) -> pd.Series:
     # True Range
     tr = true_range(df)
 
-    # Smoothed values
-    atr_val = tr.rolling(window=period).mean()
-    plus_di = 100 * (plus_dm.rolling(window=period).mean() / atr_val)
-    minus_di = 100 * (minus_dm.rolling(window=period).mean() / atr_val)
+    # FIXED: Use RMA (Wilder) smoothing instead of SMA
+    def _rma(series: pd.Series, period: int) -> pd.Series:
+        """Calculate RMA (Wilder's smoothed moving average)."""
+        result = [np.nan] * (period - 1)
+        result.append(series.iloc[:period].mean())
+        for i in range(period, len(series)):
+            rma_prev = result[-1]
+            rma_new = ((rma_prev * (period - 1)) + series.iloc[i]) / period
+            result.append(rma_new)
+        return pd.Series(result, index=series.index)
+
+    smoothed_tr = _rma(tr, period)
+    smoothed_plus_dm = _rma(plus_dm, period)
+    smoothed_minus_dm = _rma(minus_dm, period)
+
+    # Calculate DI+ and DI-
+    plus_di = 100 * smoothed_plus_dm / smoothed_tr
+    minus_di = 100 * smoothed_minus_dm / smoothed_tr
 
     # DX and ADX
     dx = 100 * abs(plus_di - minus_di) / (plus_di + minus_di)
-    adx_val = dx.rolling(window=period).mean()
+    adx_val = _rma(dx, period)
 
     return adx_val
 
@@ -390,7 +423,7 @@ def new_high(df: pd.DataFrame, i: int, lookback: int = 21) -> bool:
     if i < lookback:
         return False
     current_high = df.iloc[i]["High"]
-    return current_high > df.iloc[i - lookback : i]["High"].max()
+    return bool(float(current_high) > float(df.iloc[i - lookback : i]["High"].max()))
 
 
 def new_low(df: pd.DataFrame, i: int, lookback: int = 21) -> bool:
@@ -398,7 +431,7 @@ def new_low(df: pd.DataFrame, i: int, lookback: int = 21) -> bool:
     if i < lookback:
         return False
     current_low = df.iloc[i]["Low"]
-    return current_low < df.iloc[i - lookback : i]["Low"].min()
+    return bool(float(current_low) < float(df.iloc[i - lookback : i]["Low"].min()))
 
 
 # =============================================================================
@@ -485,14 +518,14 @@ def sma_cached(data: Union[pd.Series, np.ndarray], period: int) -> pd.Series:
         SMA series with same index as input
     """
     if isinstance(data, pd.Series):
-        arr = data.values
+        arr: np.ndarray = np.asarray(data.values, dtype=np.float64)
         index = data.index
     else:
-        arr = data
+        arr = np.asarray(data, dtype=np.float64)
         index = pd.RangeIndex(len(arr))
 
     # Create hashable key from array
-    key_data = _make_hashable(arr)
+    key_data = _make_hashable(arr)  # type: ignore[arg-type]
 
     try:
         result = _cached_sma_core(key_data, period, len(arr))
@@ -564,13 +597,13 @@ def ema_cached(data: Union[pd.Series, np.ndarray], period: int) -> pd.Series:
         EMA series with same index as input
     """
     if isinstance(data, pd.Series):
-        arr = data.values
+        arr: np.ndarray = np.asarray(data.values, dtype=np.float64)
         index = data.index
     else:
-        arr = data
+        arr = np.asarray(data, dtype=np.float64)
         index = pd.RangeIndex(len(arr))
 
-    key_data = _make_hashable(arr)
+    key_data = _make_hashable(arr)  # type: ignore[arg-type]
 
     try:
         result = _cached_ema_core(key_data, period, len(arr))

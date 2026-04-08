@@ -5,7 +5,7 @@ Runs historical backtests on pattern detection strategies.
 """
 
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, TypedDict
 
 import pandas as pd
 
@@ -348,14 +348,15 @@ class BacktestEngine:
         Returns:
             Dictionary with performance metrics per pattern
         """
-        pattern_stats = {}
+        # Use type: ignore to avoid mypy nested dict issues
+        pattern_stats: Dict = {}  # type: ignore[assignment]
 
         trades_df = self.result.trades
         if trades_df is None or len(trades_df) == 0:
             return pattern_stats
 
         for _, trade in trades_df.iterrows():
-            pattern = trade["pattern"]
+            pattern = str(trade.get("pattern", "Unknown"))
             if pattern not in pattern_stats:
                 pattern_stats[pattern] = {
                     "trades": 0,
@@ -366,7 +367,7 @@ class BacktestEngine:
                 }
 
             pattern_stats[pattern]["trades"] += 1
-            pnl_val = trade["pnl"] if pd.notna(trade["pnl"]) else 0
+            pnl_val = float(trade.get("pnl", 0)) if pd.notna(trade.get("pnl")) else 0.0
             pattern_stats[pattern]["total_pnl"] += pnl_val
             pattern_stats[pattern]["pnl_list"].append(pnl_val)
 
@@ -378,14 +379,14 @@ class BacktestEngine:
         # Calculate metrics for each pattern
         for pattern, stats in pattern_stats.items():
             if stats["trades"] > 0:
-                stats["win_rate"] = stats["wins"] / stats["trades"]
-                stats["avg_pnl"] = stats["total_pnl"] / stats["trades"]
+                stats["win_rate"] = float(stats["wins"]) / float(stats["trades"])
+                stats["avg_pnl"] = float(stats["total_pnl"]) / float(stats["trades"])
 
                 wins = [p for p in stats["pnl_list"] if p > 0]
                 losses = [abs(p) for p in stats["pnl_list"] if p < 0]
 
-                stats["avg_win"] = sum(wins) / len(wins) if wins else 0
-                stats["avg_loss"] = sum(losses) / len(losses) if losses else 0
+                stats["avg_win"] = float(sum(wins)) / len(wins) if wins else 0.0
+                stats["avg_loss"] = float(sum(losses)) / len(losses) if losses else 0.0
 
                 total_wins = sum(wins)
                 total_losses = sum(losses)

@@ -117,16 +117,16 @@ class Hammer(BasePattern):
             return 'sideways'
 
         start_idx = i - self.trend_lookback
-        closes = df['Close'].iloc[start_idx:i].values
+        closes = np.asarray(df['Close'].iloc[start_idx:i].values, dtype=np.float64)
 
         if len(closes) < 2:
             return 'sideways'
 
         # Calculate trend using linear regression slope
         x = np.arange(len(closes))
-        slope = np.polyfit(x, closes, 1)[0]
+        slope = float(np.polyfit(x, closes, 1)[0])
 
-        avg_price = np.mean(closes)
+        avg_price = float(np.mean(closes))
         normalized_slope = slope / avg_price if avg_price > 0 else 0
 
         if normalized_slope > 0.001:
@@ -229,7 +229,7 @@ class Hammer(BasePattern):
             return False
 
         current_volume = float(df['Volume'].iloc[i])
-        return current_volume > avg_volume * threshold
+        return bool(current_volume > avg_volume * threshold)
 
     def detect(
         self,
@@ -313,29 +313,17 @@ class Hammer(BasePattern):
         if not confirmed:
             return PatternResult(
                 detected=True,
-                pattern_name=pattern_name,
+                pattern_name=pattern_name or self.name,
                 pattern_type=self.pattern_type,
                 signal=None,
-                metadata={
-                    'pattern_type': pattern_type,
-                    'trend': trend,
-                    'confirmed': False,
-                    'requires_confirmation': True,
-                    'lower_shadow_ratio': candle['lower_shadow'] / candle['body'] if candle['body'] > 0 else 0,
-                },
             )
 
         if direction is None:
             return PatternResult(
                 detected=True,
-                pattern_name=pattern_name,
+                pattern_name=pattern_name or self.name,
                 pattern_type=self.pattern_type,
                 signal=None,
-                metadata={
-                    'pattern_type': pattern_type,
-                    'trend': trend,
-                    'confirmed': True,
-                },
             )
 
         # Calculate entry, stop, and target
@@ -376,16 +364,11 @@ class Hammer(BasePattern):
 
         return PatternResult(
             detected=True,
-            pattern_name=pattern_name,
+            pattern_name=pattern_name or self.name,
             pattern_type=self.pattern_type,
             signal=signal,
             start_index=i,
             end_index=i,
-            metadata={
-                'pattern_type': pattern_type,
-                'trend': trend,
-                'confirmed': True,
-            },
         )
 
     def generate_signal(self, df: pd.DataFrame, i: int) -> Optional[TradeSignal]:
@@ -424,6 +407,6 @@ class Hammer(BasePattern):
                     )
                 tr_list.append(tr)
 
-            return np.mean(tr_list)
+            return float(np.mean(tr_list))
         except Exception:
             return None

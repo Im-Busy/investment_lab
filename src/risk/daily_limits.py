@@ -421,7 +421,7 @@ class CircuitBreaker:
         if current_time is None:
             current_time = datetime.now()
 
-        status = {
+        status: Dict[str, Any] = {
             "level": self._current_level,
             "is_triggered": self.is_triggered,
             "is_halted": self.is_halted,
@@ -434,9 +434,8 @@ class CircuitBreaker:
 
         if self._reset_at:
             remaining = self._reset_at - current_time
-            status["time_until_reset"] = (
-                remaining.total_seconds() if remaining.total_seconds() > 0 else 0
-            )
+            total_secs = remaining.total_seconds()
+            status["time_until_reset"] = total_secs if total_secs > 0 else 0
 
         # Add recommended action
         if self._current_level == 0:

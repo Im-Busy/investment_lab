@@ -5,26 +5,35 @@ Executes strategies using the backtesting.py framework with integrated
 visualization support.
 """
 
+import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Type
 
 import pandas as pd
 
-try:
-    from backtesting import Backtest
-
-    BACKTESTING_AVAILABLE = True
-except ImportError:
-    BACKTESTING_AVAILABLE = False
-
-# Import visualization
-import sys
-
 project_root = Path(__file__).parent.parent.parent.parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-from src.visualization.report import ReportGenerator
+from backtesting import Backtest  # noqa: E402
+
+from src.visualization.report import ReportGenerator  # noqa: E402
+
+BACKTESTING_AVAILABLE = True
+
+
+def _extract_stats(results: Any) -> Dict[str, Any]:
+    """Extract stats from backtesting.py Results object."""
+    try:
+        return dict(results._asdict())
+    except AttributeError:
+        stats: Dict[str, Any] = {}
+        for key in results.index:
+            try:
+                stats[key] = results[key]
+            except (KeyError, TypeError):
+                pass
+        return stats
 
 
 class BacktestPyRunner:
@@ -66,8 +75,8 @@ class BacktestPyRunner:
         self.exclusive_orders = exclusive_orders
         self.output_dir = output_dir
 
-        self.bt = None
-        self.results = None
+        self.bt: Any = None
+        self.results: Any = None
         self.report_gen = ReportGenerator(output_dir=output_dir)
 
     def _prepare_data(self, data: pd.DataFrame) -> pd.DataFrame:
@@ -152,7 +161,7 @@ class BacktestPyRunner:
 
         # Run backtest
         print(f"Running backtest on {len(df)} bars...")
-        self.results = self.bt.run(**kwargs)
+        self.results = self.bt.run(**kwargs)  # type: ignore[union-attr]
 
         # Print summary
         self._print_summary()
@@ -205,14 +214,14 @@ class BacktestPyRunner:
         print(f"Optimizing parameters with {max_tries} iterations...")
 
         # Run optimization
-        self.results = self.bt.optimize(
+        self.results = self.bt.optimize(  # type: ignore[union-attr]
             max_tries=max_tries,
             maximize="Return [%]",  # Maximize return
             **params,
         )
 
         print("Optimization complete!")
-        print(f"Best parameters: {self.results._strategy}")
+        print(f"Best parameters: {self.results._strategy}")  # type: ignore[union-attr]
 
         return self.get_stats()
 
@@ -230,6 +239,7 @@ class BacktestPyRunner:
         if self.bt is None:
             raise ValueError("Run backtest first before plotting")
 
+        assert self.bt is not None
         self.bt.plot(filename=filename, open_browser=open_browser)
 
     def get_stats(self) -> Dict[str, Any]:
@@ -243,7 +253,8 @@ class BacktestPyRunner:
             raise ValueError("Run backtest first")
 
         # Convert to dictionary
-        stats = dict(self.results)
+        assert self.results is not None
+        stats: Dict[str, Any] = dict(self.results)
 
         # Add equity curve and trades with proper keys for notebook compatibility
         stats["_equity_curve"] = self.results._equity_curve
@@ -263,16 +274,8 @@ class BacktestPyRunner:
 
         # Convert stats to dictionary - handle backtesting.py Results object properly
         # The Results object supports _asdict() for conversion to OrderedDict
-        try:
-            stats = dict(self.results._asdict())
-        except AttributeError:
-            # Fallback: manually extract common stats
-            stats = {}
-            for key in self.results.index:
-                try:
-                    stats[key] = self.results[key]
-                except (KeyError, TypeError):
-                    pass
+        assert self.results is not None
+        stats: Dict[str, Any] = _extract_stats(self.results)
 
         return {
             "stats": stats,
@@ -290,6 +293,7 @@ class BacktestPyRunner:
         if self.results is None:
             raise ValueError("Run backtest first")
 
+        assert self.results is not None
         trades = list(self.results._trades)
         if not trades:
             return pd.DataFrame()
@@ -337,6 +341,7 @@ class BacktestPyRunner:
         if self.results is None:
             raise ValueError("Run backtest first")
 
+        assert self.results is not None
         return self.results._equity_curve
 
     def generate_report(
@@ -355,7 +360,9 @@ class BacktestPyRunner:
         if self.results is None:
             raise ValueError("Run backtest first")
 
-        files = {}
+        assert self.results is not None
+        assert self.bt is not None
+        files: Dict[str, Path] = {}
 
         # Generate tearsheet
         print("Generating tearsheet...")
@@ -378,10 +385,12 @@ class BacktestPyRunner:
         print(f"Report generated: {len(files)} files")
         return files
 
-    def _print_summary(self):
+    def _print_summary(self) -> None:
         """Print backtest summary."""
         if self.results is None:
             return
+
+        assert self.results is not None
 
         print("\n" + "=" * 60)
         print("BACKTEST SUMMARY")
@@ -494,7 +503,6 @@ def compare_strategies(
 
     # Generate comparison report
     report_gen = ReportGenerator(output_dir=output_dir)
-    equity_curves = {name: results[name]["equity_curve"]["Equity"] for name in names}
 
     comparison_files = report_gen.generate_comparison_report(
         results_list=[results[name]["stats"] for name in names],

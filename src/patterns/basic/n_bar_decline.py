@@ -161,23 +161,29 @@ class NBarDecline(BasePattern):
 
     def __init__(
         self,
-        min_successive: int = 3,
+        min_successive: int = 4,
         lookback_period: int = 21,
         entry_offset: float = 0.01,
         stop_offset: float = 0.01,
         require_volume_spike: bool = False,
         volume_threshold: float = 1.5,
+        reversal_bar_threshold: float = 0.6,
     ):
         """
         Initialize n-Bar Decline pattern detector.
 
+        FIXED: Strengthened parameters for daily timeframe.
+        - min_successive: 3 -> 4 (reduces false reversal signals in strong downtrends)
+        - reversal_bar_threshold: NEW - requires close in upper 60% of range (was just Close > Open)
+
         Args:
-            min_successive: Minimum number of successive new lows
+            min_successive: Minimum number of successive new lows (default 4)
             lookback_period: Lookback period for trend context
             entry_offset: Price offset for entry orders
             stop_offset: Price offset for stop loss
             require_volume_spike: Require volume spike on reversal bar
             volume_threshold: Volume multiplier threshold (e.g., 1.5x average)
+            reversal_bar_threshold: Minimum close position in range (0.0-1.0, default 0.6)
         """
         super().__init__(
             name="n-Bar Decline",
@@ -190,6 +196,7 @@ class NBarDecline(BasePattern):
         self.stop_offset = stop_offset
         self.require_volume_spike = require_volume_spike
         self.volume_threshold = volume_threshold
+        self.reversal_bar_threshold = reversal_bar_threshold
 
     def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
         """
@@ -206,13 +213,13 @@ class NBarDecline(BasePattern):
             - 1 = n-bar decline reversal detected
         """
         # Extract arrays
-        lows = df["Low"].values.astype(np.float64)
-        highs = df["High"].values.astype(np.float64)
-        opens = df["Open"].values.astype(np.float64)
-        closes = df["Close"].values.astype(np.float64)
+        lows: np.ndarray = np.asarray(df["Low"].values, dtype=np.float64)
+        highs: np.ndarray = np.asarray(df["High"].values, dtype=np.float64)
+        opens: np.ndarray = np.asarray(df["Open"].values, dtype=np.float64)
+        closes: np.ndarray = np.asarray(df["Close"].values, dtype=np.float64)
 
         # Run vectorized detection
-        return detect_nbar_decline_signals_numba(
+        result = detect_nbar_decline_signals_numba(
             lows,
             highs,
             opens,
@@ -220,6 +227,7 @@ class NBarDecline(BasePattern):
             self.min_successive,
             self.lookback_period,
         )
+        return result  # type: ignore[no-any-return]
 
     def _find_decline_start(self, arrays: dict, i: int) -> Optional[Tuple[int, int]]:
         """
@@ -274,13 +282,16 @@ class NBarDecline(BasePattern):
 
         # Check if current low is the lowest in lookback period
         lookback_lows = low_arr[i - self.lookback_period : i]
-        return current_low < np.min(lookback_lows)
+        return bool(current_low < float(np.min(lookback_lows)))
 
     def _is_reversal_bar(self, arrays: dict, i: int) -> bool:
         """
         Check if bar i is a bullish reversal bar.
 
-        Reversal bar: Close > Open (bullish candle)
+        FIXED: Now requires close to be in upper portion of range,
+        not just Close > Open. This provides a stronger reversal signal.
+
+        Reversal bar: Close > Open AND close position >= reversal_bar_threshold
 
         Args:
             arrays: Dictionary with NumPy arrays (open, high, low, close, volume)
@@ -291,11 +302,25 @@ class NBarDecline(BasePattern):
         """
         open_arr = arrays["open"]
         close_arr = arrays["close"]
+        high_arr = arrays["high"]
+        low_arr = arrays["low"]
 
         open_price = float(open_arr[i])
         close = float(close_arr[i])
+        high = float(high_arr[i])
+        low = float(low_arr[i])
 
-        return close > open_price
+        # Must be bullish (close > open)
+        if close <= open_price:
+            return False
+
+        # FIXED: Check close position in range
+        bar_range = high - low
+        if bar_range <= 0:
+            return False
+
+        close_position = (close - low) / bar_range
+        return close_position >= self.reversal_bar_threshold
 
     def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
         """
@@ -378,8 +403,8 @@ class NBarDecline(BasePattern):
         )
 
     def generate_signal(
-        self, df: pd.DataFrame, i: int, start_idx: int, successive_count: int
-    ) -> Optional[TradeSignal]:
+        self, df: pd.DataFrame, i: int, start_idx: int = 0, successive_count: int = 0
+    ) -> Optional[TradeSignal]:  # type: ignore[override]
         """
         Generate trade signal for n-Bar Decline pattern.
 
@@ -521,7 +546,7 @@ class NBarRally(BasePattern):
 
         # Check if current high is the highest in lookback period
         lookback_highs = high_arr[i - self.lookback_period : i]
-        return current_high > np.max(lookback_highs)
+        return bool(current_high > float(np.max(lookback_highs)))
 
     def _is_reversal_bar(self, arrays: dict, i: int) -> bool:
         """Check if bar i is a bearish reversal bar."""
@@ -587,8 +612,8 @@ class NBarRally(BasePattern):
         )
 
     def generate_signal(
-        self, df: pd.DataFrame, i: int, start_idx: int, successive_count: int
-    ) -> Optional[TradeSignal]:
+        self, df: pd.DataFrame, i: int, start_idx: int = 0, successive_count: int = 0
+    ) -> Optional[TradeSignal]:  # type: ignore[override]
         """Generate short trade signal for n-Bar Rally pattern."""
         arrays = self._extract_arrays(df)
         high_arr = arrays["high"]

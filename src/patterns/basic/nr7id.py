@@ -180,11 +180,11 @@ class NR7ID(BasePattern):
             - 1 = NR7ID pattern detected
         """
         # Extract arrays
-        highs = df["High"].values.astype(np.float64)
-        lows = df["Low"].values.astype(np.float64)
+        highs: np.ndarray = np.asarray(df["High"].values, dtype=np.float64)
+        lows: np.ndarray = np.asarray(df["Low"].values, dtype=np.float64)
 
         # Run vectorized detection
-        return detect_nr7id_signals_numba(highs, lows)
+        return detect_nr7id_signals_numba(highs, lows)  # type: ignore[no-any-return,return-value]
 
     def _is_nr7(self, arrays: dict, i: int) -> bool:
         """

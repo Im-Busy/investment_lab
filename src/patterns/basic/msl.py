@@ -58,6 +58,10 @@ if NUMBA_AVAILABLE:
         """
         JIT-compiled MSL pattern detection.
 
+        FIXED: Removed lookahead bias. Signal is generated at confirmation bar (i),
+        not at pattern formation bar. Pattern forms at bars i-3, i-2, i-1 and
+        is confirmed by bar i's close.
+
         Returns array of signals:
         - 0 = no pattern
         - 1 = long signal (confirmed MSL)
@@ -65,21 +69,24 @@ if NUMBA_AVAILABLE:
         n = len(closes)
         signals = np.zeros(n, dtype=np.int8)
 
-        for i in range(2, n - 1):
+        # Start from bar 3 to have enough history for pattern (i-3, i-2, i-1)
+        for i in range(3, n):
+            # Pattern formation bars: i-3, i-2, i-1
+            c_minus_3 = closes[i - 3]
             c_minus_2 = closes[i - 2]
             c_minus_1 = closes[i - 1]
+            # Confirmation bar: i (current)
             c_0 = closes[i]
-            c_plus_1 = closes[i + 1]
 
-            # Condition 1: Down Move
-            cond1 = c_minus_1 < c_minus_2
+            # Condition 1: Down Move - C[-2] < C[-3]
+            cond1 = c_minus_2 < c_minus_3
 
-            # Condition 2: Higher Low of Close
-            cond2 = (c_0 > c_minus_1) and (c_0 < c_minus_2)
+            # Condition 2: Higher Low of Close - C[-1] > C[-2] AND C[-1] < C[-3]
+            cond2 = (c_minus_1 > c_minus_2) and (c_minus_1 < c_minus_3)
 
-            # Condition 3: Confirmation
-            max_close = max(c_minus_2, c_minus_1, c_0)
-            cond3 = c_plus_1 > max_close
+            # Condition 3: Confirmation - Close[i] > Max(C[-3], C[-2], C[-1])
+            max_close = max(c_minus_3, c_minus_2, c_minus_1)
+            cond3 = c_0 > max_close
 
             if cond1 and cond2 and cond3:
                 signals[i] = 1
@@ -92,16 +99,24 @@ else:
         n = len(closes)
         signals = np.zeros(n, dtype=np.int8)
 
-        for i in range(2, n - 1):
+        # Start from bar 3 to have enough history for pattern (i-3, i-2, i-1)
+        for i in range(3, n):
+            # Pattern formation bars: i-3, i-2, i-1
+            c_minus_3 = closes[i - 3]
             c_minus_2 = closes[i - 2]
             c_minus_1 = closes[i - 1]
+            # Confirmation bar: i (current)
             c_0 = closes[i]
-            c_plus_1 = closes[i + 1]
 
-            cond1 = c_minus_1 < c_minus_2
-            cond2 = (c_0 > c_minus_1) and (c_0 < c_minus_2)
-            max_close = max(c_minus_2, c_minus_1, c_0)
-            cond3 = c_plus_1 > max_close
+            # Condition 1: Down Move - C[-2] < C[-3]
+            cond1 = c_minus_2 < c_minus_3
+
+            # Condition 2: Higher Low of Close - C[-1] > C[-2] AND C[-1] < C[-3]
+            cond2 = (c_minus_1 > c_minus_2) and (c_minus_1 < c_minus_3)
+
+            # Condition 3: Confirmation - Close[i] > Max(C[-3], C[-2], C[-1])
+            max_close = max(c_minus_3, c_minus_2, c_minus_1)
+            cond3 = c_0 > max_close
 
             if cond1 and cond2 and cond3:
                 signals[i] = 1
@@ -153,17 +168,20 @@ class MarketStructureLow(BasePattern):
         Returns:
             numpy array of signal values: 0=none, 1=long
         """
-        closes = df["Close"].values.astype(np.float64)
-        lows = df["Low"].values.astype(np.float64)
-        return detect_msl_signals_numba(closes, lows)
+        closes: np.ndarray = np.asarray(df["Close"].values, dtype=np.float64)
+        lows: np.ndarray = np.asarray(df["Low"].values, dtype=np.float64)
+        return detect_msl_signals_numba(closes, lows)  # type: ignore[no-any-return]
 
     def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
         """
         Detect MSL pattern at bar index i.
 
+        FIXED: Removed lookahead bias. At bar i (confirmation bar), we check
+        if the pattern formed at bars i-3, i-2, i-1 and is confirmed by bar i.
+
         Args:
             df: DataFrame with OHLCV data
-            i: Current bar index
+            i: Current bar index (confirmation bar)
             window_start: Optional window start for bounds checking (avoids DataFrame slicing)
 
         Returns:
@@ -174,7 +192,7 @@ class MarketStructureLow(BasePattern):
                 detected=False, pattern_name=self.name, pattern_type=self.pattern_type
             )
 
-        # Need at least 3 bars for the pattern + 1 for confirmation
+        # Need at least 4 bars: 3 for pattern formation + 1 for confirmation
         if i < 3:
             return PatternResult(
                 detected=False, pattern_name=self.name, pattern_type=self.pattern_type
@@ -183,17 +201,18 @@ class MarketStructureLow(BasePattern):
         # PERFORMANCE OPTIMIZATION: Use NumPy arrays for faster access
         arrays = self._extract_arrays(df)
 
-        # Get the close sequence: C[-2], C[-1], C[0]
-        # At bar i, we're looking at bars i-2, i-1, i
+        # Pattern formation bars: i-3, i-2, i-1
+        # Confirmation bar: i (current)
+        c_minus_3 = float(arrays["close"][i - 3])
         c_minus_2 = float(arrays["close"][i - 2])
         c_minus_1 = float(arrays["close"][i - 1])
         c_0 = float(arrays["close"][i])
 
-        # Condition 1: Down Move - C[-1] < C[-2]
-        condition_1 = c_minus_1 < c_minus_2
+        # Condition 1: Down Move - C[-2] < C[-3]
+        condition_1 = c_minus_2 < c_minus_3
 
-        # Condition 2: Higher Low of Close - C[0] > C[-1] AND C[0] < C[-2]
-        condition_2 = (c_0 > c_minus_1) and (c_0 < c_minus_2)
+        # Condition 2: Higher Low of Close - C[-1] > C[-2] AND C[-1] < C[-3]
+        condition_2 = (c_minus_1 > c_minus_2) and (c_minus_1 < c_minus_3)
 
         # Check if pattern is forming (conditions 1 and 2 met)
         pattern_forming = condition_1 and condition_2
@@ -203,33 +222,23 @@ class MarketStructureLow(BasePattern):
                 detected=False, pattern_name=self.name, pattern_type=self.pattern_type
             )
 
-        # Condition 3: Confirmation - Check next bar
-        # We need to check if bar i+1 confirms the pattern
-        confirmed = False
-        confirmation_index = None
+        # Condition 3: Confirmation - Close[i] > Max(C[-3], C[-2], C[-1])
+        max_close = max(c_minus_3, c_minus_2, c_minus_1)
+        confirmed = c_0 > max_close
 
-        if i + 1 < len(arrays["close"]):
-            c_plus_1 = float(arrays["close"][i + 1])
-            max_close = max(c_minus_2, c_minus_1, c_0)
-            if c_plus_1 > max_close:
-                confirmed = True
-                confirmation_index = i + 1
-
-        # For real-time detection, we also allow checking if current bar
-        # is within confirmation window of a previously formed pattern
         if not confirmed:
             return PatternResult(
                 detected=False,
                 pattern_name=self.name,
                 pattern_type=self.pattern_type,
                 pivot_points={
-                    "msl_high_close": max(c_minus_2, c_minus_1, c_0),
-                    "msl_low": float(arrays["low"][i]),
+                    "msl_high_close": max_close,
+                    "msl_low": float(arrays["low"][i - 1]),  # Low of the pattern formation bar
                 },
             )
 
         # Pattern is confirmed - generate signal
-        signal = self.generate_signal(df, i)
+        signal = self.generate_signal(df, i - 1)  # Signal based on pattern formation bar
 
         return PatternResult(
             detected=True,
@@ -237,15 +246,16 @@ class MarketStructureLow(BasePattern):
             pattern_type=self.pattern_type,
             signal=signal,
             pivot_points={
-                "msl_high_close": max(c_minus_2, c_minus_1, c_0),
-                "msl_low": float(arrays["low"][i]),
+                "msl_high_close": max_close,
+                "msl_low": float(arrays["low"][i - 1]),
+                "c_minus_3": c_minus_3,
                 "c_minus_2": c_minus_2,
                 "c_minus_1": c_minus_1,
                 "c_0": c_0,
             },
             bars_since_detection=0,
-            start_index=i - 2,
-            end_index=confirmation_index if confirmation_index else i,
+            start_index=i - 3,
+            end_index=i,
         )
 
     def generate_signal(self, df: pd.DataFrame, i: int) -> Optional[TradeSignal]:
@@ -316,7 +326,7 @@ class MarketStructureLow(BasePattern):
             take_profit_2=take_profit_2,
             take_profit_3=None,
             confidence=min(confidence, 1.0),
-            timestamp=df.iloc[i].name if hasattr(df.iloc[i], "name") else None,
+            timestamp=pd.Timestamp(df.iloc[i].name) if hasattr(df.iloc[i], "name") and df.iloc[i].name is not None else None,  # type: ignore[arg-type]
             metadata={
                 "msl_high_close": max_close,
                 "msl_low": msl_low,
@@ -349,16 +359,19 @@ class MarketStructureHigh(BasePattern):
         self.confirmation_bars = confirmation_bars
         self.volume_filter = volume_filter
 
-    def detect(self, df: pd.DataFrame, i: int) -> PatternResult:
+    def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
         """
         Detect MSH pattern at bar index i.
 
+        FIXED: Removed lookahead bias. At bar i (confirmation bar), we check
+        if the pattern formed at bars i-3, i-2, i-1 and is confirmed by bar i.
+
         MSH Logic (opposite of MSL):
-        - Condition 1 (Up Move): C[-1] > C[-2]
-        - Condition 2 (Lower High of Close): C[0] < C[-1] AND C[0] > C[-2]
-        - Condition 3 (Confirmation): Close[i+1] < Min(C[-2], C[-1], C[0])
+        - Condition 1 (Up Move): C[-2] > C[-3]
+        - Condition 2 (Lower High of Close): C[-1] < C[-2] AND C[-1] > C[-3]
+        - Condition 3 (Confirmation): Close[i] < Min(C[-3], C[-2], C[-1])
         """
-        if not self._validate_data(df, i):
+        if not self._validate_data(df, i, window_start):
             return PatternResult(
                 detected=False, pattern_name=self.name, pattern_type=self.pattern_type
             )
@@ -368,15 +381,18 @@ class MarketStructureHigh(BasePattern):
                 detected=False, pattern_name=self.name, pattern_type=self.pattern_type
             )
 
+        # Pattern formation bars: i-3, i-2, i-1
+        # Confirmation bar: i (current)
+        c_minus_3 = self._safe_float(df.iloc[i - 3]["Close"])
         c_minus_2 = self._safe_float(df.iloc[i - 2]["Close"])
         c_minus_1 = self._safe_float(df.iloc[i - 1]["Close"])
         c_0 = self._safe_float(df.iloc[i]["Close"])
 
-        # Condition 1: Up Move
-        condition_1 = c_minus_1 > c_minus_2
+        # Condition 1: Up Move - C[-2] > C[-3]
+        condition_1 = c_minus_2 > c_minus_3
 
-        # Condition 2: Lower High of Close
-        condition_2 = (c_0 < c_minus_1) and (c_0 > c_minus_2)
+        # Condition 2: Lower High of Close - C[-1] < C[-2] AND C[-1] > C[-3]
+        condition_2 = (c_minus_1 < c_minus_2) and (c_minus_1 > c_minus_3)
 
         pattern_forming = condition_1 and condition_2
 
@@ -385,23 +401,16 @@ class MarketStructureHigh(BasePattern):
                 detected=False, pattern_name=self.name, pattern_type=self.pattern_type
             )
 
-        # Condition 3: Confirmation
-        confirmed = False
-        confirmation_index = None
-
-        if i + 1 < len(df):
-            c_plus_1 = self._safe_float(df.iloc[i + 1]["Close"])
-            min_close = min(c_minus_2, c_minus_1, c_0)
-            if c_plus_1 < min_close:
-                confirmed = True
-                confirmation_index = i + 1
+        # Condition 3: Confirmation - Close[i] < Min(C[-3], C[-2], C[-1])
+        min_close = min(c_minus_3, c_minus_2, c_minus_1)
+        confirmed = c_0 < min_close
 
         if not confirmed:
             return PatternResult(
                 detected=False, pattern_name=self.name, pattern_type=self.pattern_type
             )
 
-        signal = self.generate_signal(df, i)
+        signal = self.generate_signal(df, i - 1)  # Signal based on pattern formation bar
 
         return PatternResult(
             detected=True,
@@ -409,12 +418,16 @@ class MarketStructureHigh(BasePattern):
             pattern_type=self.pattern_type,
             signal=signal,
             pivot_points={
-                "msh_low_close": min(c_minus_2, c_minus_1, c_0),
-                "msh_high": self._safe_float(df.iloc[i]["High"]),
+                "msh_low_close": min_close,
+                "msh_high": self._safe_float(df.iloc[i - 1]["High"]),
+                "c_minus_3": c_minus_3,
+                "c_minus_2": c_minus_2,
+                "c_minus_1": c_minus_1,
+                "c_0": c_0,
             },
             bars_since_detection=0,
-            start_index=i - 2,
-            end_index=confirmation_index if confirmation_index else i,
+            start_index=i - 3,
+            end_index=i,
         )
 
     def generate_signal(self, df: pd.DataFrame, i: int) -> Optional[TradeSignal]:
@@ -447,6 +460,6 @@ class MarketStructureHigh(BasePattern):
             take_profit_2=take_profit_2,
             take_profit_3=None,
             confidence=confidence,
-            timestamp=df.iloc[i].name if hasattr(df.iloc[i], "name") else None,
+            timestamp=pd.Timestamp(df.iloc[i].name) if hasattr(df.iloc[i], "name") and df.iloc[i].name is not None else None,  # type: ignore[arg-type]
             metadata={"msh_low_close": min_close, "msh_high": msh_high, "entry_type": "sell_stop"},
         )

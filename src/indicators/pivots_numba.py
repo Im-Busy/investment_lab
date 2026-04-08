@@ -14,7 +14,9 @@ Performance Notes:
 import numpy as np
 
 try:
-    from numba import jit, prange
+    import numba  # type: ignore[import-untyped]
+    jit = numba.jit
+    prange = numba.prange
 
     NUMBA_AVAILABLE = True
 except ImportError:
@@ -242,7 +244,7 @@ def get_recent_swing_high_numba(
                 break
 
         if is_swing_high:
-            return current_high
+            return float(current_high)
 
     return np.nan
 
@@ -279,7 +281,7 @@ def get_recent_swing_low_numba(
                 break
 
         if is_swing_low:
-            return current_low
+            return float(current_low)
 
     return np.nan
 

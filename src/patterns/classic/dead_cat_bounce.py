@@ -193,9 +193,9 @@ class DeadCatBounce(BasePattern):
             "bounce_high": bounce_high,
             "bounce_high_idx": bounce_high_idx,
             "retracement_pct": retracement_pct,
-            "fib_382": fib_levels["38.2%"],
-            "fib_500": fib_levels["50.0%"],
-            "fib_618": fib_levels["61.8%"],
+            "fib_382": fib_levels[0.382],
+            "fib_500": fib_levels[0.5],
+            "fib_618": fib_levels[0.618],
             "decline_range": decline_range,
         }
 

@@ -242,7 +242,7 @@ class ABCPattern(BasePattern):
         
         return [A, B, C, X] if X else [A, B, C]
     
-    def detect(self, df: pd.DataFrame, i: int) -> PatternResult:
+    def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
         """
         Detect ABC pattern at bar index i.
         
@@ -288,14 +288,14 @@ class ABCPattern(BasePattern):
             pattern_type=self.pattern_type,
             signal=signal,
             pivot_points={
-                'A_idx': A[0], 'A': A[1],
-                'B_idx': B[0], 'B': B[1],
-                'C_idx': C[0], 'C': C[1],
-                'X_idx': X[0] if X else None,
-                'X': X[1] if X else None,
-                'direction': direction,
-                'bc_ratio': bc_ratio,
-                'ab_range': ab_range
+                'A_idx': float(A[0]), 'A': float(A[1]),
+                'B_idx': float(B[0]), 'B': float(B[1]),
+                'C_idx': float(C[0]), 'C': float(C[1]),
+                'X_idx': float(X[0]) if X else 0.0,
+                'X': float(X[1]) if X else 0.0,
+                'direction': 1.0 if direction == 'bullish' else 0.0,
+                'bc_ratio': float(bc_ratio),
+                'ab_range': float(ab_range)
             },
             bars_since_detection=0,
             start_index=A[0],
@@ -380,7 +380,7 @@ class ABCPattern(BasePattern):
             take_profit_2=take_profit_2,
             take_profit_3=None,
             confidence=min(confidence, 1.0),
-            timestamp=df.iloc[i].name if hasattr(df.iloc[i], 'name') else None,
+            timestamp=pd.Timestamp(df.iloc[i].name) if hasattr(df.iloc[i], 'name') and df.iloc[i].name is not None else None,
             metadata={
                 'direction': direction,
                 'A': A[1], 'B': B[1], 'C': C[1],
@@ -419,7 +419,7 @@ class ABCCorrectionPattern(BasePattern):
         self.stop_offset = stop_offset
         self.fib_tolerance = fib_tolerance
     
-    def detect(self, df: pd.DataFrame, i: int) -> PatternResult:
+    def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
         """Detect ABC Correction pattern."""
         # Simplified - delegates to ABCPattern
         return PatternResult(

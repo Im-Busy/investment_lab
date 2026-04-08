@@ -248,21 +248,27 @@ class TraderVic2B(BasePattern):
             )
 
         # Generate signal
-        if bearish:
+        if bearish is not None:
             signal = self._generate_bearish_signal(df, i, bearish, arrays)
             direction = "bearish"
             pattern = bearish
-        else:
+        elif bullish is not None:
             signal = self._generate_bullish_signal(df, i, bullish, arrays)
             direction = "bullish"
             pattern = bullish
+        else:
+            return PatternResult(
+                detected=False,
+                pattern_name=self.name,
+                pattern_type=self.pattern_type,
+            )
 
         return PatternResult(
             detected=True,
             pattern_name=f"{self.name} ({direction.title()})",
             pattern_type=self.pattern_type,
             signal=signal,
-            pivot_points={"direction": direction, **pattern},
+            pivot_points={k: float(v) for k, v in pattern.items() if isinstance(v, (int, float))},
             bars_since_detection=0,
             start_index=pattern.get("new_high_idx") or pattern.get("new_low_idx"),
             end_index=i,

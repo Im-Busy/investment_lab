@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from typing import Dict, Any, Optional, List
 from pathlib import Path
 import json
-import yaml
+import yaml  # type: ignore[import-untyped]
 
 
 @dataclass
@@ -364,28 +364,28 @@ class TradingConfig:
     
     def save(self, filepath: str) -> None:
         """Save configuration to file."""
-        filepath = Path(filepath)
-        filepath.parent.mkdir(parents=True, exist_ok=True)
+        path = Path(filepath)
+        path.parent.mkdir(parents=True, exist_ok=True)
         
         config_dict = self.to_dict()
         
-        if filepath.suffix in ['.yaml', '.yml']:
-            with open(filepath, 'w') as f:
+        if path.suffix in ['.yaml', '.yml']:
+            with open(path, 'w') as f:
                 yaml.dump(config_dict, f, default_flow_style=False)
         else:
-            with open(filepath, 'w') as f:
+            with open(path, 'w') as f:
                 json.dump(config_dict, f, indent=2)
     
     @classmethod
     def load(cls, filepath: str) -> 'TradingConfig':
         """Load configuration from file."""
-        filepath = Path(filepath)
+        path = Path(filepath)
         
-        if not filepath.exists():
+        if not path.exists():
             return cls()
         
-        with open(filepath, 'r') as f:
-            if filepath.suffix in ['.yaml', '.yml']:
+        with open(path, 'r') as f:
+            if path.suffix in ['.yaml', '.yml']:
                 config_dict = yaml.safe_load(f)
             else:
                 config_dict = json.load(f)

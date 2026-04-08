@@ -146,8 +146,10 @@ class CupAndHandle(BasePattern):
                             cup_bottom = low_price
                             cup_bottom_idx = low_idx
 
-                if cup_bottom is None:
+                if cup_bottom is None or cup_bottom_idx is None:
                     continue
+
+                assert cup_bottom_idx is not None, "cup_bottom_idx must be set"
 
                 # Check cup depth (should be meaningful but not too deep)
                 cup_depth = min(left_rim[1], right_rim[1]) - cup_bottom

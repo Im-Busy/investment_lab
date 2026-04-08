@@ -6,7 +6,7 @@ Utility functions for data handling, formatting, and calculations.
 
 import pandas as pd
 import numpy as np
-from typing import Optional, Dict, Any, Union
+from typing import Optional, Dict, Any, Union, List
 from pathlib import Path
 import json
 import logging
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 def load_data(
-    filepath: str,
+    filepath: Union[str, Path],
     date_column: Optional[str] = None,
     parse_dates: bool = True,
     **kwargs
@@ -34,13 +34,13 @@ def load_data(
     Returns:
         DataFrame with OHLCV data
     """
-    filepath = Path(filepath)
+    path: Path = Path(filepath) if isinstance(filepath, str) else filepath
     
-    if not filepath.exists():
-        raise FileNotFoundError(f"Data file not found: {filepath}")
+    if not path.exists():
+        raise FileNotFoundError(f"Data file not found: {path}")
     
     # Determine file type and load
-    suffix = filepath.suffix.lower()
+    suffix = path.suffix.lower()
     
     if suffix == '.csv':
         df = pd.read_csv(filepath, **kwargs)
@@ -76,14 +76,14 @@ def load_data(
     if 'Volume' not in df.columns:
         df['Volume'] = 0
     
-    logger.info(f"Loaded {len(df)} rows from {filepath}")
+    logger.info(f"Loaded {len(df)} rows from {path}")
     
     return df
 
 
 def save_results(
     results: Dict[str, Any],
-    filepath: str,
+    filepath: Union[str, Path],
     format: str = 'json'
 ) -> None:
     """
@@ -94,28 +94,28 @@ def save_results(
         filepath: Output file path
         format: Output format ('json', 'csv', 'parquet')
     """
-    filepath = Path(filepath)
-    filepath.parent.mkdir(parents=True, exist_ok=True)
+    path: Path = Path(filepath) if isinstance(filepath, str) else filepath
+    path.parent.mkdir(parents=True, exist_ok=True)
     
     if format == 'json':
         # Convert any non-serializable types
         serializable = _make_serializable(results)
-        with open(filepath, 'w') as f:
+        with open(path, 'w') as f:
             json.dump(serializable, f, indent=2, default=str)
     elif format == 'csv':
         if 'trades' in results:
-            pd.DataFrame(results['trades']).to_csv(filepath, index=False)
+            pd.DataFrame(results['trades']).to_csv(path, index=False)
         else:
-            pd.DataFrame(results).to_csv(filepath)
+            pd.DataFrame(results).to_csv(path)
     elif format == 'parquet':
         if 'trades' in results:
-            pd.DataFrame(results['trades']).to_parquet(filepath, index=False)
+            pd.DataFrame(results['trades']).to_parquet(path, index=False)
         else:
-            pd.DataFrame(results).to_parquet(filepath)
+            pd.DataFrame(results).to_parquet(path)
     else:
         raise ValueError(f"Unsupported format: {format}")
     
-    logger.info(f"Results saved to {filepath}")
+    logger.info(f"Results saved to {path}")
 
 
 def _make_serializable(obj: Any) -> Any:
@@ -277,7 +277,7 @@ def resample_data(
     if not isinstance(df.index, pd.DatetimeIndex):
         raise ValueError("DataFrame index must be a DatetimeIndex for resampling")
     
-    ohlcv_dict = {
+    agg_dict = {
         'Open': 'first',
         'High': 'max',
         'Low': 'min',
@@ -285,7 +285,7 @@ def resample_data(
         'Volume': 'sum'
     }
     
-    resampled = df.resample(timeframe).agg(ohlcv_dict)
+    resampled = df.resample(timeframe).agg(agg_dict)  # type: ignore[arg-type]
     resampled.dropna(inplace=True)
     
     return resampled
@@ -293,7 +293,7 @@ def resample_data(
 
 def add_indicators(
     df: pd.DataFrame,
-    indicators: list = None
+    indicators: Optional[List[str]] = None
 ) -> pd.DataFrame:
     """
     Add technical indicators to DataFrame.
@@ -313,7 +313,7 @@ def add_indicators(
     if indicators is None:
         indicators = ['sma', 'atr', 'rsi']
     
-    for indicator in indicators:
+    for indicator in indicators:  # type: ignore[union-attr]
         if indicator.lower() == 'sma':
             df['SMA_20'] = sma(df['Close'], 20)
             df['SMA_50'] = sma(df['Close'], 50)

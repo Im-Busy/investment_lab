@@ -482,7 +482,7 @@ class ConfluenceScorer:
                 if risk > 0:
                     rr_ratios.append(reward / risk)
 
-        return np.mean(rr_ratios) if rr_ratios else 0.0
+        return float(np.mean(rr_ratios)) if rr_ratios else 0.0  # type: ignore[return-value]
 
     def _calculate_quality_score(
         self, results: List[PatternResult], regime: Optional[RegimeState]
@@ -514,7 +514,7 @@ class ConfluenceScorer:
             regime_alignment = self._check_regime_alignment(results, regime)
             quality_factors.append(1.0 if regime_alignment else 0.5)
 
-        return np.mean(quality_factors)
+        return float(np.mean(quality_factors))  # type: ignore[return-value, arg-type]
 
     def _check_regime_alignment(self, results: List[PatternResult], regime: RegimeState) -> bool:
         """Check if signals align with market regime."""
@@ -572,10 +572,16 @@ class ConfluenceScorer:
         if not compatible_results:
             return None
 
-        # Separate by direction
-        long_results = [r for r in compatible_results if r.signal.direction == SignalDirection.LONG]
+        # Separate by direction (signal is non-None from valid_results filter)
+        long_results = [
+            r
+            for r in compatible_results
+            if r.signal is not None and r.signal.direction == SignalDirection.LONG
+        ]
         short_results = [
-            r for r in compatible_results if r.signal.direction == SignalDirection.SHORT
+            r
+            for r in compatible_results
+            if r.signal is not None and r.signal.direction == SignalDirection.SHORT
         ]
 
         # Determine dominant direction
@@ -595,7 +601,10 @@ class ConfluenceScorer:
 
         for result in active_results:
             weight = self._calculate_pattern_weight(result, regime)
-            confidence = result.signal.confidence
+            sig = result.signal
+            if sig is None:
+                continue
+            confidence = sig.confidence
             weighted_sum += confidence * weight
             total_weight += weight
 
@@ -631,7 +640,9 @@ class ConfluenceScorer:
             confidence_level = max(1, confidence_level - 1)
 
         # Calculate quality metrics
-        signals = [r.signal for r in active_results]
+        signals: List[TradeSignal] = [
+            r.signal for r in active_results if r.signal is not None
+        ]
         rr_ratio = self._calculate_risk_reward(signals)
         quality_score = self._calculate_quality_score(active_results, regime)
 

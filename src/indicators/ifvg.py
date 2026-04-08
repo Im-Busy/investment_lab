@@ -146,7 +146,7 @@ def detect_ifvg(
         >>> for ifvg in ifvgs:
         ...     print(f"IFVG: {ifvg.low:.2f} - {ifvg.high:.2f}, filled: {ifvg.filled}")
     """
-    ifvgs = []
+    ifvgs: list[IFVG] = []
     
     if len(df) < 3:
         return ifvgs
@@ -317,7 +317,10 @@ def update_ifvg_status(
     """
     Update IFVG fill status based on price action.
     
-    An IFVG is considered filled when price trades through the entire zone.
+    FIXED: An IFVG is considered filled when price ENTERS the zone, not when it
+    exits. This is the correct behavior for Fair Value Gaps:
+    - Bullish IFVG (support zone): Filled when price drops INTO the zone (high touches or enters)
+    - Bearish IFVG (resistance zone): Filled when price rises INTO the zone (low touches or enters)
     
     Args:
         ifvgs: List of IFVGs to update
@@ -334,16 +337,18 @@ def update_ifvg_status(
         # Check if price has filled the gap
         bar = df.iloc[current_bar]
         
-        # Gap is filled if price trades through the entire zone
+        # FIXED: Gap is filled when price ENTERS the zone
         if ifvg.direction == 'bullish':
-            # Bullish IFVG is filled if price drops below the low edge
-            if bar['Low'] <= ifvg.low:
+            # Bullish IFVG (support zone) is filled when price drops into the zone
+            # Price enters when high touches or goes below the zone top (ifvg.high)
+            if bar['High'] <= ifvg.high:
                 ifvg.filled = True
                 ifvg.fill_bar = current_bar
                 logger.debug(f"Bullish IFVG filled at bar {current_bar}")
         else:  # bearish
-            # Bearish IFVG is filled if price rises above the high edge
-            if bar['High'] >= ifvg.high:
+            # Bearish IFVG (resistance zone) is filled when price rises into the zone
+            # Price enters when low touches or goes above the zone bottom (ifvg.low)
+            if bar['Low'] >= ifvg.low:
                 ifvg.filled = True
                 ifvg.fill_bar = current_bar
                 logger.debug(f"Bearish IFVG filled at bar {current_bar}")

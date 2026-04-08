@@ -202,7 +202,7 @@ class SpikeAndLedge(BasePattern):
             'bars': ledge_bars
         }
     
-    def detect(self, df: pd.DataFrame, i: int) -> PatternResult:
+    def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
         """
         Detect Spike and Ledge pattern at bar index i.
         

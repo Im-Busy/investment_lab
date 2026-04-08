@@ -12,7 +12,7 @@ Compares:
 import sys
 import time
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any, Dict, Optional
 
 import numpy as np
 import pandas as pd
@@ -67,7 +67,7 @@ def generate_test_data(n: int, seed: int = 42) -> pd.DataFrame:
     return df
 
 
-def benchmark_pivot_detection(df: pd.DataFrame, iterations: int = 100) -> Dict[str, Any]:
+def benchmark_pivot_detection(df: pd.DataFrame, iterations: int = 100) -> Dict[str, Optional[float]]:
     """
     Benchmark swing high/low detection.
 
@@ -77,10 +77,10 @@ def benchmark_pivot_detection(df: pd.DataFrame, iterations: int = 100) -> Dict[s
     """
     from src.indicators.pivots import find_swing_highs, find_swing_lows
 
-    highs = df["High"].values
-    lows = df["Low"].values
+    highs = np.asarray(df["High"], dtype=np.float64)
+    lows = np.asarray(df["Low"], dtype=np.float64)
 
-    results = {}
+    results: Dict[str, Optional[float]] = {}
 
     # Benchmark pure Python (pandas-based)
     print("\n  Pivot Detection (Pure Python):")
@@ -97,9 +97,9 @@ def benchmark_pivot_detection(df: pd.DataFrame, iterations: int = 100) -> Dict[s
     # Benchmark Numba
     try:
         from src.indicators.pivots_numba import (
+            NUMBA_AVAILABLE,
             find_swing_highs_numba,
             find_swing_lows_numba,
-            NUMBA_AVAILABLE,
         )
 
         if NUMBA_AVAILABLE:
@@ -121,17 +121,17 @@ def benchmark_pivot_detection(df: pd.DataFrame, iterations: int = 100) -> Dict[s
             print(f"    Speedup: {results['numba_speedup']:.1f}x")
         else:
             print("\n  Numba not available - skipping")
-            results["numba_time"] = None
-            results["numba_speedup"] = None
+            results["numba_time"] = None  # type: ignore[assignment]
+            results["numba_speedup"] = None  # type: ignore[assignment]
     except ImportError as e:
         print(f"\n  Numba import failed: {e}")
-        results["numba_time"] = None
-        results["numba_speedup"] = None
+        results["numba_time"] = None  # type: ignore[assignment]
+        results["numba_speedup"] = None  # type: ignore[assignment]
 
     return results
 
 
-def benchmark_indicators(df: pd.DataFrame, iterations: int = 100) -> Dict[str, Any]:
+def benchmark_indicators(df: pd.DataFrame, iterations: int = 100) -> Dict[str, Optional[float]]:
     """
     Benchmark technical indicators.
 
@@ -139,9 +139,9 @@ def benchmark_indicators(df: pd.DataFrame, iterations: int = 100) -> Dict[str, A
     - Pandas implementation
     - Numba JIT implementation
     """
-    from src.indicators.technical import sma, ema, atr, rsi
+    from src.indicators.technical import atr, ema, rsi, sma
 
-    results = {}
+    results: Dict[str, Optional[float]] = {}
 
     # Benchmark SMA
     print("\n  SMA (20-period):")
@@ -153,10 +153,10 @@ def benchmark_indicators(df: pd.DataFrame, iterations: int = 100) -> Dict[str, A
     print(f"    Pandas: {pandas_sma_time:.4f}s")
 
     try:
-        from src.indicators.technical_numba import sma_numba, NUMBA_AVAILABLE
+        from src.indicators.technical_numba import NUMBA_AVAILABLE, sma_numba
 
         if NUMBA_AVAILABLE:
-            values = df["Close"].values.astype(np.float64)
+            values = np.asarray(df["Close"], dtype=np.float64)
             _ = sma_numba(values[:100], 20)  # Warm up
 
             start = time.perf_counter()
@@ -168,8 +168,8 @@ def benchmark_indicators(df: pd.DataFrame, iterations: int = 100) -> Dict[str, A
             print(f"    Numba:  {numba_sma_time:.4f}s")
             print(f"    Speedup: {results['sma_speedup']:.1f}x")
     except ImportError:
-        results["sma_numba"] = None
-        results["sma_speedup"] = None
+        results["sma_numba"] = None  # type: ignore[assignment]
+        results["sma_speedup"] = None  # type: ignore[assignment]
 
     # Benchmark EMA
     print("\n  EMA (20-period):")
@@ -181,10 +181,10 @@ def benchmark_indicators(df: pd.DataFrame, iterations: int = 100) -> Dict[str, A
     print(f"    Pandas: {pandas_ema_time:.4f}s")
 
     try:
-        from src.indicators.technical_numba import ema_numba, NUMBA_AVAILABLE
+        from src.indicators.technical_numba import NUMBA_AVAILABLE, ema_numba
 
         if NUMBA_AVAILABLE:
-            values = df["Close"].values.astype(np.float64)
+            values = np.asarray(df["Close"], dtype=np.float64)
             _ = ema_numba(values[:100], 20)  # Warm up
 
             start = time.perf_counter()
@@ -196,8 +196,8 @@ def benchmark_indicators(df: pd.DataFrame, iterations: int = 100) -> Dict[str, A
             print(f"    Numba:  {numba_ema_time:.4f}s")
             print(f"    Speedup: {results['ema_speedup']:.1f}x")
     except ImportError:
-        results["ema_numba"] = None
-        results["ema_speedup"] = None
+        results["ema_numba"] = None  # type: ignore[assignment]
+        results["ema_speedup"] = None  # type: ignore[assignment]
 
     # Benchmark ATR
     print("\n  ATR (14-period):")
@@ -209,12 +209,12 @@ def benchmark_indicators(df: pd.DataFrame, iterations: int = 100) -> Dict[str, A
     print(f"    Pandas: {pandas_atr_time:.4f}s")
 
     try:
-        from src.indicators.technical_numba import atr_numba, NUMBA_AVAILABLE
+        from src.indicators.technical_numba import NUMBA_AVAILABLE, atr_numba
 
         if NUMBA_AVAILABLE:
-            highs = df["High"].values.astype(np.float64)
-            lows = df["Low"].values.astype(np.float64)
-            closes = df["Close"].values.astype(np.float64)
+            highs = np.asarray(df["High"], dtype=np.float64)
+            lows = np.asarray(df["Low"], dtype=np.float64)
+            closes = np.asarray(df["Close"], dtype=np.float64)
             _ = atr_numba(highs[:100], lows[:100], closes[:100], 14)  # Warm up
 
             start = time.perf_counter()
@@ -226,8 +226,8 @@ def benchmark_indicators(df: pd.DataFrame, iterations: int = 100) -> Dict[str, A
             print(f"    Numba:  {numba_atr_time:.4f}s")
             print(f"    Speedup: {results['atr_speedup']:.1f}x")
     except ImportError:
-        results["atr_numba"] = None
-        results["atr_speedup"] = None
+        results["atr_numba"] = None  # type: ignore[assignment]
+        results["atr_speedup"] = None  # type: ignore[assignment]
 
     # Benchmark RSI
     print("\n  RSI (14-period):")
@@ -239,10 +239,10 @@ def benchmark_indicators(df: pd.DataFrame, iterations: int = 100) -> Dict[str, A
     print(f"    Pandas: {pandas_rsi_time:.4f}s")
 
     try:
-        from src.indicators.technical_numba import rsi_numba, NUMBA_AVAILABLE
+        from src.indicators.technical_numba import NUMBA_AVAILABLE, rsi_numba
 
         if NUMBA_AVAILABLE:
-            values = df["Close"].values.astype(np.float64)
+            values = np.asarray(df["Close"], dtype=np.float64)
             _ = rsi_numba(values[:100], 14)  # Warm up
 
             start = time.perf_counter()
@@ -254,13 +254,13 @@ def benchmark_indicators(df: pd.DataFrame, iterations: int = 100) -> Dict[str, A
             print(f"    Numba:  {numba_rsi_time:.4f}s")
             print(f"    Speedup: {results['rsi_speedup']:.1f}x")
     except ImportError:
-        results["rsi_numba"] = None
-        results["rsi_speedup"] = None
+        results["rsi_numba"] = None  # type: ignore[assignment]
+        results["rsi_speedup"] = None  # type: ignore[assignment]
 
     return results
 
 
-def benchmark_pattern_detection(df: pd.DataFrame, iterations: int = 10) -> Dict[str, Any]:
+def benchmark_pattern_detection(df: pd.DataFrame, iterations: int = 10) -> Dict[str, Optional[float]]:
     """
     Benchmark pattern detection.
 
@@ -268,11 +268,11 @@ def benchmark_pattern_detection(df: pd.DataFrame, iterations: int = 10) -> Dict[
     - Bar-by-bar detection
     - Vectorized detection (Numba)
     """
+    from src.patterns.basic.floor_pivot import FloorPivotBreakout
     from src.patterns.basic.msl import MarketStructureLow
     from src.patterns.basic.nr7id import NR7ID
-    from src.patterns.basic.floor_pivot import FloorPivotBreakout
 
-    results = {}
+    results: Dict[str, Optional[float]] = {}
 
     patterns = [
         ("MSL", MarketStructureLow()),
@@ -299,13 +299,15 @@ def benchmark_pattern_detection(df: pd.DataFrame, iterations: int = 10) -> Dict[
                 _ = pattern.detect_vectorized(df)
             vectorized_time = time.perf_counter() - start
             results[f"{name}_vectorized"] = vectorized_time
-            results[f"{name}_speedup"] = bar_by_bar_time / vectorized_time if vectorized_time > 0 else 0
+            results[f"{name}_speedup"] = (
+                bar_by_bar_time / vectorized_time if vectorized_time > 0 else 0
+            )
             print(f"    Vectorized: {vectorized_time:.4f}s")
             print(f"    Speedup: {results[f'{name}_speedup']:.1f}x")
         except Exception as e:
             print(f"    Vectorized failed: {e}")
-            results[f"{name}_vectorized"] = None
-            results[f"{name}_speedup"] = None
+            results[f"{name}_vectorized"] = None  # type: ignore[assignment]
+            results[f"{name}_speedup"] = None  # type: ignore[assignment]
 
     return results
 
@@ -323,7 +325,7 @@ def benchmark_backtest(df: pd.DataFrame, n_bars: int = 5000) -> Dict[str, Any]:
         MultiPatternStrategyOptimized,
     )
 
-    results = {}
+    results: Dict[str, Optional[float]] = {}
 
     # Trim data if needed
     if len(df) > n_bars:
@@ -361,8 +363,8 @@ def benchmark_backtest(df: pd.DataFrame, n_bars: int = 5000) -> Dict[str, Any]:
 
     except Exception as e:
         print(f"    Backtest failed: {e}")
-        results["backtest_time"] = None
-        results["error"] = str(e)
+        results["backtest_time"] = None  # type: ignore[assignment]
+        results["error"] = str(e)  # type: ignore[assignment]
 
     return results
 

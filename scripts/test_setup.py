@@ -43,7 +43,7 @@ def verify_python_version() -> Dict[str, Any]:
     Returns:
         Dict with verification results
     """
-    result = {
+    result: Dict[str, Any] = {
         'check': 'python_version',
         'passed': False,
         'version': f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
@@ -61,7 +61,7 @@ def verify_python_version() -> Dict[str, Any]:
     return result
 
 
-def verify_packages() -> Dict[str, Any]:
+def verify_packages() -> Dict[str, Any]:  # type: ignore[return-value]
     """
     Verify required packages are installed with correct versions.
     
@@ -80,7 +80,7 @@ def verify_packages() -> Dict[str, Any]:
         'backtesting': '0.3.0',
     }
     
-    results = {
+    results: Dict[str, Any] = {
         'check': 'packages',
         'passed': True,
         'required': {},
@@ -133,7 +133,7 @@ def verify_packages() -> Dict[str, Any]:
     return results
 
 
-def verify_yfinance_connection() -> Dict[str, Any]:
+def verify_yfinance_connection() -> Dict[str, Any]:  # type: ignore[return-value]
     """
     Verify yfinance can fetch data from Yahoo Finance API.
     
@@ -263,7 +263,7 @@ def calculate_simple_atr(df, period: int = 14):
     return atr
 
 
-def verify_atr_calculation() -> Dict[str, Any]:
+def verify_atr_calculation() -> Dict[str, Any]:  # type: ignore[return-value]
     """
     Verify ATR calculation matches manual formula.
     
@@ -274,7 +274,7 @@ def verify_atr_calculation() -> Dict[str, Any]:
     Returns:
         Dict with verification results
     """
-    result = {
+    result: Dict[str, Any] = {
         'check': 'atr_calculation',
         'passed': False,
         'method_comparison': {},
@@ -359,9 +359,10 @@ def verify_atr_calculation() -> Dict[str, Any]:
             ta_deviation = np.abs(atr_ema_values - atr_ta_values) / atr_ema_values * 100
             ta_max_deviation = np.max(ta_deviation)
             
+            atr_ta_arr = np.asarray(atr_ta_values, dtype=np.float64)
             result['method_comparison']['pandas_ta'] = {
-                'mean': float(np.nanmean(atr_ta_values)),
-                'std': float(np.nanstd(atr_ta_values))
+                'mean': float(np.nanmean(atr_ta_arr)),
+                'std': float(np.nanstd(atr_ta_arr))
             }
             result['pandas_ta_deviation_pct'] = float(ta_max_deviation)
             
@@ -380,7 +381,7 @@ def verify_atr_calculation() -> Dict[str, Any]:
     return result
 
 
-def verify_data_quality() -> Dict[str, Any]:
+def verify_data_quality() -> Dict[str, Any]:  # type: ignore[return-value]
     """
     Verify data quality checks work correctly.
     
@@ -389,7 +390,7 @@ def verify_data_quality() -> Dict[str, Any]:
     Returns:
         Dict with verification results
     """
-    result = {
+    result: Dict[str, Any] = {
         'check': 'data_quality',
         'passed': False,
         'tests': {},
@@ -475,14 +476,14 @@ def verify_data_quality() -> Dict[str, Any]:
     return result
 
 
-def verify_project_structure() -> Dict[str, Any]:
+def verify_project_structure() -> Dict[str, Any]:  # type: ignore[return-value]
     """
     Verify project directory structure.
     
     Returns:
         Dict with verification results
     """
-    result = {
+    result: Dict[str, Any] = {
         'check': 'project_structure',
         'passed': False,
         'directories': {},
@@ -541,7 +542,7 @@ def run_all_checks() -> Dict[str, Any]:
     Returns:
         Dict with all verification results
     """
-    results = {
+    results: Dict[str, Any] = {
         'timestamp': datetime.now().isoformat(),
         'environment': {
             'python_version': f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",

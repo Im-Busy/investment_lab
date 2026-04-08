@@ -9,8 +9,8 @@ self.results._trades with entry_time, exit_time, entry_price, exit_price, size, 
 We need to match these to our signal log entries by timestamp.
 """
 
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
+from dataclasses import dataclass
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 import pandas as pd
@@ -82,7 +82,7 @@ class TradeAttributor:
             return self.attributed_trades
 
         for idx, trade_row in self.trades_df.iterrows():
-            attributed_trade = self._attribute_single_trade(idx, trade_row)
+            attributed_trade = self._attribute_single_trade(int(idx), trade_row)  # type: ignore[arg-type]
             self.attributed_trades.append(attributed_trade)
 
         return self.attributed_trades
@@ -139,7 +139,7 @@ class TradeAttributor:
                         confidences.append(event.confidence)
                         categories.add(event.pattern_category)
 
-                avg_confidence = np.mean(confidences) if confidences else 0.0
+                avg_confidence = float(np.mean(confidences)) if confidences else 0.0
                 pattern_categories = sorted(categories)
 
         # Compute is_winner and holding_days
@@ -189,17 +189,19 @@ class TradeAttributor:
 
         for timestamp, bar_index in self._bar_timestamps.items():
             diff_val = timestamp - entry_time
-            
-            # Handle numpy.float64 case
-            if isinstance(diff_val, (int, float, np.integer, np.floating)):
+
+            # Handle different types
+            if isinstance(diff_val, pd.Timedelta):
+                diff = abs(diff_val.total_seconds())
+            elif isinstance(diff_val, (int, float, np.integer, np.floating)):
                 diff = abs(float(diff_val))
             else:
                 # Try to get total_seconds
                 try:
                     diff = abs(diff_val.total_seconds())
                 except AttributeError:
-                    diff = abs(float(diff_val))
-            
+                    diff = abs(float(diff_val))  # type: ignore[arg-type]
+
             if best_diff is None or diff < best_diff:
                 best_diff = diff
                 best_bar = bar_index
@@ -227,13 +229,13 @@ class TradeAttributor:
             return "Unknown"
 
         delta = exit_time - entry_time
-        
-        # Handle numpy.float64 case
+
+        # Handle numeric case (int, float, numpy types)
         if isinstance(delta, (int, float, np.integer, np.floating)):
             # delta is a numeric value (likely seconds or days as float)
-            if delta == 0:
+            if float(delta) == 0:  # type: ignore[arg-type]
                 return "0 seconds"
-            elif abs(delta) < 1:
+            elif abs(float(delta)) < 1:  # type: ignore[arg-type]
                 # Likely in days
                 days = int(delta * 86400)  # Convert to seconds
                 if days == 0:
@@ -251,7 +253,7 @@ class TradeAttributor:
                     return "1 day"
                 else:
                     return f"{days} days"
-        
+
         # Handle timedelta case
         try:
             days = delta.days
@@ -283,15 +285,15 @@ class TradeAttributor:
             return 0
 
         delta = exit_time - entry_time
-        
+
         # Handle numpy.float64 case
         if isinstance(delta, (int, float, np.integer, np.floating)):
             # delta is a numeric value (likely in days)
             return max(0, int(delta))
-        
+
         # Handle timedelta case
         try:
-            return max(0, delta.days)
+            return max(0, int(delta.days))  # type: ignore[arg-type]
         except AttributeError:
             return 0
 
@@ -566,9 +568,15 @@ class TradeAttributor:
             result.append(
                 {
                     "pattern_name": pattern,
-                    "participation_rate": counts["total"] / total_trades if total_trades > 0 else 0.0,
-                    "winner_participation_rate": counts["winners"] / total_winners if total_winners > 0 else 0.0,
-                    "loser_participation_rate": counts["losers"] / total_losers if total_losers > 0 else 0.0,
+                    "participation_rate": counts["total"] / total_trades
+                    if total_trades > 0
+                    else 0.0,
+                    "winner_participation_rate": counts["winners"] / total_winners
+                    if total_winners > 0
+                    else 0.0,
+                    "loser_participation_rate": counts["losers"] / total_losers
+                    if total_losers > 0
+                    else 0.0,
                     "total_trades": counts["total"],
                     "winner_trades": counts["winners"],
                     "loser_trades": counts["losers"],

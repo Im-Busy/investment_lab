@@ -9,6 +9,23 @@
       "env": {
         "DEFAULT_MINIMUM_TOKENS": ""
       }
+    },
+    "sequentialthinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ]
+    },
+    "exa": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "exa-mcp-server"
+      ],
+      "env": {
+        "EXA_API_KEY": "f1880704-28ee-4203-8c96-5c9a7f95cbcb"
+      }
     }
   }
 }

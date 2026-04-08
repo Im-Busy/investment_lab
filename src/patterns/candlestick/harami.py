@@ -114,10 +114,11 @@ class Harami(BasePattern):
             return 'sideways'
 
         # Calculate trend using linear regression slope
-        x = np.arange(len(closes))
-        slope = np.polyfit(x, closes, 1)[0]
+        closes_arr = np.asarray(closes, dtype=np.float64)
+        x = np.arange(len(closes_arr))
+        slope = float(np.polyfit(x, closes_arr, 1)[0])
 
-        avg_price = np.mean(closes)
+        avg_price = float(np.mean(closes_arr))
         normalized_slope = slope / avg_price if avg_price > 0 else 0
 
         if normalized_slope > 0.001:
@@ -209,7 +210,7 @@ class Harami(BasePattern):
             return False
 
         current_volume = float(df['Volume'].iloc[i])
-        return current_volume > avg_volume * threshold
+        return bool(current_volume > avg_volume * threshold)
 
     def detect(
         self,
@@ -259,6 +260,12 @@ class Harami(BasePattern):
         # Check confirmation
         confirmed = False
         if self.require_confirmation:
+            if direction is None:
+                return PatternResult(
+                    detected=False,
+                    pattern_name=self.name,
+                    pattern_type=self.pattern_type,
+                )
             confirmed = self._check_confirmation(df, i, direction, candle1)
 
         # Calculate confidence
@@ -285,14 +292,6 @@ class Harami(BasePattern):
                 pattern_name=self.name,
                 pattern_type=self.pattern_type,
                 signal=None,
-                metadata={
-                    'harami_type': harami_type,
-                    'trend': trend,
-                    'confirmed': False,
-                    'requires_confirmation': True,
-                    'candle1_body': candle1['body'],
-                    'candle2_body': candle2['body'],
-                },
             )
 
         # Calculate entry, stop, and target
@@ -313,6 +312,7 @@ class Harami(BasePattern):
             take_profit_2 = entry_price - atr * 2.5
             take_profit_3 = entry_price - atr * 4.0
 
+        assert direction is not None, "direction must be set"
         signal = TradeSignal(
             direction=direction,
             entry_price=entry_price,
@@ -337,11 +337,6 @@ class Harami(BasePattern):
             signal=signal,
             start_index=i - 1,
             end_index=i,
-            metadata={
-                'harami_type': harami_type,
-                'trend': trend,
-                'confirmed': True,
-            },
         )
 
     def generate_signal(self, df: pd.DataFrame, i: int) -> Optional[TradeSignal]:
@@ -380,6 +375,6 @@ class Harami(BasePattern):
                     )
                 tr_list.append(tr)
 
-            return np.mean(tr_list)
+            return float(np.mean(tr_list))
         except Exception:
             return None

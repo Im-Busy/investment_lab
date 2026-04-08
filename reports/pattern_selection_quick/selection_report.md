@@ -12,15 +12,15 @@
 | Redundant Pairs Found | 0 |
 | After Redundancy Removal | 1 |
 | **Final Selected Patterns** | **0** |
-| Execution Time | 75.6s |
+| Execution Time | 1.0s |
 
 ### Phase Timings
 
 | Phase | Duration |
 |-------|----------|
-| PHASE1 | 1.4s |
+| PHASE1 | 1.0s |
 | PHASE2 | 0.0s |
-| PHASE3 | 74.1s |
+| PHASE3 | 0.0s |
 
 ## Phase 1: Isolated Performance Baseline
 
@@ -54,7 +54,7 @@ No redundant pairs found.
 
 | Rank | Pattern | Delta Sharpe | Delta Return | Role | Keep |
 |------|---------|---------------|--------------|------|------|
-| 1 | Floor Pivot Breakout | nan | -490.23% | Neutral | [REMOVE] |
+| 1 | Floor Pivot Breakout | -0.4950 | -223.75% | Noise Generator | [REMOVE] |
 
 ### Pattern Role Classification
 
@@ -62,8 +62,8 @@ No redundant pairs found.
 |------|-------|-------------|
 | Primary Signal | 0 | High solo edge, high marginal contribution |
 | Confirmation Filter | 0 | Low solo edge, positive marginal contribution |
-| Neutral | 1 | No significant impact |
-| Noise Generator | 0 | Negative marginal contribution (remove) |
+| Neutral | 0 | No significant impact |
+| Noise Generator | 1 | Negative marginal contribution (remove) |
 
 ## Final Selected Patterns
 
@@ -71,6 +71,10 @@ No redundant pairs found.
 
 
 ## Recommendations
+
+### Patterns to Remove
+
+- **Floor Pivot Breakout** — Delta Sharpe: -0.4950
 
 ## Configuration Used
 

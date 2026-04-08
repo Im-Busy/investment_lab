@@ -19,6 +19,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from matplotlib.figure import Figure
 
 from .signal_event_log import SignalEventLog
 from .trade_attributor import TradeAttributor
@@ -30,7 +31,7 @@ def create_contribution_charts(
     ablation_results: Optional[pd.DataFrame] = None,
     synergy_results: Optional[pd.DataFrame] = None,
     output_dir: Optional[str] = None,
-) -> Dict[str, plt.Figure]:
+) -> Dict[str, Figure]:
     """
     Create all contribution analysis charts.
 
@@ -93,7 +94,7 @@ def create_contribution_charts(
     return figures
 
 
-def create_co_occurrence_heatmap(signal_log: SignalEventLog) -> plt.Figure:
+def create_co_occurrence_heatmap(signal_log: SignalEventLog) -> Figure:
     """
     Create co-occurrence heatmap.
 
@@ -143,7 +144,7 @@ def create_co_occurrence_heatmap(signal_log: SignalEventLog) -> plt.Figure:
 
 def create_frequency_quality_scatter(
     signal_log: SignalEventLog, trade_attributor: TradeAttributor
-) -> plt.Figure:
+) -> Figure:
     """
     Create frequency vs. quality scatter plot.
 
@@ -270,7 +271,7 @@ def create_frequency_quality_scatter(
     return fig
 
 
-def create_confluence_performance_chart(trade_attributor: TradeAttributor) -> plt.Figure:
+def create_confluence_performance_chart(trade_attributor: TradeAttributor) -> Figure:
     """
     Create confluence count vs. performance chart.
 
@@ -343,7 +344,7 @@ def create_confluence_performance_chart(trade_attributor: TradeAttributor) -> pl
     return fig
 
 
-def create_pattern_leaderboard(ablation_results: pd.DataFrame) -> plt.Figure:
+def create_pattern_leaderboard(ablation_results: pd.DataFrame) -> Figure:
     """
     Create pattern leaderboard horizontal bar chart.
 
@@ -398,7 +399,7 @@ def create_pattern_leaderboard(ablation_results: pd.DataFrame) -> plt.Figure:
     return fig
 
 
-def create_contribution_waterfall(ablation_results: pd.DataFrame) -> plt.Figure:
+def create_contribution_waterfall(ablation_results: pd.DataFrame) -> Figure:
     """
     Create contribution waterfall chart.
 
@@ -456,7 +457,7 @@ def create_contribution_waterfall(ablation_results: pd.DataFrame) -> plt.Figure:
     return fig
 
 
-def create_synergy_network(synergy_results: pd.DataFrame) -> plt.Figure:
+def create_synergy_network(synergy_results: pd.DataFrame) -> Figure:
     """
     Create synergy network graph.
 
@@ -547,7 +548,7 @@ def create_synergy_network(synergy_results: pd.DataFrame) -> plt.Figure:
     return fig
 
 
-def create_category_performance(ablation_results: pd.DataFrame) -> plt.Figure:
+def create_category_performance(ablation_results: pd.DataFrame) -> Figure:
     """
     Create pattern category performance chart.
 

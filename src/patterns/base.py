@@ -112,7 +112,7 @@ class PatternResult:
     pattern_name: str
     pattern_type: PatternType
     signal: Optional[TradeSignal] = None
-    pivot_points: Dict[str, float] = field(default_factory=dict)
+    pivot_points: Dict[str, Any] = field(default_factory=dict)
     bars_since_detection: int = 0
     start_index: Optional[int] = None
     end_index: Optional[int] = None

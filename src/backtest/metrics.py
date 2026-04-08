@@ -47,7 +47,7 @@ class PerformanceMetrics:
                 "message": "No trades to analyze",
             }
 
-        metrics = {}
+        metrics: Dict[str, Any] = {}  # type: ignore[assignment]
 
         # Basic trade statistics
         metrics["total_trades"] = len(trades)
@@ -80,14 +80,14 @@ class PerformanceMetrics:
             win_amounts = wins["pnl"].values if len(wins) > 0 else np.array([])
             loss_amounts = np.abs(losses["pnl"].values) if len(losses) > 0 else np.array([])
 
-            metrics["avg_win"] = float(np.mean(win_amounts)) if len(win_amounts) > 0 else 0
-            metrics["avg_loss"] = float(np.mean(loss_amounts)) if len(loss_amounts) > 0 else 0
-            metrics["largest_win"] = float(np.max(win_amounts)) if len(win_amounts) > 0 else 0
-            metrics["largest_loss"] = float(np.max(loss_amounts)) if len(loss_amounts) > 0 else 0
+            metrics["avg_win"] = float(np.mean(win_amounts)) if len(win_amounts) > 0 else 0  # type: ignore[arg-type]
+            metrics["avg_loss"] = float(np.mean(loss_amounts)) if len(loss_amounts) > 0 else 0  # type: ignore[arg-type]
+            metrics["largest_win"] = float(np.max(win_amounts)) if len(win_amounts) > 0 else 0  # type: ignore[arg-type]
+            metrics["largest_loss"] = float(np.max(loss_amounts)) if len(loss_amounts) > 0 else 0  # type: ignore[arg-type]
 
             # Profit factor
-            total_wins = float(np.sum(win_amounts))
-            total_losses = float(np.sum(loss_amounts))
+            total_wins = float(np.sum(win_amounts))  # type: ignore[arg-type]
+            total_losses = float(np.sum(loss_amounts))  # type: ignore[arg-type]
             metrics["profit_factor"] = (
                 total_wins / total_losses if total_losses > 0 else float("inf")
             )
@@ -147,15 +147,15 @@ class PerformanceMetrics:
         equity_curve: pd.DataFrame, initial_equity: float, risk_free_rate: float
     ) -> Dict[str, Any]:
         """Calculate equity curve based metrics."""
-        metrics = {}
+        metrics: Dict[str, Any] = {}  # type: ignore[assignment]
 
         if "equity" not in equity_curve.columns:
             return metrics
 
-        equity = equity_curve["equity"].values
+        equity = np.asarray(equity_curve["equity"].values)
 
         # Returns
-        returns = np.diff(equity) / equity[:-1]
+        returns = np.diff(equity) / equity[:-1]  # type: ignore[arg-type]
         returns = returns[~np.isnan(returns) & ~np.isinf(returns)]
 
         if len(returns) > 0:
@@ -198,7 +198,7 @@ class PerformanceMetrics:
         trades: Union[List[Dict[str, Any]], pd.DataFrame], initial_equity: float
     ) -> Dict[str, Any]:
         """Calculate drawdown metrics from trades."""
-        metrics = {}
+        metrics: Dict[str, Any] = {}  # type: ignore[assignment]
 
         # Handle empty trades
         if trades is None or len(trades) == 0:
@@ -218,8 +218,8 @@ class PerformanceMetrics:
         equity = initial_equity
         equity_values = [initial_equity]
         peak = initial_equity
-        max_drawdown = 0
-        max_drawdown_pct = 0
+        max_drawdown = 0.0
+        max_drawdown_pct = 0.0
         drawdowns = []
 
         # Get pnl values
@@ -271,7 +271,7 @@ class PerformanceMetrics:
         trades: Union[List[Dict[str, Any]], pd.DataFrame],
     ) -> Dict[str, Any]:
         """Calculate winning/losing streak metrics."""
-        metrics = {}
+        metrics: Dict[str, Any] = {}  # type: ignore[assignment]
 
         if trades is None or len(trades) == 0:
             return metrics
@@ -325,7 +325,7 @@ class PerformanceMetrics:
         trades: Union[List[Dict[str, Any]], pd.DataFrame],
     ) -> Dict[str, Any]:
         """Calculate holding period metrics."""
-        metrics = {}
+        metrics: Dict[str, Any] = {}  # type: ignore[assignment]
 
         holding_periods = []
 
@@ -389,7 +389,7 @@ class PerformanceMetrics:
             return pd.DataFrame()
 
         # Build monthly P&L
-        monthly_pnl = {}
+        monthly_pnl: Dict[str, float] = {}
         equity = initial_equity
 
         for trade in trades:
@@ -432,22 +432,22 @@ class PerformanceMetrics:
         if not trades:
             return pd.DataFrame()
 
-        pattern_stats = {}
+        pattern_stats: Dict[str, Any] = {}  # type: ignore[assignment]
 
         for trade in trades:
-            pattern = trade.get("pattern", "Unknown")
+            pattern = str(trade.get("pattern", "Unknown"))
 
             if pattern not in pattern_stats:
                 pattern_stats[pattern] = {
                     "trades": 0,
                     "wins": 0,
                     "losses": 0,
-                    "total_pnl": 0,
+                    "total_pnl": 0.0,
                     "pnl_list": [],
                 }
 
             pattern_stats[pattern]["trades"] += 1
-            pnl = trade.get("pnl", 0)
+            pnl = float(trade.get("pnl", 0))
             pattern_stats[pattern]["total_pnl"] += pnl
             pattern_stats[pattern]["pnl_list"].append(pnl)
 
@@ -459,11 +459,12 @@ class PerformanceMetrics:
         # Calculate metrics for each pattern
         rows = []
         for pattern, stats in pattern_stats.items():
-            win_rate = stats["wins"] / stats["trades"] if stats["trades"] > 0 else 0
-            avg_pnl = stats["total_pnl"] / stats["trades"] if stats["trades"] > 0 else 0
+            win_rate = float(stats["wins"]) / float(stats["trades"]) if stats["trades"] > 0 else 0.0
+            avg_pnl = float(stats["total_pnl"]) / float(stats["trades"]) if stats["trades"] > 0 else 0.0
 
-            wins = [p for p in stats["pnl_list"] if p > 0]
-            losses = [abs(p) for p in stats["pnl_list"] if p < 0]
+            pnl_list: list = stats.get("pnl_list", [])  # type: ignore[assignment]
+            wins = [p for p in pnl_list if p > 0]
+            losses = [abs(p) for p in pnl_list if p < 0]
 
             avg_win = np.mean(wins) if wins else 0
             avg_loss = np.mean(losses) if losses else 0

@@ -5,7 +5,7 @@ Aggregates all analysis layers into a unified report.
 """
 
 import os
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, DefaultDict
 
 import numpy as np
 import pandas as pd
@@ -117,7 +117,7 @@ class ContributionReport:
         # Add synergy data if available
         if self.synergy_results is not None and not self.synergy_results.empty:
             # Calculate average synergy score per pattern
-            synergy_per_pattern = {}
+            synergy_per_pattern: Dict[str, List[float]] = {}
             for _, row in self.synergy_results.iterrows():
                 for pattern in [row["pattern_a"], row["pattern_b"]]:
                     if pattern not in synergy_per_pattern:
@@ -174,7 +174,7 @@ class ContributionReport:
 
         return result
 
-    def get_pattern_roles(self) -> Dict[str, str]:
+    def get_pattern_roles(self) -> Dict[str, str]:  # type: ignore[return-value]
         """
         Classify each pattern into a role:
         - "Primary Signal" — high solo edge, high ablation contribution
@@ -185,7 +185,7 @@ class ContributionReport:
         Returns:
             Dictionary mapping pattern name to role
         """
-        roles = {}
+        roles: Dict[str, str] = {}
 
         if self.ablation_results is None or self.ablation_results.empty:
             return roles
@@ -328,7 +328,7 @@ class ContributionReport:
         roles = self.get_pattern_roles()
         if roles:
             lines.append("## Pattern Roles\n")
-            role_counts = {}
+            role_counts: Dict[str, int] = {}
             for pattern, role in roles.items():
                 role_counts[role] = role_counts.get(role, 0) + 1
 

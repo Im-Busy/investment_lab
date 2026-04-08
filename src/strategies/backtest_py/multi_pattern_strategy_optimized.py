@@ -40,36 +40,36 @@ from src.patterns.basic.msl import MarketStructureLow
 from src.patterns.basic.n_bar_decline import NBarDecline
 from src.patterns.basic.nr7id import NR7ID
 from src.patterns.basic.two_bar_reversal import TwoBarReversal
+from src.patterns.breakout.donchian import DonchianChannelBreakout
+from src.patterns.breakout.gap import GapPattern
+from src.patterns.candlestick.dark_cloud import DarkCloudCover, PiercingLine
+
+# Import candlestick patterns
+from src.patterns.candlestick.doji import Doji
+from src.patterns.candlestick.engulfing import Engulfing
+from src.patterns.candlestick.hammer import Hammer
+from src.patterns.candlestick.harami import Harami
+from src.patterns.classic.ascending_triangle import AscendingTriangle
 from src.patterns.classic.dead_cat_bounce import DeadCatBounce
+from src.patterns.classic.descending_triangle import DescendingTriangle
 from src.patterns.classic.double_bottom import DoubleBottom
 from src.patterns.classic.double_top import DoubleTop
-from src.patterns.classic.trader_vic_2b import TraderVic2B
-from src.patterns.classic.triple_top import TripleTop
-from src.patterns.classic.triple_bottom import TripleBottom
-from src.patterns.classic.ascending_triangle import AscendingTriangle
-from src.patterns.classic.descending_triangle import DescendingTriangle
 from src.patterns.classic.rectangle import Rectangle
+from src.patterns.classic.trader_vic_2b import TraderVic2B
+from src.patterns.classic.triple_bottom import TripleBottom
+from src.patterns.classic.triple_top import TripleTop
 from src.patterns.classic.wedge import Wedge
 from src.patterns.complex.cup_handle import CupAndHandle
 from src.patterns.complex.head_shoulders import HeadAndShoulders
 from src.patterns.complex.parabolic_arc import ParabolicArc
 from src.patterns.complex.spike_ledge import SpikeAndLedge
 from src.patterns.complex.three_hills import ThreeHillsMountain
-from src.patterns.harmonic.abc import ABCPattern
-from src.patterns.harmonic.bollinger import BollingerBands
-from src.patterns.harmonic.donchian import DonchianChannel
-from src.patterns.harmonic.gartley import GartleyPattern
-from src.patterns.harmonic.symmetric_triangle import SymmetricTriangle
 from src.patterns.continuation.flag import Flag
 from src.patterns.continuation.pennant import Pennant
-from src.patterns.breakout.gap import GapPattern
-
-# Import candlestick patterns
-from src.patterns.candlestick.doji import Doji
-from src.patterns.candlestick.harami import Harami
-from src.patterns.candlestick.hammer import Hammer
-from src.patterns.candlestick.engulfing import Engulfing
-from src.patterns.candlestick.dark_cloud import DarkCloudCover, PiercingLine
+from src.patterns.harmonic.abc import ABCPattern
+from src.patterns.harmonic.bollinger import BollingerBands
+from src.patterns.harmonic.gartley import GartleyPattern
+from src.patterns.harmonic.symmetric_triangle import SymmetricTriangle
 
 # Import confluence and regime detection
 from src.strategies.confluence import ConfluenceScorer
@@ -170,6 +170,7 @@ class MultiPatternStrategyOptimized(Strategy):
         self._signal_event_log = None
         if self.enable_signal_log:
             from src.analysis.signal_event_log import SignalEventLog
+
             self._signal_event_log = SignalEventLog()
 
     def _create_dataframe(self) -> pd.DataFrame:
@@ -194,7 +195,14 @@ class MultiPatternStrategyOptimized(Strategy):
 
         # Basic patterns
         patterns.extend(
-            [MarketStructureLow(), MatchingLows(), NR7ID(), NBarDecline(), FloorPivotBreakout(), TwoBarReversal()]
+            [
+                MarketStructureLow(),
+                MatchingLows(),
+                NR7ID(),
+                NBarDecline(),
+                FloorPivotBreakout(),
+                TwoBarReversal(),
+            ]
         )
 
         # Harmonic patterns
@@ -203,8 +211,14 @@ class MultiPatternStrategyOptimized(Strategy):
                 GartleyPattern(),
                 ABCPattern(),
                 SymmetricTriangle(),
-                DonchianChannel(),
                 BollingerBands(),
+            ]
+        )
+
+        # Breakout patterns
+        patterns.extend(
+            [
+                DonchianChannelBreakout(),
             ]
         )
 
@@ -443,7 +457,7 @@ class MultiPatternStrategyOptimized(Strategy):
             signals = self._detect_patterns_sequential(self._df, current_idx, window_start)
 
         # LOG ALL detections (even sub-threshold) for contribution analysis
-        if hasattr(self, '_signal_event_log') and self._signal_event_log is not None:
+        if hasattr(self, "_signal_event_log") and self._signal_event_log is not None:
             self._signal_event_log.record_bar_detections(
                 bar_index=current_idx,
                 timestamp=self.data.index[current_idx],
@@ -529,7 +543,7 @@ class MultiPatternStrategyOptimized(Strategy):
             self.sell(size=position_size_frac, sl=stop_loss)
 
         # Update signal event log with passed threshold info
-        if hasattr(self, '_signal_event_log') and self._signal_event_log is not None:
+        if hasattr(self, "_signal_event_log") and self._signal_event_log is not None:
             self._signal_event_log.update_bar_passed_threshold(
                 bar_index=current_idx,
                 active_patterns=[s["pattern_name"] for s in active_signals],

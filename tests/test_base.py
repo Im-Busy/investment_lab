@@ -9,6 +9,8 @@ Tests the core pattern detection framework including:
 - BasePattern abstract class
 """
 
+from typing import Optional
+
 import numpy as np
 import pandas as pd
 import pytest
@@ -176,7 +178,7 @@ class ConcretePattern(BasePattern):
             name="Concrete Pattern", pattern_type=PatternType.REVERSAL, min_bars_required=10
         )
 
-    def detect(self, df: pd.DataFrame, i: int) -> PatternResult:
+    def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
         """Simple detection for testing."""
         if not self._validate_data(df, i):
             return PatternResult(
@@ -209,9 +211,11 @@ class ConcretePattern(BasePattern):
 
         return PatternResult(detected=False, pattern_name=self.name, pattern_type=self.pattern_type)
 
-    def generate_signal(self, df: pd.DataFrame, i: int):
+    def generate_signal(
+        self, df: pd.DataFrame, i: int, window_start: Optional[int] = None
+    ) -> Optional[TradeSignal]:
         """Generate signal for testing."""
-        result = self.detect(df, i)
+        result = self.detect(df, i, window_start=window_start)
         return result.signal if result.detected else None
 
 

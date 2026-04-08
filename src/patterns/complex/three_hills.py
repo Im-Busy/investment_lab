@@ -216,7 +216,7 @@ class ThreeHillsMountain(BasePattern):
         """Calculate trendline value at given index."""
         return (slope * idx) + intercept
     
-    def detect(self, df: pd.DataFrame, i: int) -> PatternResult:
+    def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
         """
         Detect Three Hills and Mountain pattern at bar index i.
         
@@ -382,7 +382,7 @@ class ThreeDrives(BasePattern):
         self.entry_offset = entry_offset
         self.stop_offset = stop_offset
     
-    def detect(self, df: pd.DataFrame, i: int) -> PatternResult:
+    def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
         """Detect Three Drives pattern - simplified implementation."""
         # Similar to Three Hills but with stricter Fib relationships
         return PatternResult(

@@ -279,8 +279,8 @@ class MatchingLows(BasePattern):
 
     def __init__(
         self,
-        epsilon_atr_multiplier: float = 0.05,
-        min_test_bars: int = 3,
+        epsilon_atr_multiplier: float = 0.20,
+        min_test_bars: int = 2,
         max_test_bars: int = 20,
         entry_offset: float = 0.01,
         stop_offset: float = 0.01,
@@ -290,9 +290,13 @@ class MatchingLows(BasePattern):
         """
         Initialize Matching Lows pattern detector.
 
+        FIXED: Relaxed parameters for daily timeframe compatibility.
+        - epsilon_atr_multiplier: 0.05 -> 0.20 (was too strict, pattern rarely triggered)
+        - min_test_bars: 3 -> 2 (reduced for daily data where finding 3+ tests is rare)
+
         Args:
-            epsilon_atr_multiplier: ATR multiplier for level tolerance
-            min_test_bars: Minimum bars testing support level
+            epsilon_atr_multiplier: ATR multiplier for level tolerance (default 0.20)
+            min_test_bars: Minimum bars testing support level (default 2)
             max_test_bars: Maximum bars to look back for matching lows
             entry_offset: Price offset for entry orders
             stop_offset: Price offset for stop loss
@@ -325,17 +329,17 @@ class MatchingLows(BasePattern):
             - 1 = long signal
         """
         # Extract arrays
-        lows = df["Low"].values.astype(np.float64)
-        highs = df["High"].values.astype(np.float64)
-        closes = df["Close"].values.astype(np.float64)
-        opens = df["Open"].values.astype(np.float64)
+        lows: np.ndarray = np.asarray(df["Low"].values, dtype=np.float64)
+        highs: np.ndarray = np.asarray(df["High"].values, dtype=np.float64)
+        closes: np.ndarray = np.asarray(df["Close"].values, dtype=np.float64)
+        opens: np.ndarray = np.asarray(df["Open"].values, dtype=np.float64)
 
         # Pre-compute ATR
         atr_series = atr(df, period=14)
-        atr_values = atr_series.values.astype(np.float64)
+        atr_values: np.ndarray = np.asarray(atr_series.values, dtype=np.float64)
 
         # Run vectorized detection
-        return detect_matching_lows_signals_numba(
+        result = detect_matching_lows_signals_numba(
             lows,
             highs,
             closes,
@@ -346,6 +350,7 @@ class MatchingLows(BasePattern):
             self.max_test_bars,
             self.require_bullish_breakout,
         )
+        return result  # type: ignore[no-any-return]
 
     def _find_matching_lows(self, arrays: dict, i: int, epsilon: float) -> Optional[dict]:
         """
@@ -478,7 +483,7 @@ class MatchingLows(BasePattern):
             end_index=i,
         )
 
-    def generate_signal(self, df: pd.DataFrame, i: int, match_info: dict) -> Optional[TradeSignal]:
+    def generate_signal(self, df: pd.DataFrame, i: int, match_info: Optional[dict] = None) -> Optional[TradeSignal]:  # type: ignore[override]
         """
         Generate trade signal for Matching Lows pattern.
 
@@ -490,6 +495,7 @@ class MatchingLows(BasePattern):
         Returns:
             TradeSignal if valid entry point, None otherwise
         """
+        assert match_info is not None, "match_info is required"
         arrays = self._extract_arrays(df)
         high_arr = arrays["high"]
         low_arr = arrays["low"]
@@ -595,17 +601,17 @@ class MatchingHighs(BasePattern):
             - -1 = short signal
         """
         # Extract arrays
-        highs = df["High"].values.astype(np.float64)
-        lows = df["Low"].values.astype(np.float64)
-        closes = df["Close"].values.astype(np.float64)
-        opens = df["Open"].values.astype(np.float64)
+        highs: np.ndarray = np.asarray(df["High"].values, dtype=np.float64)
+        lows: np.ndarray = np.asarray(df["Low"].values, dtype=np.float64)
+        closes: np.ndarray = np.asarray(df["Close"].values, dtype=np.float64)
+        opens: np.ndarray = np.asarray(df["Open"].values, dtype=np.float64)
 
         # Pre-compute ATR
         atr_series = atr(df, period=14)
-        atr_values = atr_series.values.astype(np.float64)
+        atr_values: np.ndarray = np.asarray(atr_series.values, dtype=np.float64)
 
         # Run vectorized detection
-        return detect_matching_highs_signals_numba(
+        result = detect_matching_highs_signals_numba(
             highs,
             lows,
             closes,
@@ -616,6 +622,7 @@ class MatchingHighs(BasePattern):
             self.max_test_bars,
             self.require_bearish_breakout,
         )
+        return result  # type: ignore[no-any-return]
 
     def _find_matching_highs(self, arrays: dict, i: int, epsilon: float) -> Optional[dict]:
         """Find bars with matching highs within epsilon tolerance."""
@@ -722,8 +729,9 @@ class MatchingHighs(BasePattern):
             end_index=i,
         )
 
-    def generate_signal(self, df: pd.DataFrame, i: int, match_info: dict) -> Optional[TradeSignal]:
+    def generate_signal(self, df: pd.DataFrame, i: int, match_info: Optional[dict] = None) -> Optional[TradeSignal]:  # type: ignore[override]
         """Generate short trade signal for Matching Highs pattern."""
+        assert match_info is not None, "match_info is required"
         arrays = self._extract_arrays(df)
         high_arr = arrays["high"]
         low_arr = arrays["low"]

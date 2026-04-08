@@ -5,9 +5,7 @@ Generates candlestick charts with pattern markers and indicators.
 """
 
 import pandas as pd
-import numpy as np
 from typing import List, Dict, Any, Optional, Tuple
-from pathlib import Path
 from dataclasses import dataclass
 
 try:
@@ -205,19 +203,22 @@ class ChartGenerator:
         exit_markers = pd.Series(index=df.index, dtype=float)
         
         for trade in trades:
-            entry_time = pd.to_datetime(trade.get('entry_time'))
-            exit_time = pd.to_datetime(trade.get('exit_time')) if trade.get('exit_time') else None
+            entry_ts = trade.get('entry_time')
+            if entry_ts is None:
+                continue
+            entry_time = pd.to_datetime(entry_ts)
+            exit_ts = trade.get('exit_time')
+            exit_time = pd.to_datetime(exit_ts) if exit_ts is not None else None
             entry_price = trade.get('entry_price')
             exit_price = trade.get('exit_price')
-            direction = trade.get('direction', 'LONG')
             
             # Entry marker
             if entry_time in df.index:
-                entry_markers[entry_time] = entry_price
+                entry_markers[entry_time] = entry_price  # type: ignore[index]
             
             # Exit marker
-            if exit_time and exit_price and exit_time in df.index:
-                exit_markers[exit_time] = exit_price
+            if exit_time is not None and exit_price and exit_time in df.index:
+                exit_markers[exit_time] = exit_price  # type: ignore[index]
         
         # Create addplots
         addplots = []
@@ -303,11 +304,11 @@ class ChartGenerator:
         else:
             equity = equity_curve
         
-        ax.plot(equity.index, equity.values, label='Strategy', linewidth=2)
+        ax.plot(equity.index, equity.values, label='Strategy', linewidth=2)  # type: ignore[arg-type]
         
         # Plot benchmark if provided
         if benchmark is not None:
-            ax.plot(benchmark.index, benchmark.values, label='Benchmark', 
+            ax.plot(benchmark.index, benchmark.values, label='Benchmark',  # type: ignore[arg-type]
                    linewidth=1.5, alpha=0.7, linestyle='--')
         
         ax.set_title(title)
@@ -361,9 +362,9 @@ class ChartGenerator:
         drawdown = (equity - running_max) / running_max * 100
         
         # Plot drawdown
-        ax.fill_between(drawdown.index, drawdown.values, 0, 
+        ax.fill_between(drawdown.index, drawdown.values, 0,  # type: ignore[arg-type]
                        color='red', alpha=0.3, label='Drawdown')
-        ax.plot(drawdown.index, drawdown.values, color='red', linewidth=1)
+        ax.plot(drawdown.index, drawdown.values, color='red', linewidth=1)  # type: ignore[arg-type]
         
         ax.set_title(title)
         ax.set_xlabel('Date')
@@ -390,11 +391,14 @@ class ChartGenerator:
         markers = pd.Series(index=df.index, dtype=float)
         
         for signal in signals:
-            timestamp = pd.to_datetime(signal.get('timestamp'))
+            ts_val = signal.get('timestamp')
+            if ts_val is None:
+                continue
+            timestamp = pd.to_datetime(ts_val)
             entry_price = signal.get('entry_price')
             
             if timestamp in df.index and entry_price is not None:
-                markers[timestamp] = entry_price
+                markers[timestamp] = entry_price  # type: ignore[index]
         
         return markers
     
@@ -407,11 +411,14 @@ class ChartGenerator:
         markers = pd.Series(index=df.index, dtype=float)
         
         for signal in signals:
-            timestamp = pd.to_datetime(signal.get('timestamp'))
+            ts_val = signal.get('timestamp')
+            if ts_val is None:
+                continue
+            timestamp = pd.to_datetime(ts_val)
             stop_loss = signal.get('stop_loss')
             
             if timestamp in df.index and stop_loss is not None:
-                markers[timestamp] = stop_loss
+                markers[timestamp] = stop_loss  # type: ignore[index]
         
         return markers
     
@@ -426,15 +433,18 @@ class ChartGenerator:
         tp3 = pd.Series(index=df.index, dtype=float)
         
         for signal in signals:
-            timestamp = pd.to_datetime(signal.get('timestamp'))
+            ts_val = signal.get('timestamp')
+            if ts_val is None:
+                continue
+            timestamp = pd.to_datetime(ts_val)
             
             if timestamp in df.index:
                 if signal.get('take_profit_1'):
-                    tp1[timestamp] = signal['take_profit_1']
+                    tp1[timestamp] = signal['take_profit_1']  # type: ignore[index]
                 if signal.get('take_profit_2'):
-                    tp2[timestamp] = signal['take_profit_2']
+                    tp2[timestamp] = signal['take_profit_2']  # type: ignore[index]
                 if signal.get('take_profit_3'):
-                    tp3[timestamp] = signal['take_profit_3']
+                    tp3[timestamp] = signal['take_profit_3']  # type: ignore[index]
         
         return {
             'tp1': tp1,
@@ -450,7 +460,7 @@ class ChartGenerator:
     ) -> None:
         """Add legend with pattern counts."""
         # Count patterns by category
-        pattern_counts = {}
+        pattern_counts: Dict[str, int] = {}  # noqa: F841
         for signal in signals:
             pattern = signal.get('pattern_name', 'Unknown')
             pattern_counts[pattern] = pattern_counts.get(pattern, 0) + 1

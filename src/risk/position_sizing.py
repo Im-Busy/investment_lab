@@ -9,7 +9,7 @@ ATR-based sizing, and volatility-adjusted position sizing.
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 
 class SizingMethod(Enum):
@@ -440,8 +440,8 @@ def calculate_stop_loss(
 def calculate_take_profits(
     entry_price: float,
     stop_price: float,
-    risk_reward_ratios: list = None,
-    fibonacci_levels: list = None,
+    risk_reward_ratios: Optional[List[float]] = None,
+    fibonacci_levels: Optional[List[float]] = None,
 ) -> Dict[str, float]:
     """
     Calculate take profit levels.
@@ -455,13 +455,12 @@ def calculate_take_profits(
     Returns:
         Dictionary with take profit levels
     """
-    if risk_reward_ratios is None:
-        risk_reward_ratios = [1.0, 1.5, 2.0]
+    ratios: List[float] = risk_reward_ratios if risk_reward_ratios is not None else [1.0, 1.5, 2.0]
 
     risk = entry_price - stop_price
 
-    take_profits = {}
-    for i, rr in enumerate(risk_reward_ratios, 1):
+    take_profits: Dict[str, float] = {}
+    for i, rr in enumerate(ratios, 1):
         take_profits[f"tp{i}"] = entry_price + (risk * rr)
 
     if fibonacci_levels:

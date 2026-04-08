@@ -264,10 +264,11 @@ class SMCReversalStrategy:
         self._current_ifvgs = []
 
         # Ensure UTC timezone
+        assert isinstance(df.index, pd.DatetimeIndex)
         if df.index.tz is None:
-            df = df.tz_localize("UTC")
+            df.index = df.index.tz_localize("UTC")
         elif str(df.index.tz) != "UTC":
-            df = df.tz_convert("UTC")
+            df.index = df.index.tz_convert("UTC")
 
         # Get unique dates
         dates = df.index.normalize().unique()
@@ -314,24 +315,25 @@ class SMCReversalStrategy:
 
         # Process each bar
         for i, (idx, row) in enumerate(day_df.iterrows()):
-            bar_time = idx.time()
+            bar_ts: pd.Timestamp = pd.Timestamp(idx)  # type: ignore[assignment]
+            bar_time = bar_ts.time()
 
             # Check for daily reset
             if self._is_session_start(bar_time):
-                self._handle_session_start(idx)
+                self._handle_session_start(bar_ts)
 
             # State machine processing
-            self._process_bar(df, idx, i)
+            self._process_bar(df, bar_ts, i)
 
     def _is_session_start(self, bar_time: time) -> bool:
         """Check if bar is at session start."""
         start_time = pd.to_datetime(self.config.session_start).time()
-        return bar_time.hour == start_time.hour and bar_time.minute == start_time.minute
+        return (bar_time.hour, bar_time.minute) == (start_time.hour, start_time.minute)
 
     def _is_session_end(self, bar_time: time) -> bool:
         """Check if bar is at session end."""
         end_time = pd.to_datetime(self.config.session_end).time()
-        return bar_time.hour == end_time.hour and bar_time.minute == end_time.minute
+        return (bar_time.hour, bar_time.minute) == (end_time.hour, end_time.minute)
 
     def _handle_session_start(self, timestamp: pd.Timestamp) -> None:
         """Handle session start - reset state."""
@@ -348,7 +350,6 @@ class SMCReversalStrategy:
             return
 
         bar_time = idx.time()
-        session_end_time = pd.to_datetime(self.config.session_end).time()
 
         # State machine
         if self.state.state == StrategyState.TRACKING_ASIA:
@@ -377,10 +378,6 @@ class SMCReversalStrategy:
 
     def _complete_asia_session(self, df: pd.DataFrame, idx: pd.Timestamp) -> None:
         """Complete Asian session tracking."""
-        # Get Asia session data
-        session_start = pd.to_datetime(self.config.session_start).time()
-        session_end = pd.to_datetime(self.config.session_end).time()
-
         day_start = idx.normalize()
         day_df = df.loc[day_start:idx]
 
@@ -400,6 +397,7 @@ class SMCReversalStrategy:
             logger.warning(f"Could not detect Asian range at {idx}")
             return
 
+        assert self.state is not None
         self.state.asia_range = asia_range
         self.state.state = StrategyState.ASIA_COMPLETE
 
@@ -522,11 +520,11 @@ class SMCReversalStrategy:
         """Update IFVG detection."""
         # Detect new IFVGs periodically
         if global_idx % 10 == 0:  # Every 10 bars
-            current_atr = self._get_atr(global_idx)
-
             # Detect IFVGs from recent data
             lookback = min(100, global_idx)
             recent_df = df.iloc[global_idx - lookback : global_idx + 1]
+            if self._atr_series is None:
+                return
             recent_atr = self._atr_series.iloc[global_idx - lookback : global_idx + 1]
 
             new_ifvgs = detect_ifvg(recent_df, recent_atr, atr_mult=self.config.ifvg_atr_mult)
@@ -601,18 +599,25 @@ class SMCReversalStrategy:
             return None
 
         current_atr = self._get_atr(global_idx)
-        current_price = df.iloc[global_idx]["Close"]
         ifvg = ifvg_proximity.nearest_ifvg
+        if ifvg is None:
+            return None
+
+        asia_range = self.state.asia_range
+        if asia_range is None:
+            return None
+
+        sweep_info = self.state.sweep_info
 
         # Determine entry and stop
-        if self.state.sweep_info.direction == "bullish":
-            direction = "long"
-            entry_price = ifvg.low  # Enter at IFVG low edge
-            stop_price = self.state.asia_range.low - (self.config.atr_buffer_mult * current_atr)
+        if sweep_info.direction == "bullish":
+            direction: Literal["long", "short"] = "long"
+            entry_price = ifvg.low
+            stop_price = asia_range.low - (self.config.atr_buffer_mult * current_atr)
         else:
             direction = "short"
-            entry_price = ifvg.high  # Enter at IFVG high edge
-            stop_price = self.state.asia_range.high + (self.config.atr_buffer_mult * current_atr)
+            entry_price = ifvg.high
+            stop_price = asia_range.high + (self.config.atr_buffer_mult * current_atr)
 
         # Calculate risk
         risk_distance = abs(entry_price - stop_price)
@@ -647,9 +652,9 @@ class SMCReversalStrategy:
             target_final=target_final,
             position_size=position_size,
             risk_amount=risk_amount,
-            asia_high=self.state.asia_range.high,
-            asia_low=self.state.asia_range.low,
-            sweep_price=self.state.sweep_info.sweep_price,
+            asia_high=asia_range.high,
+            asia_low=asia_range.low,
+            sweep_price=sweep_info.sweep_price or 0.0,
             ifvg_zone=(ifvg.low, ifvg.high),
             confidence=confidence,
             metadata={

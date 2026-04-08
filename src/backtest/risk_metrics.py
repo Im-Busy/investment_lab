@@ -71,7 +71,7 @@ class RiskMetrics:
         mean_return = np.mean(returns)
         std_return = np.std(returns, ddof=1)
 
-        from scipy import stats
+        from scipy import stats  # noqa: F811
 
         for conf in confidence_levels:
             var_level = int((1 - conf) * 100)
@@ -188,8 +188,8 @@ class RiskMetrics:
 
             if len(wins) > 0 and len(losses) > 0:
                 win_rate = len(wins) / len(trades)
-                avg_win = float(np.mean(wins))
-                avg_loss = float(np.mean(losses))
+                avg_win = float(np.mean(wins))  # type: ignore[arg-type]
+                avg_loss = float(np.mean(losses))  # type: ignore[arg-type]
 
                 if avg_loss > 0:
                     # Kelly = W - (1-W) / (Avg Win / Avg Loss)
@@ -240,7 +240,7 @@ class RiskMetrics:
         metrics["kurtosis"] = returns.kurtosis()
 
         # Excess kurtosis (kurtosis - 3)
-        metrics["excess_kurtosis"] = metrics["kurtosis"] - 3
+        metrics["excess_kurtosis"] = metrics["kurtosis"] - 3  # type: ignore[operator]
 
         # Tail ratio (95th percentile / 5th percentile)
         percentile_95 = np.percentile(returns, 95)

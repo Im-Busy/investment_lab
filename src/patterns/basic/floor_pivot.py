@@ -185,12 +185,13 @@ class FloorPivotBreakout(BasePattern):
             - -1 = short breakout (close < S1)
         """
         # Extract arrays
-        highs = df["High"].values.astype(np.float64)
-        lows = df["Low"].values.astype(np.float64)
-        closes = df["Close"].values.astype(np.float64)
+        highs: np.ndarray = np.asarray(df["High"].values, dtype=np.float64)
+        lows: np.ndarray = np.asarray(df["Low"].values, dtype=np.float64)
+        closes: np.ndarray = np.asarray(df["Close"].values, dtype=np.float64)
 
         # Run vectorized detection
-        return detect_floor_pivot_signals_numba(highs, lows, closes)
+        result: np.ndarray = detect_floor_pivot_signals_numba(highs, lows, closes)
+        return result
 
     def _calculate_pivot_levels(self, df: pd.DataFrame, i: int) -> Optional[dict]:
         """
@@ -221,7 +222,8 @@ class FloorPivotBreakout(BasePattern):
             return False
 
         current_close = float(arrays["close"][i])
-        return current_close > pivots["R1"]
+        r1 = float(pivots["R1"])
+        return bool(current_close > r1)
 
     def _check_short_breakout(self, arrays: dict, i: int, pivots: dict) -> bool:
         """
@@ -239,7 +241,8 @@ class FloorPivotBreakout(BasePattern):
             return False
 
         current_close = float(arrays["close"][i])
-        return current_close < pivots["S1"]
+        s1 = float(pivots["S1"])
+        return bool(current_close < s1)
 
     def _check_trend_alignment(self, arrays: dict, i: int, pivots: dict, direction: str) -> bool:
         """
@@ -262,10 +265,10 @@ class FloorPivotBreakout(BasePattern):
 
         if direction == "long":
             # Prefer long if previous close was above PP
-            return prev_close > pp
+            return bool(prev_close > float(pp))
         else:
             # Prefer short if previous close was below PP
-            return prev_close < pp
+            return bool(prev_close < float(pp))
 
     def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
         """

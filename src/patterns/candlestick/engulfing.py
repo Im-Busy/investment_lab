@@ -102,15 +102,15 @@ class Engulfing(BasePattern):
             return 'sideways'
 
         start_idx = i - self.trend_lookback - 1
-        closes = df['Close'].iloc[start_idx:i].values
+        closes = np.asarray(df['Close'].iloc[start_idx:i].values, dtype=np.float64)
 
         if len(closes) < 2:
             return 'sideways'
 
         x = np.arange(len(closes))
-        slope = np.polyfit(x, closes, 1)[0]
+        slope = float(np.polyfit(x, closes, 1)[0])
 
-        avg_price = np.mean(closes)
+        avg_price = float(np.mean(closes))
         normalized_slope = slope / avg_price if avg_price > 0 else 0
 
         if normalized_slope > 0.001:
@@ -193,7 +193,7 @@ class Engulfing(BasePattern):
             return False
 
         current_volume = float(df['Volume'].iloc[i])
-        return current_volume > avg_volume * threshold
+        return bool(current_volume > avg_volume * threshold)
 
     def detect(
         self,
@@ -242,6 +242,12 @@ class Engulfing(BasePattern):
         # Check confirmation if required
         confirmed = True
         if self.require_confirmation:
+            if direction is None:
+                return PatternResult(
+                    detected=False,
+                    pattern_name=self.name,
+                    pattern_type=self.pattern_type,
+                )
             confirmed = self._check_confirmation(df, i, direction, candle2)
 
         # Calculate confidence
@@ -271,16 +277,9 @@ class Engulfing(BasePattern):
         if not confirmed:
             return PatternResult(
                 detected=True,
-                pattern_name=engulfing_type,
+                pattern_name=engulfing_type or self.name,
                 pattern_type=self.pattern_type,
                 signal=None,
-                metadata={
-                    'engulfing_type': engulfing_type,
-                    'trend': trend,
-                    'confirmed': False,
-                    'requires_confirmation': self.require_confirmation,
-                    'engulf_ratio': candle2['body'] / candle1['body'] if candle1['body'] > 0 else 0,
-                },
             )
 
         # Calculate entry, stop, and target
@@ -301,6 +300,7 @@ class Engulfing(BasePattern):
             take_profit_2 = entry_price - atr * 2.5
             take_profit_3 = entry_price - atr * 4.0
 
+        assert direction is not None, "direction must be set"
         signal = TradeSignal(
             direction=direction,
             entry_price=entry_price,
@@ -309,28 +309,16 @@ class Engulfing(BasePattern):
             take_profit_2=take_profit_2,
             take_profit_3=take_profit_3,
             confidence=confidence,
-            pattern_name=engulfing_type,
-            metadata={
-                'engulfing_type': engulfing_type,
-                'trend': trend,
-                'confirmed': True,
-                'volume_spike': self._check_volume_spike(df, i),
-                'engulf_ratio': candle2['body'] / candle1['body'] if candle1['body'] > 0 else 0,
-            },
+            pattern_name=engulfing_type or self.name,
         )
 
         return PatternResult(
             detected=True,
-            pattern_name=engulfing_type,
+            pattern_name=engulfing_type or self.name,
             pattern_type=self.pattern_type,
             signal=signal,
             start_index=i - 1,
             end_index=i,
-            metadata={
-                'engulfing_type': engulfing_type,
-                'trend': trend,
-                'confirmed': True,
-            },
         )
 
     def generate_signal(self, df: pd.DataFrame, i: int) -> Optional[TradeSignal]:
@@ -369,6 +357,6 @@ class Engulfing(BasePattern):
                     )
                 tr_list.append(tr)
 
-            return np.mean(tr_list)
+            return float(np.mean(tr_list))
         except Exception:
             return None

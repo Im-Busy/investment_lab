@@ -107,15 +107,15 @@ class DarkCloudCover(BasePattern):
             return 'sideways'
 
         start_idx = i - self.trend_lookback - 1
-        closes = df['Close'].iloc[start_idx:i].values
+        closes = np.asarray(df['Close'].iloc[start_idx:i].values, dtype=np.float64)
 
         if len(closes) < 2:
             return 'sideways'
 
         x = np.arange(len(closes))
-        slope = np.polyfit(x, closes, 1)[0]
+        slope = float(np.polyfit(x, closes, 1)[0])
 
-        avg_price = np.mean(closes)
+        avg_price = float(np.mean(closes))
         normalized_slope = slope / avg_price if avg_price > 0 else 0
 
         if normalized_slope > 0.001:
@@ -193,7 +193,7 @@ class DarkCloudCover(BasePattern):
             return False
 
         current_volume = float(df['Volume'].iloc[i])
-        return current_volume > avg_volume * threshold
+        return bool(current_volume > avg_volume * threshold)
 
     def detect(
         self,
@@ -242,6 +242,12 @@ class DarkCloudCover(BasePattern):
         # Check confirmation
         confirmed = True
         if self.require_confirmation:
+            if direction is None:
+                return PatternResult(
+                    detected=False,
+                    pattern_name=self.name,
+                    pattern_type=self.pattern_type,
+                )
             confirmed = self._check_confirmation(df, i, direction, candle2)
 
         # Calculate confidence
@@ -263,16 +269,9 @@ class DarkCloudCover(BasePattern):
         if not confirmed:
             return PatternResult(
                 detected=True,
-                pattern_name=pattern_type,
+                pattern_name=pattern_type or self.name,
                 pattern_type=self.pattern_type,
                 signal=None,
-                metadata={
-                    'pattern_type': pattern_type,
-                    'trend': trend,
-                    'confirmed': False,
-                    'requires_confirmation': self.require_confirmation,
-                    'penetration': penetration,
-                },
             )
 
         # Calculate entry, stop, and target
@@ -287,6 +286,7 @@ class DarkCloudCover(BasePattern):
         take_profit_2 = entry_price - atr * 2.5
         take_profit_3 = entry_price - atr * 4.0
 
+        assert direction is not None, "direction must be set"
         signal = TradeSignal(
             direction=direction,
             entry_price=entry_price,
@@ -295,28 +295,16 @@ class DarkCloudCover(BasePattern):
             take_profit_2=take_profit_2,
             take_profit_3=take_profit_3,
             confidence=confidence,
-            pattern_name=pattern_type,
-            metadata={
-                'pattern_type': pattern_type,
-                'trend': trend,
-                'confirmed': True,
-                'volume_spike': self._check_volume_spike(df, i),
-                'penetration': penetration,
-            },
+            pattern_name=pattern_type or self.name,
         )
 
         return PatternResult(
             detected=True,
-            pattern_name=pattern_type,
+            pattern_name=pattern_type or self.name,
             pattern_type=self.pattern_type,
             signal=signal,
             start_index=i - 1,
             end_index=i,
-            metadata={
-                'pattern_type': pattern_type,
-                'trend': trend,
-                'confirmed': True,
-            },
         )
 
     def generate_signal(self, df: pd.DataFrame, i: int) -> Optional[TradeSignal]:
@@ -355,7 +343,7 @@ class DarkCloudCover(BasePattern):
                     )
                 tr_list.append(tr)
 
-            return np.mean(tr_list)
+            return float(np.mean(tr_list))
         except Exception:
             return None
 
@@ -436,15 +424,15 @@ class PiercingLine(BasePattern):
             return 'sideways'
 
         start_idx = i - self.trend_lookback - 1
-        closes = df['Close'].iloc[start_idx:i].values
+        closes = np.asarray(df['Close'].iloc[start_idx:i].values, dtype=np.float64)
 
         if len(closes) < 2:
             return 'sideways'
 
         x = np.arange(len(closes))
-        slope = np.polyfit(x, closes, 1)[0]
+        slope = float(np.polyfit(x, closes, 1)[0])
 
-        avg_price = np.mean(closes)
+        avg_price = float(np.mean(closes))
         normalized_slope = slope / avg_price if avg_price > 0 else 0
 
         if normalized_slope > 0.001:
@@ -522,7 +510,7 @@ class PiercingLine(BasePattern):
             return False
 
         current_volume = float(df['Volume'].iloc[i])
-        return current_volume > avg_volume * threshold
+        return bool(current_volume > avg_volume * threshold)
 
     def detect(
         self,
@@ -571,6 +559,12 @@ class PiercingLine(BasePattern):
         # Check confirmation
         confirmed = True
         if self.require_confirmation:
+            if direction is None:
+                return PatternResult(
+                    detected=False,
+                    pattern_name=self.name,
+                    pattern_type=self.pattern_type,
+                )
             confirmed = self._check_confirmation(df, i, direction, candle2)
 
         # Calculate confidence
@@ -592,16 +586,10 @@ class PiercingLine(BasePattern):
         if not confirmed:
             return PatternResult(
                 detected=True,
-                pattern_name=pattern_type,
+                pattern_name=pattern_type or self.name,
                 pattern_type=self.pattern_type,
                 signal=None,
-                metadata={
-                    'pattern_type': pattern_type,
-                    'trend': trend,
-                    'confirmed': False,
-                    'requires_confirmation': self.require_confirmation,
-                    'penetration': penetration,
-                },
+                pivot_points={},
             )
 
         # Calculate entry, stop, and target
@@ -617,14 +605,14 @@ class PiercingLine(BasePattern):
         take_profit_3 = entry_price + atr * 4.0
 
         signal = TradeSignal(
-            direction=direction,
+            direction=direction if direction is not None else SignalDirection.LONG,
             entry_price=entry_price,
             stop_loss=stop_loss,
             take_profit_1=take_profit_1,
             take_profit_2=take_profit_2,
             take_profit_3=take_profit_3,
             confidence=confidence,
-            pattern_name=pattern_type,
+            pattern_name=pattern_type or self.name,
             metadata={
                 'pattern_type': pattern_type,
                 'trend': trend,
@@ -636,16 +624,12 @@ class PiercingLine(BasePattern):
 
         return PatternResult(
             detected=True,
-            pattern_name=pattern_type,
+            pattern_name=pattern_type or self.name,
             pattern_type=self.pattern_type,
             signal=signal,
             start_index=i - 1,
             end_index=i,
-            metadata={
-                'pattern_type': pattern_type,
-                'trend': trend,
-                'confirmed': True,
-            },
+            pivot_points={},
         )
 
     def generate_signal(self, df: pd.DataFrame, i: int) -> Optional[TradeSignal]:
@@ -684,6 +668,6 @@ class PiercingLine(BasePattern):
                     )
                 tr_list.append(tr)
 
-            return np.mean(tr_list)
+            return float(np.mean(tr_list))
         except Exception:
             return None

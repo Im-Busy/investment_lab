@@ -46,7 +46,7 @@ class DoubleBottom(BasePattern):
         lookback: int = 5,
         trough_tolerance: float = 0.05,
         min_pattern_bars: int = 20,
-        max_pattern_bars: int = 60,
+        max_pattern_bars: int = 120,
         entry_offset: float = 0.01,
         stop_offset: float = 0.01,
         volume_filter: bool = False,
@@ -54,11 +54,14 @@ class DoubleBottom(BasePattern):
         """
         Initialize Double Bottom pattern detector.
 
+        FIXED: Increased max_pattern_bars from 60 to 120 for daily timeframe.
+        Double bottoms can take 3-6 months to form on daily data.
+
         Args:
             lookback: Lookback period for pivot detection
             trough_tolerance: Maximum trough depth difference (default 5%)
             min_pattern_bars: Minimum bars between troughs
-            max_pattern_bars: Maximum bars between troughs
+            max_pattern_bars: Maximum bars between troughs (default 120)
             entry_offset: Price offset for entry orders
             stop_offset: Price offset for stop loss
             volume_filter: Require volume dissipation

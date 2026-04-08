@@ -6,16 +6,16 @@ Validation functions for data, signals, and pattern parameters.
 
 import pandas as pd
 import numpy as np
-from typing import Dict, Any, List, Optional, Union
+from typing import Dict, Any, List, Optional, Union, Tuple
 from dataclasses import fields
 
 
 def validate_dataframe(
     df: pd.DataFrame,
-    required_columns: List[str] = None,
+    required_columns: Optional[List[str]] = None,
     min_rows: int = 50,
     require_datetime_index: bool = True
-) -> tuple:
+) -> Tuple[bool, List[str]]:
     """
     Validate a DataFrame for pattern detection.
     

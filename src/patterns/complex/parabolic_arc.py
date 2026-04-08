@@ -259,7 +259,7 @@ class ParabolicArc(BasePattern):
         
         return current_close < trendline_value
     
-    def detect(self, df: pd.DataFrame, i: int) -> PatternResult:
+    def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
         """
         Detect Parabolic Arc pattern at bar index i.
         
@@ -432,7 +432,7 @@ class ParabolicBase(BasePattern):
         self.volatility_threshold = volatility_threshold
         self.entry_offset = entry_offset
     
-    def detect(self, df: pd.DataFrame, i: int) -> PatternResult:
+    def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
         """Detect Parabolic Base pattern."""
         if not self._validate_data(df, i):
             return PatternResult(

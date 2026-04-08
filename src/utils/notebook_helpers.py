@@ -188,7 +188,7 @@ def merge_configs(*configs: Dict[str, Any]) -> Dict[str, Any]:
     Returns:
         Merged configuration dictionary
     """
-    result = {}
+    result: Dict[str, Any] = {}
     for config in configs:
         result = deep_merge(result, config)
     return result
@@ -298,14 +298,17 @@ def setup_project_root() -> Path:
         Path object pointing to project root
     """
     # Try different possible project root locations
-    possible_roots = [
+    candidates: list[Path] = [
         Path("..").resolve(),
         Path(".").resolve(),
-        Path(__file__).parent.parent.parent if "__file__" in dir() else None,
     ]
+    try:
+        candidates.append(Path(__file__).parent.parent.parent)
+    except NameError:
+        pass
 
-    for root in possible_roots:
-        if root and (root / "src").exists():
+    for root in candidates:
+        if (root / "src").exists():
             if str(root) not in sys.path:
                 sys.path.insert(0, str(root))
             return root
@@ -329,8 +332,8 @@ def get_data_path(config: Dict[str, Any], project_root: Path) -> Path:
         Full path to data file
     """
     data_config = config.get("data", {})
-    directory = data_config.get("directory", "data/raw")
-    file = data_config.get("file", "SPY_daily.csv")
+    directory: str = data_config.get("directory", "data/raw")
+    file: str = data_config.get("file", "SPY_daily.csv")
 
     return project_root / directory / file
 
@@ -352,10 +355,10 @@ def get_output_path(
         Full output path
     """
     output_config = config.get("output", {})
-    directory = output_config.get("directory", "reports")
-    subdirectory = output_config.get("subdirectory")
+    directory: str = output_config.get("directory", "reports")
+    subdirectory: Optional[str] = output_config.get("subdirectory")
 
-    path = project_root / directory
+    path: Path = project_root / directory
     if subdirectory:
         path = path / subdirectory
 
@@ -1030,7 +1033,8 @@ def load_config(filepath: Union[str, Path]) -> Dict[str, Any]:
         Configuration dictionary
     """
     with open(filepath, "r") as f:
-        return json.load(f)
+        result: Dict[str, Any] = json.load(f)
+        return result
 
 
 def create_report_header(title: str, config: Optional[Dict[str, Any]] = None) -> str:

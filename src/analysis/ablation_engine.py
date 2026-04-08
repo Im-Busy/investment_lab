@@ -121,14 +121,13 @@ class AblationEngine:
         # Run backtest
         start_time = time.time()
         runner = BacktestPyRunner(
-            strategy_class=self.strategy_class,
             data=self.data,
             cash=self.cash,
             commission=self.commission,
             exclusive_orders=True,
         )
 
-        results = runner.run(**params)
+        results = runner.run(strategy_class=self.strategy_class, **params)
         duration = time.time() - start_time
 
         # Extract metrics

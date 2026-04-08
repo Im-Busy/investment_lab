@@ -305,7 +305,7 @@ class GartleyPattern(BasePattern):
         
         return True
     
-    def detect(self, df: pd.DataFrame, i: int) -> PatternResult:
+    def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
         """
         Detect Gartley pattern at bar index i.
         
@@ -487,16 +487,21 @@ class ButterflyPattern(BasePattern):
     """
     Butterfly Pattern Detector
     
-    Similar to Gartley but with different Fibonacci ratios:
+    Similar to Gartley but with different Fibonacci ratios.
+    The Butterfly is an extension pattern where D point extends beyond X.
+    
+    Fibonacci ratios:
     - AB = 0.786 XA
     - BC = 0.382 to 0.886 AB
-    - CD = 1.618 to 2.24 BC
-    - XD = 1.27 to 1.618 XA
+    - CD = 1.618 to 2.618 BC
+    - XD = 1.27 to 1.618 XA (D extends beyond X)
     """
     
     AB_RETRACEMENT_TARGET = 0.786
+    BC_RETRACEMENT_MIN = 0.382
+    BC_RETRACEMENT_MAX = 0.886
     CD_EXTENSION_MIN = 1.618
-    CD_EXTENSION_MAX = 2.24
+    CD_EXTENSION_MAX = 2.618
     XD_RETRACEMENT_MIN = 1.27
     XD_RETRACEMENT_MAX = 1.618
     
@@ -505,7 +510,9 @@ class ButterflyPattern(BasePattern):
         lookback: int = 5,
         entry_offset: float = 0.01,
         stop_offset: float = 0.01,
-        fib_tolerance: float = 0.05
+        fib_tolerance: float = 0.05,
+        require_confirmation: bool = True,
+        volume_filter: bool = False
     ):
         super().__init__(
             name="Butterfly Pattern",
@@ -516,19 +523,232 @@ class ButterflyPattern(BasePattern):
         self.entry_offset = entry_offset
         self.stop_offset = stop_offset
         self.fib_tolerance = fib_tolerance
+        self.require_confirmation = require_confirmation
+        self.volume_filter = volume_filter
     
-    def detect(self, df: pd.DataFrame, i: int) -> PatternResult:
-        """Detect Butterfly pattern - simplified implementation."""
-        # Similar to Gartley but with different Fib ratios
-        # Implementation would follow same structure with modified ratios
+    def _find_pivots(self, df: pd.DataFrame, i: int) -> Optional[Dict]:
+        """Find potential XABCD pivots for Butterfly pattern."""
+        if i < self.lookback * 5:
+            return None
+        
+        swing_highs = find_swing_highs(df, self.lookback)
+        swing_lows = find_swing_lows(df, self.lookback)
+        
+        highs = []
+        lows = []
+        
+        for j in range(i - self.lookback, i + 1):
+            if pd.notna(swing_highs.iloc[j]):
+                highs.append((j, self._safe_float(swing_highs.iloc[j])))
+            if pd.notna(swing_lows.iloc[j]):
+                lows.append((j, self._safe_float(swing_lows.iloc[j])))
+        
+        if len(highs) < 2 or len(lows) < 2:
+            return None
+        
+        # Try bullish Butterfly (X=Low, A=High, B=Low, C=High, D=Low where D < X)
+        bullish_pivots = self._identify_bullish_pivots(highs, lows, i)
+        
+        # Try bearish Butterfly (X=High, A=Low, B=High, C=Low, D=High where D > X)
+        bearish_pivots = self._identify_bearish_pivots(highs, lows, i)
+        
+        if bullish_pivots:
+            return {
+                'direction': 'bullish',
+                'X': bullish_pivots[0], 'A': bullish_pivots[1],
+                'B': bullish_pivots[2], 'C': bullish_pivots[3],
+                'D': bullish_pivots[4]
+            }
+        elif bearish_pivots:
+            return {
+                'direction': 'bearish',
+                'X': bearish_pivots[0], 'A': bearish_pivots[1],
+                'B': bearish_pivots[2], 'C': bearish_pivots[3],
+                'D': bearish_pivots[4]
+            }
+        
+        return None
+    
+    def _identify_bullish_pivots(self, highs, lows, current_idx):
+        """Identify bullish Butterfly pivots: X=Low, A=High, B=Low, C=High, D=Low where D < X"""
+        highs = sorted(highs, key=lambda x: x[0])
+        lows = sorted(lows, key=lambda x: x[0])
+        
+        if len(lows) < 3 or len(highs) < 2:
+            return None
+        
+        D = lows[-1]
+        C_candidates = [(idx, price) for idx, price in highs if idx < D[0]]
+        if not C_candidates:
+            return None
+        C = C_candidates[-1]
+        
+        B_candidates = [(idx, price) for idx, price in lows if idx < C[0]]
+        if not B_candidates:
+            return None
+        B = B_candidates[-1]
+        
+        A_candidates = [(idx, price) for idx, price in highs if idx < B[0]]
+        if not A_candidates:
+            return None
+        A = A_candidates[-1]
+        
+        X_candidates = [(idx, price) for idx, price in lows if idx < A[0]]
+        if not X_candidates:
+            return None
+        X = X_candidates[-1]
+        
+        if not self._validate_fib_ratios(X[1], A[1], B[1], C[1], D[1]):
+            return None
+        
+        return [X, A, B, C, D]
+    
+    def _identify_bearish_pivots(self, highs, lows, current_idx):
+        """Identify bearish Butterfly pivots: X=High, A=Low, B=High, C=Low, D=High where D > X"""
+        highs = sorted(highs, key=lambda x: x[0])
+        lows = sorted(lows, key=lambda x: x[0])
+        
+        if len(highs) < 3 or len(lows) < 2:
+            return None
+        
+        D = highs[-1]
+        C_candidates = [(idx, price) for idx, price in lows if idx < D[0]]
+        if not C_candidates:
+            return None
+        C = C_candidates[-1]
+        
+        B_candidates = [(idx, price) for idx, price in highs if idx < C[0]]
+        if not B_candidates:
+            return None
+        B = B_candidates[-1]
+        
+        A_candidates = [(idx, price) for idx, price in lows if idx < B[0]]
+        if not A_candidates:
+            return None
+        A = A_candidates[-1]
+        
+        X_candidates = [(idx, price) for idx, price in highs if idx < A[0]]
+        if not X_candidates:
+            return None
+        X = X_candidates[-1]
+        
+        if not self._validate_fib_ratios(X[1], A[1], B[1], C[1], D[1], bearish=True):
+            return None
+        
+        return [X, A, B, C, D]
+    
+    def _validate_fib_ratios(self, X, A, B, C, D, bearish=False):
+        """Validate Butterfly Fibonacci ratios."""
+        ab_ratio = calculate_ab_retracement(X, A, B)
+        bc_ratio = calculate_bc_retracement(A, B, C)
+        cd_ratio = calculate_cd_extension(B, C, D)
+        xd_ratio = calculate_xd_retracement(X, A, D)
+        
+        # AB = 0.786 XA
+        if not is_fib_ratio_match(ab_ratio, self.AB_RETRACEMENT_TARGET, self.fib_tolerance):
+            return False
+        
+        # BC = 0.382-0.886 AB
+        if not (self.BC_RETRACEMENT_MIN - self.fib_tolerance <= bc_ratio <= self.BC_RETRACEMENT_MAX + self.fib_tolerance):
+            return False
+        
+        # CD = 1.618-2.618 BC
+        if not (self.CD_EXTENSION_MIN - self.fib_tolerance <= cd_ratio <= self.CD_EXTENSION_MAX + self.fib_tolerance):
+            return False
+        
+        # XD = 1.27-1.618 XA (D extends beyond X)
+        if not (self.XD_RETRACEMENT_MIN - self.fib_tolerance <= xd_ratio <= self.XD_RETRACEMENT_MAX + self.fib_tolerance):
+            return False
+        
+        return True
+    
+    def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
+        """Detect Butterfly pattern at bar index i."""
+        if not self._validate_data(df, i, window_start):
+            return PatternResult(detected=False, pattern_name=self.name, pattern_type=self.pattern_type)
+        
+        pivots = self._find_pivots(df, i)
+        if pivots is None:
+            return PatternResult(detected=False, pattern_name=self.name, pattern_type=self.pattern_type)
+        
+        X, A, B, C, D = pivots['X'], pivots['A'], pivots['B'], pivots['C'], pivots['D']
+        direction = pivots['direction']
+        
+        if self.require_confirmation and D[0] >= i:
+            return PatternResult(
+                detected=False, pattern_name=self.name, pattern_type=self.pattern_type,
+                pivot_points={'X': X[1], 'A': A[1], 'B': B[1], 'C': C[1], 'D': D[1]}
+            )
+        
+        signal = self._generate_signal(df, i, X, A, B, C, D, direction)
+        
         return PatternResult(
-            detected=False,
-            pattern_name=self.name,
-            pattern_type=self.pattern_type
+            detected=True,
+            pattern_name=f"{self.name} ({direction.capitalize()})",
+            pattern_type=self.pattern_type,
+            signal=signal,
+            pivot_points={
+                'X_idx': X[0], 'X': X[1], 'A_idx': A[0], 'A': A[1],
+                'B_idx': B[0], 'B': B[1], 'C_idx': C[0], 'C': C[1],
+                'D_idx': D[0], 'D': D[1], 'direction': direction,
+                'ab_ratio': calculate_ab_retracement(X[1], A[1], B[1]),
+                'bc_ratio': calculate_bc_retracement(A[1], B[1], C[1]),
+                'cd_ratio': calculate_cd_extension(B[1], C[1], D[1]),
+                'xd_ratio': calculate_xd_retracement(X[1], A[1], D[1])
+            },
+            bars_since_detection=0,
+            start_index=X[0],
+            end_index=D[0]
         )
     
     def generate_signal(self, df: pd.DataFrame, i: int) -> Optional[TradeSignal]:
-        return None
+        """Generate trade signal."""
+        result = self.detect(df, i)
+        return result.signal if result.detected else None
+    
+    def _generate_signal(self, df, i, X, A, B, C, D, direction):
+        """Generate Butterfly trade signal."""
+        ad_range = abs(A[1] - D[1])
+        
+        if direction == 'bullish':
+            entry_bar_high = self._safe_float(df.iloc[D[0] + 1]['High']) if self.require_confirmation and D[0] + 1 <= i else D[1]
+            entry_price = entry_bar_high + self.entry_offset
+            stop_loss = D[1] - self.stop_offset
+            take_profit_1 = A[1]
+            take_profit_2 = D[1] + (ad_range * 1.27)
+            take_profit_3 = D[1] + (ad_range * 1.618)
+            signal_direction = SignalDirection.LONG
+        else:
+            entry_bar_low = self._safe_float(df.iloc[D[0] + 1]['Low']) if self.require_confirmation and D[0] + 1 <= i else D[1]
+            entry_price = entry_bar_low - self.entry_offset
+            stop_loss = D[1] + self.stop_offset
+            take_profit_1 = A[1]
+            take_profit_2 = D[1] - (ad_range * 1.27)
+            take_profit_3 = D[1] - (ad_range * 1.618)
+            signal_direction = SignalDirection.SHORT
+        
+        confidence = 0.6
+        ab_ratio = calculate_ab_retracement(X[1], A[1], B[1])
+        if abs(ab_ratio - 0.786) < 0.02:
+            confidence += 0.1
+        
+        return TradeSignal(
+            pattern_name=f"{self.name} ({direction.capitalize()})",
+            direction=signal_direction,
+            entry_price=entry_price,
+            stop_loss=stop_loss,
+            take_profit_1=take_profit_1,
+            take_profit_2=take_profit_2,
+            take_profit_3=take_profit_3,
+            confidence=min(confidence, 1.0),
+            timestamp=df.iloc[i].name if hasattr(df.iloc[i], 'name') else None,
+            metadata={
+                'direction': direction,
+                'X': X[1], 'A': A[1], 'B': B[1], 'C': C[1], 'D': D[1],
+                'ad_range': ad_range,
+                'entry_type': 'buy_stop' if direction == 'bullish' else 'sell_stop'
+            }
+        )
 
 
 class BatPattern(BasePattern):
@@ -540,14 +760,26 @@ class BatPattern(BasePattern):
     - BC = 0.382 to 0.886 AB
     - CD = 1.618 to 2.618 BC
     - XD = 0.886 XA
+    
+    The Bat pattern is known for its high accuracy and tight stop losses.
     """
+    
+    AB_RETRACEMENT_MIN = 0.382
+    AB_RETRACEMENT_MAX = 0.5
+    BC_RETRACEMENT_MIN = 0.382
+    BC_RETRACEMENT_MAX = 0.886
+    CD_EXTENSION_MIN = 1.618
+    CD_EXTENSION_MAX = 2.618
+    XD_RETRACEMENT_TARGET = 0.886
     
     def __init__(
         self,
         lookback: int = 5,
         entry_offset: float = 0.01,
         stop_offset: float = 0.01,
-        fib_tolerance: float = 0.05
+        fib_tolerance: float = 0.05,
+        require_confirmation: bool = True,
+        volume_filter: bool = False
     ):
         super().__init__(
             name="Bat Pattern",
@@ -558,14 +790,226 @@ class BatPattern(BasePattern):
         self.entry_offset = entry_offset
         self.stop_offset = stop_offset
         self.fib_tolerance = fib_tolerance
+        self.require_confirmation = require_confirmation
+        self.volume_filter = volume_filter
     
-    def detect(self, df: pd.DataFrame, i: int) -> PatternResult:
-        """Detect Bat pattern - simplified implementation."""
+    def _find_pivots(self, df: pd.DataFrame, i: int) -> Optional[Dict]:
+        """Find potential XABCD pivots for Bat pattern."""
+        if i < self.lookback * 5:
+            return None
+        
+        swing_highs = find_swing_highs(df, self.lookback)
+        swing_lows = find_swing_lows(df, self.lookback)
+        
+        highs = []
+        lows = []
+        
+        for j in range(i - self.lookback, i + 1):
+            if pd.notna(swing_highs.iloc[j]):
+                highs.append((j, self._safe_float(swing_highs.iloc[j])))
+            if pd.notna(swing_lows.iloc[j]):
+                lows.append((j, self._safe_float(swing_lows.iloc[j])))
+        
+        if len(highs) < 2 or len(lows) < 2:
+            return None
+        
+        bullish_pivots = self._identify_bullish_pivots(highs, lows, i)
+        bearish_pivots = self._identify_bearish_pivots(highs, lows, i)
+        
+        if bullish_pivots:
+            return {
+                'direction': 'bullish',
+                'X': bullish_pivots[0], 'A': bullish_pivots[1],
+                'B': bullish_pivots[2], 'C': bullish_pivots[3],
+                'D': bullish_pivots[4]
+            }
+        elif bearish_pivots:
+            return {
+                'direction': 'bearish',
+                'X': bearish_pivots[0], 'A': bearish_pivots[1],
+                'B': bearish_pivots[2], 'C': bearish_pivots[3],
+                'D': bearish_pivots[4]
+            }
+        
+        return None
+    
+    def _identify_bullish_pivots(self, highs, lows, current_idx):
+        """Identify bullish Bat pivots: X=Low, A=High, B=Low, C=High, D=Low"""
+        highs = sorted(highs, key=lambda x: x[0])
+        lows = sorted(lows, key=lambda x: x[0])
+        
+        if len(lows) < 3 or len(highs) < 2:
+            return None
+        
+        D = lows[-1]
+        C_candidates = [(idx, price) for idx, price in highs if idx < D[0]]
+        if not C_candidates:
+            return None
+        C = C_candidates[-1]
+        
+        B_candidates = [(idx, price) for idx, price in lows if idx < C[0]]
+        if not B_candidates:
+            return None
+        B = B_candidates[-1]
+        
+        A_candidates = [(idx, price) for idx, price in highs if idx < B[0]]
+        if not A_candidates:
+            return None
+        A = A_candidates[-1]
+        
+        X_candidates = [(idx, price) for idx, price in lows if idx < A[0]]
+        if not X_candidates:
+            return None
+        X = X_candidates[-1]
+        
+        if not self._validate_fib_ratios(X[1], A[1], B[1], C[1], D[1]):
+            return None
+        
+        return [X, A, B, C, D]
+    
+    def _identify_bearish_pivots(self, highs, lows, current_idx):
+        """Identify bearish Bat pivots: X=High, A=Low, B=High, C=Low, D=High"""
+        highs = sorted(highs, key=lambda x: x[0])
+        lows = sorted(lows, key=lambda x: x[0])
+        
+        if len(highs) < 3 or len(lows) < 2:
+            return None
+        
+        D = highs[-1]
+        C_candidates = [(idx, price) for idx, price in lows if idx < D[0]]
+        if not C_candidates:
+            return None
+        C = C_candidates[-1]
+        
+        B_candidates = [(idx, price) for idx, price in highs if idx < C[0]]
+        if not B_candidates:
+            return None
+        B = B_candidates[-1]
+        
+        A_candidates = [(idx, price) for idx, price in lows if idx < B[0]]
+        if not A_candidates:
+            return None
+        A = A_candidates[-1]
+        
+        X_candidates = [(idx, price) for idx, price in highs if idx < A[0]]
+        if not X_candidates:
+            return None
+        X = X_candidates[-1]
+        
+        if not self._validate_fib_ratios(X[1], A[1], B[1], C[1], D[1], bearish=True):
+            return None
+        
+        return [X, A, B, C, D]
+    
+    def _validate_fib_ratios(self, X, A, B, C, D, bearish=False):
+        """Validate Bat Fibonacci ratios."""
+        ab_ratio = calculate_ab_retracement(X, A, B)
+        bc_ratio = calculate_bc_retracement(A, B, C)
+        cd_ratio = calculate_cd_extension(B, C, D)
+        xd_ratio = calculate_xd_retracement(X, A, D)
+        
+        # AB = 0.382-0.5 XA
+        if not (self.AB_RETRACEMENT_MIN - self.fib_tolerance <= ab_ratio <= self.AB_RETRACEMENT_MAX + self.fib_tolerance):
+            return False
+        
+        # BC = 0.382-0.886 AB
+        if not (self.BC_RETRACEMENT_MIN - self.fib_tolerance <= bc_ratio <= self.BC_RETRACEMENT_MAX + self.fib_tolerance):
+            return False
+        
+        # CD = 1.618-2.618 BC
+        if not (self.CD_EXTENSION_MIN - self.fib_tolerance <= cd_ratio <= self.CD_EXTENSION_MAX + self.fib_tolerance):
+            return False
+        
+        # XD = 0.886 XA
+        if not is_fib_ratio_match(xd_ratio, self.XD_RETRACEMENT_TARGET, self.fib_tolerance):
+            return False
+        
+        return True
+    
+    def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
+        """Detect Bat pattern at bar index i."""
+        if not self._validate_data(df, i, window_start):
+            return PatternResult(detected=False, pattern_name=self.name, pattern_type=self.pattern_type)
+        
+        pivots = self._find_pivots(df, i)
+        if pivots is None:
+            return PatternResult(detected=False, pattern_name=self.name, pattern_type=self.pattern_type)
+        
+        X, A, B, C, D = pivots['X'], pivots['A'], pivots['B'], pivots['C'], pivots['D']
+        direction = pivots['direction']
+        
+        if self.require_confirmation and D[0] >= i:
+            return PatternResult(
+                detected=False, pattern_name=self.name, pattern_type=self.pattern_type,
+                pivot_points={'X': X[1], 'A': A[1], 'B': B[1], 'C': C[1], 'D': D[1]}
+            )
+        
+        signal = self._generate_signal(df, i, X, A, B, C, D, direction)
+        
         return PatternResult(
-            detected=False,
-            pattern_name=self.name,
-            pattern_type=self.pattern_type
+            detected=True,
+            pattern_name=f"{self.name} ({direction.capitalize()})",
+            pattern_type=self.pattern_type,
+            signal=signal,
+            pivot_points={
+                'X_idx': X[0], 'X': X[1], 'A_idx': A[0], 'A': A[1],
+                'B_idx': B[0], 'B': B[1], 'C_idx': C[0], 'C': C[1],
+                'D_idx': D[0], 'D': D[1], 'direction': direction,
+                'ab_ratio': calculate_ab_retracement(X[1], A[1], B[1]),
+                'bc_ratio': calculate_bc_retracement(A[1], B[1], C[1]),
+                'cd_ratio': calculate_cd_extension(B[1], C[1], D[1]),
+                'xd_ratio': calculate_xd_retracement(X[1], A[1], D[1])
+            },
+            bars_since_detection=0,
+            start_index=X[0],
+            end_index=D[0]
         )
     
     def generate_signal(self, df: pd.DataFrame, i: int) -> Optional[TradeSignal]:
-        return None
+        """Generate trade signal."""
+        result = self.detect(df, i)
+        return result.signal if result.detected else None
+    
+    def _generate_signal(self, df, i, X, A, B, C, D, direction):
+        """Generate Bat trade signal."""
+        ad_range = abs(A[1] - D[1])
+        
+        if direction == 'bullish':
+            entry_bar_high = self._safe_float(df.iloc[D[0] + 1]['High']) if self.require_confirmation and D[0] + 1 <= i else D[1]
+            entry_price = entry_bar_high + self.entry_offset
+            stop_loss = D[1] - self.stop_offset
+            take_profit_1 = A[1]
+            take_profit_2 = D[1] + (ad_range * 1.27)
+            take_profit_3 = D[1] + (ad_range * 1.618)
+            signal_direction = SignalDirection.LONG
+        else:
+            entry_bar_low = self._safe_float(df.iloc[D[0] + 1]['Low']) if self.require_confirmation and D[0] + 1 <= i else D[1]
+            entry_price = entry_bar_low - self.entry_offset
+            stop_loss = D[1] + self.stop_offset
+            take_profit_1 = A[1]
+            take_profit_2 = D[1] - (ad_range * 1.27)
+            take_profit_3 = D[1] - (ad_range * 1.618)
+            signal_direction = SignalDirection.SHORT
+        
+        confidence = 0.6
+        xd_ratio = calculate_xd_retracement(X[1], A[1], D[1])
+        if abs(xd_ratio - 0.886) < 0.02:
+            confidence += 0.1
+        
+        return TradeSignal(
+            pattern_name=f"{self.name} ({direction.capitalize()})",
+            direction=signal_direction,
+            entry_price=entry_price,
+            stop_loss=stop_loss,
+            take_profit_1=take_profit_1,
+            take_profit_2=take_profit_2,
+            take_profit_3=take_profit_3,
+            confidence=min(confidence, 1.0),
+            timestamp=df.iloc[i].name if hasattr(df.iloc[i], 'name') else None,
+            metadata={
+                'direction': direction,
+                'X': X[1], 'A': A[1], 'B': B[1], 'C': C[1], 'D': D[1],
+                'ad_range': ad_range,
+                'entry_type': 'buy_stop' if direction == 'bullish' else 'sell_stop'
+            }
+        )

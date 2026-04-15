@@ -1,0 +1,6 @@
+{
+  "instructions": [".kilo/global-rules.md", ".kilo/project-rules.md"],
+  "skills": {
+    "paths": ["C:\\Dev\\skills"]
+  }
+}

@@ -24,6 +24,7 @@ STRATEGIES = {
     "RSI Divergence": ("src.strategies.rsi_divergence", "RSIDivergenceStrategy"),
     "Stoch RSI Crossover": ("src.strategies.stoch_rsi_crossover", "StochRSICrossoverStrategy"),
     "CCI": ("src.strategies.cci_strategy", "CCIStrategy"),
+    "Donchian Channel": ("src.strategies.donchian_breakout", "DonchianChannelStrategy"),
     # MFI skipped - Volume=0 in BTC 1H data
 }
 

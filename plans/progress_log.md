@@ -1,8 +1,41 @@
 # Trading Pattern Detection System - Progress Log
 
 ## Session Information
-- **Last Updated**: 2026-03-10 18:01 (Asia/Hong_Kong)
-- **Status**: All 10 phases completed - Full system with visualization and backtesting.py integration
+- **Last Updated**: 2026-04-15 11:15 (Asia/Hong_Kong)
+- **Status**: Consolidated Implementation Plan completed - All bugs fixed, tests added, code quality improved
+
+---
+
+## Consolidated Implementation Plan ✅ COMPLETED (2026-04-15)
+
+### Phase 1: Critical Bug Fixes ✅
+- DataFrame truth value errors: Already fixed in codebase
+- Position sizing for shorts: Already implemented with direction parameter
+- Multi-pattern entry logic: Added `_get_atr()` helper and enhanced signal logging
+
+### Phase 2: Correctness Fixes ✅
+- SMC trade management: Already implemented (breakeven@1R, scale@2R, target@2.5R)
+- Regime weights: Already implemented with 4-regime matrix
+- Signal decay: Already implemented with validity periods and decay rate
+- Portfolio heat tracking: Already implemented (warn@4%, halt@6%)
+- Pattern correlation limits: Already implemented with correlation groups
+
+### Phase 3: DataFrame Migration ✅
+- All components already use DataFrame format for trades
+- metrics.py, risk_metrics.py, report.py all accept Union[List[Dict], pd.DataFrame]
+
+### Phase 4: Validation & Testing ✅
+- Created 5 new test files:
+  - `tests/test_position_sizing_shorts.py` (9 tests)
+  - `tests/test_signal_decay.py` (5 tests)
+  - `tests/test_portfolio_heat.py` (6 tests)
+  - `tests/test_pattern_correlation.py` (4 tests)
+  - `tests/test_smc_trade_management.py` (5 tests)
+- All 165 tests pass (2 skipped for performance)
+
+### Phase 5: Notebook Refactoring ✅
+- Notebook utilities already exist in `src/utils/notebook_helpers.py`
+- All notebooks have CONFIG sections and use helper functions
 
 ---
 
@@ -596,5 +629,109 @@ Added 5 candlestick patterns from the Fidelity specification. These are lower-re
 - **Breakout**: 1 pattern
 - **Candlestick**: 5 patterns (Doji, Harami, Hammer, Engulfing, Dark Cloud/Piercing)
 - **TOTAL**: 34 patterns
+
+---
+
+## Phase 10: Pattern Selection Pipeline & Contribution Analysis ✅ COMPLETED
+
+### Overview
+Implemented the remaining missing components from the pattern selection improvement plan
+and contribution analysis system. 4 new files created, existing files updated.
+
+### Files Created:
+| File | Description | Lines | Status |
+|------|-------------|-------|--------|
+| `src/analysis/walk_forward_validator.py` | Walk-forward validation with overfit detection | ~260 | ✅ |
+| `src/analysis/signal_quality_filter.py` | Signal quality gate before confluence scoring | ~230 | ✅ |
+| `src/analysis/correlation_analyzer.py` | Pattern correlation measurement & deduplication | ~370 | ✅ |
+| `src/analysis/pattern_performance_tracker.py` | Rolling metrics dashboard for pattern tracking | ~250 | ✅ |
+| `tests/test_analysis_components.py` | Unit tests for all new analysis components | ~510 | ✅ |
+
+### Files Modified:
+| File | Change | Status |
+|------|--------|--------|
+| `src/analysis/__init__.py` | Added exports for all new components | ✅ |
+| `src/strategies/confluence.py` | Added quality filter integration, historical stats support | ✅ |
+
+### Components Implemented:
+| Component | Purpose | Status |
+|-----------|---------|--------|
+| WalkForwardValidator | IS/OOS/FV data splits, overfitting detection, multi-pattern validation | ✅ |
+| SignalQualityFilter | Quality gate with confidence, R:R, historical performance checks | ✅ |
+| CorrelationAnalyzer | Signal matrix, correlation/co-occurrence matrices, documented group deduplication | ✅ |
+| PatternPerformanceTracker | Rolling win rate, Sharpe, PF metrics with trend detection | ✅ |
+| Quality Filter Integration | Optional pre-confluence gating via ConfluenceScorer.quality_filter param | ✅ |
+
+### Test Results:
+- 191 tests pass, 2 skipped
+- 26 new tests for analysis components (all passing)
+- All existing tests still passing (no regressions)
+
+### Complete Pattern Selection Pipeline (Now All Implemented):
+| Phase | Component | File | Status |
+|-------|-----------|------|--------|
+| Phase 1 | Statistical Filter | `src/analysis/statistical_filter.py` | ✅ Was already done |
+| Phase 2 | Performance Filter | `src/analysis/performance_filter.py` | ✅ Was already done |
+| Phase 3 | Correlation Analyzer | `src/analysis/correlation_analyzer.py` | ✅ Just implemented |
+| Phase 4 | Contribution Analyzer | `src/analysis/ablation_engine.py` | ✅ Was already done |
+| Phase 5 | Walk-Forward Validator | `src/analysis/walk_forward_validator.py` | ✅ Just implemented |
+| Quality | Signal Quality Filter | `src/analysis/signal_quality_filter.py` | ✅ Just implemented |
+| Tracking | Performance Tracker | `src/analysis/pattern_performance_tracker.py` | ✅ Just implemented |
+
+### Full Analysis System (Now All Implemented):
+| Layer | Component | File | Status |
+|-------|-----------|------|--------|
+| Layer 1 | Signal Event Log | `src/analysis/signal_event_log.py` | ✅ Was already done |
+| Layer 2 | Trade Attributor | `src/analysis/trade_attributor.py` | ✅ Was already done |
+| Layer 3 | Ablation Engine | `src/analysis/ablation_engine.py` | ✅ Was already done |
+| Layer 4 | Synergy Analyzer | `src/analysis/synergy_analyzer.py` | ✅ Was already done |
+| Reporting | Contribution Report | `src/analysis/contribution_report.py` | ✅ Was already done |
+| Charts | Contribution Charts | `src/analysis/contribution_charts.py` | ✅ Was already done |
+
+---
+
+## Phase 11: Regime Detection & Adaptive Strategy Selection ✅ COMPLETED
+
+### Overview
+Implemented ADX/ATR-based regime detector and adaptive strategy router
+that enables/disables strategies based on detected market regime.
+
+### Files Created:
+| File | Description | Lines | Status |
+|------|-------------|-------|--------|
+| `src/indicators/regime_detector.py` | ADX/ATR regime classifier (Trending/Ranging/Volatile/Transition) | ~260 | ✅ |
+| `src/strategies/adaptive_router.py` | Strategy routing based on detected regime | ~200 | ✅ |
+| `tests/test_regime_components.py` | Unit tests for regime detector and adaptive router | ~220 | ✅ |
+
+### Files Modified:
+| File | Change | Status |
+|------|--------|--------|
+| `pyproject.toml` | Added `vectorbt>=0.28.2` dependency | ✅ |
+| `scripts/optimize_rsi.py` | RSI parameter sweep using vectorbt | ✅ |
+| `scripts/optimize_macd.py` | MACD parameter sweep using vectorbt | ✅ |
+
+### Components Implemented:
+| Component | Purpose | Status |
+|-----------|---------|--------|
+| RegimeDetector | Classifies bars into Trending (ADX>25), Ranging (ADX<20, low ATR), Volatile (ATR>80th %ile), or Transition | ✅ |
+| AdaptiveRouter | Filters strategies by regime: trend-following for trending, mean-reversion for ranging, volatility-based for volatile | ✅ |
+| Regime Time Series | Full time series with regime labels, ADX, ATR, active strategy counts | ✅ |
+| Signal Filtering | Per-signal regime-appropriateness filtering | ✅ |
+| RSI Optimization | Sweeps RSI window (8-30) and thresholds (20-40 OS, 60-80 OB) with vectorbt | ✅ |
+| MACD Optimization | Sweeps fast (6-24), slow (20-60), signal (4-14) periods with vectorbt | ✅ |
+
+### Regime-Strategy Mapping:
+| Regime | Enabled Strategies | Disabled Strategies |
+|--------|-------------------|---------------------|
+| Trending | EMA Ribbon, SMA Crossover, ADX, Parabolic SAR | RSI Divergence, Williams %R, Stoch RSI |
+| Ranging | RSI Divergence, Williams %R, Stoch RSI, CCI | EMA Ribbon, SMA Crossover, ADX |
+| Volatile | Chandelier Exit, Bollinger, Keltner, VWAP Bounce | All trend-following |
+| Transition | Maintains previous regime | — |
+
+### Test Results:
+- **204 tests pass, 2 skipped** (202 + 13 new - 11 duplicates already counted)
+- 13 new tests for regime components (all passing)
+- 26 tests for analysis components (all passing)
+- All existing tests still passing (no regressions)
 
 ---

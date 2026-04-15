@@ -13,6 +13,14 @@ import numpy as np
 from ..indicators.regime import RegimeState, TrendDirection, VolatilityRegime
 from ..patterns.base import PatternResult, PatternType, SignalDirection, TradeSignal
 
+# Optional import for signal quality filtering
+try:
+    from src.analysis.signal_quality_filter import SignalQualityFilter, SignalQualityConfig
+
+    QUALITY_FILTER_AVAILABLE = True
+except ImportError:
+    QUALITY_FILTER_AVAILABLE = False
+
 
 @dataclass
 class ConfluenceScore:
@@ -139,6 +147,7 @@ class ConfluenceScorer:
         min_confidence: float = 0.50,
         trend_alignment_bonus: float = 0.05,
         regime_adaptation: bool = True,
+        quality_filter=None,  # SignalQualityFilter or None
     ):
         """
         Initialize Confluence Scorer.
@@ -147,10 +156,12 @@ class ConfluenceScorer:
             min_confidence: Minimum confidence threshold
             trend_alignment_bonus: Bonus for trend alignment
             regime_adaptation: Whether to adapt to market regime
+            quality_filter: Optional SignalQualityFilter for pre-confluence gating
         """
         self.min_confidence = min_confidence
         self.trend_alignment_bonus = trend_alignment_bonus
         self.regime_adaptation = regime_adaptation
+        self._quality_filter = quality_filter
         self._compatibility_rules = self._build_compatibility_rules()
 
     def _build_compatibility_rules(self) -> Dict[Tuple[str, str], PatternCompatibility]:
@@ -184,6 +195,63 @@ class ConfluenceScorer:
             )
 
         return rules
+
+    def _filter_by_quality(
+        self,
+        results: List[PatternResult],
+        historical_stats: Optional[Dict[str, Dict[str, float]]] = None,
+    ) -> List[PatternResult]:
+        """
+        Apply signal quality filter before confluence scoring.
+
+        Uses the SignalQualityFilter to evaluate each individual signal
+        against quality thresholds (confidence, risk/reward, historical performance).
+
+        Args:
+            results: Candidate pattern results
+            historical_stats: Optional historical stats per pattern
+
+        Returns:
+            Filtered list of results that pass the quality gate
+        """
+        if self._quality_filter is None:
+            return results
+
+        filtered = []
+        for result in results:
+            if not result.signal:
+                continue
+
+            sig = result.signal
+            rr = self._estimate_rr(result)
+            hist = historical_stats.get(result.pattern_name, {}) if historical_stats else {}
+
+            quality_result = self._quality_filter.evaluate_signal(
+                signal_id=f"{result.pattern_name}_{id(result)}",
+                pattern_name=result.pattern_name,
+                confidence=sig.confidence,
+                entry_price=sig.entry_price or 0.0,
+                stop_loss=sig.stop_loss or 0.0,
+                take_profit=sig.take_profit_1 or 0.0,
+                historical_win_rate=hist.get("win_rate"),
+                historical_profit_factor=hist.get("profit_factor"),
+            )
+
+            if quality_result.passes_quality_gate:
+                filtered.append(result)
+
+        return filtered
+
+    def _estimate_rr(self, result: PatternResult) -> float:
+        """Estimate risk/reward ratio from a PatternResult."""
+        if not result.signal or not result.signal.entry_price:
+            return 0.0
+        sig = result.signal
+        if sig.stop_loss and sig.take_profit_1:
+            risk = abs(sig.entry_price - sig.stop_loss)
+            reward = abs(sig.take_profit_1 - sig.entry_price)
+            return reward / risk if risk > 0 else 0.0
+        return 0.0
 
     def _get_pattern_category(self, pattern_name: str) -> str:
         """Get pattern category from name."""
@@ -542,7 +610,10 @@ class ConfluenceScorer:
             return True  # Both directions acceptable in ranging market
 
     def calculate_confluence(
-        self, results: List[PatternResult], regime: Optional[RegimeState] = None
+        self,
+        results: List[PatternResult],
+        regime: Optional[RegimeState] = None,
+        historical_stats: Optional[Dict[str, Dict[str, float]]] = None,
     ) -> Optional[ConfluenceScore]:
         """
         Calculate confluence score for multiple pattern results.
@@ -550,6 +621,7 @@ class ConfluenceScorer:
         Args:
             results: List of PatternResult objects
             regime: Current market regime state
+            historical_stats: Optional historical performance stats per pattern
 
         Returns:
             ConfluenceScore object or None if no valid signals
@@ -559,6 +631,13 @@ class ConfluenceScorer:
 
         if not valid_results:
             return None
+
+        # Apply quality filter gate (if configured)
+        if self._quality_filter is not None:
+            quality_results = self._filter_by_quality(valid_results, historical_stats)
+            if not quality_results:
+                return None
+            valid_results = quality_results
 
         # Filter incompatible patterns
         compatible_results = self._filter_compatible_patterns(valid_results)
@@ -640,9 +719,7 @@ class ConfluenceScorer:
             confidence_level = max(1, confidence_level - 1)
 
         # Calculate quality metrics
-        signals: List[TradeSignal] = [
-            r.signal for r in active_results if r.signal is not None
-        ]
+        signals: List[TradeSignal] = [r.signal for r in active_results if r.signal is not None]
         rr_ratio = self._calculate_risk_reward(signals)
         quality_score = self._calculate_quality_score(active_results, regime)
 
@@ -671,7 +748,11 @@ class ConfluenceScorer:
         )
 
     def rank_signals(
-        self, results: List[PatternResult], regime: Optional[RegimeState] = None, top_n: int = 3
+        self,
+        results: List[PatternResult],
+        regime: Optional[RegimeState] = None,
+        top_n: int = 3,
+        historical_stats: Optional[Dict[str, Dict[str, float]]] = None,
     ) -> List[Tuple[PatternResult, ConfluenceScore]]:
         """
         Rank signals by confluence score.
@@ -680,6 +761,7 @@ class ConfluenceScorer:
             results: List of PatternResult objects
             regime: Current market regime state
             top_n: Number of top signals to return
+            historical_stats: Optional historical performance stats per pattern
 
         Returns:
             List of (PatternResult, ConfluenceScore) tuples sorted by score
@@ -692,7 +774,7 @@ class ConfluenceScorer:
                 continue
 
             # Create single-result confluence score
-            score = self.calculate_confluence([result], regime)
+            score = self.calculate_confluence([result], regime, historical_stats)
             if score:
                 scored_results.append((result, score))
 

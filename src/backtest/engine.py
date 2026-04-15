@@ -116,6 +116,9 @@ class BacktestEngine:
             initial_equity=self.config.initial_equity,
             position_sizer=position_sizer,
             max_open_positions=self.config.max_open_positions,
+            use_take_profit_1=self.config.use_take_profit_1,
+            use_take_profit_2=self.config.use_take_profit_2,
+            use_take_profit_3=self.config.use_take_profit_3,
         )
 
         # Results storage

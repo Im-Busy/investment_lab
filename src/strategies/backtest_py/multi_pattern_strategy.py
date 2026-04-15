@@ -5,10 +5,11 @@ Wrapper for running multi-pattern confluence strategy in backtesting.py framewor
 Integrates all 20 pattern detectors with confluence scoring.
 """
 
+import logging
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 import pandas as pd
 from backtesting import Strategy
@@ -17,6 +18,8 @@ from backtesting import Strategy
 project_root = Path(__file__).parent.parent.parent.parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
+
+logger = logging.getLogger(__name__)
 
 # Import pattern detectors
 from src.indicators.regime import MarketRegimeDetector
@@ -167,6 +170,31 @@ class MultiPatternStrategy(Strategy):
         df.index = self.data.index
         return df
 
+    def _get_atr(self, period: int = 14) -> float:
+        """
+        Calculate Average True Range for current bar.
+
+        Args:
+            period: ATR calculation period
+
+        Returns:
+            Current ATR value
+        """
+        df = self._get_dataframe()
+        if len(df) < period + 1:
+            return df["Close"].iloc[-1] * 0.02  # Default 2% if not enough data
+
+        high = df["High"]
+        low = df["Low"]
+        close = df["Close"]
+
+        true_range = pd.concat(
+            [high - low, (high - close.shift(1)).abs(), (low - close.shift(1)).abs()], axis=1
+        ).max(axis=1)
+
+        atr = true_range.rolling(window=period).mean().iloc[-1]
+        return float(atr) if not pd.isna(atr) else df["Close"].iloc[-1] * 0.02
+
     def next(self):
         """Execute trading logic for current bar."""
         # Check position limit
@@ -305,15 +333,23 @@ class MultiPatternStrategy(Strategy):
 
         # Record signal for analysis
         self.signal_count += 1
-        self.signals.append(
-            {
-                "bar": current_idx,
-                "direction": direction,
-                "patterns": [s["pattern_name"] for s in active_signals],
-                "confidence": confluence.score if confluence else 0.5,
-                "entry_price": entry_price,
-                "stop_loss": stop_loss,
-            }
+        signal_log = {
+            "bar": current_idx,
+            "timestamp": df.index[-1] if hasattr(df.index[-1], "isoformat") else str(df.index[-1]),
+            "direction": direction,
+            "patterns": [s["pattern_name"] for s in active_signals],
+            "pattern_count": len(active_signals),
+            "confidence": confluence.score if confluence else 0.5,
+            "entry_price": entry_price,
+            "stop_loss": stop_loss,
+            "atr": self._get_atr(),
+            "risk_amount": risk_amount,
+            "position_size_frac": position_size_frac,
+        }
+        self.signals.append(signal_log)
+        logger.info(
+            f"Signal #{self.signal_count}: {direction} @ {entry_price:.2f} | "
+            f"Patterns: {len(active_signals)} | Confidence: {signal_log['confidence']:.2f}"
         )
 
 

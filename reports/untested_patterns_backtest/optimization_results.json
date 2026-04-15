@@ -1,0 +1,50 @@
+[
+  {
+    "pat": "Triple Top",
+    "asset": "SPY",
+    "error": "unhashable type: 'numpy.ndarray'",
+    "time_s": 0.0
+  },
+  {
+    "pat": "Symmetric Triangle",
+    "asset": "SPY",
+    "error": "unhashable type: 'numpy.ndarray'",
+    "time_s": 0.0
+  },
+  {
+    "pat": "Donchian Channel Breakout",
+    "asset": "SPY",
+    "error": "unhashable type: 'numpy.ndarray'",
+    "time_s": 0.1
+  },
+  {
+    "pat": "Gap Pattern",
+    "asset": "SPY",
+    "error": "unhashable type: 'numpy.ndarray'",
+    "time_s": 0.0
+  },
+  {
+    "pat": "Triple Top",
+    "asset": "QQQ",
+    "error": "unhashable type: 'numpy.ndarray'",
+    "time_s": 0.0
+  },
+  {
+    "pat": "Symmetric Triangle",
+    "asset": "QQQ",
+    "error": "unhashable type: 'numpy.ndarray'",
+    "time_s": 0.0
+  },
+  {
+    "pat": "Donchian Channel Breakout",
+    "asset": "QQQ",
+    "error": "unhashable type: 'numpy.ndarray'",
+    "time_s": 0.0
+  },
+  {
+    "pat": "Gap Pattern",
+    "asset": "QQQ",
+    "error": "unhashable type: 'numpy.ndarray'",
+    "time_s": 0.0
+  }
+]

@@ -1,0 +1,10 @@
+# AI Commands Reference
+#
+# This file tracks useful commands for utility functions.
+#
+# Instructions for AI Contributors:
+# - Add commands with descriptions
+#
+# Category: Utilities
+# Last Updated: 2026-04-21
+

@@ -1,0 +1,17 @@
+[
+  {
+    "pair": "GLD/IAU",
+    "hedge_ratio": 4.872215477542623,
+    "p_value": 0.05721715195632662,
+    "half_life": 1.181208908266821,
+    "correlation": 0.9999957414123765,
+    "adf_statistic": -3.2822395085824767,
+    "spread_mean": 0.9420608504905768,
+    "spread_std": 0.05961307164200149,
+    "status": "cointegrated"
+  },
+  {
+    "status": "no_cointegration",
+    "pair": "SPY/QQQ"
+  }
+]

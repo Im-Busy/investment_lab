@@ -1,0 +1,3396 @@
+Page 1: 1
+Page 1: 
+Page 1: A Multimodal Event-driven LSTM Model for
+Page 1: Stock Prediction Using Online News
+Page 1: Qing Li, Member, IEEE, Jinghua Tan, Member, IEEE, Jun Wang, Hsinchun Chen, Fellow, IEEE
+Page 1: AbstractΓÇöIn finance, it is believed that market information, namely, fundamentals and news information, affects stock movements.
+Page 1: Such media-aware stock movements essentially comprise a multimodal problem. Two unique challenges arise in processing these
+Page 1: multimodal data. First, information from one data mode will interact with information from other data modes. A common strategy is to
+Page 1: concatenate various data modes into one compound vector; however, this strategy ignores the interactions among different modes.
+Page 1: The second challenge is the heterogeneity of the data in terms of sampling time. Specifically, fundamental data consist of continuous
+Page 1: values sampled at fixed time intervals, whereas news information emerges randomly. This heterogeneity can cause valuable information
+Page 1: to be partially missing or can distort the feature spaces. In addition, the study of media-aware stock movements in previous work has
+Page 1: focused on the one-to-one problem, in which it is assumed that news affects only the performance of the stocks mentioned in the reports.
+Page 1: However, news articles also impact related stocks and cause stock co-movements. In this article, we propose a tensor-based eventdriven LSTM model to address these challenges. Experiments performed on the China securities market demonstrate the superiority of
+Page 1: the proposed approach over state-of-the-art algorithms, including AZFinText, eMAQT, and TeSIA.
+Page 1: Index TermsΓÇöStock Prediction, Tensor, Multimodality, Deep Learning, LSTM.
+Page 1: 
+Page 1: F
+Page 1: 
+Page 1: 1
+Page 1: 
+Page 1: I NTRODUCTION
+Page 1: 
+Page 1: A
+Page 1: 
+Page 1: C ompanyΓÇÖs stock price reflects investor perception of
+Page 1: its ability to earn and grow profits in the future. The
+Page 1: traditional efficient market hypothesis (EMH) states that
+Page 1: the price of a stock is always driven by ΓÇÖunemotionalΓÇÖ
+Page 1: investors [1, 2]. New information related to markets will
+Page 1: change investorsΓÇÖ expectations about the markets and cause
+Page 1: stock prices to move [3]. On the other hand, in behavioral
+Page 1: finance studies, stock movements are attributed to investorsΓÇÖ
+Page 1: cognitive and emotional biases [4]. Although the two theories are based on different views regarding how information
+Page 1: shapes stock movements, both agree that the volatility of
+Page 1: stock markets stems from the release, dissemination and
+Page 1: absorption of information [5].
+Page 1: In previous studies, scholars have found that stock
+Page 1: movements are affected by various sources of information, including transaction data, news, social media, and
+Page 1: search behavior [6, 7, 8]. Some researchers have taken
+Page 1: a further step by examining the joint effects of various
+Page 1: types of information, which has proven helpful in capturing stock movements [9, 10, 11]. Essentially, stock markets
+Page 1: are affected by multiple information sources, which can
+Page 1: be roughly categorized into two subgroups: fundamentals
+Page 1: (e.g., turnover, opening prices, and trading volumes) and
+Page 1: financial news [12]. Thus, the problem of modeling stock
+Page 1: movements is essentially a multimodal learning problem.
+Page 1: The first challenge lies in identifying the joint effects of
+Page 1: fundamental data and news information on stock markets.
+Page 1: The traditional strategy is to concatenate these information
+Page 1: 
+Page 1: ΓÇó
+Page 1: 
+Page 1: ΓÇó
+Page 1: 
+Page 1: Qing Li, Jinghua Tan and Jun Wang are with the Financial Intelligence
+Page 1: & Financial Engineering Key Lab of Sichuan Province and the School of
+Page 1: Economic Information Engineering, Southwestern University of Finance
+Page 1: and Economics, China.
+Page 1: Email address: liq t@swufe.edu.cn (Qing Li)
+Page 1: Hsinchun Chen is with the Department of Management Information
+Page 1: Systems, University of Arizona, USA and Tsinghua University, China.
+Page 1: 
+Page 1: into a compound vector and utilize various learning models,
+Page 1: including support vector machines (SVMs), decision trees
+Page 1: (DTs), and artificial neural networks (ANNs), to make predictions [13, 14, 15]. However, such vector-based models
+Page 1: may ignore the inherent links among multiple sources of
+Page 1: information and thus fail to capture their interconnections.
+Page 1: To overcome this challenge, some scholars have modeled
+Page 1: multidimensional information with tensors to achieve better
+Page 1: performance [16, 17].
+Page 1: Another important issue facing multimodal models is
+Page 1: the heterogeneity of the sampling times among different
+Page 1: modes. For stock markets in particular, the fundamental
+Page 1: data are characterized by continuous values sampled at
+Page 1: equal time intervals (i.e., one day). By contrast, news information consists of discrete values sampled at nonequal time
+Page 1: intervals because of the randomness of the occurrence of
+Page 1: news events. A good example is presented in Figure 1. This
+Page 1: figure shows news articles about stock ΓÇ¥000001ΓÇ¥ published
+Page 1: between January 1, 2015, and April 1, 2015. The occurrence
+Page 1: of these news events is irregularly distributed, with varying
+Page 1: intervals ranging from days to weeks or even months,
+Page 1: while the fundamental information is represented by daily
+Page 1: continuous data. The problem of how to fuse these two
+Page 1: types of data for solving a supervised learning problem has
+Page 1: yet to be explored.
+Page 1: 
+Page 1: Fig. 1: An example of news events between Jan 1, 2015, and
+Page 1: April 1, 2015, with varying time intervals.
+Page 1: 
+Page 1: 
+Page 2: 2
+Page 2: 
+Page 2: In previous studies, this problem has typically been
+Page 2: solved by using only a portion of the available data; that
+Page 2: is, only data sampled at the times of news events are
+Page 2: retained for further analysis. For instance, Schumaker and
+Page 2: Chen utilized transaction data within 20 minutes following
+Page 2: the release of breaking news to study media-aware stock
+Page 2: movements [10]. There were two data dimensions in this
+Page 2: study: the continuous transaction data and the discrete
+Page 2: news article data. Only part of the transaction data, i.e., the
+Page 2: data that coincided with news publications, were utilized,
+Page 2: while other transaction records without corresponding news
+Page 2: reports were discarded. One alternative solution is to obtain
+Page 2: a sparse feature space by filling the missing values in the
+Page 2: news mode with Null. However, such sparsity in the news
+Page 2: dimension will distort the entire feature space.
+Page 2: In addition, previous studies on media-aware stock
+Page 2: movements have focused on only the one-to-one problem,
+Page 2: in which news articles about a company are assumed to
+Page 2: affect only that company, without considering the indirect
+Page 2: effects on related companies. However, the fluctuation of
+Page 2: one company is also affected by its related companies. For
+Page 2: instance, a news report on the alternative energy supply on
+Page 2: November 14th, 2017, applied downward pressure on the
+Page 2: PetroChina (601857) stock, resulting in a decrease of 1.35%.
+Page 2: By contrast, due to its savings on transportation costs, Air
+Page 2: China (601111) saw its stock increase by 15.35%. Incorporating such correlations among relevant companies to quantify
+Page 2: media-aware stock movements is of great interest.
+Page 2: 
+Page 2: 2.1
+Page 2: 
+Page 2: Information and stock volatility
+Page 2: 
+Page 2: The price of a stock reflects investorsΓÇÖ expectations regarding a companyΓÇÖs future cash flows. Investors may change
+Page 2: their expectations as they receive new information, resulting in stock fluctuations. Stock market information can
+Page 2: be roughly categorized into three subgroups: fundamental
+Page 2: data, media information and a combination of the two [12].
+Page 2: ΓÇó
+Page 2: 
+Page 2: ΓÇó
+Page 2: 
+Page 2: To address the above challenges, we propose a multimodal event-driven long short-term memory (LSTM) model
+Page 2: with several unique contributions, as follows.
+Page 2: ΓÇó
+Page 2: 
+Page 2: ΓÇó
+Page 2: 
+Page 2: ΓÇó
+Page 2: 
+Page 2: ΓÇó
+Page 2: 
+Page 2: 2
+Page 2: 
+Page 2: We first represent the complicated market information space with tensors to preserve the interconnections among different information modalities.
+Page 2: We then propose an event-driven LSTM model to
+Page 2: address the heterogeneity of the sampling times in
+Page 2: different modes. This is achieved by controlling the
+Page 2: memory in the neural network so as to fuse the
+Page 2: continuous data sampled at equal intervals (fundamental data) with the discrete values sampled at
+Page 2: nonequal intervals (news).
+Page 2: We also consider the indirect influence of related
+Page 2: companies on media-aware stock movements by
+Page 2: constructing a media-based enterprise network to
+Page 2: reshape the market information space represented by
+Page 2: tensors.
+Page 2: Experiments performed on one full year of data on
+Page 2: the China securities market demonstrate the superiority of the proposed approach over state-of-theart algorithms, including AZFinText, eMAQT, and
+Page 2: TeSIA. Relative to these algorithms, the proposed
+Page 2: approach achieves a performance improvement of at
+Page 2: least 22.8%.
+Page 2: 
+Page 2: R ELATED WORK
+Page 2: 
+Page 2: In this section, we review the relevant literature from
+Page 2: three perspectives: the influence of information on stock
+Page 2: volatility, stock comovements and the approaches for quantifying such media-aware movements.
+Page 2: 
+Page 2: ΓÇó
+Page 2: 
+Page 2: Fundamental information: A number of studies in
+Page 2: traditional finance have examined the effects of fundamental information. Haugen and Baker showed
+Page 2: that cash flows can provide additional information
+Page 2: content for better understanding stock markets [21].
+Page 2: Fama and French found that a stockΓÇÖs performance is
+Page 2: determined mainly by three risk factors: the overall
+Page 2: market, the firm size, and the book-to-market equity
+Page 2: ratio (BE/ME) [22]. Jegadeesh and Titman observed
+Page 2: that stocks with higher returns in the previous 12
+Page 2: months tended to have higher future returns [23].
+Page 2: Media information: The pilot research on mediaaware stock movements can be traced back to work
+Page 2: on the influence of financial reports on stocks [24].
+Page 2: Later, researchers observed the influence of online
+Page 2: media on stock fluctuations [15, 20]. In particular,
+Page 2: investorsΓÇÖ decisions can be influenced by the opinions of others as expressed via online media, which
+Page 2: may result in herd behavior in investment. For example, Schumaker and Chen experimented with several
+Page 2: textual news representation approaches to study the
+Page 2: effects of breaking news on stock movements [10].
+Page 2: Bollen, Mao and Zeng found that the collective mood
+Page 2: states derived from 10 million tweets were correlated
+Page 2: with the index of the Dow Jones Industrial Average
+Page 2: (DJIA) using a self-organizing fuzzy neural network
+Page 2: (SOFNN) model [14]. These works have prompted
+Page 2: the birth of media-aware hedge funds, including
+Page 2: Derwent Capital Markets, DCM Capital and Cayman
+Page 2: Atlantic.
+Page 2: Combination: Many studies have shown that both
+Page 2: fundamental and media information can shape stock
+Page 2: movements. However, difficulties arise in modeling
+Page 2: these two types of information [25, 26]. One common
+Page 2: strategy is to concatenate these information into a
+Page 2: compound vector, thus treating each value as an independent variable. For example, Tetlock measured
+Page 2: the positive (negative) sentiment polarity of an article
+Page 2: and applied a linear regression model to capture
+Page 2: stock returns [12]. Mittermayer and Knolmayer represented market information spaces with vectors and
+Page 2: applied SVM and KNN models to study the impacts
+Page 2: of news on stock markets [15]. However, such vectorbased methods dilute or even ignore the intrinsic
+Page 2: associations among various information sources. Alternatively, researchers have found that tensor representations are able to capture the interconnections
+Page 2: among various modes of market information, thus
+Page 2: providing a better understanding of stock movements. Li et al. was the first to apply tensor theory
+Page 2: to model the complicated market information space
+Page 2: and show that such a representation is able to capture
+Page 2: the joint effects of different information sources [16].
+Page 2: 
+Page 2: 
+Page 3: 3
+Page 3: 
+Page 3: TABLE 1: Representative research on the influence exerted by news articles on stock markets.
+Page 3: Category
+Page 3: 
+Page 3: Statistical models
+Page 3: and regression
+Page 3: models
+Page 3: 
+Page 3: Classical
+Page 3: ML-based models
+Page 3: Deep learning
+Page 3: models
+Page 3: 
+Page 3: Reference
+Page 3: 
+Page 3: Model
+Page 3: 
+Page 3: [7]
+Page 3: 
+Page 3: Statistical model
+Page 3: 
+Page 3: Focus
+Page 3: Scale
+Page 3: 
+Page 3: Response
+Page 3: 
+Page 3: Predictor
+Page 3: 
+Page 3: Period
+Page 3: 
+Page 3: Wikipedia
+Page 3: 
+Page 3: Week
+Page 3: 
+Page 3: Index
+Page 3: 
+Page 3: Number of page
+Page 3: views
+Page 3: 
+Page 3: 12/10/2007-04/30/2012
+Page 3: 
+Page 3: [8]
+Page 3: 
+Page 3: Mutual information
+Page 3: 
+Page 3: DJIA
+Page 3: 
+Page 3: Hour
+Page 3: 
+Page 3: Price
+Page 3: 
+Page 3: Message volume
+Page 3: 
+Page 3: 11/12/2012-12/03/2013
+Page 3: 
+Page 3: [12]
+Page 3: 
+Page 3: Linear model
+Page 3: 
+Page 3: S&P 500
+Page 3: 
+Page 3: Day
+Page 3: 
+Page 3: Return
+Page 3: 
+Page 3: Number of emotion
+Page 3: words
+Page 3: 
+Page 3: 1980-2004
+Page 3: 
+Page 3: [15]
+Page 3: 
+Page 3: KNN, SVM
+Page 3: 
+Page 3: PR Newswire
+Page 3: 
+Page 3: Minute
+Page 3: 
+Page 3: Stock trend
+Page 3: 
+Page 3: News content
+Page 3: 
+Page 3: 12/06/1997-03/06/1997
+Page 3: 
+Page 3: [18]
+Page 3: 
+Page 3: KNN
+Page 3: 
+Page 3: Yahoo
+Page 3: 
+Page 3: Day
+Page 3: 
+Page 3: Index
+Page 3: 
+Page 3: News content
+Page 3: 
+Page 3: 04/01/2002-12/31/2002
+Page 3: 
+Page 3: [19]
+Page 3: 
+Page 3: Neural network
+Page 3: 
+Page 3: Reuters,
+Page 3: Bloomberg
+Page 3: 
+Page 3: Week
+Page 3: 
+Page 3: Return, volatility
+Page 3: 
+Page 3: Sentiment
+Page 3: 
+Page 3: 01/2003-02/2014
+Page 3: 
+Page 3: [20]
+Page 3: 
+Page 3: LSTM
+Page 3: 
+Page 3: Microblogs
+Page 3: 
+Page 3: Hour
+Page 3: 
+Page 3: Stock trend
+Page 3: 
+Page 3: Social media content
+Page 3: 
+Page 3: 2015
+Page 3: 
+Page 3: A tensor representation provides a promising solution
+Page 3: for retaining the interactions among different information
+Page 3: modes for multimodal learning problems. However, the
+Page 3: previous work [16] relied on a framework based on support
+Page 3: tensor regression, which requires iterative estimation of the
+Page 3: parameters for each mode until the objective function converges. Such iterative calculations are time consuming and
+Page 3: constitute a bottleneck for the parallelization of processing.
+Page 3: Moreover, most machine learning algorithms can utilize
+Page 3: only vectorized input features. It is quite challenging to
+Page 3: apply a tensor representation in combination with machine
+Page 3: learning approaches, especially deep learning networks.
+Page 3: 2.2
+Page 3: 
+Page 3: Experiment
+Page 3: 
+Page 3: Information
+Page 3: source
+Page 3: 
+Page 3: Stock comovements
+Page 3: 
+Page 3: As discussed in regard to the above examples of PetroChina
+Page 3: and Air China, it is of great interest to consider the influence
+Page 3: of related companies on stock movements. The challenge
+Page 3: here lies in how to identify related companies. Related to
+Page 3: this challenge is the work on stock comovements.
+Page 3: There are two mainstream methods of studying stock comovements: from the perspective of fundamentals and from
+Page 3: the perspective of investor behavior. Traditional financial
+Page 3: researchers have attributed stock comovments to the fundamental characteristics of the listed companies [27, 28, 29].
+Page 3: For instance, Pindyck and Rotemberg discovered that company size and the degree of institutional ownership influence stock comovements [27]. Preis et al. reported that stock
+Page 3: correlations are reflected by normalized DJIA index returns
+Page 3: on various time scales [28]. Aghabozorgi and Teh attributed
+Page 3: stock comovements to historical transaction prices [29]. In
+Page 3: contrast, in modern behavioral finance, it is believed that
+Page 3: irrational behaviors of investors cause the comovements
+Page 3: of related stocks. For example, Rashes found a highly abnormal positive correlation between two companies with
+Page 3: similar names but nothing else in common, caused by the
+Page 3: irrational feelings of investors [30].
+Page 3: With the advancement of the Web 2.0 era, the influence of
+Page 3: online information on stocks has become salient [9]. The influence of online media involves two aspects: fundamentals
+Page 3: and emotions. Web media enrich investorsΓÇÖ knowledge by
+Page 3: conveying a more comprehensive view of a firmΓÇÖs financial
+Page 3: standing. In addition, Web media provide a platform for
+Page 3: expressing the options of experts and the public moods
+Page 3: of investors, which inevitably affect investor behavior and
+Page 3: 
+Page 3: can even elicit herd behavior [9]. Essentially, Web media
+Page 3: act as a sort of mirror reflecting the fundamentals of listed
+Page 3: companies and affecting investor behavior to some degree.
+Page 3: In this study, we build an innovative media-based enterprise
+Page 3: network to identify related companies in terms of their
+Page 3: media performance.
+Page 3: 
+Page 3: 2.3
+Page 3: 
+Page 3: Stock analysis models
+Page 3: 
+Page 3: Once fundamental data and news information have been
+Page 3: obtained in a machine-friendly form, various types of analysis models can be applied to study media-aware stock movements. There are three mainstream classes of such models:
+Page 3: statistical models (originating from statistics), regression
+Page 3: models (originating from econometrics) and machine learning models (originating from computer science). Table 1
+Page 3: summarizes the related work in terms of these classes of
+Page 3: models.
+Page 3: Statistical models emphasize the correlations between a
+Page 3: single feature and stock markets [7, 8]. For example, Moat
+Page 3: et al. applied the Wilcoxon test to identify the linkage
+Page 3: between a companyΓÇÖs browsing frequency on Wikipedia
+Page 3: and its stock fluctuations. Econometric models focus on the
+Page 3: causal relationships between specific features and market
+Page 3: movements [12, 31, 32]. For example, Huang et al. applied
+Page 3: logistic regression models and found that abnormal optimism in a companyΓÇÖs earnings report exerted a drag on
+Page 3: its stock performance [33]. However, both statistical models
+Page 3: and econometric models often have difficulty preserving the
+Page 3: interconnections among multiple data sources and thus fail
+Page 3: to capture their joint effects on stock performance. Thus,
+Page 3: computer scientists have taken the further step of utilizing
+Page 3: machine learning algorithms to capture such complex nonlinear relationships.
+Page 3: The problem of modeling media-aware stock movements is essentially a binary classification problem. Given
+Page 3: the ability to take high-dimensional data as input, many
+Page 3: machine learning algorithms, including SVMs, Bayesian
+Page 3: classifiers and DT methods, have been applied to solve this
+Page 3: problem [13, 15, 34]. For example, early research can be
+Page 3: traced back to the work of Wuthrich et al., who forecast the
+Page 3: daily trends of five major stock market indexes using a neural network and the KNN algorithm [18]. Later, Schumaker
+Page 3: and Chen estimated a discrete stock price 20 minutes after
+Page 3: 
+Page 3: 
+Page 4: 4
+Page 4: 
+Page 4: 3.1
+Page 4: 
+Page 4: Fig. 2: System framework.
+Page 4: 
+Page 4: the release of a related news article using support vector
+Page 4: regression (SVR) [35].
+Page 4: With the great success of deep learning in various fields,
+Page 4: including text processing [36], image recognition [37], and
+Page 4: speech recognition [38], some researchers have begun to
+Page 4: explore the power of deep learning for capturing mediaaware stock movements [39]. For example, Ding et al. proposed a deep learning method to model both the shortterm and long-term influences on stock price movements
+Page 4: and found that the performance of a deep neural network
+Page 4: (DNN) was better than that of an SVM [39]. Huang et al.
+Page 4: applied a convolutional neural network (CNN) to explore
+Page 4: the impact of public sentiment, as extracted from tweets, on
+Page 4: stock markets [40]. Inspired by the application of recurrent
+Page 4: neural networks (RNNs) to time-series problems, LSTM
+Page 4: models have been widely applied to study media-aware
+Page 4: stock movements [20, 41]. However, these approaches simplify the market information space by adopting a vector representation, which ignores the interconnections among different information modes. In addition, the standard LSTM
+Page 4: technique fails to address the heterogeneity of the sampling
+Page 4: times among different market information modes. In this
+Page 4: article, we model the market information with tensors and
+Page 4: apply an event-driven mechanism to capture the interconnections and balance the heterogeneity of the sampling
+Page 4: times between the different information modes [16].
+Page 4: 
+Page 4: 3
+Page 4: 
+Page 4: M ODEL ARCHITECTURE
+Page 4: 
+Page 4: Stock markets are influenced by various information
+Page 4: sources, including fundamental data and media information. A common strategy in previous studies has been
+Page 4: to concatenate information from these heterogeneous data
+Page 4: sources into a compound vector. However, these vectorbased models treat different information sources as independent features, ignoring the inherent links between them and
+Page 4: thus failing to properly capture stock movements [16]. In
+Page 4: addition, fundamental data are continuous values sampled
+Page 4: at equal time intervals, whereas media information emerges
+Page 4: randomly. This heterogeneity results in valuable information being partially missing. Therefore, we use tensors to
+Page 4: represent market information to preserve the multifaceted
+Page 4: and interrelated nature of the data. On this basis, a multimodal event-driven LSTM model is proposed to capture the
+Page 4: nonlinear relations between market information and stock
+Page 4: movements. Figure 2 shows an overview of the proposed
+Page 4: approach.
+Page 4: 
+Page 4: Tensor representation
+Page 4: 
+Page 4: A tensor is a mathematical representation of a multidimensional array. Specifically, an N -way or N th -order tensor is
+Page 4: an element of the tensor product of N vector spaces, each
+Page 4: of which has its own coordinate system. Essentially, a firstorder tensor is a vector, a second-order tensor is a matrix,
+Page 4: and tensors of order three or higher are called higher-order
+Page 4: tensors. Figure 3 illustrates an example of a second-order
+Page 4: tensor sequence for one stock. Additional details on tensor
+Page 4: algebra can be found in [42].
+Page 4: 
+Page 4: Fig. 3: Market information represented by a second-order
+Page 4: tensor sequence. The tensor representation is used to reinforce the intrinsic links among multiple information sources.
+Page 4: In this study, stock market information is categorized
+Page 4: into two subgroups, namely, fundamental data and media
+Page 4: information, as described below.
+Page 4: F undamental data : The price of a stock is a reflection
+Page 4: of a firmΓÇÖs intrinsic value. Eight firm attributes are selected
+Page 4: to capture the future business value of a firm, and each
+Page 4: attribute has been shown to have some degree of predictive
+Page 4: value [22, 43]. These attributes are the following: highest
+Page 4: price, lowest price, opening price, closing price, turnover,
+Page 4: trading volume, P/B and P/E ratio. More detailed explanation can be found in Table 2.
+Page 4: TABLE 2: Definition of the stock attributes.
+Page 4: Predictor
+Page 4: 
+Page 4: Explanations
+Page 4: 
+Page 4: Opening/
+Page 4: Closing price
+Page 4: 
+Page 4: The first (final) price at which a security is traded on
+Page 4: a given trading day.
+Page 4: 
+Page 4: Highest/
+Page 4: Lowest price
+Page 4: 
+Page 4: The highest (lowest) price at which a security is traded
+Page 4: on a given trading day.
+Page 4: 
+Page 4: Volume of
+Page 4: trade
+Page 4: 
+Page 4: The total quantity of shares or contracts traded for a
+Page 4: specific security.
+Page 4: 
+Page 4: Turnover
+Page 4: 
+Page 4: Turnover calculates how quickly a firm collects cash
+Page 4: from accounts receivable or how fast the firm sells its
+Page 4: inventory.
+Page 4: 
+Page 4: P/E ratio
+Page 4: 
+Page 4: Price-Earnings Ratio is for valuing a company that
+Page 4: measures its current share price relative to its pershare earnings. It can be calculated as: Market Value
+Page 4: per Share / Earning per Share.
+Page 4: 
+Page 4: P/B ratio
+Page 4: 
+Page 4: Price-to-Book Ratio is used to compare a stockΓÇÖs market value to its book value. It can be calculated as:
+Page 4: Market Price per Share/Book Value per Share.
+Page 4: 
+Page 4: M edia data : In modern behavioral finance, it is believed
+Page 4: that investors are irrational, tending to be influenced by expertsΓÇÖ opinions as expressed in the media. To capture media
+Page 4: sentiment, we extract the following characteristics: positive
+Page 4: media sentiment (Pt+ ), negative media sentiment (PtΓêÆ ) and
+Page 4: media sentiment divergence (Dt ). These characteristics are
+Page 4: calculated as follows:
+Page 4: 
+Page 4: 
+Page 5: 5
+Page 5: 
+Page 5: Fig. 4: Illustration of tensor transformations.
+Page 5: 
+Page 5: N+
+Page 5: NΓêÆ
+Page 5: N + ΓêÆ NtΓêÆ
+Page 5: Pt+ = + t ΓêÆ , PtΓêÆ = + t ΓêÆ , Dt = t+
+Page 5: ,
+Page 5: Nt + Nt
+Page 5: Nt + Nt
+Page 5: Nt + NtΓêÆ
+Page 5: 
+Page 5: (1)
+Page 5: 
+Page 5: 
+Page 5: where Nt+ NtΓêÆ is the sum of the frequency of each positive
+Page 5: (negative) sentiment word found in the media on the tth
+Page 5: day. Dt denotes the sentiment divergence on the tth day.
+Page 5: Previous studies have relied on a general emotion word
+Page 5: dictionary to capture media sentiment. However, 73.8%
+Page 5: of the negative sentiment words in this general sentiment
+Page 5: dictionary no longer express negative emotional meanings
+Page 5: in the financial field [9]. For instance, the word ΓÇ¥bearΓÇ¥
+Page 5: originally referred to an ursine animal but indicates poor
+Page 5: earnings returns in the financial domain, e.g., ΓÇ¥a bear stockΓÇ¥.
+Page 5: Therefore, we resort to a finance-oriented sentiment dictionary created in our previous study [16].
+Page 5: After obtaining fundamental information and media
+Page 5: sentiment data, we construct a second-order tensor Xt Γêê
+Page 5: RI1 ├ùI2 to represent the market information at time t. The
+Page 5: variables I1 and I2 represent the numbers of features in the
+Page 5: fundamental data and media data, respectively. In this way,
+Page 5: the interconnections among multiple sources of information
+Page 5: can be preserved. The significance of the elements ai1 ,i2 of
+Page 5: the tensor Xt is defined as follows:
+Page 5: ΓÇó
+Page 5: ΓÇó
+Page 5: ΓÇó
+Page 5: 
+Page 5: ai1 ,1 , 1 < i1 Γëñ I1 , denotes the value of the ith
+Page 5: 1
+Page 5: fundamental information feature.
+Page 5: a2,i2 , 1 < i2 Γëñ I2 , denotes the value of the ith
+Page 5: 2 media
+Page 5: sentiment information feature.
+Page 5: All other elements are initially set to zero.
+Page 5: 
+Page 5: Unlike in traditional vector-based methods, this secondorder tensor is able to capture the correlations characterizing
+Page 5: market information in complementary subspaces.
+Page 5: 3.2
+Page 5: 
+Page 5: Tensor decomposition and reconstruction
+Page 5: 
+Page 5: In this study, we introduce a unique tensor framework to
+Page 5: allow the intrinsic connections between two different information sources to be identified from the geometric structure
+Page 5: of the tensor X . Such identification is achieved through
+Page 5: tensor transformations, namely, Tucker decomposition and
+Page 5: tensor reconstruction. Tucker decomposition is applied to
+Page 5: decompose the tensor X into C ├ù1 R1 ├ù2 R2 [42]. Here,
+Page 5: 
+Page 5: each factor matrix Rk (k = 1, 2) describes one distinct facet
+Page 5: of the information space of the stock market (i.e., fundamental information and media information), and the core
+Page 5: tensor C reflects the strength of the relations between these
+Page 5: two facets. Thus, the decomposition captures the intrinsic
+Page 5: associations and interactions within the tensor X .
+Page 5: After Tucker decomposition, the Rk are further adjusted
+Page 5: to preserve the stock connections based on a stock correlation matrix, which is constructed on the basis of stock
+Page 5: comovements. The intuition here is that if two stocks are
+Page 5: highly correlated, then news articles about one stock are
+Page 5: likely to effect a similar shock to the other stock.
+Page 5: Figure 4 details the tensor transformation process. For
+Page 5: this purpose, we minimize the following Lagrangian objective function to obtain correction factors Vk (k = 1, 2) with
+Page 5: which to adjust the original factor matrix sequences Rki |N
+Page 5: i=1 :
+Page 5: N
+Page 5: 
+Page 5: min L(Vk ) =
+Page 5: 
+Page 5: Vk,k=1,2
+Page 5: 
+Page 5: +
+Page 5: 
+Page 5: +
+Page 5: 
+Page 5: 2
+Page 5: ╬╗X
+Page 5: Xti ΓêÆ C ├ù1 (V1T R1i ) ├ù2 (V2T R2i )
+Page 5: 2 i=1
+Page 5: 
+Page 5: N
+Page 5: 
+Page 5: N
+Page 5: 
+Page 5: N
+Page 5: 
+Page 5: N
+Page 5: 
+Page 5: 2
+Page 5: 1 XX
+Page 5: V1T R1i ΓêÆ V1T R1j si,j
+Page 5: 2 i=1 j=i
+Page 5: 
+Page 5: 2
+Page 5: 1 XX
+Page 5: V2T R2i ΓêÆ V2T R2j si,j .
+Page 5: 2 i=1 j=i
+Page 5: 
+Page 5: (2)
+Page 5: 
+Page 5: 2
+Page 5: 
+Page 5: Here, X ΓêÆ C ├ù1 (V1T R) ├ù2 (V2T R) is used as a normalization constraint to avoid overfitting and to control
+Page 5: the adjusted tensor decomposition to be close to the real
+Page 5: j
+Page 5: 
+Page 5: 2
+Page 5: 
+Page 5: values, whereas VkT Rki ΓêÆ VkT Rk serves to correct Rki by
+Page 5: Vk to minimize the differences among stocks with higher
+Page 5: correlations si,j . The purpose of the adjustment factor si,j
+Page 5: is to minimize the differences in the values of each mode
+Page 5: for related stocks. The method of calculating the si,j is
+Page 5: described in Section 3.3.
+Page 5: To solve this Lagrangian function L and optimize the
+Page 5: objective function, we apply an iterative algorithm to update
+Page 5: the entries in V via gradient descent [26]. The gradient for
+Page 5: each variable is derived as follows:
+Page 5: 
+Page 5: 
+Page 6: 6
+Page 6: 
+Page 6: Γêç v1 L = ╬╗
+Page 6: 
+Page 6: N
+Page 6: X
+Page 6: 
+Page 6: (C ├ù1 (V1T R1i ) ├ù2 (V2T R2i )R1i )
+Page 6: 
+Page 6: i=1
+Page 6: 
+Page 6: + (DR1 ΓêÆ SR1 )V1
+Page 6: Γêç v2 L = ╬╗
+Page 6: 
+Page 6: N
+Page 6: X
+Page 6: 
+Page 6: (3)
+Page 6: 
+Page 6: (C ├ù1 (V1T R1i ) ├ù2 (V2T R2i )R2i )
+Page 6: 
+Page 6: i=1
+Page 6: 
+Page 6: + (DR2 ΓêÆ SR2 )V2 .
+Page 6: PN
+Page 6: i iT
+Page 6: Here, DRk =
+Page 6: i=1 (Rk Rk )di,j , where di,i are the
+Page 6: diagonal entries and are column sums of the correlation
+Page 6: PN
+Page 6: matrix S(i.e., di,i = m=1 sm,i ), while SRk is calculated as
+Page 6: PN PN
+Page 6: i iT
+Page 6: j=i (Rk Rk )si,j . The details of the partial derivative
+Page 6: i=1
+Page 6: can be found in [16]. The iterative procedure for updating V1 and V2 is performed until the objective function
+Page 6: converges. Thus, the reconstructed tensor is defined as
+Page 6: e = C ├ù1 (V T Ri ) ├ù2 (V T Ri ). The algorithm for the
+Page 6: X
+Page 6: 1
+Page 6: 1
+Page 6: 2
+Page 6: 2
+Page 6: learning process is detailed in Algorithm 1.
+Page 6: Algorithm 1 Iterative machine learning approach for tensor
+Page 6: transformation
+Page 6: Input: The tensor stream X , the global correlation matrix
+Page 6: S , and the error threshold ╬╡ .
+Page 6: e = C i ├ù1 (V T Ri ) ├ù2
+Page 6: Output: The mapped tensor stream X
+Page 6: 1
+Page 6: 1
+Page 6: T i
+Page 6: (V2 R2 )
+Page 6: 1: From i = 1 to N (N is the total number of stocks)
+Page 6: 2:
+Page 6: Decompose the tensor X i into C i ├ù1 R1i ├ù2 R2i
+Page 6: 3: End
+Page 6: 4: Set ╬╖ as the step size for gradient descent
+Page 6: 5: While (Lossn ΓêÆ LossnΓêÆ1 > ╬╡)
+Page 6: 6:
+Page 6: Get 5v1 L, 5v2 L
+Page 6: 7:
+Page 6: v1n+1 = v1n ΓêÆ ╬╖ 5v1 L
+Page 6: 8:
+Page 6: v2n+1 = v2n ΓêÆ ╬╖ 5v2 L
+Page 6: 9:
+Page 6: n=n+1
+Page 6: 10: End while
+Page 6: 11: From i = 1 to N
+Page 6: e = C ├ù1 (V T Ri ) ├ù2 (V T Ri )
+Page 6: 12:
+Page 6: X
+Page 6: 1
+Page 6: 1
+Page 6: 2
+Page 6: 2
+Page 6: 13: End
+Page 6: 
+Page 6: 3.3
+Page 6: 
+Page 6: Stock Relatedness
+Page 6: 
+Page 6: Stock movements are influenced by fluctuations of related
+Page 6: stocks. There are two ways to define the concept of ΓÇÖrelatedΓÇÖ
+Page 6: stocks [44]. In traditional finance, related stocks are determined by their fundamental characteristics [27, 28]. From
+Page 6: this perspective, the correlations si,j in Equation (2) can be
+Page 6: calculated as follows:
+Page 6: 
+Page 6: si,j =
+Page 6: 
+Page 6: E((xi ΓêÆuxi )(yj ΓêÆuyj ))
+Page 6: ,
+Page 6: ╧âxi ╧âyj
+Page 6: 
+Page 6: (4)
+Page 6: 
+Page 6: where the xi are the fundamental features of firm i and the
+Page 6: yj are the fundamental features of firm j . Essentially, the si,j
+Page 6: are the Pearson correlation coefficients applied to calculate
+Page 6: the correlations between the two firms. u is the mean value,
+Page 6: and ╧â is the standard error.
+Page 6: 
+Page 6: In modern behavioral finance, stock comovements are
+Page 6: considered to be affected by the collective opinions of irrational investors [30]. To some extent, financial news articles
+Page 6: provide summaries of both firm fundamentals and investor
+Page 6: opinions. In other words, news articles enrich investorsΓÇÖ
+Page 6: knowledge by conveying a more comprehensive view of a
+Page 6: firmΓÇÖs financial standing than is provided by a firmΓÇÖs price
+Page 6: alone. The optimism and pessimism characterizing news
+Page 6: articles may affect the emotions of irrational investors.
+Page 6: In this study, we construct a media-based enterprise
+Page 6: network to identify the stocks related to a target firm. In
+Page 6: this network, each node represents a listed firm, and an
+Page 6: edge between two nodes represents the news co-exposure
+Page 6: of the two corresponding firms. Specifically, if two firms
+Page 6: are mentioned in the same news articles, there is a link
+Page 6: between them. The edge between two firms is weighted by
+Page 6: the total number of news articles mentioning both firms.
+Page 6: Note that we disregard news articles mentioning more than
+Page 6: five firms consecutively because such news items usually do
+Page 6: not convey useful information [26].
+Page 6: In this enterprise network, we can simply treat firms
+Page 6: with direct connections to the target firm i as related firms.
+Page 6: However, this approach ignores the transitive effect. Specifically, as shown in Figure 5, a news article related to firm A
+Page 6: may affect firms B , C and D since they are directly linked
+Page 6: to firm A. Moreover, firm E could be affected as well. This
+Page 6: is because the influence of firm A could be passed through
+Page 6: firms B and C to firm E . Therefore, we take the further
+Page 6: step of adopting the community linkage method to bridge
+Page 6: relevant firms without direct linkages [45].
+Page 6: 
+Page 6: Fig. 5: Simple pairwise correlations and the community
+Page 6: linkage method.
+Page 6: In particular, we first calculate the relationship between
+Page 6: firms i and j as follows:
+Page 6: P
+Page 6: T
+Page 6: (Ni Nj )
+Page 6: P
+Page 6: S
+Page 6: si,j =
+Page 6: ,
+Page 6: (5)
+Page 6: (Ni Nj )
+Page 6: where Ni is the sum of the correlations of Node i and Nj is
+Page 6: the sum of the correlations of Node j . A larger si,j indicates
+Page 6: a higher correlation. The final relation matrix S Γêê RN ├ùN is
+Page 6: a Boolean matrix, and each of its entries si,j is defined as
+Page 6: follows:
+Page 6: 
+Page 6: 1 if i Γëñ j and s╠äi,j ΓëÑ ╬╕
+Page 6: si,j =
+Page 6: (6)
+Page 6: 0 otherwise
+Page 6: where ╬╕ is a threshold. Therefore, the related firms are the
+Page 6: firms with an entry value of 1 with respect to the target
+Page 6: firm. This information is utilized in Equation (2) to bridge
+Page 6: and reinforce the interactions among related firms.
+Page 6: 
+Page 6: 
+Page 7: 7
+Page 7: 
+Page 7: Fig. 6: Illustration of the proposed event-driven long short-term memory unit and its application for analyzing stock market
+Page 7: information. At the tth day, it considers the event effect of the previous k days.
+Page 7: 
+Page 7: 3.4
+Page 7: 
+Page 7: Multimodal event-driven LSTM model
+Page 7: 
+Page 7: A long short-term memory (LSTM) model is a variant of
+Page 7: a recurrent neural network (RNN) that is able to handle
+Page 7: long-term dependencies by means of a gate mechanism [46].
+Page 7: Such a model is designed to handle time sequence data collected at equal intervals, such as daily transaction data [20].
+Page 7: However, predicting media-driven stock movements is essentially a multimodal problem, in which each mode has
+Page 7: unique characteristics. Specifically, the information space
+Page 7: for stock markets consists of both fundamental information
+Page 7: and media information. The fundamental data are daily
+Page 7: transaction records sampled at equal intervals. In contrast,
+Page 7: the data for the media mode consist of discrete values
+Page 7: sampled at nonequal time intervals due to the random time
+Page 7: distribution of news releases. This randomness can lead
+Page 7: to failure of the long-term dependency mechanism of an
+Page 7: LSTM model [47]. Specifically, if two similar news articles
+Page 7: are released with a sufficiently large time gap, the LSTM
+Page 7: model may forget the knowledge learned from the first news
+Page 7: article before processing the information from the second. To
+Page 7: solve this problem, we propose a novel event-driven LSTM
+Page 7: model by extending an LSTM model to include an eventdriven memory mechanism. In addition, we adopt a tensor
+Page 7: representation to capture the interactions among different
+Page 7: modes of the multimodal data.
+Page 7: 3.4.1
+Page 7: 
+Page 7: Event-driven LSTM model
+Page 7: 
+Page 7: Market information takes the form of multimodal data with
+Page 7: a continuous fundamentals mode and a discrete news mode.
+Page 7: To solve the stock movements prediction problem given
+Page 7: data collected at nonuniformly distributed time intervals,
+Page 7: we propose an event-driven LSTM model, in which a
+Page 7: triggering strategy is applied to reinforce the event-based
+Page 7: information obtained in previous stages. Figure 6 shows the
+Page 7: details of the proposed event-driven LSTM model.
+Page 7: As seen in Figure 6, all market information at time t
+Page 7: is represented by a tensor Xt . The event information Et
+Page 7: is represented by a vector < e0 , e1 , . . . , et >, where et is
+Page 7: the total number of news articles at time t. There are two
+Page 7: information flows recording the learned knowledge in the
+Page 7: network. Specifically, the cell memory Ct records the eventbased knowledge learned from previous stages, and the out-
+Page 7: 
+Page 7: put Ht records the patterns learned from previous market
+Page 7: information at time t. A forget gate Ft is utilized to control
+Page 7: how much information should be retained or forgotten from
+Page 7: the cell memory CtΓêÆ1 at time t. In other words, Ft allows
+Page 7: information in CtΓêÆ1 that is useless with respect to HtΓêÆ1
+Page 7: and Xt to be discarded. An input gate It is used to control
+Page 7: how much current information should be absorbed into the
+Page 7: event knowledge flow C . In this structure, the temporary
+Page 7: et stores the knowledge learned from both the
+Page 7: memory C
+Page 7: current market information Xt and the information HtΓêÆ1
+Page 7: from the previous stage via the mapping function in the
+Page 7: neural network. Therefore, C╠ét is able to capture the valuable
+Page 7: rules and patterns hidden in both the previous and current
+Page 7: et , Ft , It and C╠ét are calculated as follows:
+Page 7: time periods. C
+Page 7: et = tanh(Wc Γêù Xt + Uc Γêù HtΓêÆ1 + Vc Γêù Et + Bc )
+Page 7: C
+Page 7: 
+Page 7: (7)
+Page 7: 
+Page 7: Ft = ╧â(Wf Γêù Xt + Uf Γêù HtΓêÆ1 + Vf Γêù Et + Bf )
+Page 7: 
+Page 7: (8)
+Page 7: 
+Page 7: It = ╧â(Wi Γêù Xt + Ui Γêù HtΓêÆ1 + Vi Γêù Et + Bi )
+Page 7: 
+Page 7: (9)
+Page 7: 
+Page 7: et ,
+Page 7: C╠ét = ft Γùª CtΓêÆ1 + It Γùª C
+Page 7: 
+Page 7: (10)
+Page 7: 
+Page 7: where {Wc , Uc , Vc } are the parameters of the temporary
+Page 7: cell, with Bc being the corresponding bias; {Wf , Uf , Vf }
+Page 7: are the parameters of the forget gate, with Bf being the
+Page 7: corresponding bias; {Wi , Ui , Vi } are the parameters of the
+Page 7: input gate, with Bi being the corresponding bias; ΓÇÖΓùªΓÇÖ denotes
+Page 7: the Hadamard product; and ΓÇÖΓêùΓÇÖdenotes the convolution
+Page 7: operator. The convolution operator ΓÇÖΓêùΓÇÖ, which is used to
+Page 7: process the tensor-based market information, is explained
+Page 7: in Section 3.4.2.
+Page 7: To address events occurring at nonequal time intervals,
+Page 7: Et is used to control what type of market information
+Page 7: should be utilized on the basis of event occurrence at time t.
+Page 7: Thus, we obtain an event control factor rt via a nonincreasing mapping function, as follows:
+Page 7: 
+Page 7: rt = ╧â(Vr Γêù Et + Br )
+Page 7: 
+Page 7: (11)
+Page 7: 
+Page 7: If the market information is strongly related to current
+Page 7: events, rt tends to be large. In this case, more eventrelated information Cr will be retained in the cell memory.
+Page 7: Specifically, the event-related memory Cr can be extracted
+Page 7: 
+Page 7: 
+Page 8: 8
+Page 8: 
+Page 8: via a tanh function, and the cell memory Ct at time t is
+Page 8: determined by Equation (13):
+Page 8: 
+Page 8: Cr = tanh(C╠ét )
+Page 8: 
+Page 8: (12)
+Page 8: 
+Page 8: Ct = C╠ét + (Cr Γùª rt ΓêÆ Cr )
+Page 8: 
+Page 8: (13)
+Page 8: 
+Page 8: Finally, the cell memory Ct and the market information
+Page 8: Xt together are passed through the output gate Ot to obtain
+Page 8: the output Ht . Specifically,
+Page 8: 
+Page 8: Ot = ╧â(Wo Γêù Xt + Uo Γêù HtΓêÆ1 + Vo Γêù Et + Bo )
+Page 8: Ht = Ot Γùª tanh(Ct )
+Page 8: 
+Page 8: (14)
+Page 8: (15)
+Page 8: 
+Page 8: With this proposed architecture, we are able to address
+Page 8: multimodal data with heterogeneous sampling intervals,
+Page 8: specifically, data for which some data modes are sampled
+Page 8: at equal intervals and other modes are sampled at nonequal
+Page 8: intervals. The pseudocode for this proposed algorithm is
+Page 8: presented in Algorithm 2.
+Page 8: 
+Page 8: interrelations among different sources of market information X t Γêê RI1 ├ùI2 can be captured for further analysis.
+Page 8: 
+Page 8: 4
+Page 8: 
+Page 8: E XPERIMENTAL EVALUATION
+Page 8: 
+Page 8: To gauge the effectiveness of the proposed approach for
+Page 8: predicting media-aware stock movements, we conducted a
+Page 8: series of experiments using actual market transaction data
+Page 8: from January 1, 2015, to December 31, 2015. The source code
+Page 8: and dataset are accessible on GitHub1 .
+Page 8: 4.1
+Page 8: 
+Page 8: Experimental data
+Page 8: 
+Page 8: In our experiments, we extended the CSI 100 stock data
+Page 8: provided by Li et al. [9] with additional financial news
+Page 8: articles crawled by our focus-topic crawler, as follows,
+Page 8: ΓÇó
+Page 8: 
+Page 8: Algorithm 2 Event-driven long short-term memory model
+Page 8: Input: The training tensor stream Xti |N
+Page 8: i=1 and the associ.
+Page 8: ated stock trends yti |N
+Page 8: i=1
+Page 8: Output: Trained proposed model for stock predictions.
+Page 8: 1: For time step t = 1 to T Do
+Page 8: et from the input at
+Page 8: 2:
+Page 8: Obtain candidate cell state C
+Page 8: time t and the output at time t ΓêÆ 1(t > 1) by
+Page 8: Eq. 7.
+Page 8: 3:
+Page 8: Process information in time t through forget gate Ft
+Page 8: and input gate It by Eq. 8, 9.
+Page 8: 4:
+Page 8: Obtain cell memory C╠ét at time t by Eq. 10.
+Page 8: 5:
+Page 8: Update cell memory C╠ét through the event-driven
+Page 8: mechanism by Eq. 11- 13 and obtain the new cell
+Page 8: state Ct at time t.
+Page 8: 6:
+Page 8: Obtain the output Ht through output gate Ot by
+Page 8: Eq. 14, 15.
+Page 8: 7: End for
+Page 8: 
+Page 8: 3.4.2 Tensor-based convolution operation:
+Page 8: In Figure 6, the market information Xt is fed into the
+Page 8: network along with the learned knowledge HtΓêÆ1 from the
+Page 8: previous stage t ΓêÆ 1 for further analysis at time t. However,
+Page 8: Xt and HtΓêÆ1 are represented by tensors, which cannot be
+Page 8: concatenated into a super compound vector, as is the case in
+Page 8: a traditional LSTM model.
+Page 8: To merge, multiply, and sum this knowledge and information represented by tensors in the proposed network, as
+Page 8: shown in Figure 6, we apply the convolution operations
+Page 8: of the ConvLSTM model to process the tensors, as done
+Page 8: in [48]. By virtue of the advantages of local connections and
+Page 8: weight sharing possessed by these convolution operations,
+Page 8: it becomes possible to capture the interactions among different information sources modeled as different tensor subspaces. Essentially, ConvLSTM provides the unique feature
+Page 8: of temporally propagating interconnections through each
+Page 8: ConvLSTM state. This makes it possible for us to process
+Page 8: time-series data represented as tensors.
+Page 8: The convolution operation in Equations (7) to (14) is
+Page 8: defined as ΓÇÖΓêùΓÇÖ and makes it possible to process tensors
+Page 8: instead of vectors in the proposed network. Therefore, the
+Page 8: 
+Page 8: ΓÇó
+Page 8: 
+Page 8: Fundamental data: This dataset contains the financial
+Page 8: statuses of 100 companies listed on the China Securities Index (CSI 100) between January 1, 2015, and
+Page 8: December 31, 2015. Since the companies on the CSI
+Page 8: 100 list are updated every six months, we selected
+Page 8: 91 companies that remained on the list for the entire
+Page 8: period.
+Page 8: Media data: The release of important news information affects investorsΓÇÖ expectations concerning a companyΓÇÖs future, resulting in stock market fluctuations.
+Page 8: We selected 45, 021 news data points related to the
+Page 8: 91 selected companies listed on the CSI 100 from
+Page 8: www.eastmoney.com, which is one of the largest
+Page 8: financial information websites in China.
+Page 8: 
+Page 8: Table 3 summarizes the descriptive statistics of the main
+Page 8: variables of these two data sources. From Table 3(a), it can
+Page 8: be observed that the variation in volume is substantial. Conversely, the variations in stock prices (opening price, closing
+Page 8: price, highest price and lowest price) are much smaller. The
+Page 8: standard derivations of these prices are all around 20. This
+Page 8: is understandable because the highest price of any stock
+Page 8: is 116, while volume can reach a considerable quantity of
+Page 8: shares (51, 354, 670). Furthermore, as indicated earlier, the
+Page 8: stock prices wander around a firmΓÇÖs intrinsic value and thus
+Page 8: have relatively low volatility.
+Page 8: Table 3(b) shows the statistical information of our media
+Page 8: data set. There are 34, 656 positive and 10, 365 negative
+Page 8: news articles. The number of positive news articles is approximately 3.5 times the number of negative news articles.
+Page 8: This is consistent with the findings that news about the
+Page 8: stock markets tends to present positive sentiment towards a
+Page 8: firm [49]. The shortest positive news consists of 18 words,
+Page 8: while the shortest negative news is 16 words. The longest
+Page 8: news article reaches 20, 936 words. At the company level,
+Page 8: the firm with the least news coverage has only 74 news
+Page 8: reports, while the firm with the most public attention has
+Page 8: 6, 303 news articles.
+Page 8: In our experiments, the data of the first 9 months are
+Page 8: utilized to train the model, and the last 3 months of data are
+Page 8: used for evaluation. Note that the evaluation is conducted
+Page 8: in a rolling window fashion. In particular, the basic model
+Page 8: is trained with the first 9 months of data. When evaluating
+Page 8: the tth day in the test period, the input data prior to the tth
+Page 8: 1. https://github.com/Tanny16/Tensor-based-eLSTM.
+Page 8: 
+Page 8: 
+Page 9: 9
+Page 9: 
+Page 9: day are continuously added to update the training model,
+Page 9: ensuring the latest market information is included.
+Page 9: TABLE 3: Descriptive statistics of features.
+Page 9: 
+Page 9: riskier asset. The higher the ratio is, the greater the investment return relative to the amount of risk taken, and thus,
+Page 9: the better the investment. It can be defined as,
+Page 9: 
+Page 9: S=
+Page 9: 
+Page 9: (a) Descriptive statistics of fundamental data
+Page 9: Variables
+Page 9: 
+Page 9: Min
+Page 9: 
+Page 9: Mean
+Page 9: 
+Page 9: Max
+Page 9: 
+Page 9: Opening price
+Page 9: Closing price
+Page 9: Highest price
+Page 9: Lowest price
+Page 9: Turnover
+Page 9: Volume
+Page 9: P/B ratio
+Page 9: P/E ratio
+Page 9: 
+Page 9: 2.200
+Page 9: 2.220
+Page 9: 2.290
+Page 9: 2.200
+Page 9: 0.009
+Page 9: 1,018
+Page 9: 0.817
+Page 9: 6.642
+Page 9: 
+Page 9: 26.602
+Page 9: 26.633
+Page 9: 27.118
+Page 9: 26.150
+Page 9: 1.685
+Page 9: 948,717
+Page 9: 3.367
+Page 9: 40.428
+Page 9: 
+Page 9: 110.710
+Page 9: 20.479
+Page 9: 112.300
+Page 9: 20.517
+Page 9: 116.000
+Page 9: 20.887
+Page 9: 110.710
+Page 9: 20.134
+Page 9: 62.248
+Page 9: 2.413
+Page 9: 51,354,670 2,177,324
+Page 9: 14.889
+Page 9: 1.911
+Page 9: 477.466
+Page 9: 61.221
+Page 9: 
+Page 9: Std
+Page 9: 
+Page 9: 25%
+Page 9: 
+Page 9: 75%
+Page 9: 
+Page 9: 12.410
+Page 9: 12.438
+Page 9: 12.715
+Page 9: 12.150
+Page 9: 0.439
+Page 9: 138,306
+Page 9: 1.920
+Page 9: 12.113
+Page 9: 
+Page 9: 32.400
+Page 9: 32.450
+Page 9: 32.990
+Page 9: 31.818
+Page 9: 1.916
+Page 9: 871,434
+Page 9: 4.420
+Page 9: 36.977
+Page 9: 
+Page 9: (b) Descriptive statistics of media data
+Page 9: Category
+Page 9: P
+Page 9: News
+Page 9: Total
+Page 9: 
+Page 9: 4.2
+Page 9: 
+Page 9: N
+Page 9: 
+Page 9: News Length
+Page 9: 
+Page 9: Nn
+Page 9: 
+Page 9: Company News Count
+Page 9: 
+Page 9: Min
+Page 9: 
+Page 9: Avg
+Page 9: 
+Page 9: Max
+Page 9: 
+Page 9: Low
+Page 9: 
+Page 9: Avg
+Page 9: 
+Page 9: Top
+Page 9: 
+Page 9: 34,656
+Page 9: 
+Page 9: 18
+Page 9: 
+Page 9: 1,200.79
+Page 9: 
+Page 9: 20,936
+Page 9: 
+Page 9: 63
+Page 9: 
+Page 9: 1,263.52
+Page 9: 
+Page 9: 5,512
+Page 9: 
+Page 9: 10,365
+Page 9: 
+Page 9: 16
+Page 9: 
+Page 9: 727.52
+Page 9: 
+Page 9: 8,758
+Page 9: 
+Page 9: 9
+Page 9: 
+Page 9: 42.34
+Page 9: 
+Page 9: 210
+Page 9: 
+Page 9: 45,021
+Page 9: 
+Page 9: 16
+Page 9: 
+Page 9: 1,136.99
+Page 9: 
+Page 9: 20,936
+Page 9: 
+Page 9: 74
+Page 9: 
+Page 9: 1,418.22
+Page 9: 
+Page 9: 6,303
+Page 9: 
+Page 9: Evaluation settings
+Page 9: 
+Page 9: In this study, the directional accuracy (DA) and the
+Page 9: Matthews correlation coefficient (MCC) were selected as
+Page 9: evaluation metrics to measure the system performance
+Page 9: [16, 26, 39, 50]. The DA is the most popular metric for
+Page 9: stock classification tasks. This metric measures the upward
+Page 9: or downward differences in the predicted trends compared
+Page 9: to the actual changes in stock prices.
+Page 9: However, the DA tends to exhibit bias if the classes are
+Page 9: of very different sizes. Suppose that there are 100 samples,
+Page 9: among which 98% are positive samples and the remainder
+Page 9: are negative samples. If a classifier judges all samples to
+Page 9: be positive samples, the DA achieved is 98%. However,
+Page 9: this classifier fails to recognize the negative samples even
+Page 9: though it has a high DA. Therefore, in this study, we
+Page 9: also adopted the MCC metric avoid such bias caused by
+Page 9: skewed data. For both metrics, a larger value indicates better
+Page 9: performance. The two metrics are defined as follows:
+Page 9: n
+Page 9: (16)
+Page 9: DA =
+Page 9: N
+Page 9: tp ├ù tn ΓêÆ f p ├ù f n
+Page 9: M CC = p
+Page 9: ,
+Page 9: (tp + f p)(tp + f n)(tn + f p)(tn + f n)
+Page 9: 
+Page 9: (17)
+Page 9: 
+Page 9: where n is the number of predictions for which the predicted trend and the actual stock trend show the same
+Page 9: direction of stock movements and N is the total number
+Page 9: of predictions over several days. tp(tn) is the number of
+Page 9: positive (negative) samples correctly classified as positive
+Page 9: (negative) ones. f p(f n) is the number of negative (positive)
+Page 9: samples falsely classified as positive (negative) ones.
+Page 9: In addition, considering the financial scenario, the
+Page 9: Sharpe ratio is applied to measure the investment robustness of the proposed multimodal event-driven LSTM framework. The Sharpe ratio helps investors compare investments
+Page 9: in terms of both risks and returns [49]. Specifically, the
+Page 9: Sharpe ratio describes how much excess return the investors
+Page 9: receive for the extra volatility they endure for holding a
+Page 9: 
+Page 9: rm ΓêÆ rf
+Page 9: ,
+Page 9: ╧â
+Page 9: 
+Page 9: (18)
+Page 9: 
+Page 9: where rm is the mean return of an investment, rf is the
+Page 9: risk-free rate represented by the bank rate, and ╧â is the standard deviation of the investment return/volatility. Thus, the
+Page 9: Sharpe ratio S measures the excess return per unit of risk.
+Page 9: It allows an investor to better isolate the profits associated
+Page 9: with risk-taking activities.
+Page 9: We take the further step of evaluating the k -day-ahead
+Page 9: influence of media information. In particular, there are
+Page 9: several k -day-ahead stock trends that can be of interest to
+Page 9: investors. We carry out three tracks with different trends, as
+Page 9: suggested by [11]. In Table 4, target 1 compares the opening
+Page 9: stock price on day i + k with the opening price on day i.
+Page 9: Target 2 follows the same logic but based on the closing
+Page 9: price instead of the opening price. For target 3, we compare
+Page 9: the closing price on day i + k with the opening price on day
+Page 9: i. Although the targets of these three tracks are different,
+Page 9: their inputs, which consist of the fundamental and media
+Page 9: features from the previous k days, are the same. It can be
+Page 9: 1
+Page 9: 2
+Page 9: m
+Page 9: , ft+kΓêÆ1
+Page 9: , ..., ft+kΓêÆ1
+Page 9: >,
+Page 9: defined as < ft1 , ft2 , ..., ftm , ..., ft+kΓêÆ1
+Page 9: where m is the number of features.
+Page 9: TABLE 4: Three k -days-ahead targets.
+Page 9: 
+Page 9: 4.3
+Page 9: 
+Page 9: Tracks
+Page 9: 
+Page 9: Targets formula
+Page 9: 
+Page 9: Target 1
+Page 9: Target 2
+Page 9: Target 3
+Page 9: 
+Page 9: open
+Page 9: priceopen
+Page 9: i+k ΓêÆ pricei+kΓêÆ1
+Page 9: close
+Page 9: priceclose
+Page 9: ΓêÆ
+Page 9: price
+Page 9: i+k
+Page 9: i+kΓêÆ1
+Page 9: open
+Page 9: priceclose
+Page 9: ΓêÆ
+Page 9: price
+Page 9: i+k
+Page 9: i+kΓêÆ1
+Page 9: 
+Page 9: Model parameters
+Page 9: 
+Page 9: Essentially, the proposed algorithm is an extension of the
+Page 9: traditional LSTM approach. The basic framework of our
+Page 9: algorithm was implemented using Keras and TensorFlow.
+Page 9: We tuned the parameters to achieve the optimal performance of the proposed method. In our preliminary study,
+Page 9: we found an optimal ╬╕ of 0.8 in Equation (6). We also found
+Page 9: that among several classical activation functions, including
+Page 9: the sigmoid, tanh, and exponential linear unit (ELU), the
+Page 9: rectified linear unit (ReLU) function achieved the best performance. We utilized the Adam optimizer because it allows
+Page 9: the learning rate to be set automatically based on the update
+Page 9: history of the model weights.
+Page 9: In addition, we carry out a series of experiments with
+Page 9: different k days ahead to investigate the optimal period
+Page 9: of influence of the media on stock movements. Figure 7
+Page 9: shows that stock markets respond to the news immediately,
+Page 9: and the impact of the media on stock markets lasts for a
+Page 9: few days. Such influence is able to last up to 6 days and
+Page 9: attenuates thereafter in terms of both the DA and MCC in
+Page 9: our experimental setting. This finding supports the findings
+Page 9: of previous studies regarding the short-term effect of mediaaware stock movements [9, 35]. Note that, since k indicates
+Page 9: the future time after releasing a news article, the range of k
+Page 9: starts from 1 as shown in the x-axis of Figure 7.
+Page 9: 
+Page 9: 
+Page 10: 10
+Page 10: 0.64
+Page 10: 
+Page 10: 0.50
+Page 10: 0.45
+Page 10: 
+Page 10: 0.62
+Page 10: 0.40
+Page 10: 0.35
+Page 10: 
+Page 10: MCC
+Page 10: 
+Page 10: Accuracy
+Page 10: 
+Page 10: 0.60
+Page 10: 
+Page 10: 0.58
+Page 10: 
+Page 10: 0.30
+Page 10: 0.25
+Page 10: 
+Page 10: 0.56
+Page 10: 0.20
+Page 10: 
+Page 10: 0.54
+Page 10: 
+Page 10: 0.15
+Page 10: 0.10
+Page 10: 
+Page 10: 0.52
+Page 10: 1
+Page 10: 
+Page 10: 5
+Page 10: 
+Page 10: 10
+Page 10: 
+Page 10: 15
+Page 10: 
+Page 10: 1
+Page 10: 
+Page 10: 20
+Page 10: 
+Page 10: 5
+Page 10: 
+Page 10: 10
+Page 10: 
+Page 10: 15
+Page 10: 
+Page 10: 20
+Page 10: 
+Page 10: Days
+Page 10: 
+Page 10: Days
+Page 10: 
+Page 10: (a) Directional accuracy
+Page 10: 
+Page 10: (b) Matthews correlation coefficient
+Page 10: 
+Page 10: Fig. 7: DA (a) and MCC (b) over different day intervals for the proposed multimodal event-driven LSTM model.
+Page 10: 
+Page 10: 0.5
+Page 10: xxxxxxxxxxxx
+Page 10: xxxxxxxxxxxx
+Page 10: xxxxxxxxxxxx
+Page 10: xxxxxxxxxxxx
+Page 10: 
+Page 10: SVM
+Page 10: BP
+Page 10: TeSIA
+Page 10: 
+Page 10: LSTM
+Page 10: TeSIA
+Page 10: Our Model
+Page 10: 
+Page 10: Accuracy
+Page 10: 
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: 
+Page 10: Target 1
+Page 10: 
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: 
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: 
+Page 10: Target 2
+Page 10: 
+Page 10: DT
+Page 10: LSTM
+Page 10: Our Model
+Page 10: 
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: 
+Page 10: 0.3
+Page 10: 
+Page 10: 0.2
+Page 10: 
+Page 10: 0.1
+Page 10: 
+Page 10: 0.0
+Page 10: 
+Page 10: Target 3
+Page 10: 
+Page 10: (a) Directional accuracy
+Page 10: 
+Page 10: xxxxxxxxxxx
+Page 10: xxxxxxxxxxx
+Page 10: xxxxxxxxxxx
+Page 10: xxxxxxxxxxx
+Page 10: xxxxxxxxxxx
+Page 10: xxxxxxxxxxx
+Page 10: 
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: 
+Page 10: 0.4
+Page 10: 
+Page 10: MCC
+Page 10: 
+Page 10: SVM
+Page 10: DT
+Page 10: BP
+Page 10: 
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: xxxxxx
+Page 10: 
+Page 10: Target 2
+Page 10: 
+Page 10: Target 1
+Page 10: 
+Page 10: Target 3
+Page 10: 
+Page 10: (b) Matthews correlation coefficient
+Page 10: 
+Page 10: Fig. 8: Prediction results for the directions of stock movements.
+Page 10: 4.4
+Page 10: 
+Page 10: Comparison
+Page 10: 
+Page 10: To gauge the overall performance of the proposed approach,
+Page 10: we compared it with several classic methods, including
+Page 10: SVM, DT, backpropagation (BP) neural network, and LSTM
+Page 10: models. The baselines are described as follows:
+Page 10: ΓÇó
+Page 10: 
+Page 10: ΓÇó
+Page 10: 
+Page 10: ΓÇó
+Page 10: 
+Page 10: ΓÇó
+Page 10: 
+Page 10: ΓÇó
+Page 10: 
+Page 10: ΓÇó
+Page 10: 
+Page 10: SVM: We directly concatenated the fundamental and
+Page 10: media information to form a super compound vector,
+Page 10: and used this vector as the input to the SVM model.
+Page 10: DT: The DT approach is an effective modeling
+Page 10: method for stock forecasting. Therefore, we applied
+Page 10: it as one of our benchmarks. The concatenated compound vector was directly fed into the DT model for
+Page 10: predictions.
+Page 10: BP: We concatenated the fundamental and media
+Page 10: information into a compound vector, which was fed
+Page 10: into the BP neural network to generate predictions.
+Page 10: LSTM: LSTM networks can achieve excellent performance on time-series data. Here, we applied an
+Page 10: LSTM model to capture the time dependency of stock
+Page 10: data. The concatenated compound vector was used
+Page 10: as the input to the LSTM model.
+Page 10: TeSIA: TeSIA is one of the state-of-the-art methods
+Page 10: for forecasting media-aware stock movements [16].
+Page 10: In TeSIA, the market information is modeled with
+Page 10: tensors to capture the interconnections among different information modes. Here, we modeled the fundamental and media information as tensors instead
+Page 10: of using vectors as input.
+Page 10: Our model: For our proposed multimodal eventdriven LSTM model, the fundamental and media
+Page 10: information are modeled as tensors to be used as the
+Page 10: input to the model.
+Page 10: 
+Page 10: Thus, we compared the proposed method to five classic
+Page 10: approaches (SVM, DT, BP, LSTM, and TeSIA) with three
+Page 10: 
+Page 10: different targets representing different predicted outcomes.
+Page 10: Table 5 and Figure 8 present the details of our experimental
+Page 10: results.
+Page 10: TABLE 5: Prediction results for the directions of stock movements.
+Page 10: Target 1
+Page 10: 
+Page 10: Target 2
+Page 10: 
+Page 10: Target 3
+Page 10: 
+Page 10: Model
+Page 10: 
+Page 10: DA
+Page 10: 
+Page 10: MCC
+Page 10: 
+Page 10: DA
+Page 10: 
+Page 10: MCC
+Page 10: 
+Page 10: DA
+Page 10: 
+Page 10: MCC
+Page 10: 
+Page 10: SVM
+Page 10: DT
+Page 10: BP
+Page 10: LSTM
+Page 10: TeSIA
+Page 10: Our model
+Page 10: 
+Page 10: 0.547
+Page 10: 0.562
+Page 10: 0.542
+Page 10: 0.571
+Page 10: 0.584
+Page 10: 0.617
+Page 10: 
+Page 10: 0.1956
+Page 10: 0.2244
+Page 10: 0.1438
+Page 10: 0.2354
+Page 10: 0.2775
+Page 10: 0.3516
+Page 10: 
+Page 10: 0.519
+Page 10: 0.537
+Page 10: 0.551
+Page 10: 0.583
+Page 10: 0.576
+Page 10: 0.614
+Page 10: 
+Page 10: 0.0679
+Page 10: 0.1277
+Page 10: 0.1997
+Page 10: 0.2594
+Page 10: 0.2371
+Page 10: 0.3304
+Page 10: 
+Page 10: 0.528
+Page 10: 0.524
+Page 10: 0.539
+Page 10: 0.601
+Page 10: 0.597
+Page 10: 0.624
+Page 10: 
+Page 10: 0.1374
+Page 10: 0.1195
+Page 10: 0.1422
+Page 10: 0.3058
+Page 10: 0.2789
+Page 10: 0.4472
+Page 10: 
+Page 10: In terms of both the DA and MCC metrics, the SVM
+Page 10: and DT models achieved the best performance for target 1
+Page 10: among the three considered targets. The BP model achieved
+Page 10: its best performance for target 2, whereas LSTM, TeSIA
+Page 10: and the proposed approach achieved their best performance
+Page 10: for target 3. Among the baseline models, the models that
+Page 10: achieved their best performance for target 3 also achieved
+Page 10: better performance overall compared with the traditional
+Page 10: SVM, DT and BP models. A good explanation for this
+Page 10: behavior is that the memory dependency in the LSTM
+Page 10: network enhances the effectiveness of LSTM-based methods
+Page 10: on time-series data. Furthermore, the result of experiments
+Page 10: performed on the entire year of data on the China securities market demonstrate the superiority of the proposed
+Page 10: approach over even these superior baselines, with performance enhancements of at least 1.9% and 17.1% in terms
+Page 10: of the DA and MCC, respectively. The p-values for the ttests are all less than the critical confidence value (0.05),
+Page 10: indicating that the superior performance of the proposed
+Page 10: approach was statistically significant.
+Page 10: 
+Page 10: 
+Page 11: 11
+Page 11: 
+Page 11: Effectiveness of the proposed approach
+Page 11: 
+Page 11: 4.5.1
+Page 11: 
+Page 11: Effectiveness of the tensor representation
+Page 11: 
+Page 11: As mentioned above, both fundamental and media information can shape stock movements. Predicting media-aware
+Page 11: stock movements is essentially a multimodal problem. Difficulties arise in attempting to model the two relevant types
+Page 11: of information without ignoring the interactions among
+Page 11: different data types. One common strategy is to concatenate
+Page 11: multiple types of information into one compound vector,
+Page 11: thus inevitably diluting or even ignoring the intrinsic associations between the two information sources. In this study,
+Page 11: we modeled market information in the form of tensors
+Page 11: to retain the interactions between different modes when
+Page 11: addressing the multimodal learning problem. To investigate the effectiveness of this tensor representation, we first
+Page 11: compared the results of a vector-based LSTM model with
+Page 11: those of a tensor-based LSTM model and then explored
+Page 11: the differences between the results of a vector-based eventdriven LSTM model and the proposed tensor-based eventdriven LSTM model, in which an event-driven mechanism
+Page 11: is adopted to account for data that are heterogeneous in
+Page 11: terms of their sampling times for the multimodal learning
+Page 11: problems.
+Page 11: Figure 9 compares vector-based models with tensorbased models to show the superiority of the tensor representation. Specifically, the tensor-based LSTM achieves better
+Page 11: performance than the vector-based LSTM in terms of target
+Page 11: 1 and 2 in Figure 9(a). Note, however, that the vector-based
+Page 11: LSTM model performs slightly better than the tensor-based
+Page 11: LSTM model for target 3. In addition, Figure 9(b) shows
+Page 11: that the proposed tensor-based event-driven LSTM model
+Page 11: outperforms the vector-based event-driven LSTM model for
+Page 11: all targets. These results prove that the interactions among
+Page 11: different information modes affect stock movements and
+Page 11: that the tensor representation can efficiently preserve such
+Page 11: connections compared with the vector representation.
+Page 11: One possible explanation of the failure of the tensor
+Page 11: representation in the LSTM model for target 3 is that this
+Page 11: 
+Page 11: Vector-based LSTM
+Page 11: Tensor-based LSTM
+Page 11: 
+Page 11: Vector-based event-driven LSTM
+Page 11: Tensor-based event-driven LSTM
+Page 11: 
+Page 11: 0.60
+Page 11: 0.60
+Page 11: 
+Page 11: Accuracy
+Page 11: 
+Page 11: The modeling of media-aware stock movements is essentially a multimodal problem. Two unique challenges arise
+Page 11: in processing such multimodal data. First, the information
+Page 11: from one data mode interacts with information from other
+Page 11: data modes. One common strategy for addressing this
+Page 11: challenge is to concatenate information from various data
+Page 11: modes into one compound vector, thus simply ignoring
+Page 11: the interactions among the different modes. The second
+Page 11: challenge is the heterogeneity of the data in terms of sampling time. Specifically, fundamental stock data consist of
+Page 11: continuous values sampled at fixed time intervals, whereas
+Page 11: news information emerges randomly. This heterogeneity
+Page 11: can lead to some valuable information being missing or
+Page 11: can even distort the feature spaces. In addition, previous
+Page 11: studies on media-aware stock movements have focused
+Page 11: on the one-to-one problem, in which news is assumed to
+Page 11: affect the performance of only the stocks mentioned in the
+Page 11: news report. However, news can also impact related stocks
+Page 11: and cause stock comovements. In this section, we examine
+Page 11: the effectiveness of the unique features of the proposed
+Page 11: framework in addressing these three issues.
+Page 11: 
+Page 11: Accuracy
+Page 11: 
+Page 11: 4.5
+Page 11: 
+Page 11: 0.02
+Page 11: 
+Page 11: 0.02
+Page 11: 
+Page 11: 0.01
+Page 11: 
+Page 11: 0.01
+Page 11: 
+Page 11: 0.00
+Page 11: 
+Page 11: 0.00
+Page 11: Target 1
+Page 11: 
+Page 11: Target 2
+Page 11: 
+Page 11: Target 3
+Page 11: 
+Page 11: (a) LSTM models
+Page 11: 
+Page 11: Target 1
+Page 11: 
+Page 11: Target 2
+Page 11: 
+Page 11: Target 3
+Page 11: 
+Page 11: (b) Event-driven models
+Page 11: 
+Page 11: Fig. 9: DA results for (a) LSTM models and (b) Event-driven
+Page 11: models using vector and tensor representations.
+Page 11: 
+Page 11: target utilizes both the opening price and the closing price,
+Page 11: and using both prices allows additional information to be
+Page 11: considered, thus overcoming the limited ability of the vector
+Page 11: representation in the traditional LSTM model to capture
+Page 11: interaction information. This observation also supports the
+Page 11: finding that nontransactional time information can be reflected in the opening and closing prices [51]. In contrast,
+Page 11: the success of the tensor representation in the event-driven
+Page 11: LSTM model with respect to target 3 can be attributed to the
+Page 11: event-driven mechanism in the event-driven LSTM model,
+Page 11: which captures even more valuable interaction information,
+Page 11: thus overwhelming the benefit gained from the additional
+Page 11: information absorbed by considering both the opening and
+Page 11: closing prices. A more comprehensive gauge of the effectiveness of the event-driven mechanism in accounting for
+Page 11: the heterogeneity of the data in terms of sampling time for
+Page 11: multimodal learning is presented in the next section.
+Page 11: 4.5.2
+Page 11: 
+Page 11: Effectiveness of the event-driven mechanism
+Page 11: 
+Page 11: To capture media-aware stock movements, accounting for
+Page 11: the heterogeneity of the sampling times between the two
+Page 11: information modes is a critical issue for this multimodal
+Page 11: learning problem. Specifically, the fundamental data consist
+Page 11: of continuous values sampled at equal time intervals, i.e.,
+Page 11: one day, whereas the news information consists of discrete
+Page 11: values sampled at nonequal time intervals because of the
+Page 11: randomness of news releases. This randomness leads to
+Page 11: failure of the long-term dependency mechanism of the traditional LSTM model [47]. Specifically, if two similar news
+Page 11: articles are released with a sufficiently large time gap, the
+Page 11: LSTM model may forget the knowledge learned from the
+Page 11: first news article before processing the information from the
+Page 11: second. In this study, we have proposed an event-driven
+Page 11: memory mechanism to solve this problem of heterogeneous
+Page 11: data sampling for multimodal learning.
+Page 11: Figure 10 presents the effectiveness of the proposed
+Page 11: event-driven mechanism in both the vector-based and
+Page 11: tensor-based LSTM models. Figure 10(a) shows that the
+Page 11: vector-based event-driven LSTM model performs better
+Page 11: than the traditional LSTM model for all targets. Similarly,
+Page 11: Figure 10(b) shows that the tensor-based event-driven LSTM
+Page 11: model outperforms the tensor-based LSTM model for all
+Page 11: targets. These findings confirm that the event-driven mechanism allows the event-driven LSTM model to better find
+Page 11: the rules and patterns characterizing stock markets given
+Page 11: random news event occurrences. In previous studies, this
+Page 11: problem has typically been solved by using only a portion
+Page 11: 
+Page 11: 
+Page 12: 12
+Page 12: 
+Page 12: relatedness is defined has a critical effect on the prediction
+Page 12: performance and that considering link communities is a
+Page 12: promising approach to defining relatedness.
+Page 12: 0.63
+Page 12: 
+Page 12: xxxxxxxxxxxxxxx
+Page 12: xxxxxxxxxxxxxxx
+Page 12: xxxxxxxxxxxxxxx
+Page 12: xxxxxxxxxxxxxxx
+Page 12: xxxxxxxxxxxxxxx
+Page 12: xxxxxxxxxxxxxxx
+Page 12: 
+Page 12: xxxxxxxxxxxxxxx
+Page 12: xxxxxxxxxxxxxxx
+Page 12: xxxxxxxxxxxxxxx
+Page 12: xxxxxxxxxxxxxxx
+Page 12: xxxxxxxxxxxxxxx
+Page 12: xxxxxxxxxxxxxxx
+Page 12: 
+Page 12: Tensor-based event-driven LSTM_none
+Page 12: Tensor-based event-driven LSTM_dl
+Page 12: Tensor-based event-driven LSTM_lc (Ours)
+Page 12: 
+Page 12: 0.62
+Page 12: 
+Page 12: Accuracy
+Page 12: 
+Page 12: of the data; that is, only the data sampled at the time of
+Page 12: a news event are retained for further analysis. However,
+Page 12: the failure to address the sampling heterogeneity leads to
+Page 12: a loss of important patterns, inevitably causing historical
+Page 12: information to be undervalued. By contrast, the eventdriven memory mechanism proposed in this study provides
+Page 12: a promising method of addressing the problem presented by
+Page 12: the sampling heterogeneity among different data sources in
+Page 12: multimodal learning.
+Page 12: 
+Page 12: 0.61
+Page 12: 0.65
+Page 12: 
+Page 12: 0.61
+Page 12: 
+Page 12: LSTM
+Page 12: Event-driven LSTM
+Page 12: 
+Page 12: Tensor-based LSTM
+Page 12: Tensor-based event-driven LSTM
+Page 12: 
+Page 12: 0.60
+Page 12: 0.60
+Page 12: 
+Page 12: 0.60
+Page 12: 
+Page 12: 0.58
+Page 12: 
+Page 12: Accuracy
+Page 12: 
+Page 12: Accuracy
+Page 12: 
+Page 12: 0.59
+Page 12: 
+Page 12: 0.57
+Page 12: 
+Page 12: Target 1
+Page 12: 
+Page 12: Target 2
+Page 12: 
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: 
+Page 12: Target 3
+Page 12: 
+Page 12: 0.02
+Page 12: 
+Page 12: Fig. 11: DA results for tensor-based event-driven LSTM
+Page 12: models considering stock relatedness.
+Page 12: 
+Page 12: 0.01
+Page 12: 
+Page 12: 0.01
+Page 12: 
+Page 12: 0.00
+Page 12: 
+Page 12: Target 1
+Page 12: 
+Page 12: Target 2
+Page 12: 
+Page 12: Target 3
+Page 12: 
+Page 12: (a) Vector-based methods
+Page 12: 
+Page 12: Target 1
+Page 12: 
+Page 12: Target 2
+Page 12: 
+Page 12: Target 3
+Page 12: 
+Page 12: (b) Tensor-based methods
+Page 12: 
+Page 12: 4.6
+Page 12: Fig. 10: DA results for (a) vector-based and (b) tensor-based
+Page 12: LSTM using event-driven LSTM models.
+Page 12: 
+Page 12: 4.5.3
+Page 12: 
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: 
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: 
+Page 12: 0.55
+Page 12: 
+Page 12: 0.02
+Page 12: 
+Page 12: 0.00
+Page 12: 
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: 
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: xxxxxxxxx
+Page 12: 
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: xxxxxxxx
+Page 12: 
+Page 12: Effectiveness of stock relatedness
+Page 12: 
+Page 12: In this section, we evaluate the performance enhancement
+Page 12: achieved by considering the influence of related stocks
+Page 12: on a target stock. Previous studies on media-aware stock
+Page 12: movements have focused only on the one-to-one problem,
+Page 12: without considering the impact of related stocks. The main
+Page 12: challenge for considering related stocks is how to define the
+Page 12: relevant relationships among stocks. In this study, we have
+Page 12: built a media-based enterprise network under the assumption that the co-occurrence of stocks in a news article reflects
+Page 12: their relatedness to some degree. Such relevant influences
+Page 12: are absorbed via the tensor decomposition and reconstruction when modeling the market information (Section 3.3).
+Page 12: As mentioned above, there are two ways to identify
+Page 12: stocks related to a target stock. One approach (implemented
+Page 12: in the tensor-based event-driven LSTM dl model) is to
+Page 12: treat only firms with direct links to the target firm in
+Page 12: the media-based enterprise network as related firms. The
+Page 12: other approach (implemented in the tensor-based eventdriven LSTM lc) is to treat all firms in the same link communities as related firms, thus considering the transitive
+Page 12: effect. Figure 11 presents the performance of the tensorbased event-driven LSTM none, tensor-based event-driven
+Page 12: LSTM dl, and tensor-based event-driven LSTM lc models
+Page 12: (our approach). The approaches that consider the influence
+Page 12: of related stocks (tensor-based event-driven LSTM dl and
+Page 12: tensor-based event-driven LSTM lc) outperform the tensorbased event-driven LSTM none model, which ignores stock
+Page 12: comovements. This finding confirms that a target firm is
+Page 12: affected by its related firms and that media coverage is
+Page 12: an effective way to measure such relatedness. In addition,
+Page 12: the tensor-based event-driven LSTM lc model, which considers the transitive effect when identifying related stocks
+Page 12: in the media-based enterprise network, outperforms the
+Page 12: tensor-based event-driven LSTM dl model, which identifies related stocks on the basis of only direct linkages in
+Page 12: the network. This finding indicates that the way in which
+Page 12: 
+Page 12: Investment simulation
+Page 12: 
+Page 12: In this section, we describe the design and implementation of a tensor-based stock market information analyzer
+Page 12: based on the proposed multimodal event-driven LSTM
+Page 12: framework. We compare the performance of our proposed
+Page 12: analyzer with the performances of three state-of-the-art
+Page 12: trading algorithms, namely, eMAQT [9], AZFinText [10] and
+Page 12: TeSIA [16], as well as the classic top-N trading strategy. TopN is a long-term strategy based on the assumption that if
+Page 12: a certain combination of stocks has performed well in the
+Page 12: past, then the same combination will perform well in the
+Page 12: near future. We invested in the N highest-performing stocks
+Page 12: over the period between October 1 and December 31, 2015.
+Page 12: We chose RMB 10,000 as the investment budget, and
+Page 12: we further assumed zero transaction costs, as in previous
+Page 12: studies [16]. Finally, we compared the daily earnings of the
+Page 12: five approaches over three months, during which time the
+Page 12: CSI 100 index decreased by 5.21% (from 2, 363 to 2, 240).
+Page 12: In this simulation, both selling short and buying long
+Page 12: were allowed. Specifically, when a firm-specific news article
+Page 12: was released, these algorithms were used to forecast the
+Page 12: future stock price for that firm. For buying long, if the trend
+Page 12: of the predicted future price over the current stock price was
+Page 12: a rising signal, then the stock was purchased immediately
+Page 12: and sold 6 days later. The investment gain was calculated as
+Page 12: the spread between the sale and purchase prices. For selling
+Page 12: short, if the trend of the predicted future price over the
+Page 12: current stock price was a falling signal, then the stock was
+Page 12: borrowed, sold immediately and purchased at the original
+Page 12: price after 6 days. The investment gain was calculated as
+Page 12: the stock price at the time when the shares were borrowed
+Page 12: minus the purchase price. The horizon of 6 days was set
+Page 12: in accordance with our optimal parameters in Section 4.3.
+Page 12: Figure 12 presents the accumulated daily return (x-axis)
+Page 12: of these five methods over the 3-month assessment period
+Page 12: (y-axis) along with the CSI 100 index in the same period.
+Page 12: Notably, the top-N method relied on a long-term investing
+Page 12: strategy, with trading only at the end of the assessment
+Page 12: period. Thus, the daily income of the top-N method reflects
+Page 12: only the value of its portfolio on that day. For the other
+Page 12: media-aware trading systems, the daily income is the sum
+Page 12: of all transaction incomes earned on that day.
+Page 12: 
+Page 12: 
+Page 13: 13
+Page 13: 
+Page 13: Our approach
+Page 13: Top-N (N=5)
+Page 13: AZFinText
+Page 13: eMAQT
+Page 13: TeSIA
+Page 13: 
+Page 13: Portfolio value
+Page 13: 
+Page 13: 25000
+Page 13: 
+Page 13: 20000
+Page 13: 
+Page 13: 15000
+Page 13: 
+Page 13: 10000
+Page 13: 0
+Page 13: 
+Page 13: 5
+Page 13: 
+Page 13: 10
+Page 13: 
+Page 13: 15
+Page 13: 
+Page 13: 20
+Page 13: 
+Page 13: 25
+Page 13: 
+Page 13: 30
+Page 13: 
+Page 13: 35
+Page 13: 
+Page 13: 40
+Page 13: 
+Page 13: 45
+Page 13: 
+Page 13: 50
+Page 13: 
+Page 13: 55
+Page 13: 
+Page 13: 60
+Page 13: 
+Page 13: Days
+Page 13: 
+Page 13: Fig. 12: Investment simulation comparison.
+Page 13: 
+Page 13: Figure 12 shows that among all baselines, TeSIA
+Page 13: achieved the best return of 113.62% (p-values<0.05), and
+Page 13: the top-N (N =5) method achieved the lowest return of
+Page 13: 40.32% at the end of the 3-month assessment period.
+Page 13: Among all systems, our proposed approach achieved superior performance, yielding a remarkable return of 136.42%
+Page 13: (p-values<0.05). This result illustrates the superiority of the
+Page 13: proposed framework, including the mechanism of tensor
+Page 13: representation, event-driven and stock relatedness. Note
+Page 13: that this profit came from both buying long and selling
+Page 13: short. The profit from buying long was 62.35%, whereas
+Page 13: the profit from selling short was 74.07%. Selling short was
+Page 13: more advantageous because the predominant market trend
+Page 13: was downward over the evaluation period.
+Page 13: Specifically, AZFinText algorithm, the first framework to
+Page 13: incorporate both stock data and news data for predictions,
+Page 13: achieved a return of 70.30% in our experiment. By considering finance-oriented sentiment, eMAQT achieved better
+Page 13: performance, with an enhancement of 16.38%, compared
+Page 13: with AZFinText. In addition, the tensor-based methods
+Page 13: (TeSIA and our method) achieved superior returns with an
+Page 13: enhancement of 26.94% and 49.74%, respectively, compared
+Page 13: with the optimal vector-based method (eMAQT). The results
+Page 13: further demonstrate the effectiveness of the tensor representation.
+Page 13: Recall that a higher Sharpe ratio means a greater return
+Page 13: relative to the amount of risk taken. Table 6 presents the
+Page 13: Sharpe ratio of four baselines and our proposed method
+Page 13: in the 3-month assessment period. These results further
+Page 13: demonstrate the superiority of the proposed method, especially in terms of the trade-off between the return and the
+Page 13: risk.
+Page 13: TABLE 6: The Sharpe ratio for the different algorithms.
+Page 13: 
+Page 13: 5
+Page 13: 
+Page 13: Algorithm
+Page 13: 
+Page 13: Sharpe ratio
+Page 13: 
+Page 13: Top-N
+Page 13: AZFinText
+Page 13: eMAQT
+Page 13: TeSIA
+Page 13: Our method
+Page 13: 
+Page 13: 1.395%
+Page 13: 1.023%
+Page 13: 1.418%
+Page 13: 1.555%
+Page 13: 1.611%
+Page 13: 
+Page 13: C ONCLUSIONS AND FUTURE WORK
+Page 13: 
+Page 13: Stock markets are strongly affected by various types of
+Page 13: highly interrelated information. In both traditional finance
+Page 13: 
+Page 13: and behavioral finance, it is believed that market information, especially fundamental information and news report
+Page 13: information, shapes stock movements. Predicting future
+Page 13: stock trends based on market information is essentially
+Page 13: a multimodal data problem. Multimodal data consist of
+Page 13: several modes, each corresponding to a group of similar
+Page 13: data sharing the same attributes. In this study, market
+Page 13: information data are considered to consist of two modes:
+Page 13: fundamentals and news. Two unique challenges arise in
+Page 13: processing these multimodal data. The first challenge is that
+Page 13: the information from one data mode interacts with information from other data modes, violating the assumption of feature independence that is adopted in traditional supervised
+Page 13: learning. A common strategy in previous studies has been to
+Page 13: concatenate the information from various data modes into a
+Page 13: compound vector, thereby ignoring the interactions among
+Page 13: different modes. By contrast, in this study, we proposed a
+Page 13: tensor representation approach for modeling multimodal
+Page 13: market information. This method is able to preserve the
+Page 13: interrelations between fundamental and news information
+Page 13: and to capture their joint effects. The second challenge is
+Page 13: the sampling heterogeneity of the different data modes.
+Page 13: For market information, fundamental data are continuous
+Page 13: values sampled at fixed time intervals, whereas news information emerges randomly. This heterogeneity can result in a
+Page 13: partial loss of valuable information and can even distort the
+Page 13: feature space. In this study, we proposed an event-driven
+Page 13: memory mechanism to address the sampling heterogeneity among different data sources for multimodal learning.
+Page 13: Experiments performed on an entire year of data from
+Page 13: the China securities market demonstrate the superiority
+Page 13: of the proposed approach over state-of-the-art algorithms,
+Page 13: including AZFinText, eMAQT, and TeSIA, and our method
+Page 13: achieved a return of 136.42% in an investment simulation.
+Page 13: In this study, we focused on media-aware stock movements. However, the proposed tensor-based event-driven
+Page 13: LSTM framework can be generalizable to many other multimodal learning problems in which the information space
+Page 13: consists of several interacting data modes with sampling
+Page 13: heterogeneity. For instance, in health care monitoring, both
+Page 13: daily monitoring indicators and random sickness records
+Page 13: are applied to detect health abnormalities [47]. Another
+Page 13: good example is the prediction of crop growth in agriculture
+Page 13: based on daily growth indicators and uncertain conditions,
+Page 13: including rainfall, wind and disasters [48]. However, the
+Page 13: effectiveness of the proposed method in related fields has
+Page 13: yet to be explored.
+Page 13: 
+Page 13: 6
+Page 13: 
+Page 13: ACKNOWLEDGMENTS
+Page 13: 
+Page 13: This work has been supported by the National Natural
+Page 13: Science Foundation of China (NSFC) (71671141, 71873108),
+Page 13: Fundamental Research Funds for the Central Universities
+Page 13: (JBK 171113, JBK 170505, JBK 1806003), Sichuan Province
+Page 13: Science and Technology Department (2019YJ0250), and the
+Page 13: Financial Innovation Center of the Southwestern University
+Page 13: of Finance and Economics. It also has been partially funded
+Page 13: by grants awarded to Dr. Hsinchun Chen from the U.S.
+Page 13: National Science Foundation (ACI-1443019, CMMI-1442116)
+Page 13: at the University of Arizona and the China National 1000Talent Program at Tsinghua University.
+Page 13: 
+Page 13: 
+Page 14: 14
+Page 14: 
+Page 14: R EFERENCES
+Page 14: [1]
+Page 14: 
+Page 14: J. B. De Long, A. Shleifer, L. H. Summers, and R. J.
+Page 14: Waldmann, ΓÇ£Noise trader risk in financial markets,ΓÇ¥
+Page 14: Journal of Political Economy, vol. 98, no. 4, pp. 703ΓÇô738,
+Page 14: 1990.
+Page 14: [2] E. F. Fama, ΓÇ£The behavior of stock-market prices,ΓÇ¥ The
+Page 14: journal of Business, vol. 38, no. 1, pp. 34ΓÇô105, 1965.
+Page 14: [3] M. Rechenthin and W. N. Street, ΓÇ£Using conditional probability to identify trends in intra-day highfrequency equity pricing,ΓÇ¥ Physica A: Statistical Mechanics and its Applications, vol. 392, no. 24, pp. 6169ΓÇô6188,
+Page 14: 2013.
+Page 14: [4] A. Shleifer and R. W. Vishny, ΓÇ£A survey of corporate
+Page 14: governance,ΓÇ¥ Journal of Finance, vol. 52, no. 2, pp. 737ΓÇô
+Page 14: 783, 1997.
+Page 14: [5] Q. Li, C. Yan, J. Wang, Y. Chen, and H. C. Chen, ΓÇ£Web
+Page 14: media and stock markets : A survey and future directions from a big data perspective,ΓÇ¥ IEEE Transactions on
+Page 14: Knowledge & Data Engineering, vol. 30, no. 2, pp. 381ΓÇô
+Page 14: 399, 2018.
+Page 14: [6] W. Nuij, V. Milea, F. Hogenboom, F. Frasincar, and
+Page 14: U. Kaymak, ΓÇ£An automated framework for incorporating news into stock trading strategies,ΓÇ¥ IEEE Transactions on Knowledge & Data Engineering, vol. 2, no. 11,
+Page 14: pp. 823ΓÇô835, 2014.
+Page 14: [7] H. S. Moat, C. Curme, A. Avakian, D. Y. Kenett, H. E.
+Page 14: Stanley, and T. Preis, ΓÇ£Quantifying wikipedia usage
+Page 14: patterns before stock market moves,ΓÇ¥ Scientific Reports,
+Page 14: vol. 3, p. 1801, 2013.
+Page 14: [8] I. Zheludev, R. Smith, and T. Aste, ΓÇ£When can social
+Page 14: media lead financial markets?ΓÇ¥ Scientific Reports, vol. 4,
+Page 14: p. 4213, 2014.
+Page 14: [9] Q. Li, T. Wang, P. Li, L. Liu, Q. Gong, and Y. Chen, ΓÇ£The
+Page 14: effect of news and public mood on stock movements,ΓÇ¥
+Page 14: Information Sciences, vol. 278, pp. 826ΓÇô840, 2014.
+Page 14: [10] R. P. Schumaker and H. Chen, ΓÇ£A quantitative stock
+Page 14: prediction system based on financial news,ΓÇ¥ Information
+Page 14: Processing & Management, vol. 45, no. 5, pp. 571ΓÇô583,
+Page 14: 2009.
+Page 14: [11] B. Weng, M. A. Ahmed, and F. M. Megahed, ΓÇ£Stock
+Page 14: market one-day ahead movement prediction using disparate data sources,ΓÇ¥ Expert Systems with Applications,
+Page 14: vol. 79, pp. 153ΓÇô163, 2017.
+Page 14: [12] P. C. Tetlock, M. Saar-Tsechansky, and S. Macskassy,
+Page 14: ΓÇ£More than words: Quantifying language to measure
+Page 14: firmsΓÇÖ fundamentals,ΓÇ¥ Journal of Finance, vol. 63, no. 3,
+Page 14: pp. 1437ΓÇô1467, 2008.
+Page 14: [13] Y. F. Wang, ΓÇ£On-demand forecasting of stock prices
+Page 14: using a real,ΓÇ¥ IEEE Transactions on Knowledge & Data
+Page 14: Engineering, vol. 15, no. 4, pp. 1033ΓÇô1037, 2003.
+Page 14: [14] J. Bollen, H. Mao, and X. Zeng, ΓÇ£Twitter mood predicts the stock market,ΓÇ¥ Journal of Computational Science,
+Page 14: vol. 2, no. 1, pp. 1ΓÇô8, 2011.
+Page 14: [15] M.-A. Mittermayer and G. F. Knolmayer, ΓÇ£Newscats:
+Page 14: A news categorization and trading system,ΓÇ¥ in The 6th
+Page 14: International Conference on Data Mining (ICDM). IEEE,
+Page 14: 2006, pp. 1002ΓÇô1007.
+Page 14: [16] Q. Li, Y. Chen, L. L. Jiang, P. Li, and H. Chen, ΓÇ£A
+Page 14: tensor-based information framework for predicting the
+Page 14: stock market,ΓÇ¥ ACM Transactions on Information Systems
+Page 14: 
+Page 14: (TOIS), vol. 34, no. 2, p. 11, 2016.
+Page 14: [17] Y. Shen, B. Baingana, and G. B. Giannakis, ΓÇ£Tensor decompositions for identifying directed graph topologies
+Page 14: and tracking dynamic networks,ΓÇ¥ IEEE Transactions on
+Page 14: Signal Processing, vol. PP, no. 99, pp. 3675ΓÇô3687, 2016.
+Page 14: [18] B. Wuthrich, V. Cho, S. Leung, D. Permunetilleke,
+Page 14: K. Sankaran, and J. Zhang, ΓÇ£Daily stock market forecast
+Page 14: from textual web data,ΓÇ¥ in IEEE International Conference
+Page 14: on Systems, Man, and Cybernetics, 1998, pp. 2720ΓÇô2725.
+Page 14: [19] S. Qiang, A. Liu, and S. Y. Yang, ΓÇ£Stock portfolio
+Page 14: selection using learning-to-rank algorithms with news
+Page 14: sentiment,ΓÇ¥ Neurocomputing, vol. 264, pp. 20ΓÇô28, 2017.
+Page 14: [20] T. Sun, J. Wang, P. Zhang, Y. Cao, B. Liu, and D. Wang,
+Page 14: ΓÇ£Predicting stock price returns using microblog sentiment for chinese stock market,ΓÇ¥ in The 3rd International
+Page 14: Conference on Big Data Computing and Communications
+Page 14: (BIGCOM). IEEE, 2017, pp. 87ΓÇô96.
+Page 14: [21] R. A. Haugen and N. L. Baker, ΓÇ£Commonality in the
+Page 14: determinants of expected stock returns,ΓÇ¥ Journal of Financial Economics, vol. 41, no. 3, pp. 401ΓÇô439, 1996.
+Page 14: [22] E. F. Fama and K. R. French, ΓÇ£Common risk factors in
+Page 14: the returns on stocks and bonds,ΓÇ¥ Journal of Financial
+Page 14: Economics, vol. 33, no. 1, pp. 3ΓÇô56, 1993.
+Page 14: [23] A. Shleifer and R. W. Vishny, ΓÇ£The limits of arbitrage,ΓÇ¥
+Page 14: Journal of Finance, vol. 52, no. 1, pp. 35ΓÇô55, 1997.
+Page 14: [24] W. DeBondt and R. Thaler, ΓÇ£Does the stock market
+Page 14: overreact?ΓÇ¥ Journal of Finance, vol. 60, no. 3, pp. 793ΓÇô
+Page 14: 805, 1985.
+Page 14: [25] L. Yu, H. Lunchao, and T. Ling, ΓÇ£Stock selection with
+Page 14: a novel sigmoid-based mixed discrete-continuous differential evolution algorithm,ΓÇ¥ IEEE Transactions on
+Page 14: Knowledge & Data Engineering, vol. 28, no. 7, pp. 1891ΓÇô
+Page 14: 1904, 2016.
+Page 14: [26] X. Zhang, Y. Zhang, S. Wang, Y. Yao, B. Fang, and S. Y.
+Page 14: Philip, ΓÇ£Improving stock market prediction via heterogeneous information fusion,ΓÇ¥ Knowledge-Based Systems,
+Page 14: vol. 143, pp. 236ΓÇô247, 2018.
+Page 14: [27] R. S. Pindyck and J. J. Rotemberg, ΓÇ£The comovement
+Page 14: of stock prices,ΓÇ¥ The Quarterly Journal of Economics, vol.
+Page 14: 108, no. 4, pp. 1073ΓÇô1104, 1993.
+Page 14: [28] T. Preis, D. Y. Kenett, H. E. Stanley, D. Helbing, and
+Page 14: E. Ben-Jacob, ΓÇ£Quantifying the behavior of stock correlations under market stress,ΓÇ¥ Scientific Reports, vol. 2, p.
+Page 14: 752, 2012.
+Page 14: [29] S. Aghabozorgi and Y. W. Teh, ΓÇ£Stock market comovement assessment using a three-phase clustering
+Page 14: method,ΓÇ¥ Expert Systems with Applications, vol. 41, no. 4,
+Page 14: pp. 1301ΓÇô1314, 2014.
+Page 14: [30] M. S. Rashes, ΓÇ£Massively confused investors making
+Page 14: conspicuously ignorant choices (mciΓÇômcic),ΓÇ¥ Journal of
+Page 14: Finance, vol. 56, no. 5, pp. 1911ΓÇô1927, 2001.
+Page 14: [31] W. Antweiler and M. Z. Frank, ΓÇ£Is all that talk just
+Page 14: noise? the information content of internet stock message boards,ΓÇ¥ Journal of Finance, vol. 59, no. 3, pp. 1259ΓÇô
+Page 14: 1294, 2004.
+Page 14: [32] X. Luo, J. Zhang, and W. Duan, ΓÇ£Social media and
+Page 14: firm equity value,ΓÇ¥ Information Systems Research, vol. 24,
+Page 14: no. 1, pp. 146ΓÇô163, 2013.
+Page 14: [33] Z. Y. Huang X, Teoh S H, ΓÇ£Tone management,ΓÇ¥ The
+Page 14: Accounting Review, vol. 89, no. 3, pp. 1083ΓÇô1113, 2013.
+Page 14: [34] G.-B. Huang, H. Zhou, X. Ding, and R. Zhang, ΓÇ£Ex-
+Page 14: 
+Page 14: 
+Page 15: 15
+Page 15: 
+Page 15: treme learning machine for regression and multiclass
+Page 15: classification,ΓÇ¥ IEEE Transactions on Systems Man &
+Page 15: Cybernetics, vol. 42, no. 2, pp. 513ΓÇô529, 2012.
+Page 15: [35] R. P. Schumaker and H. Chen, ΓÇ£Textual analysis of
+Page 15: stock market prediction using breaking financial news:
+Page 15: The azfin text system,ΓÇ¥ ACM Transactions on Information
+Page 15: Systems (TOIS), vol. 27, no. 2, pp. 1ΓÇô19, 2009.
+Page 15: [36] G. Hinton and R. R. Salakhutdinov, ΓÇ£Reducing the
+Page 15: dimensionality of data with neural networks,ΓÇ¥ Science,
+Page 15: vol. 313, no. 5786, pp. 504ΓÇô507, 2006.
+Page 15: [37] A. Krizhevsky, I. Sutskever, and G. Hinton, ΓÇ£Imagenet classification with deep convolutional neural
+Page 15: networks,ΓÇ¥ in Advances in Neural Information Processing
+Page 15: Systems, 2012, pp. 1097ΓÇô1105.
+Page 15: [38] A. R. Mohamed, G. E. Dahl, and G. Hinton, ΓÇ£Acoustic
+Page 15: modeling using deep belief networks,ΓÇ¥ IEEE Transactions on Audio Speech & Language Processing, vol. 20,
+Page 15: no. 1, pp. 14ΓÇô22, 2011.
+Page 15: [39] X. Ding, Y. Zhang, T. Liu, and J. Duan, ΓÇ£Deep learning
+Page 15: for event-driven stock prediction.ΓÇ¥ in International Joint
+Page 15: Conferences on Artificial Intelligence (IJCAI), 2015, pp.
+Page 15: 2327ΓÇô2333.
+Page 15: [40] Y. Huang, K. Huang, Y. Wang, H. Zhang, J. Guan,
+Page 15: and S. Zhou, ΓÇ£Exploiting twitter moods to boost financial trend prediction based on deep network models,ΓÇ¥ in International Conference on Intelligent Computing.
+Page 15: Springer, 2016, pp. 449ΓÇô460.
+Page 15: [41] N. Jegadeesh and S. Titman, ΓÇ£Implications for stock
+Page 15: market efficiency,ΓÇ¥ Journal of Finance, vol. 48, no. 1, pp.
+Page 15: 65ΓÇô91, 1993.
+Page 15: [42] T. Kolda and B. Bader, ΓÇ£Tensor decompositions and
+Page 15: applications,ΓÇ¥ SIAM Review, vol. 51, no. 3, pp. 455ΓÇô500,
+Page 15: 2009.
+Page 15: [43] R. D. McLean and J. Pontiff, ΓÇ£Does academic research
+Page 15: destroy stock return predictability?ΓÇ¥ Journal of Finance,
+Page 15: vol. 71, no. 1, pp. 5ΓÇô32, 2016.
+Page 15: [44] L. Ling, W. Jing, L. Ping, and Q. Li, ΓÇ£A social-mediabased approach to predicting stock comovement,ΓÇ¥ Expert Systems with Applications, vol. 42, no. 8, pp. 3893ΓÇô
+Page 15: 3901, 2015.
+Page 15: [45] Y.-Y. Ahn, J. P. Bagrow, and S. Lehmann, ΓÇ£Link communities reveal multiscale complexity in networks,ΓÇ¥
+Page 15: Nature, vol. 466, no. 7307, p. 761, 2010.
+Page 15: [46] S. Hochreiter and J. Schmidhuber, ΓÇ£Long short-term
+Page 15: memory,ΓÇ¥ Neural Computation, vol. 9, no. 8, pp. 1735ΓÇô
+Page 15: 1780, 1997.
+Page 15: [47] I. M. Baytas, C. Xiao, X. Zhang, F. Wang, A. K. Jain, and
+Page 15: J. Zhou, ΓÇ£Patient subtyping via time-aware lstm networks,ΓÇ¥ SIGKDD International Conference on Knowledge
+Page 15: Discovery and Data Mining, pp. 65ΓÇô74, 2017.
+Page 15: [48] S. Xingjian, Z. Chen, H. Wang, D.-Y. Yeung, W.-K.
+Page 15: Wong, and W.-c. Woo, ΓÇ£Convolutional lstm network:
+Page 15: A machine learning approach for precipitation nowcasting,ΓÇ¥ in Advances in Neural Information Processing
+Page 15: Systems, 2015, pp. 802ΓÇô810.
+Page 15: [49] S. A. Sharpe, ΓÇ£Financial market imperfections, firm
+Page 15: leverage, and the cyclicality of employment,ΓÇ¥ The American Economic Review, vol. 84, no. 4, pp. 1060ΓÇô1074, 1994.
+Page 15: [50] S. Lei, Z. Teng, W. Le, Z. Yue, and A. Binder, ΓÇ£Deepclue:
+Page 15: Visual interpretation of text-based deep stock prediction,ΓÇ¥ IEEE Transactions on Knowledge & Data Engineer-
+Page 15: 
+Page 15: ing, vol. PP, no. 99, pp. 1ΓÇô1, 2018.
+Page 15: [51] K. Tissaoui, ΓÇ£The intraday pattern of trading activity, return volatility and liquidity: Evidence from the
+Page 15: emerging tunisian stock exchange,ΓÇ¥ International Journal of Economics and Finance, vol. 4, no. 5, p. 156, 2012.
+Page 15: 
+Page 15: Qing Li is a professor at Southwestern University of Finance and Economics, China. Prior
+Page 15: to taking that post, he was a postdoctoral researcher at Arizona State University and at the
+Page 15: Information & Communications University of Korea. LiΓÇÖs research interests lie primarily in intelligent information processing and business intelligence. He has served on the editorial boards
+Page 15: of Electronic Commerce Research and Applications, the Journal of Database Management, and
+Page 15: the Journal of Global Information Management
+Page 15: as well as the program committees of various international conferences,
+Page 15: including PACIS, SIGIR, and CIKM. He received his Ph.D. from Kumoh
+Page 15: National Institute of Technology in February of 2005 and his M.S. and
+Page 15: B.S. degrees from Harbin Engineering University, China.
+Page 15: 
+Page 15: Jinghua Tan is a Ph.D. student at Southwestern
+Page 15: University of Finance and Economics, China.
+Page 15: She obtained her bachelorΓÇÖs degree from Southwestern University of Finance and Economics
+Page 15: in 2016. She was a visiting scholar at Memorial University of Newfoundland at St. JohnΓÇÖs,
+Page 15: Canada in 2019. Her research primarily focuses
+Page 15: on data mining and finance intelligence.
+Page 15: 
+Page 15: Jun Wang is an associate professor at Southwestern University of Finance and Economics,
+Page 15: China. Prior to taking that post, he was a researcher at Memorial University of Newfoundland at St. JohnΓÇÖs, Canada. He was awarded
+Page 15: the National Scholarship in 2017. His research
+Page 15: interests lie primarily in social media, social network analysis, financial analysis and business
+Page 15: intelligence.
+Page 15: 
+Page 15: Hsinchun Chen is a Fellow of IEEE, ACM, and
+Page 15: AAAS. He is a University of Arizona Regents
+Page 15: Professor and the Thomas R. Brown Chair in
+Page 15: Management and Technology in the Department
+Page 15: of Management Information Systems (MIS) in
+Page 15: the School of Management of the University
+Page 15: of Arizona. His research primarily focuses on
+Page 15: data/web/text mining and knowledge management techniques. He is Editor-in-Chief of ACM
+Page 15: Transactions on Management Information Systems, Editor-in-Chief of the Springer Security
+Page 15: Informatics journal, and Associate Editor-in-Chief of IEEE Intelligent
+Page 15: Systems. He has served on the following editorial boards: ACM Transactions on Information Systems; IEEE Transactions on Systems, Man,
+Page 15: and Cybernetics; Decision Support Systems; Journal of the American
+Page 15: Society for Information Science and Technology; International Journal
+Page 15: of Digital Libraries; International Journal of Electronic Business; Journal
+Page 15: of Information Technology and Politics; and Encyclopedia of Library and
+Page 15: Information Sciences. He received his B.S. degree from the National
+Page 15: Chiao-Tung University in Taiwan, his MBA degree from SUNY Buffalo,
+Page 15: and his Ph.D. degree in Information Systems from New York University.
+Page 15: 
+Page 15: 

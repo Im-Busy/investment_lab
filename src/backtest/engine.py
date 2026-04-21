@@ -11,8 +11,13 @@ import pandas as pd
 
 from ..patterns.base import BasePattern, SignalDirection
 from ..signals.position_manager import PositionManager, PositionStatus
-from ..signals.signal_generator import SignalGenerator
+from ..signals.signal_generator import SignalGenerator, AggregatedSignal
 from .metrics import PerformanceMetrics
+from ..risk.turnover_penalty import TurnoverPenalty, TurnoverPenaltyConfig
+from ..risk.circuit_breakers import CircuitBreaker, CircuitBreakerConfig
+from ..risk.position_probability import PositionRiskModel, PositionRiskConfig, RegimeState
+from ..risk.dynamic_rebalancing import DynamicRebalancer, DynamicRebalanceConfig
+from ..indicators.regime_detector import RegimeDetector, RegimeState as RuleRegimeState
 
 
 @dataclass
@@ -25,13 +30,33 @@ class BacktestConfig:
         commission_per_trade: Commission per trade (fixed amount)
         commission_pct: Commission as percentage of trade value
         slippage_pct: Slippage percentage
+
         position_sizing_method: Method for position sizing
         risk_per_trade: Risk per trade as fraction of equity
         max_open_positions: Maximum concurrent positions
+
         use_take_profit_1: Use first take profit level
         use_take_profit_2: Use second take profit level
         use_take_profit_3: Use third take profit level
+
         min_confidence: Minimum signal confidence to trade
+
+        # Phase 6 Tier 1: Risk Management Components
+        enable_circuit_breaker: Enable portfolio drawdown circuit breaker
+        max_drawdown_pct: Maximum portfolio drawdown before halting (circuit breaker)
+        circuit_breaker_cooldown: Number of bars to stay in cooldown
+
+        enable_turnover_penalty: Enable turnover penalty tracking
+        max_allowed_turnover_pct: Maximum annualized turnover percentage
+
+        enable_position_probability: Enable per-position risk estimation
+        base_success_prob: Base probability of successful trade (from historical win rate)
+
+        enable_dynamic_re: Enable dynamic rebalancing frequency
+        min_signal_decay_rate: Minimum signal decay rate to consider daily rebalancing
+        tx_cost_pct: Transaction cost as % of portfolio value
+
+        enable_regime_detection: Enable rule-based regime detection for position probability
     """
 
     initial_equity: float = 100000.0
@@ -45,6 +70,22 @@ class BacktestConfig:
     use_take_profit_2: bool = False
     use_take_profit_3: bool = False
     min_confidence: float = 0.5
+
+    enable_circuit_breaker: bool = True
+    max_drawdown_pct: float = 20.0
+    circuit_breaker_cooldown: int = 20
+
+    enable_turnover_penalty: bool = True
+    max_allowed_turnover_pct: float = 2000.0
+
+    enable_position_probability: bool = True
+    base_success_prob: float = 0.55
+
+    enable_dynamic_re: bool = True
+    min_signal_decay_rate: float = 0.02
+    tx_cost_pct: float = 0.001
+
+    enable_regime_detection: bool = True
 
 
 @dataclass
@@ -121,6 +162,54 @@ class BacktestEngine:
             use_take_profit_3=self.config.use_take_profit_3,
         )
 
+        # Phase 6 Tier 1: Initialize risk management components
+
+        # R1: Turnover Penalty
+        if self.config.enable_turnover_penalty:
+            self.turnover_penalty = TurnoverPenalty(
+                config=TurnoverPenaltyConfig(
+                    max_allowed_turnover_pct=self.config.max_allowed_turnover_pct
+                )
+            )
+        else:
+            self.turnover_penalty = None
+
+        # R3: Circuit Breaker
+        if self.config.enable_circuit_breaker:
+            self.circuit_breaker = CircuitBreaker(
+                config=CircuitBreakerConfig(
+                    max_drawdown_pct=self.config.max_drawdown_pct,
+                    cooldown_bars=self.config.circuit_breaker_cooldown,
+                )
+            )
+        else:
+            self.circuit_breaker = None
+
+        # R2: Position Probability
+        if self.config.enable_position_probability:
+            self.position_risk_model = PositionRiskModel(
+                config=PositionRiskConfig(base_success_prob=self.config.base_success_prob)
+            )
+        else:
+            self.position_risk_model = None
+
+        # R5: Dynamic Rebalancing
+        if self.config.enable_dynamic_re:
+            self.dynamic_rebalancer = DynamicRebalancer(
+                config=DynamicRebalanceConfig(
+                    min_signal_decay_rate=self.config.min_signal_decay_rate,
+                    tx_cost_pct=self.config.tx_cost_pct,
+                )
+            )
+        else:
+            self.dynamic_rebalancer = None
+
+        # R4: Regime Detection (for position probability)
+        if self.config.enable_regime_detection:
+            self.regime_detector = RegimeDetector()
+        else:
+            self.regime_detector = None
+
         # Results storage
         self.result = BacktestResult(config=self.config)
 
@@ -149,15 +238,28 @@ class BacktestEngine:
         if end_date:
             df = df[df.index <= end_date]
 
-        # Reset position manager
+        # Reset position manager and risk components
         self.position_manager = PositionManager(initial_equity=self.config.initial_equity)
+
+        if self.circuit_breaker:
+            self.circuit_breaker.reset()
+        if self.dynamic_rebalancer:
+            self.dynamic_rebalancer.reset()
 
         # Calculate min bars required
         min_bars = max(p.min_bars_required for p in self.patterns)
 
-        # Storage for results
+        # Storage for results and tracking
         equity_curve = []
         all_signals = []
+        peak_equity = self.config.initial_equity
+        current_regime = RegimeState.TRANSITION
+
+        # R4: Pre-calculate regimes if enabled
+        if self.regime_detector:
+            regime_series = self.regime_detector.classify(df)
+        else:
+            regime_series = None
 
         # Iterate through data
         total_bars = len(df)
@@ -168,31 +270,86 @@ class BacktestEngine:
             current_high = float(df.iloc[i]["High"])
             current_low = float(df.iloc[i]["Low"])
 
-            # Check exits for open positions
-            self._check_exits(i, df)
+            # Update peak equity for circuit breaker
+            current_equity = self._calculate_equity(current_close)
+            if current_equity > peak_equity:
+                peak_equity = current_equity
 
-            # Generate signals
-            signals = self.signal_generator.generate_signals(df, i)
+            # R3: Check circuit breaker before any actions
+            trading_allowed = True
+            if self.circuit_breaker:
+                halt, msg, dd = self.circuit_breaker.check_circuit(
+                    current_price=current_equity, peak_price=peak_equity
+                )
+                if halt:
+                    trading_allowed = False
 
-            # Process signals
-            for signal in signals:
-                # Open new position
-                position = self.position_manager.open_position(
-                    signal=signal, timestamp=current_time
+            # Check exits for open positions (always allowed for risk management)
+            self._check_exits(i, df, current_high=current_high, current_low=current_low)
+
+            # Update regime if enabled
+            if regime_series is not None:
+                current_regime_val = regime_series.iloc[i]
+                current_regime = RegimeState(current_regime_val.value)
+
+            # R5: Check dynamic rebalancing before generating signals
+            should_rebalance = True
+            rebalance_reason = "Always rebalance"
+            if self.dynamic_rebalancer:
+                signal_strength = 0.0
+                if self.position_manager.open_positions:
+                    avg_confidence = 0.0
+                    for pos in self.position_manager.get_open_positions():
+                        avg_confidence += getattr(pos, "confidence", 0.5)
+                    signal_strength = avg_confidence / len(self.position_manager.open_positions)
+
+                should_rebalance, rebalance_reason, _ = self.dynamic_rebalancer.should_rebalance(
+                    current_day=i, signal_decay_rate=signal_strength
                 )
 
-                if position:
-                    signal_dict = signal.to_dict()
-                    signal_dict["position_id"] = position.id
-                    all_signals.append(signal_dict)
+                # Update signal history for decay tracking
+                if should_rebalance:
+                    self.dynamic_rebalancer.update_signal_history(signal_strength)
+
+            # Generate signals only if trading allowed
+            signals = []
+            if trading_allowed and should_rebalance:
+                signals = self.signal_generator.generate_signals(df, i)
+
+                # R2: Apply position probability and risk-adjusted sizing
+                if self.position_risk_model and signals:
+                    signals = self._apply_position_probability(signals, current_regime)
+
+                # Process signals
+                for signal in signals:
+                    # Check circuit breaker again before opening
+                    if self.circuit_breaker:
+                        halt, _, _ = self.circuit_breaker.check_circuit(
+                            current_price=current_equity, peak_price=peak_equity
+                        )
+                        if halt:
+                            break
+
+                    # Open new position
+                    position = self.position_manager.open_position(
+                        signal=signal, timestamp=current_time
+                    )
+
+                    if position:
+                        signal_dict = signal.to_dict()
+                        signal_dict["position_id"] = position.id
+                        signal_dict["regime"] = current_regime.value
+                        all_signals.append(signal_dict)
 
             # Record equity
-            equity = self._calculate_equity(current_close)
             equity_curve.append(
                 {
                     "timestamp": current_time,
-                    "equity": equity,
+                    "equity": current_equity,
                     "open_positions": len(self.position_manager.open_positions),
+                    "trading_allowed": trading_allowed,
+                    "rebalance_triggered": should_rebalance,
+                    "regime": current_regime.value,
                 }
             )
 
@@ -202,6 +359,10 @@ class BacktestEngine:
 
         # Close any remaining open positions
         self._close_all_positions(df)
+
+        # R1: Apply turnover penalty to results
+        if self.turnover_penalty:
+            self._apply_turnover_penalty(equity_curve)
 
         # Compile results
         self.result.trades = self._compile_trades()
@@ -213,13 +374,31 @@ class BacktestEngine:
             initial_equity=self.config.initial_equity,
         )
 
+        # Add risk management info to metrics
+        if self.result.metrics:
+            self.result.metrics["risk_management"] = {
+                "circuit_breaker_enabled": self.config.enable_circuit_breaker,
+                "turnover_penalty_enabled": self.config.enable_turnover_penalty,
+                "position_probability_enabled": self.config.enable_position_probability,
+                "dynamic_rebalancing_enabled": self.config.enable_dynamic_re,
+                "regime_detection_enabled": self.config.enable_regime_detection,
+            }
+
         return self.result
 
-    def _check_exits(self, i: int, df: pd.DataFrame):
+    def _check_exits(
+        self,
+        i: int,
+        df: pd.DataFrame,
+        current_high: Optional[float] = None,
+        current_low: Optional[float] = None,
+    ):
         """Check and execute exits for open positions."""
         current_close = float(df.iloc[i]["Close"])
-        current_high = float(df.iloc[i]["High"])
-        current_low = float(df.iloc[i]["Low"])
+        if current_high is None:
+            current_high = float(df.iloc[i]["High"])
+        if current_low is None:
+            current_low = float(df.iloc[i]["Low"])
         current_time = df.index[i]
 
         for position in self.position_manager.get_open_positions():
@@ -270,6 +449,105 @@ class BacktestEngine:
             equity += unrealized
 
         return equity
+
+    def _apply_position_probability(
+        self, signals: List[AggregatedSignal], current_regime: RegimeState
+    ) -> List[AggregatedSignal]:
+        """
+        Apply position probability estimates and risk-adjusted sizing.
+
+        Args:
+            signals: List of signals to adjust
+            current_regime: Current market regime
+
+        Returns:
+            Filtered list of signals with adjusted confidence
+        """
+        if not self.position_risk_model:
+            return signals
+
+        filtered_signals = []
+
+        for signal in signals:
+            # Estimate success probability
+            success_prob = self.position_risk_model.estimate_success_prob(
+                signal_confidence=signal.confidence,
+                regime=current_regime,
+                base_prob=self.config.base_success_prob,
+            )
+
+            # Skip low-probability signals (less than 40% chance)
+            if success_prob < 0.40:
+                continue
+
+            # Adjust confidence based on probability
+            adjusted_confidence = (signal.confidence + success_prob) / 2.0
+
+            # Add risk metadata
+            signal.metadata["success_probability"] = success_prob
+            signal.metadata["failure_probability"] = 1.0 - success_prob
+            signal.metadata["confidence_adjusted"] = True
+            signal.metadata["original_confidence"] = signal.confidence
+
+            signal.confidence = adjusted_confidence
+            filtered_signals.append(signal)
+
+        return filtered_signals
+
+    def _apply_turnover_penalty(self, equity_curve: List[Dict[str, Any]]) -> None:
+        """
+        Apply turnover penalty to backtest results.
+
+        Args:
+            equity_curve: List of equity curve entries
+        """
+        if not self.turnover_penalty:
+            return
+
+        # Calculate statistics
+        n_trades = len(self.position_manager.positions)
+        n_days = len(equity_curve)
+
+        if n_days == 0:
+            return
+
+        # Check turnover constraint
+        exceeded, turnover_pct, message = self.turnover_penalty.check_constraint(
+            n_trades=n_trades, n_days=n_days, portfolio_value=self.config.initial_equity
+        )
+
+        # Add penalty info to results
+        if not hasattr(self.result, "turnover_info"):
+            self.result.turnover_info = {}
+
+        self.result.turnover_info = {
+            "n_trades": n_trades,
+            "n_days": n_days,
+            "annualized_turnover_pct": turnover_pct,
+            "constraint_exceeded": exceeded,
+            "message": message,
+            "penalty_applied": False,
+        }
+
+        # Calculate and apply penalty if exceeded
+        if exceeded:
+            penalty = self.turnover_penalty.calculate_penalty(
+                n_trades=n_trades, n_days=n_days, portfolio_value=self.config.initial_equity
+            )
+
+            self.result.turnover_info["penalty_factor"] = penalty
+            self.result.turnover_info["penalty_applied"] = True
+
+            # Adjust final equity
+            if equity_curve:
+                final_equity = equity_curve[-1]["equity"]
+                adjusted_equity = final_equity * (1.0 - penalty)
+
+                # Log penalty in equity curve
+                equity_curve[-1]["turnover_penalty_applied"] = True
+                equity_curve[-1]["equity_before_penalty"] = final_equity
+                equity_curve[-1]["equity"] = adjusted_equity
+                equity_curve[-1]["penalty_factor"] = penalty
 
     def _compile_trades(self) -> pd.DataFrame:
         """Compile trades as DataFrame."""

@@ -1,0 +1,1288 @@
+Page 1: INVESTING IS COMPRESSION
+Page 1: 
+Page 1: arXiv:2604.10758v3 [cs.CE] 15 Apr 2026
+Page 1: 
+Page 1: OSCAR STIFFELMAN
+Page 1: NAND CAPITAL
+Page 1: ozzie@cs.stanford.edu
+Page 1: imagine@gmail.com
+Page 1: Abstract. In 1956 John Kelly wrote a paper at Bell Labs describing the
+Page 1: relationship between gambling and Information Theory. What came to be
+Page 1: known as the Kelly Criterion is both an objective and a closed-form solution
+Page 1: to sizing wagers when odds and edge are known. Samuelson argued it was
+Page 1: arbitrary and subjective, and successfully kept it out of mainstream economics.
+Page 1: Luckily it lived on in computer science, mostly because of Tom CoverΓÇÖs work
+Page 1: at Stanford. He showed that it is the uniquely optimal way to invest: it
+Page 1: maximizes long-term wealth, minimizes the risk of ruin, and is competitively
+Page 1: optimal in a game-theoretic sense, even over the short term.
+Page 1: One of CoverΓÇÖs most surprising contributions to portfolio theory was the
+Page 1: universal portfolio. Related to universal compression in information theory, it
+Page 1: performs asymptotically as well as the best constant-rebalanced portfolio in
+Page 1: hindsight. I borrow a trick from that algorithm to show that KellyΓÇÖs objective,
+Page 1: even in the general form, factors the investing problem into three terms: a
+Page 1: money term, an entropy term, and a divergence term. The only way to maximize growth is to minimize divergence which measures the difference between
+Page 1: our distribution and the true distribution in bits. Investing is, fundamentally,
+Page 1: a compression problem.
+Page 1: This decomposition also yields new practical results. Because the money
+Page 1: and entropy terms are constant across strategies in a given backtest, the difference in log growth between two strategies measures their relative divergence
+Page 1: in bits. I also introduce a winner fraction heuristic which allocates capital in
+Page 1: proportion to each assetΓÇÖs probability of dominating the candidate set. The
+Page 1: growth shortfall of this heuristic relative to the optimal portfolio is bounded
+Page 1: by the entropy of the winner fraction distribution. To my knowledge, both the
+Page 1: heuristic and the entropy bound are original contributions.
+Page 1: 
+Page 1: 1. Introduction
+Page 1: In 1956 John Kelly wrote a paper while working at Bell Labs [9] describing
+Page 1: the relationship between gambling and Information Theory. The paper describes
+Page 1: what would eventually be known as the Kelly criterion. The term Kelly criterion
+Page 1: has come to signify two distinct things: the objective or utility function, as well
+Page 1: as the closed-form solution to the problem when a gamblerΓÇÖs odds and edge are
+Page 1: known. Kelly observed that simply maximizing expected wealth would surely lead
+Page 1: to ruin given enough time. What was needed was some kind of nonlinear utility
+Page 1: function to balance risk and reward. The math of utility functions came from Von
+Page 1: Neumann and MorgensternΓÇÖs game theory. It formalizes a subjective preference or
+Page 1: willingness to risk loss in pursuit of gain. Kelly wanted to avoid the ΓÇ£introduction of an arbitrary cost function,ΓÇ¥ likening it to the external value that people
+Page 1: 1
+Page 1: 
+Page 1: 
+Page 2: 2
+Page 2: 
+Page 2: OSCAR STIFFELMAN
+Page 2: 
+Page 2: attempted to attach to ShannonΓÇÖs information. Kelly realized that maximizing logarithmic growth rather than simple expectation simultaneously avoids ruin while
+Page 2: maximizing asymptotic wealth. Kelly wasnΓÇÖt the first to propose this objective. It
+Page 2: was originally proposed by Bernoulli in 1738 as the solution to the Saint Petersburg
+Page 2: paradox[4]. But Kelly was the first to connect it to the new field of information theory, encouraged by Shannon himself who assisted with the paper and immediately
+Page 2: realized the significance.
+Page 2: It wasnΓÇÖt clear at the time what was so special about this particular function.
+Page 2: It looks a little bit like ShannonΓÇÖs celebrated entropy equation, but with money
+Page 2: replacing the term inside the logarithm. The function balances potential gains
+Page 2: and losses along with their probabilities through the curvature of the log function.
+Page 2: Because log is steeper to the left than to the right at every point, losses matter more
+Page 2: than gains. And log of zero is negative infinity, so itΓÇÖs not enough to have a small
+Page 2: probability of blowup (ruin) ΓÇô it has to be strictly zero. Another interpretation is
+Page 2: that investments should be both structurally and statistically asymmetric.
+Page 2: Shannon shared the paper with Edward Thorp, who applied it first to blackjack
+Page 2: [18], then to the stock market through Princeton-Newport Partners, building one of
+Page 2: the earliest quantitative investment funds and achieving one of the most successful
+Page 2: track records in investing history [19]. Thorp also conducted extensive mathematical analysis of the Kelly criterion, extending it to practical multi-asset and options
+Page 2: settings. [11]
+Page 2: Shannon separately presented these ideas to the economist Paul Samuelson at
+Page 2: MIT. Over the course of several evening meetings [6], they discussed and debated
+Page 2: the merits of this proposal. Samuelson is said to have had a ΓÇ£visceral dislike of
+Page 2: log utility.ΓÇ¥ He argued it was an arbitrary and subjective utility function, and
+Page 2: an unnecessarily conservative one at that. Over the course of several papers, he
+Page 2: defended economics against this incursion by computer science and ΓÇ£fallacy that
+Page 2: has been borrowed into portfolio theory from information theory of the Shannon
+Page 2: type.ΓÇ¥[14, 13, 15] As perhaps the most influential economist at the time, he successfully kept this idea out of mainstream economics.
+Page 2: Thankfully, this idea lived on in computer science, most notably because of the
+Page 2: work of Tom Cover, the Stanford information theory professor. We now know
+Page 2: because of CoverΓÇÖs work that ShannonΓÇÖs idea was not a subjective, arbitrary utility
+Page 2: function as Samuelson had argued. It is the objectively optimal way to invest for
+Page 2: three reasons.
+Page 2: (1) It maximizes long term wealth.
+Page 2: (2) It minimizes the risk of ruin.
+Page 2: (3) In a game-theoretic sense, it is competitively optimal, even over the short
+Page 2: term. Not just asymptotically as Samuelson believed. [2, 3, 1]
+Page 2: Samuelson seems to have understood the first two points, but he remained unconvinced, believing there was nothing special about log that distinguished it from
+Page 2: other utility functions. The third reason, the most important, wasnΓÇÖt known until
+Page 2: much later because of CoverΓÇÖs work at Stanford. Proving optimality required new
+Page 2: ideas and techniques in information theory, including a version of the Asymptotic
+Page 2: Equipartition Property (AEP) for markets to show that it dominates every other
+Page 2: strategy over the long run [1], and an application of Kuhn-Tucker conditions [3] to
+Page 2: show that it is also optimal in a game-theoretic sense over the short term. Cover
+Page 2: noted that it was ΓÇ£tantalizing that [the log optimal strategy] arises as the solution
+Page 2: 
+Page 2: 
+Page 3: INVESTING IS COMPRESSION
+Page 3: 
+Page 3: 3
+Page 3: 
+Page 3: to such dissimilar problemsΓÇ¥ and wondered if it was just a mathematical coincidence
+Page 3: or something more fundamental. [2]. As Cover observed:
+Page 3: ΓÇ£there is no essential conflict between good short-term and longrun performance. Both are achieved by maximizing the conditional
+Page 3: expected log return.ΓÇ¥ Cover [3]
+Page 3: One of CoverΓÇÖs most surprising contributions to portfolio theory was something
+Page 3: called a universal portfolio. Related to universal compression in information theory,
+Page 3: it performs asymptotically as well as the best possible adversary. One that knows
+Page 3: the rules but not the future. Although the math is elegant, the argument is very
+Page 3: abstract. But one of the steps that Cover used in creating universal portfolios is
+Page 3: extremely useful beyond that algorithm. It reveals the information structure of the
+Page 3: investing problem, making it accessible to the techniques of information theory.
+Page 3: That same technique will be applied here to show that what is so powerful about
+Page 3: the Kelly criterion is that even in the most general form, it factors the investing
+Page 3: problem into three terms: a money term, an entropy term, and a divergence term.
+Page 3: The first two terms donΓÇÖt actually depend on our allocation or distribution. So the
+Page 3: only way to maximize our compounding growth rate is to minimize the divergence
+Page 3: which is a non-negative drag or friction and which only goes to zero when our distribution matches the unknown true distribution. This means that, fundamentally,
+Page 3: investing is a compression problem.
+Page 3: 2. Classic Kelly
+Page 3: The classic Kelly criterion tells us how much to wager on a game of chance with
+Page 3: known odds and predictive edge. Assume that with probability p we win and our
+Page 3: wager is multiplied by return r. And with probability (1 ΓêÆ p) we lose the full wager.
+Page 3: The question is what fraction f to wager to maximize wealth. Note that r is the
+Page 3: return multiplier, not the more common odds = r ΓêÆ 1.
+Page 3: If we start with initial wealth V0 , then with probability p we will win and our
+Page 3: wealth at the next step will be
+Page 3: V1 = V0 (f r + (1 ΓêÆ f ))
+Page 3: 
+Page 3: (1)
+Page 3: 
+Page 3: and with probability (1 ΓêÆ p) we will lose and our wealth will be
+Page 3: V1 = V0 (1 ΓêÆ f )
+Page 3: 
+Page 3: (2)
+Page 3: 
+Page 3: After n steps, our wealth becomes
+Page 3: Vn = V0 (1 ΓêÆ f )n0 (f r + (1 ΓêÆ f ))n1
+Page 3: 
+Page 3: (3)
+Page 3: 
+Page 3: if we have n0 losses and n1 wins.
+Page 3: KellyΓÇÖs proposal is that we maximize the expected log wealth, or the probability
+Page 3: weighted average log return. Note that log is monotonic, so maximizing log return
+Page 3: also maximizes total growth after n steps. KellyΓÇÖs focus was the expected loggrowth per step, g. Since each step is multiplicative, the log of the full product is
+Page 3: the sum of the logs, and the average converges to the expectation in the limit.
+Page 3: log
+Page 3: 
+Page 3: 
+Page 3: 
+Page 3: Vn
+Page 3: V0
+Page 3: 
+Page 3: 
+Page 3: 
+Page 3: = p log(f r + (1 ΓêÆ f )) + (1 ΓêÆ p) log(1 ΓêÆ f )
+Page 3: n
+Page 3: We can find the f that maximizes g by taking the derivative and setting it equal
+Page 3: to zero
+Page 3: (4)
+Page 3: 
+Page 3: g(f ) = lim
+Page 3: 
+Page 3: nΓåÆΓê₧
+Page 3: Γêù
+Page 3: 
+Page 3: 
+Page 4: 4
+Page 4: 
+Page 4: OSCAR STIFFELMAN
+Page 4: 
+Page 4: (5)
+Page 4: 
+Page 4: dg
+Page 4: p(r ΓêÆ 1)
+Page 4: 1ΓêÆp
+Page 4: =
+Page 4: ΓêÆ
+Page 4: =0
+Page 4: df
+Page 4: fr ΓêÆ f + 1 1 ΓêÆ f
+Page 4: 
+Page 4: Solving for f we get
+Page 4: 
+Page 4: fΓêù =
+Page 4: 
+Page 4: (6)
+Page 4: 
+Page 4: pr ΓêÆ 1
+Page 4: rΓêÆ1
+Page 4: 
+Page 4: This is the famous ΓÇ£edge/oddsΓÇ¥ Kelly solution that maximizes growth. Plugging
+Page 4: it back into the growth equation:
+Page 4: 
+Page 4: (7)
+Page 4: 
+Page 4: g Γêù = p log(pr) + (1 ΓêÆ p) log
+Page 4: 
+Page 4: 
+Page 4: 
+Page 4: (1 ΓêÆ p)r
+Page 4: rΓêÆ1
+Page 4: 
+Page 4: 
+Page 4: 
+Page 4: If the market makerΓÇÖs probability is q and the odds are fair, then q ┬╖ r = 1, and
+Page 4: r = 1q . Substituting into the equation:
+Page 4: 
+Page 4: (8)
+Page 4: 
+Page 4: 
+Page 4: 
+Page 4:  
+Page 4: 1ΓêÆp
+Page 4: p
+Page 4: + (1 ΓêÆ p) log
+Page 4: g = p log
+Page 4: q
+Page 4: 1ΓêÆq
+Page 4: Γêù
+Page 4: 
+Page 4: This is the KL divergence DKL (P ΓêÑQ) between our distribution p and the marketΓÇÖs
+Page 4: distribution q.
+Page 4: 
+Page 4: 3. Horse Race Market
+Page 4: Consider a market where you can bet fractionally on mutually exclusive events
+Page 4: and you must fully allocate your capital. This is described as a ΓÇ£horse race marketΓÇ¥
+Page 4: [7] with only one winner each time. In this case we need a weight vector W rather
+Page 4: than a single wager fraction f . If there are n horses, let wi be the fraction wagered
+Page 4: on the ith horse, let pi be the probability of the ith horse winning, and let ri be
+Page 4: the return or the wealth ratio for capital wagered on that horse. KellyΓÇÖs expected
+Page 4: log return for this game becomes:
+Page 4: 
+Page 4: (9)
+Page 4: 
+Page 4: g(W ) =
+Page 4: 
+Page 4: N
+Page 4: X
+Page 4: 
+Page 4: pi log (ri wi )
+Page 4: 
+Page 4: i=1
+Page 4: 
+Page 4: In the classic Kelly example, we used calculus to find the optimal solution and
+Page 4: observed the information theoretic KL divergence in the solution. This time we
+Page 4: will take a more direct information theoretic approach to find and characterize the
+Page 4: solution. This problem is simple to analyze because there is only one nonzero term
+Page 4: inside the logarithm (the single winning horse).
+Page 4: Because the log of a product is the sum of logs, we can rewrite this as
+Page 4: 
+Page 4: 
+Page 5: INVESTING IS COMPRESSION
+Page 5: 
+Page 5: (10)
+Page 5: 
+Page 5: g(W ) =
+Page 5: 
+Page 5: N
+Page 5: X
+Page 5: 
+Page 5: 5
+Page 5: 
+Page 5: pi log(ri wi )
+Page 5: 
+Page 5: i=1
+Page 5: 
+Page 5: (11)
+Page 5: 
+Page 5: =
+Page 5: 
+Page 5: N
+Page 5: X
+Page 5: 
+Page 5: pi log(ri ) +
+Page 5: 
+Page 5: i=1
+Page 5: 
+Page 5: (12)
+Page 5: 
+Page 5: =
+Page 5: 
+Page 5: (14)
+Page 5: 
+Page 5: =
+Page 5: 
+Page 5: =
+Page 5: 
+Page 5: N
+Page 5: X
+Page 5: 
+Page 5: pi log(ri ) +
+Page 5: 
+Page 5: =
+Page 5: 
+Page 5: N
+Page 5: X
+Page 5: 
+Page 5: 
+Page 5: pi log
+Page 5: 
+Page 5: i=1
+Page 5: 
+Page 5: N
+Page 5: X
+Page 5: 
+Page 5: pi log(ri ) +
+Page 5: 
+Page 5: N
+Page 5: X
+Page 5: 
+Page 5: i=1
+Page 5: 
+Page 5: i=1
+Page 5: 
+Page 5: N
+Page 5: X
+Page 5: 
+Page 5: N
+Page 5: X
+Page 5: 
+Page 5: pi log(ri ) ΓêÆ
+Page 5: 
+Page 5: i=1
+Page 5: 
+Page 5: (15)
+Page 5: 
+Page 5: pi log (wi )
+Page 5: 
+Page 5: i=1
+Page 5: 
+Page 5: i=1
+Page 5: 
+Page 5: (13)
+Page 5: 
+Page 5: N
+Page 5: X
+Page 5: 
+Page 5: N
+Page 5: X
+Page 5: 
+Page 5: pi log (pi ) +
+Page 5: 
+Page 5: 
+Page 5: pi log
+Page 5: 
+Page 5: i=1
+Page 5: 
+Page 5: 
+Page 5: pi log
+Page 5: 
+Page 5: i=1
+Page 5: 
+Page 5: N
+Page 5: X
+Page 5: 
+Page 5: 
+Page 5: 
+Page 5: pi wi
+Page 5: pi
+Page 5: 
+Page 5: 1
+Page 5: pi
+Page 5: 
+Page 5: 
+Page 5: ΓêÆ
+Page 5: 
+Page 5: N
+Page 5: X
+Page 5: 
+Page 5: wi
+Page 5: pi
+Page 5: 
+Page 5: 
+Page 5: pi log
+Page 5: 
+Page 5: i=1
+Page 5: 
+Page 5: 
+Page 5: 
+Page 5: pi
+Page 5: wi
+Page 5: 
+Page 5: 
+Page 5: 
+Page 5: pi log (ri ) ΓêÆ H(P ) ΓêÆ DKL (P ΓêÑW )
+Page 5: 
+Page 5: i=1
+Page 5: 
+Page 5: Notice that the first two terms donΓÇÖt depend on W. The only way to maximize
+Page 5: growth is to minimize the third term which is the KL divergence between the
+Page 5: probability distribution and the weight vector. Because the weight vector sums
+Page 5: to one, we can think of it like a probability distribution. We know from GibbsΓÇÖ
+Page 5: Inequality that DKL (P ΓêÑW ) is non-negative and only goes to zero when P = W .
+Page 5: In other words, the optimal strategy is to bet in proportion to the true probability
+Page 5: distribution. This is a counterintuitive fact because it does not depend on the
+Page 5: return distribution, just the probability of winning.
+Page 5: If the payoffs are priced fairly using a market probability Q, then as before
+Page 5: qi ┬╖ ri = 1 and so qi = r1i .
+Page 5: Substituting that back into the above solution, we have
+Page 5: 
+Page 5: (16)
+Page 5: 
+Page 5: g(W ) =
+Page 5: 
+Page 5: N
+Page 5: X
+Page 5: i=1
+Page 5: 
+Page 5: 
+Page 5: pi log
+Page 5: 
+Page 5: 1
+Page 5: qi
+Page 5: 
+Page 5: 
+Page 5: ΓêÆ H(P ) ΓêÆ DKL (P ΓêÑW )
+Page 5: 
+Page 5: (17)
+Page 5: 
+Page 5: = H(P, Q) ΓêÆ H(P ) ΓêÆ DKL (P ΓêÑW )
+Page 5: 
+Page 5: (18)
+Page 5: 
+Page 5: = DKL (P ΓêÑQ) ΓêÆ DKL (P ΓêÑW )
+Page 5: 
+Page 5: Which follows from the fact that KL divergence is the difference between the
+Page 5: cross entropy and entropy.
+Page 5: The growth rate is the difference between these two KL divergences: the divergence of the market from the true distribution minus the divergence of our allocation
+Page 5: from the truth. The intuition is that you canΓÇÖt make money if the market is priced
+Page 5: accurately or if you simply agree with the market. You have to disagree with the
+Page 5: market while being closer to the true distribution.
+Page 5: 4. General Case
+Page 5: The Horse Race Market entails mutually exclusive events, with only one nonzero
+Page 5: term inside the logarithm at each step. This makes it straightforward to analyze
+Page 5: using standard mathematical techniques. Consider now the more general case where
+Page 5: 
+Page 5: 
+Page 6: 6
+Page 6: 
+Page 6: OSCAR STIFFELMAN
+Page 6: 
+Page 6: there can be more than one nonzero term at each point in time. In this case, the
+Page 6: return at each point in time is the inner product between the weight vector and the
+Page 6: return vector:
+Page 6: N
+Page 6: X
+Page 6: 
+Page 6: (19)
+Page 6: 
+Page 6: ri wi
+Page 6: 
+Page 6: i=1
+Page 6: 
+Page 6: and the log return is given by
+Page 6: 
+Page 6: (20)
+Page 6: 
+Page 6: log
+Page 6: 
+Page 6: N
+Page 6: X
+Page 6: 
+Page 6: !
+Page 6: ri wi
+Page 6: 
+Page 6: i=1
+Page 6: 
+Page 6: The Horse Race Market expected log return
+Page 6: 
+Page 6: (21)
+Page 6: 
+Page 6: N
+Page 6: X
+Page 6: 
+Page 6: pi log(ri wi )
+Page 6: 
+Page 6: i=1
+Page 6: 
+Page 6: is a special case of this more general formulation in which the ith term is nonzero
+Page 6: with probability pi . The general case is more difficult to analyze because the sum
+Page 6: doesnΓÇÖt have the same clean factorization.
+Page 6: To analyze this problem, IΓÇÖm going to use a technique that was first used by
+Page 6: Tom Cover in his universal portfolio theory [5, 7] proofs. Although Cover used the
+Page 6: technique for a different purpose, it turns out to be extremely useful for analyzing the general investing problem. ItΓÇÖs essentially a change of representation that
+Page 6: reveals an information structure to the investing problem and makes it more accessible to techniques and insights from information theory. Cover used this trick to
+Page 6: make it possible to apply the math of universal compression which is the surprising
+Page 6: idea from information theory that you can achieve the Shannon compression limit
+Page 6: asymptotically even without knowing the probability distribution ahead of time.
+Page 6: In the context of investing, this seems especially paradoxical, but the math is nevertheless sound and elegant. Rather than using it to design an algorithm as Cover
+Page 6: did, IΓÇÖm simply borrowing the technique for the purpose of analysis.
+Page 6: We traditionally think of the multi-period investing problem as a product of
+Page 6: scalars. We can write the return after n periods of some multi-period investment
+Page 6: process as the product of the individual returns:
+Page 6: 
+Page 6: (22)
+Page 6: 
+Page 6: Rn =
+Page 6: 
+Page 6: n
+Page 6: Y
+Page 6: 
+Page 6: rt
+Page 6: 
+Page 6: t=1
+Page 6: 
+Page 6: where Rn indicates the total growth of the multiplicative process after n steps.
+Page 6: Assuming we are compounding and rebalancing a fixed weight portfolio at each
+Page 6: point in time, we can write this full process, where wi is the portfolio weight assigned
+Page 6: to the ith asset, and ri,t is the return of the ith asset at time t.
+Page 6: 
+Page 6: (23)
+Page 6: 
+Page 6: Rn =
+Page 6: 
+Page 6: n X
+Page 6: m
+Page 6: Y
+Page 6: 
+Page 6: wi ri,t
+Page 6: 
+Page 6: t=1 i=1
+Page 6: 
+Page 6: Note that the product of scalars is now seen as a product of sums (dot products).
+Page 6: 
+Page 6: 
+Page 7: INVESTING IS COMPRESSION
+Page 7: 
+Page 7: 7
+Page 7: 
+Page 7: CoverΓÇÖs brilliant insight was that we can rewrite the product of sums as a sum of
+Page 7: products. This might seem like a trivially algebraic change. But as will become clear
+Page 7: momentarily, instead of compounding weighted returns per period, we can think of
+Page 7: this as a weighted average of an exponential number of multi-period returns.
+Page 7: Assume for now that there are only two assets in the system {a, b}. The return
+Page 7: after one period is
+Page 7: (24)
+Page 7: 
+Page 7: wa ra,1 + wb rb,1
+Page 7: 
+Page 7: After two periods the return is
+Page 7: (25)
+Page 7: 
+Page 7: (wa ra,1 + wb rb,1 ) (wa ra,2 + wb rb,2 )
+Page 7: 
+Page 7: Which we can expand as
+Page 7: (26)
+Page 7: 
+Page 7: wa2 ra,1 ra,2 + wb2 rb,1 rb,2 + wa wb ra,1 rb,2 + wb wa rb,1 ra,2
+Page 7: 
+Page 7: We have changed the product of sums into a sum of products. The number
+Page 7: of terms grows exponentially with the number of periods. With every additional
+Page 7: period, we double the number of terms in the two asset case.
+Page 7: The symbols {a, b} can be combined into 2n sequences of length n. Each such sequence corresponds to a term in the expanded n period sum of products, indicating
+Page 7: whether the return at time t should be aΓÇÖs or bΓÇÖs return at that time.
+Page 7: If na and nb indicate the number times each symbol occurs in a given sequence,
+Page 7: the weight for the sequence is
+Page 7: wana wbnb
+Page 7: 
+Page 7: (27)
+Page 7: 
+Page 7: The returns are more complex because they change over time. For now, think
+Page 7: of them as an additional product that goes with each term.
+Page 7: What we now have is an exponential number of sequences that describe horse
+Page 7: race style (mutually exclusive) investments on only one symbol per period. ItΓÇÖs
+Page 7: straightforward to show that the weights wana wbnb across these sequences add up
+Page 7: to one. Effectively we have turned the multi-period compounding and rebalancing
+Page 7: process into a single (non-rebalancing) weighted investment across an exponential
+Page 7: number of multi-period investments. Imagine pre-allocating capital to an exponential number of processes and compounding serially within each siloed process.
+Page 7: Let Tn (P ) be the set of sequences of length n with empirical frequencies given
+Page 7: by
+Page 7: P = {p1 , . . . , pm }
+Page 7: 
+Page 7: (28)
+Page 7: (29)
+Page 7: 
+Page 7: m
+Page 7: X
+Page 7: 
+Page 7: pi = 1
+Page 7: 
+Page 7: i=1
+Page 7: 
+Page 7: (30)
+Page 7: 
+Page 7: npi Γêê N
+Page 7: 
+Page 7: Each Tn (P ) defines a type class of sequences. It is the set of all permutations of
+Page 7: sequences of length n with symbol frequencies matching P . This lets us write the
+Page 7: total growth equation as a sum over all type classes
+Page 7: 
+Page 7: 
+Page 8: 8
+Page 8: 
+Page 8: OSCAR STIFFELMAN
+Page 8: 
+Page 8: (31)
+Page 8: 
+Page 8: Rn (W ) =
+Page 8: 
+Page 8: m
+Page 8: XY
+Page 8: P i=1
+Page 8: 
+Page 8: winpi
+Page 8: 
+Page 8: X
+Page 8: 
+Page 8: rs
+Page 8: 
+Page 8: sΓêêTn (P )
+Page 8: 
+Page 8: where rs is the product of returns obtained by following sequence s, taking the
+Page 8: return of whichever asset the sequence selects at each time period. This is the same
+Page 8: exponential set ofQsequences as before, just grouped by type and with the common
+Page 8: m
+Page 8: sequence weight i=1 winpi factored out per class.
+Page 8: As stated earlier, the weights sum to one across the full set of sequences. Each
+Page 8: sequence weight represents a budget allocation to that particular multi-period compounding process that bets on one specific symbol per time period. A particular
+Page 8: type class represents all permutations of a given sequence. Because all permutations
+Page 8: in the class have the same weight, itΓÇÖs not possible to wager more on a particular sequence than any other sequence in the set. The larger the set (higher the entropy),
+Page 8: the less specific the wager. Cover used this fact to show that we can asymptotically
+Page 8: achieve the same growth as an ideal adversary, one that knows the ΓÇ£rulesΓÇ¥ (the
+Page 8: true odds) but not the future. The key insight is that even such an adversary is
+Page 8: similarly restricted and can bet with high concentration only if the set is small
+Page 8: (low entropy). By using the entropy of the sequence to size the wager, one can
+Page 8: wager proportionally to the unknown optimal bet with only a polynomial penalty
+Page 8: to make the wagers sum to one (the cost of universality). From a traditional finance
+Page 8: perspective, this is a truly surprising result. The idea of optimal investing without
+Page 8: any informational advantage seems paradoxical, but itΓÇÖs really a demonstration of
+Page 8: how powerful it is to apply information theory to the investing problem. Most people who are aware of CoverΓÇÖs universal portfolio know it as a beautifully abstract
+Page 8: and elegant yet likely impractical algorithm due to transaction costs. But as IΓÇÖll
+Page 8: demonstrate, this isnΓÇÖt just a scaffold for making universal portfolios. CoverΓÇÖs idea
+Page 8: to rewrite the traditional product of sums investing problem as a sum of products
+Page 8: reveals the information structure of the general investing problem. ItΓÇÖs not just
+Page 8: useful for CoverΓÇÖs very abstract idea ΓÇô itΓÇÖs an essential tool that I argue makes the
+Page 8: investing problem less opaque and more accessible to the techniques of information
+Page 8: theory.
+Page 8: We will now demonstrate how the weight, which sums to one across all sequences,
+Page 8: concentrates in the particular type class P = W , the set of all permutations of
+Page 8: sequences with frequencies matching the portfolio weights. We first establish this
+Page 8: using combinatorics and StirlingΓÇÖs approximation. Because this approximation is
+Page 8: only asymptotically valid, we then refine the argument using KL divergence to
+Page 8: show how the total weight assigned to non-dominant sets declines exponentially
+Page 8: with both divergence and time. Once this type class concentration is established
+Page 8: we will use it to simplify the growth function to reveal the information theoretic
+Page 8: terms in the investment process.
+Page 8: The size of Tn (W ) is the number of permutations of sequences of length n and
+Page 8: with ni = wi n. The size of this set is given by the multinomial
+Page 8: 
+Page 8: (32)
+Page 8: 
+Page 8: n
+Page 8: n1 , n2 , n3 , . . . , nm
+Page 8: 
+Page 8: 
+Page 8: 
+Page 8: For the Tn (W ) type class, this is
+Page 8: 
+Page 8: =
+Page 8: 
+Page 8: n!
+Page 8: n!
+Page 8: = Qm
+Page 8: n1 !n2 !n3 ! . . . nm !
+Page 8: i=1 ni !
+Page 8: 
+Page 8: 
+Page 9: INVESTING IS COMPRESSION
+Page 9: 
+Page 9: 9
+Page 9: 
+Page 9: n!
+Page 9: i=1 (nwi )!
+Page 9: 
+Page 9: (33)
+Page 9: 
+Page 9: Qm
+Page 9: 
+Page 9: Using StirlingΓÇÖs Approximation
+Page 9: 
+Page 9: log(n!) = n log(n) ΓêÆ n + O(log(n))
+Page 9: 
+Page 9: (34)
+Page 9: 
+Page 9: Ignoring the sublinear term (this approximation will be revisited below), we can
+Page 9: rewrite the cardinality, using Tn (W ) to denote both the cardinality and the set
+Page 9: where itΓÇÖs unambiguous:
+Page 9: 
+Page 9: (35)
+Page 9: (36)
+Page 9: (37)
+Page 9: 
+Page 9: m
+Page 9: Y
+Page 9: 
+Page 9: log(Tn (W )) = log(n!) ΓêÆ log
+Page 9: = n log(n) ΓêÆ n ΓêÆ
+Page 9: = n log(n) ΓêÆ n ΓêÆ
+Page 9: 
+Page 9: !
+Page 9: (nwi )!
+Page 9: 
+Page 9: i=1
+Page 9: m
+Page 9: X
+Page 9: i=1
+Page 9: m
+Page 9: X
+Page 9: 
+Page 9: (nwi log(nwi ) ΓêÆ nwi )
+Page 9: nwi log(n) ΓêÆ
+Page 9: 
+Page 9: i=1
+Page 9: 
+Page 9: (38)
+Page 9: 
+Page 9: = n log(n) ΓêÆ n ΓêÆ n log(n)
+Page 9: 
+Page 9: m
+Page 9: X
+Page 9: 
+Page 9: = ΓêÆn
+Page 9: 
+Page 9: m
+Page 9: X
+Page 9: 
+Page 9: nwi log(wi ) +
+Page 9: 
+Page 9: i=1
+Page 9: m
+Page 9: X
+Page 9: 
+Page 9: wi ΓêÆ n
+Page 9: 
+Page 9: i=1
+Page 9: 
+Page 9: (39)
+Page 9: 
+Page 9: m
+Page 9: X
+Page 9: 
+Page 9: i=1
+Page 9: 
+Page 9: m
+Page 9: X
+Page 9: 
+Page 9: nwi
+Page 9: 
+Page 9: i=1
+Page 9: 
+Page 9: wi log(wi ) + n
+Page 9: 
+Page 9: m
+Page 9: X
+Page 9: 
+Page 9: wi
+Page 9: 
+Page 9: i=1
+Page 9: 
+Page 9: wi log(wi )
+Page 9: 
+Page 9: i=1
+Page 9: m
+Page 9: X
+Page 9: 
+Page 9: (40)
+Page 9: 
+Page 9: =n
+Page 9: 
+Page 9: (41)
+Page 9: 
+Page 9: = n H(W )
+Page 9: 
+Page 9: 
+Page 9: 
+Page 9: wi log
+Page 9: 
+Page 9: i=1
+Page 9: 
+Page 9: 1
+Page 9: wi
+Page 9: 
+Page 9: 
+Page 9: 
+Page 9: The cardinality is therefore
+Page 9: 
+Page 9: (42)
+Page 9: 
+Page 9: Tn (W ) = en H(W )
+Page 9: 
+Page 9: The weight assigned to a sequence s is denoted by ws . This is the product of the
+Page 9: portfolio weights for each period corresponding to the selected symbol. Because all
+Page 9: sequences within the type class Tn (W ) have the same symbol frequencies (they are
+Page 9: permutations of each other), they share the same sequence weight. The sequence
+Page 9: weight ws for each sequence s Γêê Tn (W ) is
+Page 9: 
+Page 9: (43)
+Page 9: 
+Page 9: ws =
+Page 9: 
+Page 9: m
+Page 9: Y
+Page 9: i=1
+Page 9: 
+Page 9: Applying logs, this becomes
+Page 9: 
+Page 9: winwi
+Page 9: 
+Page 9: 
+Page 10: 10
+Page 10: 
+Page 10: OSCAR STIFFELMAN
+Page 10: 
+Page 10: (44)
+Page 10: 
+Page 10: log(ws ) = log
+Page 10: 
+Page 10: m
+Page 10: Y
+Page 10: 
+Page 10: !
+Page 10: winwi
+Page 10: 
+Page 10: i=1
+Page 10: 
+Page 10: =
+Page 10: 
+Page 10: (45)
+Page 10: 
+Page 10: m
+Page 10: X
+Page 10: 
+Page 10: nwi log(wi )
+Page 10: 
+Page 10: i=1
+Page 10: m
+Page 10: X
+Page 10: 
+Page 10: =ΓêÆ
+Page 10: 
+Page 10: (46)
+Page 10: 
+Page 10: 
+Page 10: nwi log
+Page 10: 
+Page 10: i=1
+Page 10: 
+Page 10: 1
+Page 10: wi
+Page 10: 
+Page 10: 
+Page 10: 
+Page 10: = ΓêÆn H(W )
+Page 10: 
+Page 10: (47)
+Page 10: 
+Page 10: The weight for each sequence is therefore
+Page 10: ws = eΓêÆn H(W )
+Page 10: 
+Page 10: (48)
+Page 10: 
+Page 10: At least for large n (with precise refinement later), the sum of this per-sequence
+Page 10: weight across all of the sequences in the set is approximately
+Page 10: X
+Page 10: 
+Page 10: (49)
+Page 10: 
+Page 10: ws = eΓêÆn H(W ) en H(W ) = 1
+Page 10: 
+Page 10: sΓêêTn (W )
+Page 10: 
+Page 10: This indicates that the weight is concentrated in the set of sequences from the
+Page 10: type class P = W . Again this is the set of all permutations of sequences with
+Page 10: frequencies matching the portfolio weight vector. It is the uniform wager on all
+Page 10: multi-period, horse-race style investments with frequencies matching the portfolio.
+Page 10: This concentration argument relied on StirlingΓÇÖs Approximation. Although this
+Page 10: is asymptotically accurate and it identifies the dominant type class, it overstates
+Page 10: the finite log cardinality.
+Page 10: The intuition is that ShannonΓÇÖs entropy, which characterizes an infinite stochastic
+Page 10: source, is greater than the complexity of a finite object with the same frequency
+Page 10: distribution. The finite case is formally in the domain of Kolmogorov Complexity
+Page 10: Theory [10], but from a coding perspective, the reason is because knowing the full
+Page 10: distribution and the number of symbols remaining reduces the uncertainty.
+Page 10: We can use KL divergence to more precisely bound the weight mass assigned
+Page 10: to
+Page 10: Q
+Page 10: type classes that are different from W . The weight for any type class P is i winpi
+Page 10: and the cardinality is approximately |Tn (P )| = enH(P ) . The log of the total density
+Page 10: assigned to the set of sequences in the class is
+Page 10: (50)
+Page 10: !
+Page 10: log
+Page 10: 
+Page 10: Y
+Page 10: 
+Page 10: winpi enH(P )
+Page 10: 
+Page 10: =
+Page 10: 
+Page 10: X
+Page 10: (npi log (wi )) + n H(P )
+Page 10: 
+Page 10: = ΓêÆn H(P, W ) + n H(p)
+Page 10: 
+Page 10: i
+Page 10: 
+Page 10: (51)
+Page 10: 
+Page 10: = ΓêÆn DKL (P ΓêÑW )
+Page 10: 
+Page 10: The total weight concentrated on sequences in that set declines exponentially
+Page 10: with the divergence from the portfolio weight vector W and with the number of
+Page 10: periods:
+Page 10: (52)
+Page 10: 
+Page 10: eΓêÆn DKL (P ΓêÑW )
+Page 10: 
+Page 10: 
+Page 11: INVESTING IS COMPRESSION
+Page 11: 
+Page 11: 11
+Page 11: 
+Page 11: This gives us confidence that we can ignore sequences that do not match the
+Page 11: portfolio weights, with that confidence increasing exponentially with both the divergence (frequency mismatch) and the number of time periods. This lets us simplify the original growth equation, rewriting it as a single product rather than a
+Page 11: complex sum over classes.
+Page 11: The original product expression
+Page 11: 
+Page 11: (53)
+Page 11: 
+Page 11: Rn (W ) =
+Page 11: 
+Page 11: m
+Page 11: XY
+Page 11: 
+Page 11: X
+Page 11: 
+Page 11: winpi
+Page 11: 
+Page 11: P i=1
+Page 11: 
+Page 11: rs
+Page 11: 
+Page 11: sΓêêTn (P )
+Page 11: 
+Page 11: can now be reduced to
+Page 11: X
+Page 11: 
+Page 11: eΓêÆn H(W )
+Page 11: 
+Page 11: (54)
+Page 11: 
+Page 11: rs
+Page 11: 
+Page 11: sΓêêTn (W )
+Page 11: 
+Page 11: Because |Tn (W )| = en H(W ) , this is simply the average return across all multiperiod sequence returns in the class of sequences that look like the portfolio (symbol
+Page 11: frequencies equal to portfolio weights).
+Page 11: Now assume that W Γêù is the optimal portfolio weight vectorΓÇô the portfolio that
+Page 11: maximizes the expected log return. As we showed above, almost all of its mass is
+Page 11: assigned to the set of sequences with frequencies matching the portfolio weights.
+Page 11: If we invest using any other weight vector W ╠╕= W Γêù , the performance of this
+Page 11: suboptimal portfolio is (ignoring all but the dominant set for the optimal portfolio)
+Page 11: 
+Page 11: (55)
+Page 11: 
+Page 11: Rn (W ) =
+Page 11: 
+Page 11: m
+Page 11: Y
+Page 11: i=1
+Page 11: 
+Page 11: (56)
+Page 11: 
+Page 11: log(Rn (W )) =
+Page 11: 
+Page 11: m
+Page 11: X
+Page 11: 
+Page 11: nwiΓêù
+Page 11: 
+Page 11: X
+Page 11: 
+Page 11: wi
+Page 11: 
+Page 11: rs
+Page 11: 
+Page 11: sΓêêTn (W Γêù )
+Page 11: 
+Page 11: ∩ú½
+Page 11: 
+Page 11: ∩ú╢
+Page 11: X
+Page 11: 
+Page 11: nwiΓêù log(wi ) + log ∩ú¡
+Page 11: 
+Page 11: i=1
+Page 11: 
+Page 11: sΓêêTn
+Page 11: 
+Page 11: ∩ú½
+Page 11: 
+Page 11: ∩ú╢
+Page 11: X
+Page 11: 
+Page 11: = ΓêÆn H(W Γêù , W ) + log ∩ú¡
+Page 11: 
+Page 11: (57)
+Page 11: 
+Page 11: rs ∩ú╕
+Page 11: 
+Page 11: (W Γêù )
+Page 11: 
+Page 11: sΓêêTn
+Page 11: 
+Page 11: rs ∩ú╕
+Page 11: 
+Page 11: (W Γêù )
+Page 11: 
+Page 11: ∩ú½
+Page 11: Γêù
+Page 11: 
+Page 11: Γêù
+Page 11: 
+Page 11: = ΓêÆnH(W ) ΓêÆ n DKL (W ΓêÑW ) + log ∩ú¡
+Page 11: 
+Page 11: (58)
+Page 11: 
+Page 11: ∩ú╢
+Page 11: X
+Page 11: 
+Page 11: sΓêêTn
+Page 11: 
+Page 11: rs ∩ú╕
+Page 11: 
+Page 11: (W Γêù )
+Page 11: 
+Page 11: Defining R╠äT (W ) as the per-period geometric growth rate
+Page 11: X
+Page 11: (59)
+Page 11: R╠änT (W ) =
+Page 11: rs
+Page 11: sΓêêTn (W )
+Page 11: 
+Page 11: The expected log return g(W) is therefore
+Page 11: 
+Page 11: log(Rn (W ))
+Page 11: = log R╠äT (W Γêù ) ΓêÆ H(W Γêù ) ΓêÆ DKL (W Γêù ΓêÑW )
+Page 11: nΓåÆΓê₧
+Page 11: n
+Page 11: The general case is more complicated than the classic Kelly or the horse race
+Page 11: market problem. But we once again see that KellyΓÇÖs objective has factored the
+Page 11: investing problem into the same three term decomposition: a money term (payoff
+Page 11: (60)
+Page 11: 
+Page 11: g(W ) = lim
+Page 11: 
+Page 11: 
+Page 12: 12
+Page 12: 
+Page 12: OSCAR STIFFELMAN
+Page 12: 
+Page 12: / rules of the game), an entropy term (uncertainty) and a divergence term. As
+Page 12: before, the first two terms donΓÇÖt depend on our portfolio allocation. The only way
+Page 12: to maximize the compounding growth rate is to minimize the drag or friction from
+Page 12: the divergence which measures, in bits 1, the difference between our distribution and
+Page 12: the unknown true distribution. Therefore investing is, fundamentally, a compression
+Page 12: problem.
+Page 12: 5. Practical Applications
+Page 12: 5.1. Backtesting. One of the challenges when backtesting and A/B testing of
+Page 12: strategies is that market data is notoriously non-stationary. Even the log objective
+Page 12: will be sensitive to extreme and atypical historical events. This makes the average
+Page 12: difficult to interpret in a statistical sense when comparing strategies. But recall that
+Page 12: the first two terms in equation 60 (money term and entropy term) do not depend
+Page 12: on the allocation, so they are constant across strategies in a given backtest. The
+Page 12: absolute value has no real statistical meaning, but the difference measures, in bits,
+Page 12: the change in the divergence relative to some unknown ideal. This is reminiscent
+Page 12: of Gibbs free energy in statistical mechanics.
+Page 12: (61)
+Page 12: (62)
+Page 12: (63)
+Page 12: 
+Page 12: 
+Page 12: g(WA ) = log R╠äT (W Γêù ) ΓêÆ H(W Γêù ) ΓêÆ DKL (W Γêù ΓêÑWA )
+Page 12: 
+Page 12: g(WB ) = log R╠äT (W Γêù ) ΓêÆ H(W Γêù ) ΓêÆ DKL (W Γêù ΓêÑWB )
+Page 12: g(WB ) ΓêÆ g(WA ) = DKL (W Γêù ΓêÑWA ) ΓêÆ DKL (W Γêù ΓêÑWB )
+Page 12: 
+Page 12: 5.2. MDL, Market Prediction, and Strategy Performance. Markets are
+Page 12: high-dimensional, sparse, and non-stationary. This makes it very difficult to separate signal from noise. It is especially challenging for techniques based on statistical
+Page 12: learning theory [20] which rely on resampling from a stationary stochastic source
+Page 12: to detect overfitting and generalization. Although statistical learning theory is the
+Page 12: dominant machine learning paradigm, itΓÇÖs not the only one. Information theory
+Page 12: offers alternative learning paradigms, including the MDL principle [8, 10]; see [16]
+Page 12: for a discussion of prediction, compression, and the relationship between models
+Page 12: and data. The key insight is that randomness is incompressible, so generalization
+Page 12: is about finding a parsimonious, compressive description. The relationship between
+Page 12: strategy performance and prediction performance is more direct when both are
+Page 12: treated as information theoretic questions. In other words, itΓÇÖs easier to draw a
+Page 12: clear line between signal improvements and strategy improvements when both are
+Page 12: measured in bits.
+Page 12: 5.3. Winner Fraction and VC-style Investing. KellyΓÇÖs objective is convex.
+Page 12: This means that there is a unique solution, and if we can model the joint return
+Page 12: distribution, then we can solve the general case efficiently using convex optimization
+Page 12: techniques.
+Page 12: But itΓÇÖs often not feasible to accurately model the joint distribution. Consider
+Page 12: the problem of venture capital style investing. The investor has to decide how much
+Page 12: capital to allocate, often years before any real clarity on future cash flow.
+Page 12: We saw from equation 54 that the optimal portfolio concentrates on a particular type class. Finding that optimal type class is equivalent to solving the convex
+Page 12: 1Throughout, log denotes the natural logarithm. Results are stated in bits with the understanding that base conversion is a scaling constant.
+Page 12: 
+Page 12: 
+Page 13: INVESTING IS COMPRESSION
+Page 13: 
+Page 13: 13
+Page 13: 
+Page 13: optimization problem which is not feasible without a precise joint probability distribution of future returns. Even without the full return distribution, the structure
+Page 13: of this decomposition motivates a useful heuristic: winner fraction investing.
+Page 13: The principle is to invest in proportion to the fraction of universes where a given
+Page 13: asset dominates the candidate set. In other words, the probability that a given
+Page 13: startup ΓÇ£winsΓÇ¥ relative to the rest of the contemplated startups. Although this is
+Page 13: still nontrivial to predict, it is far less complicated than the full joint distribution
+Page 13: ΓÇô it does not require modeling the actual returns, just the probability of winning.
+Page 13: It will now be shown that this heuristic is approximately optimal. The lower the
+Page 13: entropy, or the more extreme the ΓÇ£wins,ΓÇ¥ the better the approximation.
+Page 13: Let W Γêù be the growth-maximum portfolio, and let W ΓÇ▓ be the vector of winner
+Page 13: probabilities, in other words the probability that the ith startup dominates the
+Page 13: candidate set.
+Page 13: 
+Page 13: (64)
+Page 13: 
+Page 13: Γêù P
+Page 13: eΓêÆn H(W ) sΓêêTn (W Γêù ) rs
+Page 13: Rn (W Γêù )
+Page 13: = ΓêÆn H(W ΓÇ▓ ) P
+Page 13: Rn (W ΓÇ▓ )
+Page 13: e
+Page 13: sΓêêTn (W ΓÇ▓ ) rs
+Page 13: 
+Page 13: The numerator and denominator represent averages over their respective type
+Page 13: classes.
+Page 13: Recall that each sequence is an exclusive bet on only one asset per time period. A
+Page 13: type class represents all sequence permutations with a given frequency matching the
+Page 13: portfolio weight vector. The largest return in the winner fraction set is constructed
+Page 13: by stringing together the dominant asset per period. This sequence must be in the
+Page 13: winner fraction set. Let rmax be the return for that sequence. By construction,
+Page 13: it must also be at least as large as every sequence in the optimal set Tn (W Γêù ).
+Page 13: Therefore
+Page 13: (65)
+Page 13: 
+Page 13: (66)
+Page 13: 
+Page 13: rs
+Page 13: 
+Page 13: ΓêÇsΓêêTn (W Γêù )
+Page 13: 
+Page 13: e
+Page 13: Rn (W Γêù )
+Page 13: Γëñ
+Page 13: ΓÇ▓
+Page 13: Rn (W )
+Page 13: 
+Page 13: rmax
+Page 13: 
+Page 13: ΓêÆn H(W Γêù )
+Page 13: 
+Page 13: Γëñ1
+Page 13: 
+Page 13: P
+Page 13: 
+Page 13: sΓêêTn (W Γêù ) rs
+Page 13: ΓÇ▓)
+Page 13: ΓêÆn
+Page 13: H(W
+Page 13: e
+Page 13: rmax
+Page 13: P
+Page 13: rs
+Page 13: 1
+Page 13: sΓêêTn (W Γêù ) rmax
+Page 13: |Tn (W Γêù )|
+Page 13: eΓêÆnH(W ΓÇ▓ )
+Page 13: 
+Page 13: (67)
+Page 13: 
+Page 13: Γëñ
+Page 13: 
+Page 13: (68)
+Page 13: 
+Page 13: Γëñ enH(W )
+Page 13: 
+Page 13: ΓÇ▓
+Page 13: 
+Page 13: This shows the ratio of the optimal to the heuristic solution.
+Page 13: Taking limits to find expectation, we see
+Page 13: ΓÇ▓
+Page 13: 
+Page 13: (69)
+Page 13: 
+Page 13: log(enH(W ) )
+Page 13: = H(W ΓÇ▓ )
+Page 13: nΓåÆΓê₧
+Page 13: n
+Page 13: 
+Page 13: g(W Γêù ) ΓêÆ g(W ΓÇ▓ ) Γëñ lim
+Page 13: 
+Page 13: The difference between growth-optimal portfolio and the winner-fraction portfolio is bounded by the entropy of the winner-fraction distribution. That entropy is
+Page 13: itself bounded by the cardinality of the candidate set, so this heuristic is especially
+Page 13: useful when the candidate set is small or when the return distribution is extreme.
+Page 13: To my knowledge, this heuristic and proof of the entropy bound are both original.
+Page 13: 
+Page 13: 
+Page 14: 14
+Page 14: 
+Page 14: OSCAR STIFFELMAN
+Page 14: 
+Page 14: 6. Conclusion
+Page 14: The Kelly criterion describes how to allocate capital in simple games of chance
+Page 14: with known odds and edge. It is a closed form optimal solution to KellyΓÇÖs log
+Page 14: wealth objective. But it turns out that KellyΓÇÖs objective is itself optimal among all
+Page 14: objectives. And this fact reframes the investing problem itself.
+Page 14: In finance, we often think of risk and reward as two different axes: for a given
+Page 14: amount of risk, we maximize return. This goes back to the 1940ΓÇÖs and MarkowitzΓÇÖs
+Page 14: Modern Portfolio Theory (MPT) [12]. A concern with MPT is that markets are
+Page 14: heavy-tail and so diversification (averaging) may not reduce risk (variance) [17].
+Page 14: This is fundamentally a statistical concern. But even if markets were Gaussian, it
+Page 14: would still be suboptimal because KellyΓÇÖs objective is uniquely optimal. To justify
+Page 14: that, we have to turn from statistics to information theory.
+Page 14: Instead of thinking of risk and reward as two different axes, Kelly proposed
+Page 14: maximizing a single objective, the logarithm of wealth over uncertainty. In other
+Page 14: words the expectation or the probability weighted average log return. Samuelson
+Page 14: argued against this idea, successfully keeping it out of mainstream economics.
+Page 14: We now know because of Tom CoverΓÇÖs work at Stanford that this was not a
+Page 14: subjective, arbitrary utility function as Samuelson believed. It is the objectively
+Page 14: optimal way to invest. It is competitively optimal in a game-theoretic sense, assuming neither party has an information advantage. It dominates over almost every
+Page 14: market sequence. Even over the short term.
+Page 14: With the help of a transformation from CoverΓÇÖs universal portfolio algorithm, we
+Page 14: now understand what is so powerful about KellyΓÇÖs objective. It reveals the information structure of the investing problem, factoring it into three terms: a money term
+Page 14: (payoff / rules of the game), an entropy term (uncertainty) and a divergence term.
+Page 14: The only way to maximize compounding growth rate is to minimize the friction
+Page 14: from that divergence term. Fundamentally, investing is a compression problem.
+Page 14: References
+Page 14: 1. Paul H. Algoet and Thomas M. Cover, Asymptotic optimality and asymptotic equipartition
+Page 14: properties of log-optimum investment, The Annals of Probability 16 (1988), no. 2, 876ΓÇô898.
+Page 14: 2. Robert M. Bell and Thomas M. Cover, Competitive optimality of logarithmic investment,
+Page 14: Mathematics of Operations Research 5 (1980), no. 2, 161ΓÇô166.
+Page 14: , Game-theoretic optimal portfolios, Management Science 34 (1988), no. 6, 724ΓÇô733.
+Page 14: 3.
+Page 14: 4. Daniel Bernoulli, Exposition of a new theory on the measurement of risk, Econometrica 22
+Page 14: (1954), no. 1, 23ΓÇô36, Translation by Louise Sommer of ΓÇ£Specimen Theoriae Novae de Mensura
+Page 14: Sortis,ΓÇ¥ Commentarii Academiae Scientiarum Imperialis Petropolitanae, 5:175ΓÇô192, 1738.
+Page 14: 5. Thomas M. Cover, Universal portfolios, Mathematical Finance 1 (1991), no. 1, 1ΓÇô29.
+Page 14: 6.
+Page 14: , Shannon and investment, IEEE Information Theory Society Newsletter 48 (1998),
+Page 14: no. 2, 10ΓÇô11, Special Golden Jubilee Issue.
+Page 14: 7. Thomas M. Cover and Joy A. Thomas, Elements of information theory, 2nd ed., WileyInterscience, Hoboken, NJ, 2006.
+Page 14: 8. Peter D. Gru╠ênwald, The minimum description length principle, MIT Press, Cambridge, MA,
+Page 14: 2007.
+Page 14: 9. J. L. Kelly, Jr., A new interpretation of information rate, Bell System Technical Journal 35
+Page 14: (1956), no. 4, 917ΓÇô926.
+Page 14: 10. Ming Li and Paul M. B. Vita╠ünyi, An introduction to kolmogorov complexity and its applications, 4th ed., Texts in Computer Science, Springer, Cham, 2019.
+Page 14: 11. Leonard C. MacLean, Edward O. Thorp, and William T. Ziemba, The Kelly capital growth
+Page 14: investment criterion: Theory and practice, World Scientific, 2011.
+Page 14: 12. Harry Markowitz, Portfolio selection, The Journal of Finance 7 (1952), no. 1, 77ΓÇô91.
+Page 14: 
+Page 14: 
+Page 15: INVESTING IS COMPRESSION
+Page 15: 
+Page 15: 15
+Page 15: 
+Page 15: 13. Robert C. Merton and Paul A. Samuelson, Fallacy of the log-normal approximation to optimal
+Page 15: portfolio decision-making over many periods, Journal of Financial Economics 1 (1974), no. 1,
+Page 15: 67ΓÇô94.
+Page 15: 14. Paul A. Samuelson, The ΓÇ£fallacyΓÇ¥ of maximizing the geometric mean in long sequences of
+Page 15: investing or gambling, Proceedings of the National Academy of Sciences 68 (1971), no. 10,
+Page 15: 2493ΓÇô2496.
+Page 15: 15.
+Page 15: , Why we should not make mean log of wealth big though years to act are long, Journal
+Page 15: of Banking & Finance 3 (1979), no. 4, 305ΓÇô307.
+Page 15: 16. Oscar Stiffelman, The least wrong model is not in the data, 2014.
+Page 15: 17. Nassim Nicholas Taleb, Statistical consequences of fat tails, STEM Academic Press, 2020.
+Page 15: 18. Edward O. Thorp, Beat the dealer: A winning strategy for the game of twenty-one, 2nd ed.,
+Page 15: Random House, New York, 1966.
+Page 15: 19.
+Page 15: , A man for all markets: From Las Vegas to Wall Street, how I beat the dealer and
+Page 15: the market, Random House, 2017.
+Page 15: 20. Vladimir N. Vapnik, Statistical learning theory, Wiley-Interscience, New York, 1998.
+Page 15: 
+Page 15: 

@@ -307,9 +307,17 @@ class PositionManager:
         )
 
         # Create position
+        pattern_name = (
+            signal.pattern_name
+            if hasattr(signal, "pattern_name")
+            else signal.patterns[0]
+            if hasattr(signal, "patterns") and len(signal.patterns) > 0
+            else "Unknown"
+        )
+
         position = Position(
             id=position_id,
-            pattern_name=signal.pattern_name,
+            pattern_name=pattern_name,
             direction=signal.direction,
             entry_price=signal.entry_price,
             stop_loss=signal.stop_loss,

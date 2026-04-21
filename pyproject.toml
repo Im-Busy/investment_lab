@@ -20,8 +20,9 @@ dependencies = [
     "xgboost>=3.1.3",
     # Backtesting & Trading
     "backtesting>=0.6.5",
+    "vectorbt>=0.25.0",  # Portfolio-level vectorized backtesting (Phase 3)
     "yfinance>=1.2.0",
-    "pandas-ta>=0.3.14b",
+    "pandas-ta>=0.3.14b0",
     "quantstats>=0.0.62",
     "mplfinance>=0.12.10b0",
     # Visualization
@@ -48,7 +49,14 @@ dependencies = [
     "tqdm>=4.67.3",
     "pydantic>=2.12.5",
     "pykalman>=0.11.2",
-    "vectorbt>=0.28.2",
+    "ploomber>=0.23.3",
+    "pyarrow>=23.0.1",
+    "pywavelets>=1.8.0",
+    "pandas-datareader>=0.10.0",
+    "papermill>=2.7.0",
+    "nbconvert>=7.17.0",
+    "nbformat>=5.10.4",
+    "nbclient>=0.10.4",
 ]
 
 [dependency-groups]

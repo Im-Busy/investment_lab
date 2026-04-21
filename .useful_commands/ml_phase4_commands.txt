@@ -1,0 +1,58 @@
+================================================================================
+                        PHASE 4: ML INTEGRATION - QUICK COMMANDS
+================================================================================
+
+## TRAIN ML MODEL
+
+# Train on SPY with default LightGBM
+uv run scripts/train_ml_model.py --symbol SPY --start 2015-01-01 --end 2024-12-31
+
+# Train with XGBoost instead
+uv run scripts/train_ml_model.py --symbol SPY --model-type xgboost --horizon 5
+
+# Train with custom date range
+uv run scripts/train_ml_model.py --symbol SPY --start 2018-01-01 --end 2023-12-31
+
+# Skip walk-forward validation for faster training
+uv run scripts/train_ml_model.py --symbol SPY --no-walk-forward
+
+--------------------------------------------------------------------------------
+
+## RUN ML-ENHANCED BACKTEST COMPARISON
+
+# Compare ML-enhanced vs baseline for VWAP strategy
+uv run scripts/backtest_ml_enhanced.py --symbol SPY --strategy vwap
+
+# Test EMA Ribbon strategy
+uv run scripts/backtest_ml_enhanced.py --strategy ema
+
+# Test SMA Crossover strategy
+uv run scripts/backtest_ml_enhanced.py --strategy sma
+
+# Custom date range
+uv run scripts/backtest_ml_enhanced.py --start 2018-01-01 --end 2023-12-31
+
+--------------------------------------------------------------------------------
+
+## VERIFY ML MODULES
+
+# Test imports
+uv run python -c "from src.ml.pattern_classifier import PatternClassifier; print('OK')"
+uv run python -c "from src.ml.feature_engineering import FeatureExtractor; print('OK')"
+uv run python -c "from src.ml.signal_scorer import SignalScorer; print('OK')"
+
+--------------------------------------------------------------------------------
+
+## OUTPUT ARTIFACTS
+
+After training:
+- models/pattern_classifier_{timestamp}.pkl
+- models/pattern_classifier_{timestamp}_metadata.json
+- reports/ml_plots/feature_importance_{timestamp}.png
+- reports/ml_plots/walk_forward_{timestamp}.png
+- reports/ml_training/training_summary_{timestamp}.json
+
+After backtest comparison:
+- reports/ml_backtest/ml_backtest_comparison_{timestamp}.json
+
+================================================================================

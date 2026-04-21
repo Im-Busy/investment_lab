@@ -342,7 +342,75 @@ Both → Unified ReportGenerator → HTML reports
 
 ---
 
-## Next Steps / Future Work
+### Test Results:
+- **236 tests pass, 2 skipped** (234 + 4 new - 0 duplicates)
+- 4 new integration tests for ConfluenceScorer+ML end-to-end
+- 5 integration tests for MLPipeline end-to-end
+- All existing tests still passing (no regressions)
+
+---
+
+## Phase 12: ML Enhancement - Session 2 ✅ COMPLETED
+
+### Overview
+Continued ML implementation from Phase 5. Fixed notebook bugs, created integration tests,
+ML-enhanced backtesting script, and validation report template.
+
+### Files Modified:
+| File | Description | Status |
+|------|-------------|--------|
+| `notebooks/13_ml_validation.ipynb` | Fixed all import/API bugs (yfinance download, RegimeDetector API, class names) | ✅ |
+
+### Files Created:
+| File | Description | Lines | Status |
+|------|-------------|-------|--------|
+| `scripts/ml_enhanced_backtest.py` | ML-enhanced backtesting CLI script | ~130 | ✅ |
+| `tests/test_ml_integration.py` | Integration tests for ML pipeline (9 tests) | ~250 | ✅ |
+| `reports/ml_validation/validation_report.md` | ML validation report template | ~70 | ✅ |
+
+### Key Fixes in Notebook:
+1. `data_utils.load_data()` → `yfinance.download()` (yfinance direct download)
+2. `RegimeDetector.detect()` → `RegimeDetector.get_regime_series()` (correct API)
+3. `ConnorsRSIStrategy` → `ConnorsRSIMeanReversion` (correct class name)
+4. Added `seaborn` import (missing)
+5. Fixed multi-index column handling for yfinance output
+6. Fixed confusion matrix class labels access (`clf.classes_` → `regime_classifier.classes_`)
+7. Fixed regime label extraction (`.apply(lambda r: r.value)`)
+
+### Integration Tests Added:
+| Test | Purpose |
+|------|---------|
+| `test_pipeline_trains_and_predicts` | End-to-end MLPipeline training and prediction |
+| `test_walk_forward_validation_runs` | ML walk-forward validation on synthetic data |
+| `test_regime_classifier_predicts_valid_states` | Regime predictions match valid states |
+| `test_signal_scorer_walk_forward` | Signal scorer walk-forward validation |
+| `test_run_pipeline_integration` | Full pipeline integration test |
+| `test_confluence_scorer_accepts_ml_scorer` | ConfluenceScorer accepts ML scorer parameter |
+| `test_ml_blend_vs_base_confidence_different` | ML scorer blends with base confidence |
+| `test_ml_feature_building_integration` | ML features built from pattern results |
+| `test_ml_scorer_blend_integration` | ML blending produces valid scores |
+
+### ML System Status:
+| Component | Tests | Status |
+|-----------|-------|--------|
+| FeatureEngineer | 5 | ✅ |
+| RegimeClassifier | 4 | ✅ |
+| SignalScorer | 4 | ✅ |
+| MLPipeline | 5 | ✅ |
+| ConfluenceScorer+ML Integration | 4 | ✅ |
+| Pipeline Integration | 5 | ✅ |
+| **Total** | **27** | **✅** |
+
+---
+
+## Phase 13: Future Work
+
+### Next Steps (Priority Order):
+1. **Run notebook on real SPY data** - Execute 13_ml_validation.ipynb with yfinance data
+2. **ML-enhanced backtest vs baseline** - Compare ML-enhanced vs rule-based backtest results
+3. **XGBoost support** - Add xgboost to dependencies, test against sklearn models
+4. **Signal quality filtering with quality_filter parameter** - Wire up SignalQualityFilter into ConfluenceScorer
+5. **Paper trading setup (Phase 6)** - Live signal monitoring after ML validation shows improvement
 
 1. ~~Unit Tests~~ - ✅ COMPLETED
 2. **Documentation** - Add docstrings and generate API documentation

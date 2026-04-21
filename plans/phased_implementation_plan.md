@@ -3,8 +3,8 @@
 ## investment_trying — Rule-Based Strategy Completion to Paper Trading Readiness
 
 **Created:** 2026-04-09
-**Last Updated:** 2026-04-09
-**Status:** Phase 1 In Progress
+**Last Updated:** 2026-04-19
+**Status:** Phase 5 In Progress
 **Architecture:** Event-Driven Signal Pipeline
 
 ---
@@ -17,8 +17,9 @@
 | Phase 2: Pair Trading | ✅ COMPLETE | 100% |
 | Phase 3: Parameter Optimization | ✅ COMPLETE | 100% |
 | Phase 4: Regime Detection | ✅ COMPLETE | 100% |
-| Phase 5: ML Enhancement | Active Development | 0% |
-| Phase 6: Paper Trading | Not Started (Optional) | 0% |
+| Phase 5: ML Enhancement | 95% Complete | B7 integration pending |
+| Phase 6: Research-Based Enhancements | Not Started | 0% |
+| Phase 7: Paper Trading | Not Started (Optional) | 0% |
 
 ### Completed Milestones
 - [x] 22 strategies backtested on SPY daily (2015-2024)
@@ -27,6 +28,8 @@
 - [x] vectorbt dependency added, RSI/MACD optimization scripts created
 - [x] RegimeDetector + AdaptiveRouter implemented and tested
 - [x] 209 tests pass, 2 skipped
+- [x] ML feature engineering, regime classification, signal scoring implemented
+- [x] Phase B5 (ML Enhancement) 90% complete
 
 ---
 
@@ -96,10 +99,10 @@
 ### Actionable Next Steps
 1. `uv add statsmodels pykalman`
 2. Implement `PairsScanner` class: takes universe of symbols, returns cointegrated pairs with p-value < 0.05
-3. Implement `PairTradingStrategy`: computes spread = price_A - hedge_ratio × price_B, generates signals when spread crosses ±2σ Bollinger Bands
-4. Add Kalman filter for dynamic hedge ratio updates (reference: `useful_resources/pairtrading/Pair_Trading_V2.ipynb`)
-5. Backtest on GLD/IAU (2020–2024 daily) and SPY/QQQ (2020–2024 daily)
-6. Document results in `reports/pair_trading_report.md`
+3.4. Implement `PairTradingStrategy`: computes spread = price_A - hedge_ratio × price_B, generates signals when spread crosses ±2σ Bollinger Bands
+5. Add Kalman filter for dynamic hedge ratio updates (reference: `useful_resources/pairtrading/Pair_Trading_V2.ipynb`)
+6. Backtest on GLD/IAU (2020–2024 daily) and SPY/QQQ (2020–2024 daily)
+7. Document results in `reports/pair_trading_report.md`
 
 ### Risk Management Protocols
 - Max spread position: 10% of equity per pair
@@ -219,12 +222,17 @@
 - Available: `scikit-learn`, `xgboost` (already in pyproject.toml dependencies)
 
 ### Key Deliverables
-| Item | File Location |
-|------|---------------|
-| ML feature engineering module | `src/ml/features.py` |
-| ML regime classifier | `src/ml/regime_model.py` |
-| ML signal scorer | `src/ml/signal_scorer.py` |
-| ML validation notebook | `notebooks/13_ml_validation.ipynb` |
+| Item | Status | File Location |
+|------|--------|---------------|
+| ML feature engineering module | ✅ DONE | `src/ml/features.py` |
+| ML regime classifier | ✅ DONE | `src/ml/regime_model.py` |
+| ML signal scorer | ✅ DONE | `src/ml/signal_scorer.py` |
+| ML validation notebook | ✅ DONE | `notebooks/13_ml_validation.ipynb` |
+| Cross-asset features module | ✅ DONE | `src/ml/cross_asset_features.py` |
+| Feature selector module | ✅ DONE | `src/ml/feature_selector.py` |
+| Ensemble regime detection | ✅ DONE | `src/ml/ensemble_regime.py` |
+| Enhanced validation script | ✅ DONE | `scripts/ml_validation_enhanced.py` |
+| ML-Enhanced backtest scripts | 🔄 IN PROGRESS | `scripts/phase_b7_ml_backtest.py`, `scripts/phase_b7_custom_backtest.py` |
 
 ### Implementation Path
 | Week | Topic | Deliverable |
@@ -233,16 +241,235 @@
 | 3–4 | Financial feature engineering: lagged returns, rolling stats, volatility regimes | Feature pipeline integrated with `src/indicators/` |
 | 5–6 | Walk-forward validation, purged cross-validation, embargo periods | Validation framework in `notebooks/13_ml_validation.ipynb` |
 | 7–8 | ML-enhanced regime detection + signal confidence scoring | Hybrid system (ML for regime, rules for execution) |
+| 9 | Full ML-Enhanced Backtest (B7) | End-to-end comparison of ML vs baseline on SPY |
+
+### Phase B7 Tasks (Integration Completion)
+| Task | Status | Notes |
+|------|--------|-------|
+| Fix AggregatedSignal interface | ⏳ Pending | Position manager expects `pattern_name` attribute |
+| Complete ML-Enhanced backtest | ⏳ Pending | Run full baseline vs ML comparison on SPY 2015-2024 |
+| Verify integration stability | ⏳ Pending | Test both backtesting.py and custom engine approaches |
 
 ### Why Active Now
 - Rule-based regime detector already implemented (Phase 4 complete)
-- scikit-learn and xgboost already available in dependencies
+- scxikit-learn and xgboost already available in dependencies
 - ML can augment what works: regime detection accuracy, signal scoring
 - Feature engineering leverage: 34 patterns provide rich input features
 
 ---
 
-## Phase 6: Paper Trading & Live Readiness (Optional)
+## Phase 6: Research-Based Enhancements
+
+**Duration:** 4–6 weeks | **Priority:** High
+**Source:** 13 academic papers synthesized in `useful_resources/papers_md/research_synthesis_report.md`
+
+### Objectives
+- Implement Tier 1 research insights (high impact, high feasibility, low complexity)
+- Implement Tier 2 insights (high impact, medium feasibility, medium complexity)
+- Phase 7 (Tier 3) is research-only, deferred to future
+
+### Research Source: Key Findings
+1. **Friction-aware strategy design** (OOM-RL paper): Turnover penalty, dynamic rebalancing frequency
+2. **Position-level risk modeling** (Jorion event-driven funds): Per-position success/failure probabilities
+3. **No universal strategy** (Against Universal Trading paper): Regime detection, failure-set awareness
+4. **Event-type granularity** (Event-Based Trading paper): Granular signals beat aggregation
+5. **Crash factor + timing** (Fang et al.): Take-profit beats RSI exits
+
+### Key Deliverables
+| Item | Priority | File Location |
+|------|----------|---------------|
+| Turnover penalty constraint | Tier 1 🔴 | `src/risk/turnover_penalty.py` |
+| Per-position risk modeling | Tier 1 🔴 | `src/risk/position_probability.py` |
+| Portfolio circuit breakers | Tier 1 🔴 | `src/risk/circuit_breakers.py` |
+| Regime declaration per strategy | Tier 1 🟠 | `src/patterns/base.py` enhancements |
+| Dynamic rebalancing frequency | Tier 1 🟠 | `src/backtest/engine.py` modifications |
+| Event-type weighted signals | Tier 2 🟠 | `src/signals/event_weighting.py` |
+| Diversity score for portfolio | Tier 2 🟠 | `src/risk/diversity_score.py` |
+| Epistemic Autopsy module | Tier 2 🟠 | `src/back/epistemic_autopsy.py` |
+| Failure-set analyzers | Tier 2 🟠 | `src/strategies/failure_analysis.py` |
+| Friction-adjusted scoring | Tier 2 🟠 | `src/backtest/engine.py` enhancements |
+
+### Actionable Next Steps (Tier 1 - Implement First)
+
+**R1: Turnover Penalty as Hard Constraint**
+```python
+# src/risk/turnover_penalty.py
+class TurnoverPenalty:
+    """Penalizes strategies with excessive annualized turnover."""
+    def calculate_penalty(self, trades: int, holding_period_days: float) -> float:
+        """Returns 0.0-1.0 penalty scaling factor."""
+        # 6700% turnover destroyed alpha in OOM-RL study
+        annualized_turnover = (365.0 / holding_period_days) * trades
+        max_allowed_turnover = 2000  # Conservative threshold
+        if annualized_turnover <= max_allowed_turnover:
+            return 0.0
+        else:
+            excess = (annualized_turnover - max_allowed_turnover) / max_allowed_turnover
+            return min(excess, 1.0)
+```
+1. Create `src/risk/turnover_penalty.py` module
+2. Integrate with `src/backtest/engine.py`: apply penalty to signal confidence
+3. Set threshold at 2000% annualized turnover (conservative)
+4. Test on high-frequency strategies (e.g., daily rebalancing)
+
+**R2: Per-Position Success/Failure Probability**
+```python
+# src/risk/position_probability.py
+class PositionRiskModel:
+    """Binomial outcome model per position (Jorion BET approach)."""
+    def estimate_success_prob(self, signal_confidence: float, regime: RegimeState) -> float:
+        """Returns probability of successful outcome."""
+        # Base probability from signal confidence
+        base_prob = signal_confidence
+        # Adjust for regime (volatile regimes = lower success)
+        if regime == RegimeState.VOLATILE:
+            return base_prob * 0.7
+        elif regime == RegimeState.TRENDING:
+            return base_prob * 1.2
+        else:
+            return base_prob
+```
+1. Create `src/risk/position_probability.py` module
+2. Integrate with position sizing in `src/risk/position_sizing.py`
+3. Use for capital allocation: size ∝ success_probability
+4. Validate with historical win rates per regime
+
+**R3: Portfolio-Level Circuit Breakers**
+```python
+# src/risk/circuit_breakers.py
+class CircuitBreaker:
+    """Portfolio-wide drawdown halt mechanism."""
+    def __init__(self, max_drawdown_pct: float = 20.0, cooldown_bars: int = 20):
+        self.max_dd = max_drawdown_pct
+        self.cooldown = cooldown_bars
+        self.halt_active = False
+        self.halt_counter = 0
+
+    def check_circuit(self, current_drawdown: float, equity_curve: pd.Series) -> bool:
+        """Returns True if trading should halt."""
+        if current_drawdown >= self.max_dd:
+            self.halt_active = True
+            self.halt_counter = self.cooldown
+            return True  # Halt all new positions
+        elif self.halt_active:
+            self.halt_counter -= 1
+            if self.halt_counter <= 0:
+                self.halt_active = False
+            return True  # Still in cooldown
+        return False
+```
+1. Create `src/risk/circuit_breakers.py` module
+2. Add to `BacktestConfig` in `src/backtest/engine.py`
+3. Default: 20% max DD, 20-bar cooldown
+4. Test on crash scenarios (2020 COVID, 2008 crisis)
+
+**R4: Regime Declaration Per Strategy**
+```python
+# src/patterns/base.py
+@dataclass
+class BasePattern(ABC):
+    """Enhanced with regime compatibility declaration."""
+    name: str
+    min_bars_required: int = 20
+    preferred_regimes: List[RegimeState] = field(default_factory=list)
+    incompatible_regimes: List[RegimeState] = field(default_factory=list)
+
+    @abstractmethod
+    def detect(self, df: pd.DataFrame, i: int) -> PatternResult:
+        pass
+```
+1. Update `BasePattern` in `src/patterns/base.py` with regime fields
+2. Add regime validation in `src/signals/signal_generator.py`
+3. Tag each pattern with preferred regimes (e.g., RSI Divergence prefers ranging)
+4. Backtest with regime-aware signal gating
+
+**R5: Dynamic Rebalancing Frequency**
+```python
+# src/backtest/engine.py (enhancement)
+class BacktestEngine:
+    def estimate_optimal_frequency(self, signal_decay_rate: float, tx_cost_pct: float) -> str:
+        """Returns 'daily', 'weekly', or 'monthly' based on decay/cost ratio."""
+        # OOM-RL: signal decay vs. transaction cost tradeoff
+        # Daily rebalancing destroyed 6700% turnover alpha
+        ratio = signal_decay_rate / tx_cost_pct
+        if ratio > 10:
+            return "daily"
+        elif ratio > 2:
+            return "weekly"
+        else:
+            return "monthly"
+```
+1. Add frequency estimation to `BacktestEngine`
+2. Calculate signal decay rate from historical signal persistence
+3. Default to weekly rebalancing (saferer than daily)
+4. Test: compare daily vs. weekly on 10 strategies
+
+### Actionable Next Steps (Tier 2 - Implement Second)
+
+**R6: Event-Type Weighted Signal Aggregation**
+1. Build event taxonomy in `src/signals/event_taxonomy.py`
+2. Map pattern types to event types (e.g., breakout → "trend_initiation")
+3. Weight signals by event-type informativeness (from research)
+4. Replace equal-weighted confluence scoring
+
+**R7: Diversity Score for Portfolio Sizing**
+1. Implement BET diversity score: `D = N / (1 + 2*sum(rho_ij))`
+2. Calculate correlation matrix of open positions
+3. Use effective number of independent bets for sizing
+4. Replace simple position count with diversity-adjusted limit
+
+**R8: Epistemic Autopsy Module**
+1. Create `src/backtest/epistemic_autopsy.py`
+2. On drawdown > threshold, generate JSON report:
+   ```json
+   {
+     "drawdown_percent": -15.2,
+     "root_cause": "VWAP Bounce pattern on volatile regime",
+     "contributing_patterns": ["VWAP Bounce", "EMA Ribbon"],
+     "remediation": "Disable VWAP in volatile regime"
+   }
+   ```
+3. Integrate with circuit breaker trigger
+4. Review reports for systematic failures
+
+**R9: Failure-Set Analyzers**
+1. Build test suite per strategy:
+   - Time-reversal test
+   - Persistent counter-trend test
+   - Fat-tail test
+2. Document failure modes per strategy
+3. Add to strategy documentation
+4. Use for go/no-go decision on live deployment
+
+**R10: Friction-Adjusted Backtest Scoring**
+1. Add transaction cost model to `BacktestEngine`
+2. Include slippage: 0.05% liquid, 0.2% illiquid
+3. Calculate TCA (Total Cost Analysis) per strategy
+4. Report friction-adjusted Sharpe alongside raw Sharpe
+
+### Deployment Readiness Checkpoint (Tier 1)
+| Metric | Threshold | Status |
+|--------|-----------|--------|
+| Turnover penalty implemented | Yes | ☐ |
+| Per-position risk model | Yes | ☐ |
+| Portfolio circuit breaker | Yes | ☐ |
+| Regime declarations added | ≥90% of patterns | ☐ |
+| Dynamic rebalancing | Yes | ☐ |
+| Tier 1 backtests pass | 100% | ☐ |
+
+### Deployment Readiness Checkpoint (Tier 2)
+| Metric | Threshold | Status |
+|--------|-----------|--------|
+| Event taxonomy built | Yes | ☐ |
+| Diversity score | Yes | ☐ |
+| Epistemic autopsy | Yes | ☐ |
+| Failure-set analyzers | ≥5 strategies | ☐ |
+| Friction-adjusted scoring | Yes | ☐ |
+| Tier 2 backtests pass | 100% | ☐ |
+
+---
+
+## Phase 7: Paper Trading & Live Readiness (Optional)
 
 **Duration:** 2–4 weeks | **Priority:** Low (Optional)
 
@@ -275,8 +502,8 @@
 5. Write `reports/live_readiness.md` with go/no-go recommendation
 
 ### Risk Management Protocols
-- **Daily loss limit**: 3% of simulated equity → halt trading for the day
-- **Weekly loss limit**: 6% → halt trading for the week, review signals
+- **Daily loss limit**: 3% of simulated equity → halt trading for day
+- **Weekly loss limit**: 6% → halt trading for week, review signals
 - **Monthly loss limit**: 10% → full system review, parameter recalibration required
 - **Position sizing**: Kelly fraction capped at 2% risk per trade, max 5 open positions
 - **Circuit breaker**: If 3 consecutive losses >2% each, pause system for 24h review
@@ -339,7 +566,8 @@ Phase 1 (Strategy Completion) ✅
     → Phase 3 (Parameter Optimization) ✅
     → Phase 4 (Regime Detection) ✅
     → Phase 5 (ML Enhancement) — Active Development
-    → Phase 6 (Paper Trading) — Optional
+    → Phase 6 (Research-Based Enhancements) — Not Started
+    → Phase 7 (Paper Trading) — Optional
 ```
 
-Each phase's deliverables become inputs to the next phase. No phase should begin until the prior phase's deployment readiness checkpoints are fully satisfied.
+Each phase's deliverables become inputs to the next phase. No phase should begin until prior phase's deployment readiness checkpoints are fully satisfied.

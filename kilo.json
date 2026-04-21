@@ -1,6 +1,7 @@
 {
+  "$schema": "https://app.kilo.ai/config.json",
   "instructions": [".kilo/global-rules.md", ".kilo/project-rules.md"],
   "skills": {
-    "paths": ["C:\\Dev\\skills"]
+    "paths": ["C:\\Dev\\skills", ".kilo\\skills"]
   }
 }

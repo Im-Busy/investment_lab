@@ -1,0 +1,1378 @@
+Page 1: Risk Management for Event-Driven Funds
+Page 1: 
+Page 1: Philippe Jorion
+Page 1: Paul Merage School of Business, University of California at Irvine, and
+Page 1: Pacific Alternative Asset Management Company (PAAMCO)
+Page 1: 
+Page 1: This version: September 2007
+Page 1: DRAFT
+Page 1: 
+Page 1: The author wishes to thank Jim Berens, Jane Buchan, Mayer Cherem, Rob Dudley, Judy
+Page 1: Posnikoff, and Sydney Zhang for useful discussions on this topic.
+Page 1: Correspondence can be addressed to:
+Page 1: Philippe Jorion
+Page 1: Paul Merage School of Business
+Page 1: University of California at Irvine
+Page 1: Irvine, CA 92697-3125
+Page 1: Phone: (949) 824-5245
+Page 1: E-mail: pjorion@uci.edu
+Page 1: 
+Page 1: PAAMCO
+Page 1: 19540 Jamboree Road
+Page 1: Irvine, CA 92612
+Page 1: Phone: (949) 261-4964
+Page 1: E-mail: pjorion@paamco.com
+Page 1: 
+Page 1: 
+Page 2: Risk Management for Event-Driven Funds
+Page 2: 
+Page 2: Abstract
+Page 2: Many portfolio strategies are ΓÇ£event-driven,ΓÇ¥ i.e., try to benefit from price
+Page 2: movements caused by corporate events such as restructurings, bankruptcies, mergers,
+Page 2: acquisitions, or other special situations. Such trading strategies involve payoffs that
+Page 2: have discontinuous and skewed distributions that cannot be measured well with
+Page 2: conventional risk methods. This paper develops methods to measure the forward-looking
+Page 2: risk of portfolios exposed to such discrete events, based on current positions. When
+Page 2: events are independent, the portfolio follows a binomial distribution. This approach is
+Page 2: extended to the more realistic case where events are not independent. For mergers and
+Page 2: acquisitions, empirical estimates of deal break correlations are positive but relatively
+Page 2: low, which implies that most event risk is idiosyncratic and diversifiable. This
+Page 2: methodology can be used to evaluate the risk and return of different portfolio structures.
+Page 2: 
+Page 2: JEL Classifications: G11 (portfolio choice), G23 (private financial institutions), G32 (financial risk
+Page 2: management)
+Page 2: Keywords: merger arbitrage, risk management, hedge funds, value at risk
+Page 2: 
+Page 2: 
+Page 3: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 3: 
+Page 3: 1
+Page 3: 
+Page 3: Introduction
+Page 3: Many hedge fund strategies are ΓÇ£event-driven,ΓÇ¥ i.e., try to benefit from price movements
+Page 3: caused by corporate events such as restructurings, bankruptcies, mergers, acquisitions, or
+Page 3: other special situations. Such trading strategies involve payoffs that have discontinuous
+Page 3: distributions. Either the event happens or not, which is a binary distribution. These
+Page 3: distributions pose a particular challenge to risk management because of their
+Page 3: discontinuous nature, as well as the asymmetry of their payoffs. In addition, the history
+Page 3: of price movements may not be relevant for measuring risk.
+Page 3: Consider, for example, a portfolio manager positioned to take advantage of a
+Page 3: proposed merger and acquisition (M&A). The acquirer makes an offer that exceeds the
+Page 3: current market price, by an amount known as the ΓÇ£merger premium.ΓÇ¥ Offers can take the
+Page 3: form of cash or stock of the bidding company. Right after the deal announcement, the
+Page 3: target companyΓÇÖs price jumps up, in proportion to this premium. There is still
+Page 3: uncertainty, however, as to the success of the deal, which explains why the price of the
+Page 3: target company generally trades at a discount to the offer price, known as the ΓÇ£arbitrage
+Page 3: spread.ΓÇ¥ The typical position for risk arbitrageurs is to buy the target company and, in
+Page 3: the case of stock deals, short the acquirer. If a deal succeeds, the position generally
+Page 3: creates a modest gain.1 In contrast, in the case of deal failure, the target companyΓÇÖs price
+Page 3: can fall back to its pre-announcement level, which is a big loss.2 Thus the position is
+Page 3: exposed to an asymmetric ΓÇ£deal risk.ΓÇ¥ Such risk, however, cannot be measured from
+Page 3: 1
+Page 3: 
+Page 3: Success, however, does not simply mean that the original bidder takes control of the target. Other bidders
+Page 3: can intervene in the meantime. Success can be defined as a situation where the price of the target goes to or
+Page 3: above the offer price due to any acquisition. Equivalently, failure is the case when the target remains
+Page 3: independent.
+Page 3: 2
+Page 3: The drop can be more than the initial run-up in price if the deal reveals negative information about the
+Page 3: target. The payoff on the strategy also depends on the price movement in the acquirerΓÇÖs stock in the case of
+Page 3: positions that involve both the target and the acquirer.
+Page 3: 
+Page 3: 
+Page 4: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 4: 
+Page 4: 2
+Page 4: 
+Page 4: historical data. The goal of this paper is to develop methods to measure the risk of
+Page 4: portfolios exposed to such discrete events.
+Page 4: Current industry methods for managing the risk of such positions are rather
+Page 4: elementary. Moore et al. (2006) describe a recent survey of risk management methods
+Page 4: used by 21 risk arbitrageurs in mergers and acquisitions. The primary method used to
+Page 4: control event risk is position limits. The first type is a limit on the fraction of the
+Page 4: portfolio invested in any deal, which is typically 10% of the portfolio value. This implies
+Page 4: a minimum of 10 positions. In the survey sample, the number of deals varies between 20
+Page 4: and 100, with a median of 30. The second type is a limit on the maximum loss of any
+Page 4: position, e.g. 5% of the portfolio value if the deal fails. This loss represents a fall in the
+Page 4: stock price back to its pre-announcement price. These two types of constraints are
+Page 4: largely overlapping.
+Page 4: Such single name limits help to diversify the portfolio but are totally ad hoc. This
+Page 4: is because, as revealed in the Moore survey, M&A arbitrageurs do not measure their total
+Page 4: portfolio risk. Portfolio risk can be summarized, however, with a single measure of
+Page 4: downside risk such as Value at Risk (VAR).3
+Page 4: The construction of portfolio risk measures, however, cannot be based on
+Page 4: traditional risk models, which do not take into account the uncertainty generated by the
+Page 4: currently unfolding events. Indeed, Schachter (2006) states that VAR ΓÇ£is not well suitedΓÇ¥
+Page 4: in these cases. This is certainly the case for conventional VAR measures based on recent
+Page 4: historical data. Nevertheless, we show that it is perfectly feasible to construct a forward-
+Page 4: 
+Page 4: 3
+Page 4: 
+Page 4: See Jorion (2006) for an exposition of VAR.
+Page 4: 
+Page 4: 
+Page 5: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 5: 
+Page 5: 3
+Page 5: 
+Page 5: looking distribution of portfolio profits and losses based on current positions and to
+Page 5: summarize it using a VAR measure.
+Page 5: Such measure would allow risk arbitrageurs to gauge optimum diversification
+Page 5: levels, which depend on the number of deals, the expected profit on each deal, and the
+Page 5: contribution of each deal to portfolio risk. Also, VAR can used to determine the optimal
+Page 5: amount of economic capital required to support the portfolio, or equivalently, the optimal
+Page 5: amount of leverage. Moore et al. (2006) report that about two-thirds of arbitrageurs use
+Page 5: leverage.
+Page 5: To our knowledge, this paper is the first to provide quantitative tools to measure
+Page 5: the portfolio risk of event-driven funds. The methodology proposed here expands on
+Page 5: methods developed for credit portfolios, which also involve discrete events, i.e., defaults.
+Page 5: In the case of cash deals, a position in the target firm is similar to an unsecured bond
+Page 5: issued by the acquirer that matures on the closing date. The methodology further
+Page 5: demonstrates the benefits of using position information to manage risks.
+Page 5: The paper proceeds in two steps. Section I describes drawbacks of conventional
+Page 5: risk measures for event-driven funds. Section II then derives a new methodology for
+Page 5: measuring portfolio risk when events are independent. Realistically, however, there may
+Page 5: be dependencies across events. Section III provides some empirical evidence on
+Page 5: probabilities and correlations of deal breaks. Section IV then analyzes portfolio risk with
+Page 5: correlated events and shows how correlations affect risk measures for event-driven
+Page 5: portfolios. Section V draws implications for assessing the amount of economic capital
+Page 5: required to support the portfolio as well as acceptable levels of leverage. Finally, Section
+Page 5: VI contains some conclusions.
+Page 5: 
+Page 5: 
+Page 6: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 6: 
+Page 6: 4
+Page 6: 
+Page 6: I. Drawbacks of Conventional Risk Measures
+Page 6: Typical risk measures are returns-based. One example is the volatility of
+Page 6: historical returns for the fund over a recent window. This approach is simple but has
+Page 6: severe shortcomings. It is unable to react quickly to changes in the portfolio composition
+Page 6: or in the trading strategy. In addition, it makes it difficult to understand the structural
+Page 6: drivers of risk and hence to manage the risk profile of the portfolio.
+Page 6: More recently, position-based risk measures such as VAR have become widely
+Page 6: used. Conventional VAR measures combine current position information with the recent
+Page 6: history of risk factors, assuming that this history can be applied to the future. Current
+Page 6: positions are taken as fixed over the risk horizon.
+Page 6: This approach could be defined as ΓÇ£conventional position-based.ΓÇ¥ Generally, this
+Page 6: is a vast improvement over returns-based methods because it can handle changes in
+Page 6: portfolio composition and can be used to manage portfolio risk.
+Page 6: In the case of event-driven funds, however, the conventional application of
+Page 6: position-based VAR methods can be misleading for a number of reasons. First, the event
+Page 6: itself changes the nature of the stochastic process, from a random walk to a discreteoutcome process. Thus, historical data cannot be used in the usual fashion. As an
+Page 6: example, consider the data provided by Mitchell and Pulvino (2001). They report that,
+Page 6: over the period 1963 to 1998, a value-weighted portfolio of M&A deals had an annual
+Page 6: realized volatility of 9.3%. This number represents the actual risk of a portfolio invested
+Page 6: in an average of 31 M&A positions taken after the announcement. They do not provide
+Page 6: the volatility of the same portfolio before the announcement, but surely this should be
+Page 6: less than that of a value-weighted market index because the latter is better diversified.
+Page 6: 
+Page 6: 
+Page 7: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 7: 
+Page 7: 5
+Page 7: 
+Page 7: Over the same period, this index had a volatility of 15.1%. This number can be taken as
+Page 7: a lower limit for the position-based risk of the M&A portfolio. In this case, the actual
+Page 7: risk is (15.1-9.3)/15.1=38% lower than the conventional position-based risk, which is
+Page 7: substantial.
+Page 7: Another problem is that the recent history includes the announcement of the event
+Page 7: itself. This creates a large jump in the price of the target, which artificially increases the
+Page 7: risk measure. The shorter is the window, the larger is the effect. As an example, take an
+Page 7: unleveraged M&A hedge fund with more than 150 positions. From May 2005 to April
+Page 7: 2007, this fund had a return-based volatility of 2.2% pa. Conventional risk forecasts
+Page 7: were also measured for this fund due to the availability of position data, applied each
+Page 7: month to a 4-year window. Over the same period, these monthly volatility forecasts
+Page 7: averaged to 9.8%. Here again, the bias is substantial. Actual risk is about (9.82.2)/9.8=78% less than the conventional position-based risk measure.
+Page 7: Perhaps simple rules of thumb could be developed for correcting conventional
+Page 7: position-based risk measures. Such adjustments cannot be universal, however. This is
+Page 7: because the relationship between a conventional position-based risk measure and its
+Page 7: actual counterpart depends on the structure of the portfolio, which involves the number of
+Page 7: positions, the distribution of deal payoffs, as well as historical risk measures. Note, for
+Page 7: instance, that the actual risk of the first M&A portfolio was 9.3%, which is much higher
+Page 7: than the risk of the second M&A portfolio, which was 2.2%. This is because the first
+Page 7: portfolio was much less diversified, with 31 positions against 150 for the second.
+Page 7: 
+Page 7: 
+Page 8: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 8: 
+Page 8: 6
+Page 8: 
+Page 8: Instead, position-based information can be used directly to construct forwardlooking measures of risk that account for the discrete-outcome processes that characterize
+Page 8: event-driven funds. This is the main purpose of this paper.
+Page 8: 
+Page 8: II. Measuring Risk from Position Information
+Page 8: Suppose we are investing in a stock that is currently in play as a takeover target at
+Page 8: a fixed offer price. The distribution of payoffs is characterized by two states of the
+Page 8: world. Table 1 gives an example. We evaluate a cash deal where the stock of the target
+Page 8: currently trades at $100, post-announcement. We ignore directional market risk and
+Page 8: focus on event risk only. The event indicator is b. In the case of failure or deal break,
+Page 8: b=1, with probability p=0.15; the dollar return R is an absolute loss AL of ΓêÆ$15. In case
+Page 8: of success, b=0, the absolute profit is AP=+$5.
+Page 8: 
+Page 8: Probability
+Page 8: Payoff (R)
+Page 8: 
+Page 8: Table 1: Single-Deal Distribution
+Page 8: Failure (b=1)
+Page 8: Success (b=0)
+Page 8: 15%
+Page 8: 85%
+Page 8: +$5
+Page 8: ΓêÆ$15
+Page 8: 
+Page 8: This example assumes a probability of failure of E[b] = p = 15%, which is typical
+Page 8: of empirical studies of M&A.4 More generally, the portfolio manager is supposed to
+Page 8: assess the probabilities and payoffs of each deal and to add value through skillful
+Page 8: selection of deals. In this example, the expected profit is positive, at E[R] = 15%├ù(ΓêÆ$15)
+Page 8: +85%├ù ($5) = $2.00. For simplicity, this is assumed to be over the risk-free rate. The
+Page 8: 
+Page 8: 4
+Page 8: 
+Page 8: See for instance Baker and Savasoglu (2002).
+Page 8: 
+Page 8: 
+Page 9: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 9: 
+Page 9: volatility for this Bernoulli distribution is ╧â[b] =
+Page 9: 
+Page 9: 7
+Page 9: 
+Page 9: p(1 ΓêÆ p) . The distribution, however,
+Page 9: 
+Page 9: is strongly skewed in the direction of losses.
+Page 9: Here, the horizon is assumed to be the average time needed for the resolution of a
+Page 9: deal. Mitchell and Pulvino (2001) indicate that the average horizon of a deal is 59
+Page 9: trading days, or about three calendar months. In practice, this horizon is uncertain. The
+Page 9: distribution of payoffs could be extended to include an intermediate case where the deal
+Page 9: is still pending. Extrapolating the quarterly horizon to a year, the expected rate of return
+Page 9: is ($2├ù4)/$100 = 8 percent per annum.5
+Page 9: Note that this example is calibrated to be realistic in terms of expected returns:
+Page 9: Mitchell and Pulvino (2001) find that simulated excess returns from risk arbitrage
+Page 9: strategies average 9.25% per annum, which is equivalent to the 2% per quarter assumed
+Page 9: here.6 These numbers represent pure alpha because they adjust for the risk-free rate and
+Page 9: the market beta. The methodology presented here, however, does not depend on these
+Page 9: numbers.
+Page 9: The next issue is the aggregation at the portfolio level. This type of problem is
+Page 9: similar to building a distribution of portfolio credit losses. To simplify, define L as a
+Page 9: positive number representing the loss relative to the success case, e.g., $20 for Table 1.
+Page 9: Assume first a homogeneous portfolio: All deals have equal size L and equal failure
+Page 9: probability p. If the events are independent, it is straightforward to build this distribution.
+Page 9: 5
+Page 9: 
+Page 9: A variety of explanations have been advanced for this ΓÇ£risk arbitrageΓÇ¥ premium. One is that risk
+Page 9: arbitrageurs need compensation for bearing event risk. This information-rich environment requires
+Page 9: specialized expertise, e.g. trading and legal, which needs compensation. Another is that some investors
+Page 9: may be forced to sell because of investment guidelines that would be breached after a takeover. For
+Page 9: instance, a minimum level of portfolio yield could be breached if the merged company pays no dividend.
+Page 9: Finally, these strategies have non-linear exposures to the market, because the break probability increases
+Page 9: when the market falls. This is akin to a short put position, which should command a risk premium.
+Page 9: 6
+Page 9: After costs, however, they report an average return of about 3.5%.
+Page 9: 
+Page 9: 
+Page 10: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 10: 
+Page 10: 8
+Page 10: 
+Page 10: The total number of deals is N. The total number of failures k then follows the binomial
+Page 10: distribution f:
+Page 10: 
+Page 10: ∩ú½ N ∩ú╢
+Page 10: f (k ; N , p ) = ∩ú¼
+Page 10: ∩ú╖
+Page 10: ∩ú¡ k ∩ú╕
+Page 10: 
+Page 10: p k (1 ΓêÆ p ) N ΓêÆ k
+Page 10: 
+Page 10: (1)
+Page 10: 
+Page 10: The distribution of total portfolio losses TL = k ├ù L is given directly by Equation
+Page 10: (1). This is also a binomial distribution, which can be summarized by a dispersion
+Page 10: measure, such as VAR, or the lowest quantile at a specified confidence level.
+Page 10: We can now explore the effect of changing the number of deals N on the shape of
+Page 10: the distribution. To maintain comparability across portfolios, the total dollar exposure is
+Page 10: kept fixed, say at $100. Hence, the size of each deal L is inversely related to N across
+Page 10: portfolios. We characterize the distribution by its VAR, say at the 95 percent confidence
+Page 10: level. Because the distribution is discrete, we report the loss associated with a confidence
+Page 10: level at least equal to 95 percent. Table 2 reports the VAR along with the associated
+Page 10: actual confidence level and number of failures. VAR is measured as the negative of the
+Page 10: dollar loss over the period, and is generally a positive number. The distribution of losses
+Page 10: is described in Figure 1 for N=5, 10, and 100.
+Page 10: 
+Page 10: Table 2: Distribution of Independent Deals (Constant Exposure of $100)
+Page 10: VAR(ΓëÑ95%)
+Page 10: VAR(ΓëÑ99.9%)
+Page 10: Number
+Page 10: Actual
+Page 10: Number
+Page 10: Actual
+Page 10: Number
+Page 10: of
+Page 10: Expected
+Page 10: Confidence of
+Page 10: Confidence of
+Page 10: Deals
+Page 10: Profit
+Page 10: VAR
+Page 10: Level
+Page 10: Failures VAR
+Page 10: Level
+Page 10: Failures
+Page 10: 1
+Page 10: +$2.00 $15.00
+Page 10: 100.0%
+Page 10: 1 $15.00
+Page 10: 100.0%
+Page 10: 1
+Page 10: 5
+Page 10: +$2.00 $3.00
+Page 10: 97.3%
+Page 10: 2 $11.00
+Page 10: 99.99%
+Page 10: 4
+Page 10: 10
+Page 10: +$2.00 $1.00
+Page 10: 95.0%
+Page 10: 3 $7.00
+Page 10: 99.99%
+Page 10: 6
+Page 10: 20
+Page 10: +$2.00 $1.00
+Page 10: 97.8%
+Page 10: 6 $4.00
+Page 10: 99.98%
+Page 10: 9
+Page 10: 30
+Page 10: +$2.00 $0.33
+Page 10: 97.2%
+Page 10: 8 $2.33
+Page 10: 99.92%
+Page 10: 11
+Page 10: 40
+Page 10: +$2.00 $0.00
+Page 10: 97.1%
+Page 10: 10 $2.00
+Page 10: 99.96%
+Page 10: 14
+Page 10: 50
+Page 10: +$2.00 ΓêÆ$0.20
+Page 10: 97.0%
+Page 10: 12 $1.40
+Page 10: 99.93%
+Page 10: 16
+Page 10: 100
+Page 10: +$2.00 ΓêÆ$0.80
+Page 10: 96.1%
+Page 10: 21 $0.40
+Page 10: 99.94%
+Page 10: 27
+Page 10: 
+Page 10: 
+Page 11: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 11: 
+Page 11: 9
+Page 11: 
+Page 11: Table 2 shows that the expected dollar profit is independent of the number of
+Page 11: deals, which simply reflects the fixed total exposure of the portfolio. VAR, however,
+Page 11: does change with the number of deals. With one deal only, the minimum 95% VAR
+Page 11: implies a loss of $15, which actually corresponds to a 100 percent confidence level, or
+Page 11: one failure. With 10 independent deals, the 95% VAR goes down to $1.00. With 40
+Page 11: deals, the 95% VAR is zero. In other words, there is a low probability (less than 5%) of
+Page 11: losing any money on this portfolio. This is because the expected profit is positive and the
+Page 11: dispersion of payoffs shrinks rapidly as N increases. As the number of deals further
+Page 11: increases to 100, VAR becomes ΓêÆ$0.80, which means that there is a low probability of
+Page 11: making a profit less than $0.80. Thus, increasing the number of independent deals
+Page 11: shrinks the spread of the distribution rather rapidly, as illustrated in Figure 1. As N
+Page 11: increases, the binomial distribution converges to a Poisson distribution.
+Page 11: It should also be noted that, because of the discrete nature of outcomes, VAR does
+Page 11: not always change smoothly when changing parameters. Consider for instance VAR at
+Page 11: the minimum 95 percent confidence level. This stays at $1.00 for N=10 and 20. For
+Page 11: N=10, the actual confidence level is just at its required minimum of 95.0%. At N=20, the
+Page 11: actual confidence level increases to 97.8%. This corresponds to 6 deal failures; the
+Page 11: confidence level for 5 deal failures is still below 95%. As N increases further, VAR
+Page 11: eventually drops, but in discrete steps. Thus VAR is not a smooth function.
+Page 11: 
+Page 11: 
+Page 12: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 12: 
+Page 12: 10
+Page 12: 
+Page 12: Fig. 1. Distribution of Portfolio Losses with Independence
+Page 12: 50%
+Page 12: 
+Page 12: Probability
+Page 12: N=5
+Page 12: N=10
+Page 12: 
+Page 12: 40%
+Page 12: 
+Page 12: N=100
+Page 12: 30%
+Page 12: 
+Page 12: 20%
+Page 12: 
+Page 12: 10%
+Page 12: 
+Page 12: $15.0
+Page 12: 
+Page 12: $14.0
+Page 12: 
+Page 12: $13.0
+Page 12: 
+Page 12: $12.0
+Page 12: 
+Page 12: $11.0
+Page 12: 
+Page 12: $9.0
+Page 12: 
+Page 12: $8.0
+Page 12: 
+Page 12: $7.0
+Page 12: 
+Page 12: $10.0
+Page 12: 
+Page 12: Loss
+Page 12: 
+Page 12: $6.0
+Page 12: 
+Page 12: $5.0
+Page 12: 
+Page 12: $4.0
+Page 12: 
+Page 12: $3.0
+Page 12: 
+Page 12: $2.0
+Page 12: 
+Page 12: $1.0
+Page 12: 
+Page 12: $0.0
+Page 12: 
+Page 12: -$1.0
+Page 12: 
+Page 12: -$2.0
+Page 12: 
+Page 12: -$3.0
+Page 12: 
+Page 12: -$4.0
+Page 12: 
+Page 12: -$5.0
+Page 12: 
+Page 12: 0%
+Page 12: 
+Page 12: This distribution could be used to infer the maximum amount of leverage that the
+Page 12: fund could safely take. Assuming the fund wants to maintain a single-A credit rating, the
+Page 12: confidence level can be taken as one minus the default probability over a year. Credit
+Page 12: rating agencies report a historical default rate of approximately 0.1 percent for A-rated
+Page 12: companies. This implies a confidence level of 99.9 percent.7 This VAR measure, which
+Page 12: can be interpreted as ΓÇ£economic capital,ΓÇ¥ is listed in the last column of Table 2.
+Page 12: For one deal, the 99.9% VAR is $15. If the notional value of the position is $100,
+Page 12: the portfolio can support a maximum leverage of $100/$15, or 6.7. For 10 deals,
+Page 12: economic capital shrinks to $7.0. Thus leverage could go to $100/$7.0, or 14.3. This
+Page 12: 
+Page 12: 7
+Page 12: 
+Page 12: Under the newly established Basel II rules, commercial banks need to maintain regulatory capital in
+Page 12: excess of their 99.9 percent credit VAR over a horizon of one year. In our case, the horizon is one quarter,
+Page 12: so that the annual default rate is even lower than that for A-rated credits.
+Page 12: 
+Page 12: 
+Page 13: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 13: 
+Page 13: 11
+Page 13: 
+Page 13: would generate a rate of return on economic capital of $2.0/$7.0, or 28.6% per quarter.8
+Page 13: With 100 deals, economic capital is $0.4. Because this number is so low, leverage can be
+Page 13: even higher, generating a rate of return of 500%. Of course, this very high number
+Page 13: cannot be realistic because it assumes independent deals. The effect of dependencies is
+Page 13: examined next.
+Page 13: 
+Page 13: 8
+Page 13: 
+Page 13: Normally, financing costs should be taken into account. The estimate of 2% expected return, however, is
+Page 13: already in excess of the risk-free rate, so there is no need for further adjustment. The only portion of
+Page 13: financing costs that is ignored is the spread between the borrowing and deposit rate.
+Page 13: 
+Page 13: 
+Page 14: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 14: 
+Page 14: 12
+Page 14: 
+Page 14: III. Empirical Estimation of Event Correlations
+Page 14: In practice, the events in the portfolio may not be independent. A large fall in the
+Page 14: market could lead to many deals breaking during the same year. Mitchell and Pulvino
+Page 14: (2001), for example, show that a 20 percent decrease in the market return increases the
+Page 14: probability of failure by about 9 percent. This contemporaneous dependency on the
+Page 14: market is akin to positive correlations across events.
+Page 14: This section provides empirical estimates of the deal-break probability and the
+Page 14: average break correlation. This study considers a large sample of 1,765 M&A deals
+Page 14: involving at least one North American company and concluded between 1997 and 2006.
+Page 14: This sample only includes deals with an announced total value over $500 million. The
+Page 14: data were collected from Bloomberg and are summarized in Table 3. Deals are tabulated
+Page 14: by their outcome every quarter.
+Page 14: Table 3: Description of M&A Deals: 1997-2006
+Page 14: 
+Page 14: Failure
+Page 14: Success
+Page 14: Total
+Page 14: 
+Page 14: Number of
+Page 14: Deals
+Page 14: Completed
+Page 14: per Quarter
+Page 14: 5.3
+Page 14: 38.8
+Page 14: 44.1
+Page 14: 
+Page 14: Average Value
+Page 14: Mean
+Page 14: of Deals ($
+Page 14: Completion
+Page 14: million)
+Page 14: Days for Deals
+Page 14: $5,377
+Page 14: 138
+Page 14: $3,385
+Page 14: 137
+Page 14: 
+Page 14: In this 40-quarter period, we observe 212 deal breaks and 1,553 completed deals,
+Page 14: which gives a 12% failure rate. The average number of deals completed in a quarter is
+Page 14: 44.1, with a mean completion time of 138 calendar days, or about 4.5 months.
+Page 14: To estimate correlations across deal failures, we use a standard methodology
+Page 14: developed for credit events.9 Initially, each deal is assumed to have the same
+Page 14: 
+Page 14: 9
+Page 14: 
+Page 14: See for example Bahar and Regal (2001) and de Servigny and Renault (2002).
+Page 14: 
+Page 14: 
+Page 15: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 15: 
+Page 15: 13
+Page 15: 
+Page 15: unconditional probability of failure p, and all pairwise correlation coefficients ╧ü are
+Page 15: assumed equal. This is extended later.
+Page 15: Suppose that we observe a number Ft of failures during a period t, out of a total of
+Page 15: Nt observations. The probability of failure is then estimated by
+Page 15: 
+Page 15: p = E[b] = Γêæt =1 wt
+Page 15: T
+Page 15: 
+Page 15: Ft
+Page 15: Nt
+Page 15: 
+Page 15: (2)
+Page 15: 
+Page 15: where wt is the weight assigned to each observation, here taken as (1/T). The probability
+Page 15: p12 of a joint deal break can be estimated from the ratio of the total number of pairs
+Page 15: breaking during the period, or Ft(FtΓêÆ1)/2, to the total number of pairs combinations, or
+Page 15: Nt(NtΓêÆ1)/2. De Servigny and Renault (2002) show via simulations that small-sample
+Page 15: properties of the joint default probability estimator are slightly better for
+Page 15: ( Ft ) 2
+Page 15: p12 = E[b1b2 ] = Γêæt =1 wt
+Page 15: (Nt )2
+Page 15: T
+Page 15: 
+Page 15: (3)
+Page 15: 
+Page 15: The deal break correlation can then be constructed from the covariance between the two
+Page 15: events
+Page 15: Cov(b1b2 ) = ╧ü ├ù ╧â (b)╧â (b) = E[b1 ΓêÆ p ][b2 ΓêÆ p ] = E[b1b2 ] ΓêÆ p 2 = p12 ΓêÆ p 2
+Page 15: 
+Page 15: (4)
+Page 15: 
+Page 15: Replacing ╧â(b) by the standard deviation of a Bernoulli variable, the correlation can be
+Page 15: written as
+Page 15: 
+Page 15: ╧ü=
+Page 15: 
+Page 15: p12 ΓêÆ p ├ù p
+Page 15: p (1 ΓêÆ p ) ├ù p (1 ΓêÆ p )
+Page 15: 
+Page 15: Note that the deal break correlation is also related to the variance of the time series of
+Page 15: fraction of breaks during each period. Define this fraction as xt=Ft/Nt. If xt fluctuates
+Page 15: sharply over time, this implies clustering of failures, or positive correlation. Using
+Page 15: 
+Page 15: (5)
+Page 15: 
+Page 15: 
+Page 16: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 16: 
+Page 16: 14
+Page 16: 
+Page 16: Equations (2), (3) and (4), and ignoring the degree of freedom adjustment, the variance of
+Page 16: x can be written as
+Page 16: 
+Page 16: ╧â2 =
+Page 16: 
+Page 16: 1 T
+Page 16: 1 T
+Page 16: ( xt ΓêÆ x ) 2 = ( Γêæt =1 xt2 ) ΓêÆ x 2 = p12 ΓêÆ p 2 = ╧ü ├ù p (1 ΓêÆ p )
+Page 16: Γêæ
+Page 16: t =1
+Page 16: T
+Page 16: T
+Page 16: 
+Page 16: (6)
+Page 16: 
+Page 16: So, a high variance is equivalent to high failure correlation.
+Page 16: Figure 2 plots the quarterly fraction of deals failing. Using Equation (2), the
+Page 16: average break probability is estimated to be 12%. The figure, however, reveals some
+Page 16: variation in the fraction of deals failing over time. This reached a peak of 27% in the first
+Page 16: quarter of 2003. The fraction was zero for two quarters (the first quarters of 1997 and
+Page 16: 2004.) This variation can be interpreted in terms of clustering of failures, or correlations
+Page 16: across deal breaks.
+Page 16: 
+Page 16: Fig. 2. Fraction of Deals Failing: 1997-2006, Quarterly
+Page 16: 30%
+Page 16: 
+Page 16: 25%
+Page 16: 
+Page 16: 20%
+Page 16: 
+Page 16: 15%
+Page 16: 
+Page 16: 10%
+Page 16: 
+Page 16: 5%
+Page 16: 
+Page 16: 2006Q1
+Page 16: 
+Page 16: 2005Q1
+Page 16: 
+Page 16: 2004Q1
+Page 16: 
+Page 16: 2003Q1
+Page 16: 
+Page 16: 2002Q1
+Page 16: 
+Page 16: 2001Q1
+Page 16: 
+Page 16: 2000Q1
+Page 16: 
+Page 16: 1999Q1
+Page 16: 
+Page 16: 1998Q1
+Page 16: 
+Page 16: 1997Q1
+Page 16: 
+Page 16: 0%
+Page 16: 
+Page 16: 
+Page 17: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 17: 
+Page 17: 15
+Page 17: 
+Page 17: Using Equation (3) to estimate p12 and Equation (5), the break correlation is
+Page 17: estimated at 0.03. The failure probability is 0.12. To assess the reliability of these
+Page 17: estimates, we simulate their distribution by bootstrapping the sample of 40 quarterly
+Page 17: fractions. Based on 1000 replications, the 95% significance interval for the break
+Page 17: probability is (0.102, 0.137), and that for the break correlation is (0.017, 0.045).
+Page 17: Therefore, the break correlation is positive and significantly different from zero. This
+Page 17: justifies the use of an average break correlation of 0.03 in the following section.
+Page 17: More generally, the portfolio manager could model the probability of failure as a
+Page 17: function of a number of deal variables.10 Here, we fit the aggregate fraction of breaks
+Page 17: using stock market returns and bond yields as independent variables. We can distinguish
+Page 17: between ΓÇ£predictive regressions,ΓÇ¥ which model predictable time-variation in the failure
+Page 17: probability, and ΓÇ£explanatory regressions,ΓÇ¥ which model correlations through the
+Page 17: influence of common risk factors. Results are presented in Table 4.
+Page 17: The first column in Table 4 shows a negative coefficient on the stock market
+Page 17: return during the same quarter. This means that the fraction of breaks increases when the
+Page 17: stock market falls during the same quarter. Splitting up market returns into positive and
+Page 17: negative values shows that the effect is asymmetric. Positive returns are basically
+Page 17: uncorrelated with deal breaks. Large negative returns, however, are significantly
+Page 17: associated with a greater proportion of deal breaks. This is as expected: A large drop in
+Page 17: the stock market reduces the value of the target and makes it more likely for the acquirer
+Page 17: to walk away from the deal.
+Page 17: 
+Page 17: 10
+Page 17: 
+Page 17: Mitchell and Pulvino (2001) estimate the probability of a deal breaking from individual deal
+Page 17: characteristics and general market factors. For example, ΓÇ£hostilityΓÇ¥ is the most important indicator,
+Page 17: increasing the probability of failure by 12.8 percent. They also find that the S&P beta on the downside is
+Page 17: greater than on the upside.
+Page 17: 
+Page 17: 
+Page 18: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 18: 
+Page 18: 16
+Page 18: 
+Page 18: The ΓêÆ0.36 coefficient means that when the stock market drops by 20%, the break
+Page 18: probability increases by 7%. This conditional dependence on the market explains why
+Page 18: we observe positive correlations across deal breaks.11 After conditioning on this common
+Page 18: factor, the break correlation becomes unimportant. In practice, using a simple measure of
+Page 18: unconditional positive correlation is sufficient because market downturns cannot be
+Page 18: predicted.
+Page 18: 
+Page 18: Table 4: Explaining and Predicting Fraction of Breaks for M&A Deals
+Page 18: This table presents regressions of the fraction of breaks on various contemporaneous and predictive variables. RM is the total
+Page 18: return on the S&P500 index; HY is the yield to maturity on the Lehman high-yield corporate bond index. Sample period is
+Page 18: 1997-2006, or 40 quarters. Standard errors are below the estimated coefficients. The superscripts **, and * indicate
+Page 18: significance at two-tailed 5% and 10% levels, respectively.
+Page 18: 
+Page 18: Independent
+Page 18: Variables
+Page 18: Constant
+Page 18: RM(t)
+Page 18: 
+Page 18: Explanatory
+Page 18: Model 1
+Page 18: 0.12
+Page 18: (0.01)
+Page 18: -0.08
+Page 18: (0.10)
+Page 18: 
+Page 18: RM(t)>0
+Page 18: 
+Page 18: Explanatory
+Page 18: Model 2
+Page 18: 0.10
+Page 18: (0.01)
+Page 18: 
+Page 18: Predictive
+Page 18: Model 1
+Page 18: 0.13
+Page 18: (0.01)
+Page 18: 
+Page 18: Predictive
+Page 18: Model 3
+Page 18: 0.05
+Page 18: (0.04)
+Page 18: 
+Page 18: 1.00**
+Page 18: (0.40)
+Page 18: 
+Page 18: -0.19*
+Page 18: (0.10)
+Page 18: 0.68
+Page 18: (0.42)
+Page 18: 
+Page 18: 15.54
+Page 18: 
+Page 18: 21.04
+Page 18: 
+Page 18: 0.13
+Page 18: (0.18)
+Page 18: -0.36*
+Page 18: (0.22)
+Page 18: 
+Page 18: RM(t)<0
+Page 18: RM(t-1)
+Page 18: 
+Page 18: -0.26**
+Page 18: (0.10)
+Page 18: 
+Page 18: HY(t-1)
+Page 18: R-square (%)
+Page 18: 
+Page 18: Predictive
+Page 18: Model 2
+Page 18: 0.02
+Page 18: (0.04)
+Page 18: 
+Page 18: 1.67
+Page 18: 
+Page 18: 7.14
+Page 18: 
+Page 18: 14.30
+Page 18: 
+Page 18: Focusing next on predictive regressions, the coefficient on the previous stock
+Page 18: market return is negative and strongly significant, indicating that falling stock prices
+Page 18: increase the fraction of breaks the next quarter. The explanation is the same as before. In
+Page 18: addition, the coefficient on the bond yield at the start of the quarter is positive and highly
+Page 18: significant. As expected, higher financing costs lead to a greater fraction of deals failing.
+Page 18: 
+Page 18: 11
+Page 18: 
+Page 18: Note that a similar factor structure is used for credit portfolio models, where correlations across defaults
+Page 18: are induced by a 1-factor structure.
+Page 18: 
+Page 18: 
+Page 19: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 19: 
+Page 19: 17
+Page 19: 
+Page 19: This leads to a predictable break probability that varies between 9% and 18% over this
+Page 19: period.
+Page 19: It should be noted that this calibration exercise is limited to large North American
+Page 19: deals. To lower the failure correlation, a portfolio manager could include in the portfolio
+Page 19: M&A deals from smaller firms and from outside North America. More generally, the
+Page 19: methodology described next can be used to illustrate how to assess the benefits from
+Page 19: searching for lower correlations.
+Page 19: 
+Page 19: 
+Page 20: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 20: 
+Page 20: 18
+Page 20: 
+Page 20: IV. Building Portfolio Distributions with Correlated Events
+Page 20: Section I has shown that the dispersion of the distribution of losses shrinks rapidly
+Page 20: as the number of independent deals increases. In practice, however, positive correlations
+Page 20: temper this risk reduction effect. The question is how to adjust the measure of portfolio
+Page 20: risk. Because M&A events are similar in structure to credit events, the methodology
+Page 20: behind recent credit risk models can be used to measure event risk.
+Page 20: Various methods have been proposed to measure the risk of credit portfolios and
+Page 20: can be applied to this case. One approach is the ΓÇ£Binomial Expansion TechniqueΓÇ¥ (BET)
+Page 20: advocated by MoodyΓÇÖs (1996) to evaluate Collateralized Debt Obligations (CDOs). This
+Page 20: technique approximates the actual distribution of N correlated events with a simpler
+Page 20: binomial distribution for another number D of uncorrelated events. D is called the
+Page 20: ΓÇ£diversityΓÇ¥ score. It is computed for each deal i, from event probabilities (p) deal size
+Page 20: (L), and bivariate correlations (╧ü):
+Page 20: 
+Page 20: ( Γêæ p L )( Γêæ (1 ΓêÆ p )L )
+Page 20: N
+Page 20: 
+Page 20: D=
+Page 20: 
+Page 20: i =1
+Page 20: 
+Page 20: N
+Page 20: 
+Page 20: i
+Page 20: 
+Page 20: i
+Page 20: 
+Page 20: i =1
+Page 20: 
+Page 20: i
+Page 20: 
+Page 20: i
+Page 20: 
+Page 20: Γêæ i =1 Γêæ j =1 ╧ü ij pi (1 ΓêÆ pi ) p j (1 ΓêÆ p j ) Li L j
+Page 20: N
+Page 20: 
+Page 20: N
+Page 20: 
+Page 20: (7)
+Page 20: 
+Page 20: This expression is obtained by matching the first and second moments of the true
+Page 20: distribution with the binomial distribution f(k; D, p). This is therefore an approximation
+Page 20: only. As before, VAR can be computed for this new distribution.
+Page 20: To illustrate, assume that all probabilities, all losses, and all correlations are equal,
+Page 20: even though this need not be the case. The diversity score then reduces to
+Page 20: 
+Page 20: ( N pL)( N (1 ΓêÆ p ) L)
+Page 20: N2
+Page 20: D=
+Page 20: =
+Page 20: ( N + ╧ü ( N ΓêÆ 1) N ) p(1 ΓêÆ p) p(1 ΓêÆ p) LL ( N + ╧ü ( N ΓêÆ 1) N )
+Page 20: 
+Page 20: (8)
+Page 20: 
+Page 20: 
+Page 21: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 21: 
+Page 21: 19
+Page 21: 
+Page 21: If the events are independent, all correlations are zero, and Equation (7) reduces to D=N,
+Page 21: as we would expect. More generally, a positive correlation leads to D<N, which implies
+Page 21: that the distribution has longer tails than with independent events.
+Page 21: Table 5 compares the distributions of portfolio of N=30 deals for different
+Page 21: correlation coefficients. The zero correlation case is the same as before, with a 95%
+Page 21: VAR of $0.33. The diversity score decreases with the correlation. For example, when
+Page 21: the average correlation increases to 0.03, the diversity score falls from 30 to 16.
+Page 21: Accordingly, the 95% VAR increases sharply, from $0.33 to $1.25. With a correlation of
+Page 21: 0.10, the 95% VAR moves to $3.57. As expected, higher correlations lead to greater
+Page 21: risk. When the correlation is 0.50 or above, VAR moves to $15, which is the same as for
+Page 21: a portfolio of one deal. In this case, there is no diversification benefit.
+Page 21: 
+Page 21: Table 5: Distribution of Dependent Deals Using the BET Approach (N=30)
+Page 21: Correlation Diversity
+Page 21: Expected
+Page 21: VAR (ΓëÑ95% ) VAR (ΓëÑ99.9%)
+Page 21: Score
+Page 21: Profit
+Page 21: [Actual Confidence Level]
+Page 21: 0.00
+Page 21: 30.0
+Page 21: +$2.00
+Page 21: $0.33
+Page 21: $2.33
+Page 21: [99.92%]
+Page 21: 0.03
+Page 21: 16.0
+Page 21: +$2.00
+Page 21: $1.25
+Page 21: $5.00
+Page 21: [99.98%]
+Page 21: 0.05
+Page 21: 12.2
+Page 21: +$2.00
+Page 21: $1.67
+Page 21: $5.00
+Page 21: [99.93%]
+Page 21: 0.10
+Page 21: 7.7
+Page 21: +$2.00
+Page 21: $3.57
+Page 21: $9.29
+Page 21: [99.99%]
+Page 21: 0.20
+Page 21: 4.4
+Page 21: +$2.00
+Page 21: $5.00
+Page 21: $10.00
+Page 21: [99.95%]
+Page 21: 0.50
+Page 21: 1.9
+Page 21: +$2.00
+Page 21: $15.00
+Page 21: $15.00 [100.00%]
+Page 21: Figure 3 compares the distribution of losses with N=30 in two cases, ╧ü=0 and
+Page 21: ╧ü=0.05. The distributions are heavily skewed. In each case the expected return is $2.0.
+Page 21: With zero correlation, the right tail falls off quickly. With positive correlation, the tail is
+Page 21: much longer. Thus, a modest amount of correlation has a substantial impact on portfolio
+Page 21: risk.
+Page 21: 
+Page 21: 
+Page 22: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 22: 
+Page 22: 20
+Page 22: 
+Page 22: Fig. 3. Distribution of Portfolio Losses with Various Correlations: N=30
+Page 22: 25%
+Page 22: 
+Page 22: 20%
+Page 22: 
+Page 22: VAR=$5.0
+Page 22: 
+Page 22: 15%
+Page 22: 
+Page 22: Correlation = 0
+Page 22: 
+Page 22: VAR=$2.3
+Page 22: 
+Page 22: Correlation = 0.05
+Page 22: 10%
+Page 22: 
+Page 22: $15.0
+Page 22: 
+Page 22: $11.0
+Page 22: 
+Page 22: $7.0
+Page 22: 
+Page 22: $3.0
+Page 22: 
+Page 22: -$1.0
+Page 22: 
+Page 22: 0%
+Page 22: 
+Page 22: -$5.0
+Page 22: 
+Page 22: 5%
+Page 22: 
+Page 22: Loss
+Page 22: 
+Page 22: More general methods can be used instead of the Binomial Expansion Technique
+Page 22: approach. The distribution of events can be constructed from Monte Carlo simulations.
+Page 22: In this framework, each event is driven by a latent random variable such that a drop
+Page 22: below some cutoff point simulates a break with a specified probability. Correlations can
+Page 22: be induced across these random variables so as to generate specified default
+Page 22: correlations.12 Such bottom-up approach, which is similar to structural models of credit
+Page 22: risk, can be used to derive a more general distribution of gains and losses for the eventdriven portfolio. This will be used for results in the next section.
+Page 22: As an illustration of the effect of number of deals on the risk profile of the
+Page 22: portfolio, a simple experiment can be performed based on the actual number of deals
+Page 22: 12
+Page 22: 
+Page 22: In our example with p=15%, we need a correlation of latent variables calibrated at 0.068 to obtain the
+Page 22: observed default correlation of 0.03 using multivariate normal random variables.
+Page 22: 
+Page 22: 
+Page 23: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 23: 
+Page 23: 21
+Page 23: 
+Page 23: breaks and successes over the period 1997 to 2006. The average number of deals per
+Page 23: quarter is 44. The first portfolio is equally-invested in all deals. Consistently with the
+Page 23: previous analysis, a success is assigned a return of +5%; a failure has a return of ΓêÆ15%.
+Page 23: Figure 4 displays the hypothetical time series of returns on this portfolio. During the first
+Page 23: quarter, for example, the failure rate is exactly 0%. The return is then computed as R =
+Page 23: 0%(-15%) + (1-0%)(+5%) = 5%, which is the highest feasible value. Over the entire
+Page 23: sample, the average return is close to 2%. The all-deal portfolio has very low volatility.
+Page 23: In this experiment, it loses money in one quarter out of 40 only.
+Page 23: 
+Page 23: Fig. 4. Time-Series of Portfolio Returns for Different Portfolio Sizes
+Page 23: 10%
+Page 23: 8%
+Page 23: 6%
+Page 23: 4%
+Page 23: 2%
+Page 23: 0%
+Page 23: -2%
+Page 23: -4%
+Page 23: 
+Page 23: All Deals
+Page 23: 5 Deals
+Page 23: 
+Page 23: -6%
+Page 23: -8%
+Page 23: 
+Page 23: 2006Q1
+Page 23: 
+Page 23: 2005Q1
+Page 23: 
+Page 23: 2004Q1
+Page 23: 
+Page 23: 2003Q1
+Page 23: 
+Page 23: 2002Q1
+Page 23: 
+Page 23: 2001Q1
+Page 23: 
+Page 23: 2000Q1
+Page 23: 
+Page 23: 1999Q1
+Page 23: 
+Page 23: 1998Q1
+Page 23: 
+Page 23: 1997Q1
+Page 23: 
+Page 23: -10%
+Page 23: 
+Page 23: The second portfolio consists of five deals only. Each quarter, the outcome is
+Page 23: selected randomly, using the deal break fraction in that same quarter as probability of
+Page 23: failure. This approach preserves the pattern of correlations in the data. Figure 4 shows a
+Page 23: 
+Page 23: 
+Page 24: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 24: 
+Page 24: 22
+Page 24: 
+Page 24: typical outcome. This 5-deal portfolio is much more volatile than the all-deal one even
+Page 24: though it has the same mean. It suffers losses during eight quarters. The worst loss is
+Page 24: ΓêÆ7%. Clearly, the portfolio with a greater number of deals is the safer one.
+Page 24: Alternatively, this first portfolio could be leveraged three times and have the same level
+Page 24: of risk as the 5-deal portfolio, while delivering three times the expected return.
+Page 24: 
+Page 24: 
+Page 25: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 25: 
+Page 25: 23
+Page 25: 
+Page 25: V. Implications for Assessing Economic Capital and Leverage
+Page 25: This methodology can be used to infer economic capital levels, or conversely the
+Page 25: number of deals required to keep a fixed level of risk for event-driven portfolios.
+Page 25: Leverage can be assessed from economic capital. Recall that with one deal only,
+Page 25: economic capital is $15, implying a maximum leverage of $100/$15.0=6.7 at which point
+Page 25: the rate of return on economic capital is $2.0/$15.0=13.3% per quarter.
+Page 25: For a 10-deal portfolio with a correlation of 0.03, VAR is $9.0, at a minimum
+Page 25: 99.9% confidence level. As a result, the portfolio could be leveraged by a factor of
+Page 25: $100/$9.0, or about 10 times the original equity investment, generating an expected
+Page 25: return of $2.0/$9.0=22%.
+Page 25: This analysis shows that increasing the number of deals substantially lowers risk,
+Page 25: because deal risk is largely idiosyncratic. When N increases to 30 and 100, economic
+Page 25: capital drops to $5.00 and $3.80, respectively. Figure 5 illustrates how economic capital
+Page 25: decreases with the number of deals. Lower risk allows greater leverage, increasing
+Page 25: expected returns.
+Page 25: 
+Page 25: 
+Page 26: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 26: 
+Page 26: 24
+Page 26: 
+Page 26: Fig. 5. Economic Capital and Portfolio Size (Break Correlation=0.03)
+Page 26: $50
+Page 26: 
+Page 26: VAR
+Page 26: 
+Page 26: $45
+Page 26: 
+Page 26: Leverage=3
+Page 26: 
+Page 26: $40
+Page 26: 
+Page 26: Leverage=2
+Page 26: 
+Page 26: $35
+Page 26: 
+Page 26: Leverage=1
+Page 26: $30
+Page 26: $25
+Page 26: $20
+Page 26: $15
+Page 26: $10
+Page 26: $5
+Page 26: $0
+Page 26: 01
+Page 26: 
+Page 26: 10
+Page 26: 
+Page 26: 20
+Page 26: 
+Page 26: 30
+Page 26: 
+Page 26: 40
+Page 26: 
+Page 26: 50
+Page 26: 
+Page 26: 60
+Page 26: 
+Page 26: 70
+Page 26: 
+Page 26: 80
+Page 26: 
+Page 26: 90
+Page 26: 
+Page 26: 100
+Page 26: 
+Page 26: Number of Deals
+Page 26: 
+Page 26: This powerful diversification effect is driven by the low correlation, taken as 0.03
+Page 26: here. Next, Figure 6 examines how correlations affect economic capital, for various
+Page 26: portfolio sizes. The effect is rather dramatic. For N=100, increasing the correlation from
+Page 26: 0.00 to 0.10 pushes economic capital from $0.4 to $9.0. Beyond a correlation of 0.30,
+Page 26: there is basically no diversification effect: VAR converges to the worst loss of $15.
+Page 26: Average correlations are very unlikely to reach such values, however, from historical
+Page 26: experience. The previously computed 95% confidence interval for ╧ü ranges from 0.017
+Page 26: to 0.045. This translates into a confidence interval of $2.3 to $5.2 for VAR with N=100.
+Page 26: So, even in a worst-case scenario for the break correlation, there is still a fair amount of
+Page 26: diversification.
+Page 26: 
+Page 26: 
+Page 27: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 27: 
+Page 27: 25
+Page 27: 
+Page 27: Fig. 6. Economic Capital and Break Correlation (Break Probability=15%)
+Page 27: $16
+Page 27: 
+Page 27: VAR
+Page 27: 
+Page 27: $14
+Page 27: 
+Page 27: $12
+Page 27: 
+Page 27: $10
+Page 27: 
+Page 27: $8
+Page 27: 
+Page 27: N=10
+Page 27: $6
+Page 27: 
+Page 27: N=30
+Page 27: N=100
+Page 27: 
+Page 27: $4
+Page 27: 
+Page 27: $2
+Page 27: 
+Page 27: $0
+Page 27: 0.00
+Page 27: 
+Page 27: 0.05
+Page 27: 
+Page 27: 0.10
+Page 27: 
+Page 27: 0.15
+Page 27: 
+Page 27: 0.20
+Page 27: 
+Page 27: 0.25
+Page 27: 
+Page 27: 0.30
+Page 27: 
+Page 27: 0.35
+Page 27: 
+Page 27: 0.40
+Page 27: 
+Page 27: 0.45
+Page 27: 
+Page 27: 0.50
+Page 27: 
+Page 27: Correlation
+Page 27: 
+Page 27: Economic capital is also sensitive to the break probability, but less so. Figure 7
+Page 27: shows that if this changes from the base number of 15% to 20%, economic capital
+Page 27: increases from $3.8 to $5.0%, when N=100. The 95% confidence interval for the
+Page 27: estimated break correlation was (10.2%, 13.7%) for this sample. So, the worst increase
+Page 27: from the mid-point probability is only 2%. On the other hand, increases in the break
+Page 27: probability are important because they directly reduce the expected return on the
+Page 27: portfolio.
+Page 27: 
+Page 27: 
+Page 28: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 28: 
+Page 28: 26
+Page 28: 
+Page 28: Fig. 7. Economic Capital and Break Probability (Break Correlation=0.03)
+Page 28: $16
+Page 28: 
+Page 28: VAR
+Page 28: 
+Page 28: $14
+Page 28: $12
+Page 28: $10
+Page 28: $8
+Page 28: $6
+Page 28: $4
+Page 28: 
+Page 28: N=10
+Page 28: N=30
+Page 28: 
+Page 28: $2
+Page 28: 
+Page 28: N=100
+Page 28: $0
+Page 28: 0.00
+Page 28: 
+Page 28: 0.05
+Page 28: 
+Page 28: 0.10
+Page 28: 
+Page 28: 0.15
+Page 28: 
+Page 28: 0.20
+Page 28: 
+Page 28: 0.25
+Page 28: 
+Page 28: 0.30
+Page 28: 
+Page 28: 0.35
+Page 28: 
+Page 28: 0.40
+Page 28: 
+Page 28: Break Probability
+Page 28: 
+Page 28: Figure 8 illustrates the trade-off between expected return and risk for various
+Page 28: levels of leverage and portfolio size, assuming a baseline correlation of 0.03. Different
+Page 28: levels of leverage are represented by horizontal lines. For a given portfolio size N,
+Page 28: expected (excess) returns and risk increase linearly with leverage. A portfolio with
+Page 28: N=100 can be 3 times leveraged and still have a level of risk similar to a portfolio with
+Page 28: N=10, while delivering three times the expected return.
+Page 28: Apparently, this analysis would lead to the conclusion that having a larger number
+Page 28: of deals is always an improvement. This is because we assumed that the expected profit
+Page 28: per deal remains constant at $2. In practice, portfolio managers have expertise in
+Page 28: evaluating some types of deals. When we increase the number of deals to evaluate, we
+Page 28: would expect that the profit per deal should decrease, reflecting acquisition information
+Page 28: costs. Thus, there should be an optimal number of deals, reflecting the tradeoff between
+Page 28: 
+Page 28: 
+Page 29: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 29: 
+Page 29: 27
+Page 29: 
+Page 29: risk and profits. Without a measure of portfolio risk, however, such assessment is not
+Page 29: even possible.
+Page 29: 
+Page 29: Fig. 8. Trade-Off between Expected Return and Economic Capital
+Page 29: (Break Correlation=0.03)
+Page 29: $8
+Page 29: 
+Page 29: Expected Return
+Page 29: N=100
+Page 29: N=30
+Page 29: N=10
+Page 29: 
+Page 29: Leverage = 3
+Page 29: 
+Page 29: $6
+Page 29: 
+Page 29: Leverage = 2
+Page 29: 
+Page 29: $4
+Page 29: 
+Page 29: Leverage = 1
+Page 29: 
+Page 29: $2
+Page 29: 
+Page 29: $0
+Page 29: $0
+Page 29: 
+Page 29: $5
+Page 29: 
+Page 29: $10
+Page 29: 
+Page 29: $15
+Page 29: 
+Page 29: $20
+Page 29: 
+Page 29: $25
+Page 29: 
+Page 29: $30
+Page 29: 
+Page 29: VAR
+Page 29: 
+Page 29: Finally, we should note that the analysis of economic capital should also account
+Page 29: for non-event risks, including market risk and some idiosyncratic risk.13 These additional
+Page 29: risks can be incorporated in an enlarged model. Stress tests should also be performed to
+Page 29: evaluate the sensitivity of the results to changes in input parameters, including break
+Page 29: probabilities and correlations.
+Page 29: 
+Page 29: 13
+Page 29: 
+Page 29: There is also horizon risk, which is the risk of a lengthening of the horizon for the deal resolution. This
+Page 29: happened, for instance, during 2004, when the Sarbanes-Oxley Act temporarily slowed down deal activity.
+Page 29: 
+Page 29: 
+Page 30: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 30: 
+Page 30: 28
+Page 30: 
+Page 30: VI. Conclusions
+Page 30: Event-driven portfolio strategies face discrete deal risk. In contrast with other
+Page 30: types of market risks, where distributions are continuous, deal risk is represented by a
+Page 30: binary variable, which is the success or failure of a deal. This type of risk cannot be
+Page 30: captured by conventional position-based risk measures.
+Page 30: Current positions, however, can be used to construct the distribution of portfolio
+Page 30: returns. To do so, the risk manager needs estimates of the probability of success for each
+Page 30: deal, of the payoffs from success and failure, and of joint correlations across deals. This
+Page 30: paper develops new methods to construct quantitative measures of portfolio risk for
+Page 30: event-driven portfolios.
+Page 30: Once constructed, this distribution can be summarized by the usual risk measures,
+Page 30: such as Value at Risk, which can be used to assess acceptable levels of leverage. This
+Page 30: paper finds that, in the case of independent deals, the economic capital required to
+Page 30: support a portfolio of 30 independent deals is six times lower than for a single-deal
+Page 30: portfolio. Thus, this diversified portfolio could be levered six times more than a singledeal position and still maintain the same level of risk. In the meantime, this higher
+Page 30: leverage implies a higher return on capital.
+Page 30: In practice, however, these diversification benefits are limited because of
+Page 30: clustering across deal breaks. This paper provides empirical estimates indicating that the
+Page 30: average deal-break correlation is around 0.03 for large North American deals. This
+Page 30: positive correlation decreases the benefits from diversification and increases the required
+Page 30: economic capital.
+Page 30: 
+Page 30: 
+Page 31: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 31: 
+Page 31: 29
+Page 31: 
+Page 31: This methodology can be used to improve current risk management practices for
+Page 31: event-driven portfolios. Apparently, portfolio managers primarily rely on position limits
+Page 31: to control risk. Similar methods were used to manage credit risk before the generalized
+Page 31: application of modern risk measurement methods.
+Page 31: Without such quantitative methods, it seems difficult to assess the optimal riskreturn profile of the portfolio. With limited expertise or resources, increasing the number
+Page 31: of deals is costly, because it decreases the average expected return per deal. On the other
+Page 31: hand, increasing the number of deals does provide diversification benefits. The optimal
+Page 31: portfolio represents the point where the marginal cost equates the marginal benefit from
+Page 31: increasing deals. Without a formal measure of the marginal benefit, however, this
+Page 31: optimal position cannot be identified.
+Page 31: Armed with these portfolio measurement tools, the portfolio manager should
+Page 31: search for deals that are profitable, yet not too correlated across each other. This paper
+Page 31: provides the means to assess the costs and benefits of different structures for event-driven
+Page 31: portfolios.
+Page 31: 
+Page 31: 
+Page 32: P. Jorion ΓêÆ Risk Management for Event-Driven Funds
+Page 32: 
+Page 32: 30
+Page 32: 
+Page 32: REFERENCES
+Page 32: Bahar, Reza and Krishnan Regal, 2001, ΓÇ£Measuring Default Correlation,ΓÇ¥ Risk (March),
+Page 32: 129ΓÇö132.
+Page 32: Baker, Malcolm and Serkan Savasoglu, 2002, ΓÇ£Limited Arbitrage in Mergers and
+Page 32: Acquisitions,ΓÇ¥ Journal of Financial Economics 64, 91-115.
+Page 32: De Servigny, Arnaud and Olivier Renault, 2002, ΓÇ£Default Correlation: Empirical
+Page 32: Evidence,ΓÇ¥ Working Paper, Standard and PoorΓÇÖs.
+Page 32: Jorion, Philippe, 2006, ΓÇ£Value at Risk: The New Benchmark to Manage Financial Risk,ΓÇ¥
+Page 32: McGrawHill.
+Page 32: Mitchell, Mark and Todd Pulvino, 2001, ΓÇ£Characteristics of Risk and Return in Risk
+Page 32: Arbitrage,ΓÇ¥ Journal of Finance 56, 2135-2175.
+Page 32: Mitchell, Mark, Todd Pulvino, and Erik Stafford, 2004, ΓÇ£Price Pressure around Mergers,ΓÇ¥
+Page 32: Journal of Finance 59, 31-63.
+Page 32: MoodyΓÇÖs, 1996, ΓÇ£The Binomial Expansion Technique Applied to CBO/CLO Analysis,ΓÇ¥
+Page 32: MoodyΓÇÖs Special Report.
+Page 32: Moore, Keith, Gene Lai, and Henry Oppenheimer, 2006, ΓÇ£The Behavior of Risk
+Page 32: Arbitrageurs in Mergers and Acquisitions,ΓÇ¥ Journal of Alternative Investments
+Page 32: (Summer), 19-29.
+Page 32: Schachter, Barry, 2006, ΓÇ£Limits on far VAR,ΓÇ¥ Risk (March).
+Page 32: 
+Page 32: 

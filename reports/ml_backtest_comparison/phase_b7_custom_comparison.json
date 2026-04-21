@@ -1,0 +1,49 @@
+{
+  "baseline": {
+    "name": "Baseline",
+    "trades": 66,
+    "win_rate": 50.0,
+    "sharpe": -1.861688076795358,
+    "profit_factor": 0.13102247449690352,
+    "max_drawdown": 1678.2670245676995,
+    "return_pct": 0,
+    "avg_trade": 0
+  },
+  "ml_enhanced": {
+    "name": "ML-Enhanced",
+    "trades": 64,
+    "win_rate": 50.0,
+    "sharpe": -1.8625919568381002,
+    "profit_factor": 0.12574156945935527,
+    "max_drawdown": 1671.864795103735,
+    "return_pct": 0,
+    "avg_trade": 0
+  },
+  "comparison": {
+    "return_improvement_pct": 0,
+    "sharpe_improvement": -0.0009038800427421112,
+    "win_rate_improvement": 0.0,
+    "drawdown_reduction": 6.4022294639644315,
+    "profit_factor_improvement": -0.005280905037548245
+  },
+  "regime_stats": {
+    "total_bars": 252,
+    "regime_distribution": {
+      "Transition": 100,
+      "Ranging": 81,
+      "Trending": 39,
+      "Volatile": 32
+    },
+    "regime_distribution_pct": {
+      "Transition": 39.7,
+      "Ranging": 32.1,
+      "Trending": 15.5,
+      "Volatile": 12.7
+    }
+  },
+  "config": {
+    "start_date": "2015-01-01",
+    "end_date": "2015-12-31",
+    "num_patterns": 16
+  }
+}

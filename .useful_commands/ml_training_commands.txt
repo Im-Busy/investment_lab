@@ -1,0 +1,29 @@
+# ML Training Commands
+
+## ML Training Commands
+
+### Local Training (uv run)
+
+# Train Default Model (LightGBM)
+uv run scripts/train_ml_model.py --symbol SPY --start 2015-01-01 --end 2024-12-31
+
+# Train with Different Model
+uv run scripts/train_ml_model.py --symbol SPY --model-type xgboost --start 2015-01-01 --end 2024-12-31
+
+# Train with Different Prediction Horizon
+uv run scripts/train_ml_model.py --symbol SPY --horizon 5 --start 2015-01-01 --end 2024-12-31
+
+# Memory-Safe Training (reduced features, shorter date range)
+uv run scripts/train_ml_model.py --symbol SPY --start 2019-01-01 --end 2024-12-31 --no-walk-forward --features momentum,volatility
+
+### Google Colab Training (Low RAM Alternative)
+
+# 1. Upload notebooks/ML_Training_Colab.ipynb to Google Colab
+# 2. Runtime → Change runtime type → GPU
+# 3. Runtime → Run all
+# 4. Download ZIP from output or Google Drive → ML_Models/
+
+# Memory-safe Colab configuration (edit notebook CONFIG cell):
+# - start_date: '2019-01-01' (5 years max)
+# - memory_safe: True
+# - use_walk_forward: False

@@ -1,0 +1,52 @@
+# Quick Reference - All Commands
+
+## ML Training
+```bash
+# Default training (LightGBM)
+uv run scripts/train_ml_model.py --symbol SPY --start 2015-01-01 --end 2024-12-31
+
+# Alternative model (XGBoost)
+uv run scripts/train_ml_model.py --symbol SPY --model-type xgboost
+
+# Different horizon (5-day prediction)
+uv run scripts/train_ml_model.py --symbol SPY --horizon 5
+```
+
+## Backtesting
+```bash
+# ML-enhanced backtest
+uv run scripts/backtest_ml_enhanced.py --symbol SPY --strategy vwap
+
+# Baseline comparison (no ML)
+uv run scripts/backtest_ml_enhanced.py --symbol SPY --strategy vwap --no-ml
+```
+
+## Feature Extraction
+```bash
+# Extract all features
+uv run scripts/features/extract_all.py --symbol SPY --output data/features
+
+# Technical indicators only
+uv run scripts/features/technical.py --symbol SPY --output data/tech_features
+
+# Pattern scores
+uv run scripts/features/pattern_scores.py --symbol SPY --output data/patterns
+```
+
+## Pattern Detection
+```bash
+# Run all pattern detectors
+uv run scripts/patterns/detect_all.py --symbol SPY --start 2020-01-01 --end 2024-12-31
+
+# Specific pattern (head_and_shoulders)
+uv run scripts/patterns/detect_pattern.py --pattern head_and_shoulders --symbol SPY
+```
+
+## Risk Analysis
+```bash
+# Portfolio risk metrics
+uv run scripts/risk/analyze.py --symbol SPY --var-confidence 0.99
+
+# Drawdown analysis
+uv run scripts/risk/drawdown.py --symbol SPY
+```

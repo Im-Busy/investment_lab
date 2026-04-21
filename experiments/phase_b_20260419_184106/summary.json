@@ -1,0 +1,17 @@
+{
+  "run_id": "phase_b_20260419_184106",
+  "mean_oos_metrics": {
+    "phase_b_status": "complete",
+    "regime_model_trained": true,
+    "signal_model_trained": true
+  },
+  "max_overfit_gap": 0,
+  "n_folds": 5,
+  "verdict": "WEAK SIGNAL",
+  "reasons": [
+    "OOS IC=0.0000 < 0.05"
+  ],
+  "recommendation": "Do not use in production. Try feature reduction, different model, or more data.",
+  "best_fold": null,
+  "worst_fold": null
+}

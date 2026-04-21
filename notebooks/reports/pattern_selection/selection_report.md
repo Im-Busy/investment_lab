@@ -18,7 +18,7 @@
 
 | Phase | Duration |
 |-------|----------|
-| PHASE1 | 301.1s |
+| PHASE1 | 372.5s |
 
 ## Phase 1: Isolated Performance Baseline
 
@@ -36,11 +36,27 @@
 
 | Pattern | Trades | Win Rate | Sharpe | Profit Factor | Return | Max DD | Status |
 |---------|--------|----------|--------|---------------|--------|--------|--------|
-| n-Bar Decline | 0 | nan% | 0.736 | nan | 5025.26% | -1074.9% | [FAIL] |
-| Market Structure Low | 2 | 0.0% | 0.704 | 0.00 | 4741.76% | -1078.2% | [FAIL] |
+| Matching Lows | 3 | 0.0% | 0.709 | 0.00 | 4897.64% | -1098.2% | [FAIL] |
+| Market Structure Low | 2 | 0.0% | 0.697 | 0.00 | 4621.36% | -1066.2% | [FAIL] |
+| Two-Bar Reversal | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
+| Gartley Pattern | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
+| Bollinger Bands | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
+| Spike and Ledge | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
+| Three Hills and Mountain | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
+| Parabolic Arc | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
+| Trader Vic's 2B | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
 | Triple Bottom | 2 | 0.0% | 0.680 | 0.00 | 4192.77% | -1012.1% | [FAIL] |
 | NR7ID | 20 | 0.0% | 0.659 | 0.00 | 3861.40% | -982.9% | [FAIL] |
-| Matching Lows | 2 | 0.0% | 0.518 | 0.00 | 1517.12% | -650.9% | [FAIL] |
+| Double Bottom | 5 | 0.0% | 0.647 | 0.00 | 3939.28% | -1011.5% | [FAIL] |
+| Symmetric Triangle | 64 | 35.9% | 0.007 | 1.00 | 17.61% | -635.7% | [FAIL] |
+| ABC Pattern | 1 | 0.0% | -0.091 | 0.00 | -27.62% | -116.5% | [FAIL] |
+| Donchian Channel Breakout | 48 | 33.3% | -0.162 | 0.75 | -488.40% | -968.3% | [FAIL] |
+| Cup and Handle | 6 | 0.0% | -0.193 | 0.00 | -283.48% | -728.7% | [FAIL] |
+| n-Bar Decline | 12 | 0.0% | -0.262 | 0.00 | -558.74% | -1204.2% | [FAIL] |
+| Double Top | 7 | 0.0% | -0.363 | 0.00 | -522.93% | -598.9% | [FAIL] |
+| Triple Top | 10 | 0.0% | -0.452 | 0.00 | -892.63% | -967.4% | [FAIL] |
+| Floor Pivot Breakout | 675 | 28.0% | -0.866 | 0.70 | -2375.35% | -2477.3% | [FAIL] |
+| Head and Shoulders | 39 | 0.0% | -1.075 | 0.00 | -1814.43% | -1949.8% | [FAIL] |
 | Ascending Triangle | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
 | Descending Triangle | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
 | Rectangle | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
@@ -48,29 +64,13 @@
 | Dead Cat Bounce | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
 | Flag | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
 | Pennant | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
-| Gap Pattern | 0 | 0.0% | 0.000 | 0.00 | 0.00% | 0.0% | [FAIL] |
 | Doji | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
-| Harami | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
-| Hammer | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
-| Engulfing | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
-| Dark Cloud Cover | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
-| Piercing Line | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
-| Double Bottom | 2 | 0.0% | 0.670 | 0.00 | 4181.07% | -1024.9% | [FAIL] |
-| Trader Vic's 2B | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
-| Triple Top | 10 | 0.0% | -0.452 | 0.00 | -892.63% | -967.4% | [FAIL] |
-| Floor Pivot Breakout | 675 | 28.0% | -0.866 | 0.70 | -2375.35% | -2477.3% | [FAIL] |
-| Two-Bar Reversal | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
-| Gartley Pattern | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
-| ABC Pattern | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
-| Symmetric Triangle | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
-| Donchian Channel Breakout | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
-| Bollinger Bands | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
-| Cup and Handle | 6 | 0.0% | -0.193 | 0.00 | -283.48% | -728.7% | [FAIL] |
-| Head and Shoulders | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
-| Spike and Ledge | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
-| Three Hills and Mountain | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
-| Parabolic Arc | 0 | nan% | nan | nan | 0.00% | -0.0% | [FAIL] |
-| Double Top | 8 | 0.0% | -0.476 | 0.00 | -840.73% | -909.2% | [FAIL] |
+| Piercing Line | 0 | nan% | 0.616 | nan | 1851.23% | -663.5% | [FAIL] |
+| Hammer | 15 | 13.3% | 0.363 | 3.96 | 1077.81% | -662.6% | [FAIL] |
+| Harami | 19 | 26.3% | 0.341 | 2.23 | 793.70% | -529.8% | [FAIL] |
+| Gap Pattern | 0 | 0.0% | 0.000 | 0.00 | 0.00% | 0.0% | [FAIL] |
+| Dark Cloud Cover | 6 | 0.0% | -0.383 | 0.00 | -223.15% | -307.5% | [FAIL] |
+| Engulfing | 121 | 20.7% | -0.878 | 0.44 | -1654.66% | -1724.8% | [FAIL] |
 
 ## Phase 2: Statistical Correlation Analysis
 

@@ -1,0 +1,10 @@
+# AI Commands Reference
+#
+# This file tracks useful commands for hyperparameter optimization.
+#
+# Instructions for AI Contributors:
+# - Add commands with descriptions
+#
+# Category: Model Optimization
+# Last Updated: 2026-04-21
+

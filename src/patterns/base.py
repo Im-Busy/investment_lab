@@ -29,6 +29,15 @@ if TYPE_CHECKING:
     from src.indicators.indicator_cache import IndicatorCache
 
 
+class RegimeState(Enum):
+    """Market regime states for pattern compatibility."""
+
+    TRENDING = "Trending"
+    RANGING = "Ranging"
+    VOLATILE = "Volatile"
+    TRANSITION = "Transition"
+
+
 class PatternType(Enum):
     """Classification of pattern types"""
 
@@ -131,17 +140,20 @@ class PatternResult:
         }
 
 
+@dataclass
 class BasePattern(ABC):
     """
     Abstract base class for all pattern detectors.
 
     All pattern implementations must inherit from this class and implement
-    the detect() and generate_signal() methods.
+    detect() and generate_signal() methods.
 
     Attributes:
         name: Pattern name
         pattern_type: Pattern classification
-        min_bars_required: Minimum bars needed for pattern detection
+        min_bars_required: Minimum bars needed for
+        preferred_regimes: Regimes where pattern works best (R4 enhancement)
+        incompatible_regimes: Regimes where pattern should be avoided (R4 enhancement)
 
     Performance Optimizations:
         - _arrays: Cached NumPy arrays for faster access
@@ -149,10 +161,13 @@ class BasePattern(ABC):
         - detect_batch(): Batch processing for multiple bars
     """
 
-    def __init__(self, name: str, pattern_type: PatternType, min_bars_required: int = 5):
-        self.name = name
-        self.pattern_type = pattern_type
-        self.min_bars_required = min_bars_required
+    name: str
+    pattern_type: PatternType
+    min_bars_required: int = 5
+    preferred_regimes: List[RegimeState] = field(default_factory=list)
+    incompatible_regimes: List[RegimeState] = field(default_factory=list)
+
+    def __post_init__(self):
         # Performance optimization: cached arrays
         self._arrays: Optional[Dict[str, np.ndarray]] = None
         self._arrays_df_id: Optional[int] = None
@@ -164,12 +179,51 @@ class BasePattern(ABC):
 
     def set_indicator_cache(self, cache: "IndicatorCache") -> None:
         """
-        Set the indicator cache for pre-computed indicators.
+        Set indicator cache for pre-computed indicators.
 
         Args:
             cache: IndicatorCache instance
         """
         self._indicator_cache = cache
+
+    def is_regime_compatible(self, regime: RegimeState) -> bool:
+        """
+        Check if pattern is compatible with given regime (R4 enhancement).
+
+        Args:
+            regime: Current market regime
+
+        Returns:
+            True if pattern should be active in this regime
+        """
+        if regime in self.incompatible_regimes:
+            return False
+
+        if self.preferred_regimes and regime not in self.preferred_regimes:
+            return False
+
+        return True
+
+    def get_regime_preference(self, regime: RegimeState) -> float:
+        """
+        Get pattern preference score for given regime (R4 enhancement).
+
+        Args:
+            regime: Current market regime
+
+        Returns:
+            Preference score: 1.0 (preferred), 0.5 (neutral), 0.0 (incompatible)
+        """
+        if regime in self.incompatible_regimes:
+            return 0.0
+
+        if regime in self.preferred_regimes:
+            return 1.0
+
+        if self.preferred_regimes:
+            return 0.3
+
+        return 0.5
 
     @abstractmethod
     def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:

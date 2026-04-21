@@ -40,6 +40,7 @@ from .pivots import (
     get_pivot_cache_info,
 )
 from .regime import MarketPhase, MarketRegimeDetector, RegimeState, TrendDirection, VolatilityRegime
+from .regime_detector import RegimeDetector, RegimeDetectorConfig
 from .technical import (
     adx,
     atr,
@@ -85,6 +86,9 @@ __all__ = [
     "TrendDirection",
     "VolatilityRegime",
     "MarketPhase",
+    # Regime Detector (ADX/ATR-based)
+    "RegimeDetector",
+    "RegimeDetectorConfig",
     # SMC/ICT Indicators - Asian Range
     "detect_asian_range",
     "get_asian_range_for_day",

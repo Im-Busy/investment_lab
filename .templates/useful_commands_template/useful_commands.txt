@@ -1,0 +1,21 @@
+================================================================================
+                        USEFUL COMMANDS FOR THIS PROJECT
+================================================================================
+
+Add project-specific useful commands here for future reference.
+
+Format:
+- Command description
+- Actual command to run
+
+Example:
+# Run tests
+uv run pytest tests/ -v
+
+# Run linting
+uv run ruff check src/
+
+# Run main application
+uv run src/main.py
+
+================================================================================

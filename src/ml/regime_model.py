@@ -54,8 +54,10 @@ class RegimeClassifier:
         self,
         model_type: str = "random_forest",
         n_estimators: int = 100,
-        max_depth: Optional[int] = 5,
+        max_depth: Optional[int] = 3,
         random_state: int = 42,
+        min_samples_leaf: int = 10,
+        max_features: str = "sqrt",
     ):
         """
         Initialize regime classifier.
@@ -63,8 +65,10 @@ class RegimeClassifier:
         Args:
             model_type: Type of classifier ("random_forest", "gradient_boosting", "logistic_regression")
             n_estimators: Number of trees (for tree-based models)
-            max_depth: Maximum tree depth (to prevent overfitting)
+            max_depth: Maximum tree depth (reduced from 5 to 3 to prevent overfitting)
             random_state: Random seed for reproducibility
+            min_samples_leaf: Minimum samples per leaf (regularization)
+            max_features: Number of features per split (regularization)
         """
         if model_type not in self.SUPPORTED_MODELS:
             raise ValueError(
@@ -75,12 +79,14 @@ class RegimeClassifier:
         self.n_estimators = n_estimators
         self.max_depth = max_depth
         self.random_state = random_state
+        self.min_samples_leaf = min_samples_leaf
+        self.max_features = max_features
         self.model = None
         self.classes_ = None
         self.feature_names_ = None
 
     def _create_model(self):
-        """Create the underlying ML model."""
+        """Create the underlying ML model with regularization."""
         from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
         from sklearn.linear_model import LogisticRegression
 
@@ -88,6 +94,8 @@ class RegimeClassifier:
             return RandomForestClassifier(
                 n_estimators=self.n_estimators,
                 max_depth=self.max_depth,
+                min_samples_leaf=self.min_samples_leaf,
+                max_features=self.max_features,
                 random_state=self.random_state,
                 class_weight="balanced",
             )
@@ -95,11 +103,14 @@ class RegimeClassifier:
             return GradientBoostingClassifier(
                 n_estimators=self.n_estimators,
                 max_depth=self.max_depth,
+                min_samples_leaf=self.min_samples_leaf,
+                max_features=self.max_features,
                 random_state=self.random_state,
             )
         else:
             return LogisticRegression(
                 max_iter=1000,
+                C=0.1,
                 class_weight="balanced",
                 random_state=self.random_state,
             )
@@ -300,3 +311,93 @@ class RegimeClassifier:
             start += step_size
 
         return results
+
+    def purged_kfold_validation(
+        self,
+        X: pd.DataFrame,
+        y: pd.Series,
+        n_splits: int = 5,
+        test_size: int = 100,
+        gap: int = 20,
+    ) -> Dict[str, Any]:
+        """
+        Purged K-Fold cross-validation with temporal splits to prevent look-ahead bias.
+
+        Args:
+            X: Feature DataFrame with datetime index
+            y: Labels series
+            n_splits: Number of CV folds
+            test_size: Number of samples in test set per fold
+            gap: Number of samples to exclude between train and test (temporal gap)
+
+        Returns:
+            Dict with mean/std train/test scores and per-fold details
+        """
+        from sklearn.metrics import accuracy_score
+
+        n_total = len(X)
+        min_train_size = n_total // (n_splits + 1)
+
+        if min_train_size < test_size:
+            raise ValueError(
+                f"Dataset too small for {n_splits} splits. Need at least "
+                f"{(n_splits + 1) * test_size} samples, got {n_total}."
+            )
+
+        fold_results = []
+        train_scores = []
+        test_scores = []
+
+        for i in range(n_splits):
+            train_end = (i * (n_total - test_size)) // n_splits
+            test_start = train_end + gap
+            test_end = test_start + test_size
+
+            if test_end > n_total:
+                break
+
+            X_train = X.iloc[:train_end]
+            y_train = y.iloc[:train_end]
+            X_test = X.iloc[test_start:test_end]
+            y_test = y.iloc[test_start:test_end]
+
+            valid_train = X_train.notna().all(axis=1) & y_train.notna()
+            valid_test = X_test.notna().all(axis=1) & y_test.notna()
+
+            if valid_train.sum() < 50 or valid_test.sum() < 10:
+                continue
+
+            model = self._create_model()
+            model.fit(X_train[valid_train], y_train[valid_train])
+
+            train_pred = model.predict(X_train[valid_train])
+            test_pred = model.predict(X_test[valid_test])
+
+            train_acc = accuracy_score(y_train[valid_train], train_pred)
+            test_acc = accuracy_score(y_test[valid_test], test_pred)
+
+            train_scores.append(train_acc)
+            test_scores.append(test_acc)
+
+            fold_results.append(
+                {
+                    "fold": i + 1,
+                    "train_size": valid_train.sum(),
+                    "test_size": valid_test.sum(),
+                    "train_accuracy": train_acc,
+                    "test_accuracy": test_acc,
+                }
+            )
+
+        if not train_scores:
+            return {"error": "No valid folds created"}
+
+        return {
+            "mean_train_accuracy": np.mean(train_scores),
+            "std_train_accuracy": np.std(train_scores),
+            "mean_test_accuracy": np.mean(test_scores),
+            "std_test_accuracy": np.std(test_scores),
+            "overfit_gap": np.mean(train_scores) - np.mean(test_scores),
+            "n_folds": len(fold_results),
+            "fold_details": fold_results,
+        }

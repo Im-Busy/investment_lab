@@ -1,0 +1,154 @@
+2026-03-01 21:00:20.516 | INFO     | __main__:main:45 - === Data Ingestion Pipeline Started ===
+2026-03-01 21:00:20.517 | INFO     | __main__:fetch_and_save:17 - Fetching data for 0005.HK...
+2026-03-01 21:00:23.415 | INFO     | __main__:fetch_and_save:37 - ✅ Saved 984 rows to data/raw\0005_HK_historical.csv
+2026-03-01 21:00:24.416 | INFO     | __main__:fetch_and_save:17 - Fetching data for 0700.HK...
+2026-03-01 21:00:24.657 | INFO     | __main__:fetch_and_save:37 - ✅ Saved 984 rows to data/raw\0700_HK_historical.csv
+2026-03-01 21:00:25.658 | INFO     | __main__:fetch_and_save:17 - Fetching data for SPY...
+2026-03-01 21:00:25.933 | INFO     | __main__:fetch_and_save:37 - ✅ Saved 1006 rows to data/raw\SPY_historical.csv
+2026-03-01 21:00:26.934 | INFO     | __main__:fetch_and_save:17 - Fetching data for QQQ...
+2026-03-01 21:00:27.196 | INFO     | __main__:fetch_and_save:37 - ✅ Saved 1006 rows to data/raw\QQQ_historical.csv
+2026-03-01 21:00:28.197 | INFO     | __main__:main:60 - === Pipeline Complete: 4/4 successful ===
+2026-03-13 13:50:07.992 | INFO     | __main__:fetch_all_data:276 - 
+============================================================
+2026-03-13 13:50:07.993 | INFO     | __main__:fetch_all_data:277 - DATA INGESTION PIPELINE - ALL DATA
+2026-03-13 13:50:07.993 | INFO     | __main__:fetch_all_data:278 - Started at: 2026-03-13 13:50:07
+2026-03-13 13:50:07.993 | INFO     | __main__:fetch_all_data:279 - ============================================================
+
+2026-03-13 13:50:07.993 | INFO     | __main__:fetch_all_daily:198 - ============================================================
+2026-03-13 13:50:07.993 | INFO     | __main__:fetch_all_daily:199 - Fetching Daily Data for Multi-Pattern Strategy
+2026-03-13 13:50:07.993 | INFO     | __main__:fetch_all_daily:200 - ============================================================
+2026-03-13 13:50:07.994 | INFO     | __main__:fetch_daily_data:80 - Fetching daily data for SPY (2015-01-01 to 2024-12-31)...
+2026-03-13 13:50:12.621 | ERROR    | __main__:fetch_daily_data:110 - ❌ Failed for SPY: 'tuple' object has no attribute 'lower'
+2026-03-13 13:50:13.622 | INFO     | __main__:fetch_daily_data:80 - Fetching daily data for QQQ (2015-01-01 to 2024-12-31)...
+2026-03-13 13:50:13.875 | ERROR    | __main__:fetch_daily_data:110 - ❌ Failed for QQQ: 'tuple' object has no attribute 'lower'
+2026-03-13 13:50:14.875 | INFO     | __main__:fetch_daily_data:80 - Fetching daily data for GLD (2015-01-01 to 2024-12-31)...
+2026-03-13 13:50:15.091 | ERROR    | __main__:fetch_daily_data:110 - ❌ Failed for GLD: 'tuple' object has no attribute 'lower'
+2026-03-13 13:50:16.091 | INFO     | __main__:fetch_daily_data:80 - Fetching daily data for TLT (2015-01-01 to 2024-12-31)...
+2026-03-13 13:50:16.431 | ERROR    | __main__:fetch_daily_data:110 - ❌ Failed for TLT: 'tuple' object has no attribute 'lower'
+2026-03-13 13:50:17.431 | INFO     | __main__:fetch_daily_data:80 - Fetching daily data for EURUSD=X (2015-01-01 to 2024-12-31)...
+2026-03-13 13:50:17.656 | ERROR    | __main__:fetch_daily_data:110 - ❌ Failed for EURUSD=X: 'tuple' object has no attribute 'lower'
+2026-03-13 13:50:18.656 | INFO     | __main__:fetch_daily_data:80 - Fetching daily data for BTC-USD (2019-01-01 to 2024-12-31)...
+2026-03-13 13:50:18.965 | ERROR    | __main__:fetch_daily_data:110 - ❌ Failed for BTC-USD: 'tuple' object has no attribute 'lower'
+2026-03-13 13:50:19.965 | INFO     | __main__:fetch_all_daily:216 - 
+============================================================
+2026-03-13 13:50:19.966 | INFO     | __main__:fetch_all_daily:217 - Daily Data Complete: 0/6 successful
+2026-03-13 13:50:19.966 | INFO     | __main__:fetch_all_daily:218 - ============================================================
+
+2026-03-13 13:50:19.966 | INFO     | __main__:fetch_all_intraday:241 - ============================================================
+2026-03-13 13:50:19.966 | INFO     | __main__:fetch_all_intraday:242 - Fetching Intraday Data for SMC/ICT Strategy
+2026-03-13 13:50:19.966 | INFO     | __main__:fetch_all_intraday:243 - ============================================================
+2026-03-13 13:50:19.966 | INFO     | __main__:fetch_intraday_data:135 - Fetching 5m data for BTC-USD (last 730d)...
+2026-03-13 13:50:20.311 | WARNING  | __main__:fetch_intraday_data:141 - No data retrieved for BTC-USD
+2026-03-13 13:50:22.311 | INFO     | __main__:fetch_intraday_data:135 - Fetching 5m data for GC=F (last 730d)...
+2026-03-13 13:50:22.739 | WARNING  | __main__:fetch_intraday_data:141 - No data retrieved for GC=F
+2026-03-13 13:50:24.739 | INFO     | __main__:fetch_intraday_data:135 - Fetching 5m data for NQ=F (last 730d)...
+2026-03-13 13:50:25.134 | WARNING  | __main__:fetch_intraday_data:141 - No data retrieved for NQ=F
+2026-03-13 13:50:27.134 | INFO     | __main__:fetch_intraday_data:135 - Fetching 5m data for EURUSD=X (last 730d)...
+2026-03-13 13:50:27.499 | WARNING  | __main__:fetch_intraday_data:141 - No data retrieved for EURUSD=X
+2026-03-13 13:50:29.499 | INFO     | __main__:fetch_intraday_data:135 - Fetching 5m data for GBPJPY=X (last 730d)...
+2026-03-13 13:50:29.896 | WARNING  | __main__:fetch_intraday_data:141 - No data retrieved for GBPJPY=X
+2026-03-13 13:50:31.896 | INFO     | __main__:fetch_all_intraday:259 - 
+============================================================
+2026-03-13 13:50:31.896 | INFO     | __main__:fetch_all_intraday:260 - Intraday Data Complete: 0/5 successful
+2026-03-13 13:50:31.897 | INFO     | __main__:fetch_all_intraday:261 - ============================================================
+
+2026-03-13 13:50:31.897 | INFO     | __main__:fetch_all_data:292 - 
+============================================================
+2026-03-13 13:50:31.897 | INFO     | __main__:fetch_all_data:293 - FINAL SUMMARY
+2026-03-13 13:50:31.897 | INFO     | __main__:fetch_all_data:294 - ============================================================
+2026-03-13 13:50:31.897 | INFO     | __main__:fetch_all_data:295 - Daily data:    0/6 successful
+2026-03-13 13:50:31.897 | INFO     | __main__:fetch_all_data:296 - Intraday data: 0/5 successful
+2026-03-13 13:50:31.897 | INFO     | __main__:fetch_all_data:297 - Total:         0/11 successful
+2026-03-13 13:50:31.897 | INFO     | __main__:fetch_all_data:298 - ============================================================
+
+2026-03-13 13:59:27.000 | INFO     | __main__:fetch_all_data:387 - 
+============================================================
+2026-03-13 13:59:27.000 | INFO     | __main__:fetch_all_data:388 - DATA INGESTION PIPELINE - ALL DATA
+2026-03-13 13:59:27.000 | INFO     | __main__:fetch_all_data:389 - Started at: 2026-03-13 13:59:27
+2026-03-13 13:59:27.000 | INFO     | __main__:fetch_all_data:390 - ============================================================
+
+2026-03-13 13:59:27.000 | INFO     | __main__:fetch_all_daily:264 - ============================================================
+2026-03-13 13:59:27.000 | INFO     | __main__:fetch_all_daily:265 - Fetching Daily Data for Multi-Pattern Strategy
+2026-03-13 13:59:27.000 | INFO     | __main__:fetch_all_daily:266 - ============================================================
+2026-03-13 13:59:27.000 | INFO     | __main__:fetch_daily_data:132 - Fetching daily data for SPY (2015-01-01 to 2025-01-01)...
+2026-03-13 13:59:27.615 | INFO     | __main__:fetch_daily_data:164 - ✅ Saved 2516 daily bars to data/raw\SPY_daily.csv
+2026-03-13 13:59:27.615 | INFO     | __main__:fetch_daily_data:165 -    Date range: 2015-01-02 00:00:00 to 2024-12-31 00:00:00
+2026-03-13 13:59:28.616 | INFO     | __main__:fetch_daily_data:132 - Fetching daily data for QQQ (2015-01-01 to 2025-01-01)...
+2026-03-13 13:59:28.866 | INFO     | __main__:fetch_daily_data:164 - ✅ Saved 2516 daily bars to data/raw\QQQ_daily.csv
+2026-03-13 13:59:28.866 | INFO     | __main__:fetch_daily_data:165 -    Date range: 2015-01-02 00:00:00 to 2024-12-31 00:00:00
+2026-03-13 13:59:29.866 | INFO     | __main__:fetch_daily_data:132 - Fetching daily data for GLD (2015-01-01 to 2025-01-01)...
+2026-03-13 13:59:30.024 | INFO     | __main__:fetch_daily_data:164 - ✅ Saved 2516 daily bars to data/raw\GLD_daily.csv
+2026-03-13 13:59:30.024 | INFO     | __main__:fetch_daily_data:165 -    Date range: 2015-01-02 00:00:00 to 2024-12-31 00:00:00
+2026-03-13 13:59:31.025 | INFO     | __main__:fetch_daily_data:132 - Fetching daily data for TLT (2015-01-01 to 2025-01-01)...
+2026-03-13 13:59:31.313 | INFO     | __main__:fetch_daily_data:164 - ✅ Saved 2516 daily bars to data/raw\TLT_daily.csv
+2026-03-13 13:59:31.314 | INFO     | __main__:fetch_daily_data:165 -    Date range: 2015-01-02 00:00:00 to 2024-12-31 00:00:00
+2026-03-13 13:59:32.314 | INFO     | __main__:fetch_daily_data:132 - Fetching daily data for EURUSD=X (2015-01-01 to 2025-01-01)...
+2026-03-13 13:59:32.576 | INFO     | __main__:fetch_daily_data:164 - ✅ Saved 2606 daily bars to data/raw\EURUSD_X_daily.csv
+2026-03-13 13:59:32.576 | INFO     | __main__:fetch_daily_data:165 -    Date range: 2015-01-01 00:00:00 to 2024-12-31 00:00:00
+2026-03-13 13:59:33.576 | INFO     | __main__:fetch_daily_data:132 - Fetching daily data for BTC-USD (2019-01-01 to 2025-01-01)...
+2026-03-13 13:59:33.765 | INFO     | __main__:fetch_daily_data:164 - ✅ Saved 2192 daily bars to data/raw\BTC_USD_daily.csv
+2026-03-13 13:59:33.765 | INFO     | __main__:fetch_daily_data:165 -    Date range: 2019-01-01 00:00:00 to 2024-12-31 00:00:00
+2026-03-13 13:59:34.766 | INFO     | __main__:fetch_all_daily:282 - 
+============================================================
+2026-03-13 13:59:34.766 | INFO     | __main__:fetch_all_daily:283 - Daily Data Complete: 6/6 successful
+2026-03-13 13:59:34.766 | INFO     | __main__:fetch_all_daily:284 - ============================================================
+
+2026-03-13 13:59:34.766 | INFO     | __main__:fetch_all_hourly:307 - ============================================================
+2026-03-13 13:59:34.766 | INFO     | __main__:fetch_all_hourly:308 - Fetching Hourly Data for SMC/ICT Strategy (2 years)
+2026-03-13 13:59:34.766 | INFO     | __main__:fetch_all_hourly:309 - ============================================================
+2026-03-13 13:59:34.766 | INFO     | __main__:fetch_intraday_data:196 - Fetching 1h data for BTC-USD (last 730d)...
+2026-03-13 13:59:35.275 | INFO     | __main__:fetch_intraday_data:237 - ✅ Saved 17470 1h bars to data/raw\BTC_USD_1h.csv
+2026-03-13 13:59:35.276 | INFO     | __main__:fetch_intraday_data:238 -    Date range: 2024-03-14 00:00:00+00:00 to 2026-03-13 05:00:00+00:00
+2026-03-13 13:59:37.276 | INFO     | __main__:fetch_intraday_data:196 - Fetching 1h data for GC=F (last 730d)...
+2026-03-13 13:59:37.723 | INFO     | __main__:fetch_intraday_data:237 - ✅ Saved 13691 1h bars to data/raw\GC_F_1h.csv
+2026-03-13 13:59:37.723 | INFO     | __main__:fetch_intraday_data:238 -    Date range: 2023-10-20 04:00:00+00:00 to 2026-03-13 05:00:00+00:00
+2026-03-13 13:59:39.724 | INFO     | __main__:fetch_intraday_data:196 - Fetching 1h data for NQ=F (last 730d)...
+2026-03-13 13:59:40.160 | INFO     | __main__:fetch_intraday_data:237 - ✅ Saved 13637 1h bars to data/raw\NQ_F_1h.csv
+2026-03-13 13:59:40.160 | INFO     | __main__:fetch_intraday_data:238 -    Date range: 2023-10-20 04:00:00+00:00 to 2026-03-13 05:00:00+00:00
+2026-03-13 13:59:42.160 | INFO     | __main__:fetch_intraday_data:196 - Fetching 1h data for EURUSD=X (last 730d)...
+2026-03-13 13:59:42.694 | INFO     | __main__:fetch_intraday_data:237 - ✅ Saved 17232 1h bars to data/raw\EURUSD_X_1h.csv
+2026-03-13 13:59:42.694 | INFO     | __main__:fetch_intraday_data:238 -    Date range: 2023-05-28 23:00:00+00:00 to 2026-03-13 05:00:00+00:00
+2026-03-13 13:59:44.694 | INFO     | __main__:fetch_intraday_data:196 - Fetching 1h data for GBPJPY=X (last 730d)...
+2026-03-13 13:59:45.226 | INFO     | __main__:fetch_intraday_data:237 - ✅ Saved 17238 1h bars to data/raw\GBPJPY_X_1h.csv
+2026-03-13 13:59:45.226 | INFO     | __main__:fetch_intraday_data:238 -    Date range: 2023-05-28 23:00:00+00:00 to 2026-03-13 05:00:00+00:00
+2026-03-13 13:59:47.226 | INFO     | __main__:fetch_all_hourly:325 - 
+============================================================
+2026-03-13 13:59:47.227 | INFO     | __main__:fetch_all_hourly:326 - Hourly Data Complete: 5/5 successful
+2026-03-13 13:59:47.227 | INFO     | __main__:fetch_all_hourly:327 - ============================================================
+
+2026-03-13 13:59:47.227 | INFO     | __main__:fetch_all_5min:352 - ============================================================
+2026-03-13 13:59:47.227 | INFO     | __main__:fetch_all_5min:353 - Fetching 5-Minute Data for SMC/ICT Strategy (60 days only)
+2026-03-13 13:59:47.227 | INFO     | __main__:fetch_all_5min:354 - ============================================================
+2026-03-13 13:59:47.227 | INFO     | __main__:fetch_intraday_data:196 - Fetching 5m data for BTC-USD (last 60d)...
+2026-03-13 13:59:47.720 | INFO     | __main__:fetch_intraday_data:237 - ✅ Saved 17064 5m bars to data/raw\BTC_USD_5m.csv
+2026-03-13 13:59:47.720 | INFO     | __main__:fetch_intraday_data:238 -    Date range: 2026-01-13 00:00:00+00:00 to 2026-03-13 05:55:00+00:00
+2026-03-13 13:59:49.721 | INFO     | __main__:fetch_intraday_data:196 - Fetching 5m data for GC=F (last 60d)...
+2026-03-13 13:59:50.182 | INFO     | __main__:fetch_intraday_data:237 - ✅ Saved 13013 5m bars to data/raw\GC_F_5m.csv
+2026-03-13 13:59:50.182 | INFO     | __main__:fetch_intraday_data:238 -    Date range: 2025-12-31 05:00:00+00:00 to 2026-03-13 05:45:00+00:00
+2026-03-13 13:59:52.182 | INFO     | __main__:fetch_intraday_data:196 - Fetching 5m data for EURUSD=X (last 60d)...
+2026-03-13 13:59:52.633 | INFO     | __main__:fetch_intraday_data:237 - ✅ Saved 16120 5m bars to data/raw\EURUSD_X_5m.csv
+2026-03-13 13:59:52.634 | INFO     | __main__:fetch_intraday_data:238 -    Date range: 2025-12-22 00:00:00+00:00 to 2026-03-13 05:55:00+00:00
+2026-03-13 13:59:54.634 | INFO     | __main__:fetch_all_5min:370 - 
+============================================================
+2026-03-13 13:59:54.634 | INFO     | __main__:fetch_all_5min:371 - 5-Minute Data Complete: 3/3 successful
+2026-03-13 13:59:54.634 | INFO     | __main__:fetch_all_5min:372 - ============================================================
+
+2026-03-13 13:59:54.635 | INFO     | __main__:fetch_all_data:405 - 
+============================================================
+2026-03-13 13:59:54.635 | INFO     | __main__:fetch_all_data:406 - FINAL SUMMARY
+2026-03-13 13:59:54.635 | INFO     | __main__:fetch_all_data:407 - ============================================================
+2026-03-13 13:59:54.635 | INFO     | __main__:fetch_all_data:408 - Daily data:     6/6 successful
+2026-03-13 13:59:54.635 | INFO     | __main__:fetch_all_data:409 - Hourly data:    5/5 successful
+2026-03-13 13:59:54.635 | INFO     | __main__:fetch_all_data:410 - 5-min data:     3/3 successful
+2026-03-13 13:59:54.635 | INFO     | __main__:fetch_all_data:411 - Total:          14/14 successful
+2026-03-13 13:59:54.635 | INFO     | __main__:fetch_all_data:412 - ============================================================
+
+2026-03-13 14:24:20.043 | INFO     | src.data_ingestion.fetch_data:fetch_daily_data:135 - Fetching daily data for XAUUSD=X (2015-01-01 to 2025-01-01)...
+2026-03-13 14:24:21.052 | WARNING  | src.data_ingestion.fetch_data:fetch_daily_data:141 - No data retrieved for XAUUSD=X
+2026-03-13 14:24:21.052 | INFO     | src.data_ingestion.fetch_data:fetch_intraday_data:199 - Fetching 1h data for XAUUSD=X (last 730d)...
+2026-03-13 14:24:21.962 | WARNING  | src.data_ingestion.fetch_data:fetch_intraday_data:205 - No data retrieved for XAUUSD=X
+2026-03-13 14:24:21.962 | INFO     | src.data_ingestion.fetch_data:fetch_intraday_data:199 - Fetching 5m data for XAUUSD=X (last 60d)...
+2026-03-13 14:24:22.310 | WARNING  | src.data_ingestion.fetch_data:fetch_intraday_data:205 - No data retrieved for XAUUSD=X
+2026-03-13 14:26:32.499 | INFO     | src.data_ingestion.fetch_data:fetch_daily_data:137 - Fetching daily data for IAU (2015-01-01 to 2025-01-01)...
+2026-03-13 14:26:33.121 | INFO     | src.data_ingestion.fetch_data:fetch_daily_data:169 - ✅ Saved 2516 daily bars to data/raw\IAU_daily.csv
+2026-03-13 14:26:33.122 | INFO     | src.data_ingestion.fetch_data:fetch_daily_data:170 -    Date range: 2015-01-02 00:00:00 to 2024-12-31 00:00:00

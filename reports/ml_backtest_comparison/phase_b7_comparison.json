@@ -1,0 +1,58 @@
+{
+  "baseline": {
+    "name": "Baseline",
+    "trades": 4,
+    "win_rate": 50.0,
+    "sharpe": 0.571721740131253,
+    "profit_factor": 4.21642847497764,
+    "max_drawdown": -33.71229714483308,
+    "return_pct": 132.5090638780129,
+    "buy_hold_return": 239.47974644064806,
+    "avg_trade": 11.650022326020014,
+    "best_trade": 40.22780914686296,
+    "worst_trade": -10.17299232917733
+  },
+  "ml_enhanced": {
+    "name": "ML-Enhanced",
+    "trades": 0,
+    "win_rate": NaN,
+    "sharpe": NaN,
+    "profit_factor": NaN,
+    "max_drawdown": -0.0,
+    "return_pct": 0.0,
+    "buy_hold_return": 239.47974644064806,
+    "avg_trade": NaN,
+    "best_trade": NaN,
+    "worst_trade": NaN
+  },
+  "comparison": {
+    "return_improvement_pct": -100.0,
+    "sharpe_improvement": NaN,
+    "win_rate_improvement": NaN,
+    "drawdown_reduction": -33.71229714483308,
+    "profit_factor_improvement": NaN
+  },
+  "regime_stats": {
+    "total_bars": 2515,
+    "regime_distribution": {
+      "Trending": 1177,
+      "Ranging": 938,
+      "Volatile": 300,
+      "Transition": 100
+    },
+    "regime_distribution_pct": {
+      "Trending": 46.8,
+      "Ranging": 37.3,
+      "Volatile": 11.9,
+      "Transition": 4.0
+    }
+  },
+  "config": {
+    "start_date": "2015-01-01",
+    "end_date": "2024-12-31",
+    "strategies": [
+      "SMA Crossover 50/200"
+    ],
+    "num_strategies": 1
+  }
+}

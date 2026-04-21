@@ -365,6 +365,7 @@ class MultiPatternStrategySimple(Strategy):
     min_confidence = 0.55
     risk_per_trade = 0.02
     max_open_positions = 3
+    min_confluence_count = 2
 
     def init(self):
         """Initialize with just the most reliable patterns."""
@@ -422,11 +423,11 @@ class MultiPatternStrategySimple(Strategy):
             except:
                 continue
 
-        # Require at least 2 patterns to agree
-        if long_count >= 2 and long_count > short_count:
+        # Require at least min_confluence_count patterns to agree
+        if long_count >= self.min_confluence_count and long_count > short_count:
             signal = long_signals[0]
             self._execute_long(signal)
-        elif short_count >= 2 and short_count > long_count:
+        elif short_count >= self.min_confluence_count and short_count > long_count:
             signal = short_signals[0]
             self._execute_short(signal)
 

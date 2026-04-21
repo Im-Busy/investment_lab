@@ -69,5 +69,6 @@
     }
   },
   "ruff.lineLength": 100,
-  "ruff.targetVersion": "py313"
+  "ruff.targetVersion": "py313",
+  "cmake.sourceDirectory": "C:/Dev/projects/investment_trying/useful_resources/useful_repos/Orderbook"
 }

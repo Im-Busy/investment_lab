@@ -51,17 +51,19 @@ class BacktestPyRunner:
         commission: float = 0.001,
         exclusive_orders: bool = True,
         output_dir: str = "reports",
+        verbose: bool = True,
     ):
         """
         Initialize the backtest runner.
 
         Args:
             data: OHLCV DataFrame with datetime index
-                  Required columns: Open, High, Low, Close, Volume (optional)
+                   Required columns: Open, High, Low, Close, Volume (optional)
             cash: Initial capital
             commission: Commission rate (default 0.1%)
             exclusive_orders: Close existing position before opening new
             output_dir: Directory for generated reports
+            verbose: Print backtest progress and summary (set False for batch runs)
         """
         if not BACKTESTING_AVAILABLE:
             raise ImportError(
@@ -74,6 +76,7 @@ class BacktestPyRunner:
         self.commission = commission
         self.exclusive_orders = exclusive_orders
         self.output_dir = output_dir
+        self.verbose = verbose
 
         self.bt: Any = None
         self.results: Any = None
@@ -160,11 +163,13 @@ class BacktestPyRunner:
         )
 
         # Run backtest
-        print(f"Running backtest on {len(df)} bars...")
+        if self.verbose:
+            print(f"Running backtest on {len(df)} bars...")
+            print(flush=True)
         self.results = self.bt.run(**kwargs)  # type: ignore[union-attr]
-
-        # Print summary
-        self._print_summary()
+        if self.verbose:
+            # Print summary
+            self._print_summary()
 
         return self.get_results()
 
@@ -294,37 +299,29 @@ class BacktestPyRunner:
             raise ValueError("Run backtest first")
 
         assert self.results is not None
-        trades = list(self.results._trades)
-        if not trades:
+        trades_df = self.results._trades
+        if trades_df.empty or len(trades_df) == 0:
             return pd.DataFrame()
 
-        # Handle different trade formats from backtesting.py
         trade_records = []
-        for t in trades:
-            # Check if t is a string (column name) or a trade object
-            if isinstance(t, str):
-                # Skip string entries (these are column names in some versions)
-                continue
-
-            # Try to access trade attributes
-            try:
-                trade_records.append(
-                    {
-                        "entry_time": getattr(t, "entry_time", None),
-                        "exit_time": getattr(t, "exit_time", None),
-                        "entry_price": getattr(t, "entry_price", None),
-                        "exit_price": getattr(t, "exit_price", None),
-                        "size": getattr(t, "size", 0),
-                        "pnl": getattr(t, "pl", getattr(t, "pnl", 0)),
-                        "pnl_pct": getattr(t, "pl_pct", getattr(t, "pnl_pct", 0)),
-                        "return_pct": getattr(t, "return_pct", 0),
-                        "duration": getattr(t, "duration", None),
-                        "direction": "LONG" if getattr(t, "size", 0) > 0 else "SHORT",
-                    }
-                )
-            except Exception:
-                # Skip trades that can't be processed
-                continue
+        for idx, row in trades_df.iterrows():
+            trade_records.append(
+                {
+                    "entry_time": row.get("EntryTime", None),
+                    "exit_time": row.get("ExitTime", None),
+                    "entry_price": row.get("EntryPrice", None),
+                    "exit_price": row.get("ExitPrice", None),
+                    "size": row.get("Size", 0),
+                    "pnl": row.get("PnL", 0),
+                    "pnl_pct": row.get("ReturnPct", 0),
+                    "return_pct": row.get("ReturnPct", 0),
+                    "duration": row.get("Duration", None),
+                    "direction": "LONG" if row.get("Size", 0) > 0 else "SHORT",
+                    "sl": row.get("SL", None),
+                    "tp": row.get("TP", None),
+                    "commission": row.get("Commission", 0),
+                }
+            )
 
         if not trade_records:
             return pd.DataFrame()

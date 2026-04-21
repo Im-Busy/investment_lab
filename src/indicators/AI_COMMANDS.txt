@@ -1,0 +1,10 @@
+# AI Commands Reference
+#
+# This file tracks useful commands for technical indicators.
+#
+# Instructions for AI Contributors:
+# - Add commands with descriptions
+#
+# Category: Technical Indicators
+# Last Updated: 2026-04-21
+

@@ -1,0 +1,36 @@
+# Backtest Commands
+
+## ML-Enhanced Backtest (Default)
+```bash
+uv run scripts/backtest_ml_enhanced.py --symbol SPY --strategy vwap
+```
+
+## ML-Enhanced Backtest with Date Range
+```bash
+uv run scripts/backtest_ml_enhanced.py --symbol SPY --strategy vwap --start 2018-01-01 --end 2023-12-31
+```
+
+## Compare Different Strategies
+```bash
+uv run scripts/backtest_ml_enhanced.py --symbol SPY --strategy ema --start 2018-01-01 --end 2023-12-31
+```
+
+## Run Baseline (No ML)
+```bash
+uv run scripts/backtest_ml_enhanced.py --symbol SPY --strategy vwap --no-ml
+```
+
+## Custom Capital and Risk
+```bash
+uv run scripts/backtest_ml_enhanced.py --symbol SPY --strategy vwap --capital 50000 --risk-pct 0.02
+```
+
+## Export Detailed Results
+```bash
+uv run scripts/backtest_ml_enhanced.py --symbol SPY --strategy vwap --export-results --output-dir reports
+```
+
+## Walk-Forward Validation
+```bash
+uv run scripts/train_ml_model.py --symbol SPY --walk-forward --n-splits 5
+```

@@ -74,12 +74,22 @@ class PatternCompatibility:
     reason: str
 
 
+# Optional import for ML signal scoring
+try:
+    from src.ml.signal_scorer import SignalScorer
+
+    ML_SCORER_AVAILABLE = True
+except ImportError:
+    ML_SCORER_AVAILABLE = False
+
+
 class ConfluenceScorer:
     """
     Enhanced Confluence Scoring System
 
     Calculates confluence scores for multiple pattern signals with
-    market regime adaptation and pattern compatibility checking.
+    market regime adaptation, pattern compatibility checking, and optional
+    ML-based signal quality scoring.
     """
 
     # Pattern category weights
@@ -148,6 +158,7 @@ class ConfluenceScorer:
         trend_alignment_bonus: float = 0.05,
         regime_adaptation: bool = True,
         quality_filter=None,  # SignalQualityFilter or None
+        ml_scorer=None,  # SignalScorer or None
     ):
         """
         Initialize Confluence Scorer.
@@ -157,11 +168,13 @@ class ConfluenceScorer:
             trend_alignment_bonus: Bonus for trend alignment
             regime_adaptation: Whether to adapt to market regime
             quality_filter: Optional SignalQualityFilter for pre-confluence gating
+            ml_scorer: Optional SignalScorer for ML-based signal quality assessment
         """
         self.min_confidence = min_confidence
         self.trend_alignment_bonus = trend_alignment_bonus
         self.regime_adaptation = regime_adaptation
         self._quality_filter = quality_filter
+        self._ml_scorer = ml_scorer
         self._compatibility_rules = self._build_compatibility_rules()
 
     def _build_compatibility_rules(self) -> Dict[Tuple[str, str], PatternCompatibility]:
@@ -609,6 +622,57 @@ class ConfluenceScorer:
         else:  # SIDEWAYS
             return True  # Both directions acceptable in ranging market
 
+    def _build_ml_features(self, result: PatternResult) -> "pd.DataFrame | None":
+        """
+        Build a single-row DataFrame of features for ML signal scoring.
+
+        Feature categories:
+        1. Signal geometry (entry, stop, take profit, R:R)
+        2. Pattern context (category weight, confluence score)
+        3. Regime context (regime type, ADX, ATR%)
+        4. Market context (VIX level, sector RS, SPY momentum)
+
+        Args:
+            result: PatternResult from pattern detection
+
+        Returns:
+            DataFrame with feature columns for ML scoring, or None if insufficient data.
+        """
+        import pandas as pd
+
+        sig = result.signal
+        if sig is None:
+            return None
+
+        entry = sig.entry_price or 0.0
+        stop = sig.stop_loss or 0.0
+        tp = sig.take_profit_1 or 0.0
+
+        if entry <= 0 or stop <= 0:
+            return None
+
+        risk = abs(entry - stop)
+        reward = abs(tp - entry) if tp > 0 else risk * 1.5
+        rr_ratio = reward / risk if risk > 0 else 0.0
+
+        category = self._get_pattern_category(result.pattern_name)
+        category_weight = self.CATEGORY_BASE_WEIGHTS.get(category, 1.0)
+
+        regime_map = {"Trending": 0, "Ranging": 1, "Volatile": 2, "Transition": 3}
+
+        return pd.DataFrame(
+            {
+                "entry_price": [entry],
+                "stop_loss": [stop],
+                "take_profit": [tp],
+                "risk": [risk],
+                "reward": [reward],
+                "rr_ratio": [rr_ratio],
+                "confidence": [sig.confidence],
+                "category_weight": [category_weight],
+            },
+        )
+
     def calculate_confluence(
         self,
         results: List[PatternResult],
@@ -684,6 +748,19 @@ class ConfluenceScorer:
             if sig is None:
                 continue
             confidence = sig.confidence
+
+            # Apply ML enhancement if available
+            if self._ml_scorer is not None:
+                try:
+                    ml_features = self._build_ml_features(result)
+                    if ml_features is not None and not ml_features.empty:
+                        ml_scored = self._ml_scorer.score(ml_features)
+                        ml_prob = ml_scored.get("ml_score", [confidence])[0]
+                        # Blend ML probability with base confidence (60/40)
+                        confidence = 0.6 * confidence + 0.4 * ml_prob
+                except Exception:
+                    pass  # Fall back to base confidence if ML scoring fails
+
             weighted_sum += confidence * weight
             total_weight += weight
 

@@ -1,0 +1,10 @@
+# AI Commands Reference
+#
+# This file tracks useful commands for trading strategies.
+#
+# Instructions for AI Contributors:
+# - Add commands with descriptions
+#
+# Category: Trading Strategies
+# Last Updated: 2026-04-21
+

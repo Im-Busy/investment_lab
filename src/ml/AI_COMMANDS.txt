@@ -1,0 +1,15 @@
+# AI Commands Reference
+#
+# This file tracks useful commands for the ML module.
+#
+# Instructions for AI Contributors:
+# - Add commands that successfully execute tasks in this module
+# - Include a brief description above each command
+#
+# Example:
+# # Train the pattern classifier
+# # uv run scripts/train_ml_model.py --symbol SPY
+#
+# Category: ML Training / Pattern Classification
+# Last Updated: 2026-04-21
+

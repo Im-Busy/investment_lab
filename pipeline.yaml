@@ -1,0 +1,46 @@
+# Ploomber pipeline - Trading Pattern Detection System
+# Run:  uv run ploomber build
+# Check: uv run ploomber status
+# Plot: uv run ploomber plot
+
+meta:
+  extract_upstream: false
+
+tasks:
+  - source: pipeline.pipeline.fetch_data
+    product: output/data_fetched.csv
+    name: fetch_data
+    params:
+      ticker: "SPY"
+      start: "2015-01-01"
+      end: "2025-01-01"
+
+  - source: pipeline.pipeline.compute_indicators
+    product: output/data/indicators.parquet
+    name: compute_indicators
+    upstream: fetch_data
+
+  - source: pipeline.pipeline.detect_patterns
+    product: output/data/patterns.parquet
+    name: detect_patterns
+    upstream: compute_indicators
+
+  - source: pipeline.pipeline.generate_signals
+    product: output/data/signals.parquet
+    name: generate_signals
+    upstream: detect_patterns
+
+  - source: pipeline.pipeline.backtest
+    product: output/data/backtest.parquet
+    name: backtest
+    upstream:
+      - fetch_data
+      - detect_patterns
+      - generate_signals
+
+  - source: pipeline.pipeline.generate_report
+    product: output/reports/tearsheet.html
+    name: generate_report
+    upstream:
+      - fetch_data
+      - backtest

@@ -1,0 +1,49 @@
+## PAPER SUMMARIZATION
+
+# Summarize research papers using LLM (via paper2md tool)
+# Requires: OpenRouter API key
+# Model: deepseek/deepseek-v4-flash (DeepSeek V4 Flash - fastest and strongest)
+cd useful_resources\useful_repos\paper2md
+uv run python summarize_md_papers.py --papers-dir ..\..\papers_md --out output\SENTIMENT_ANALYSIS_SUMMARY.md
+
+# Clear cache and re-run (force re-summarization)
+uv run python summarize_md_papers.py --papers-dir ..\..\papers_md --out output\SENTIMENT_ANALYSIS_SUMMARY.md --clear-cache
+
+# Output location: useful_resources\useful_repos\paper2md\output\SENTIMENT_ANALYSIS_SUMMARY.md
+# Copied to: useful_resources\papers_md\SENTIMENT_ANALYSIS_SUMMARY.md
+
+## API CONFIGURATION
+
+# Edit .env file in paper2md directory to configure API:
+# - OPENAI_API_KEY: Your OpenRouter API key
+# - OPENAI_BASE_URL: https://openrouter.ai/api/v1
+# - OPENAI_MODEL: Model to use (default: deepseek/deepseek-v4-flash)
+
+## RECOMMENDED MODEL
+
+# DeepSeek V4 Flash (deepseek/deepseek-v4-flash)
+# - One of the newest and strongest models available
+# - Extremely fast inference
+# - Cost-effective for batch processing
+# - Available via OpenRouter
+
+## PAPER FORMAT REQUIREMENTS
+
+# Input: Markdown files in papers_md directory
+# Each .md file should contain:
+# - Paper title (from filename or first H1 heading)
+# - Full paper text in markdown format
+# Files named: {paper_name}.md
+
+## OUTPUT STRUCTURE
+
+# Generated summary includes:
+# - Index with anchor links to each paper
+# - Per-paper sections:
+#   - TL;DR (3 bullets)
+#   - Problem & Motivation
+#   - Data & Methodology
+#   - Sentiment Analysis Approach
+#   - ML Models & Results (with metrics)
+#   - Trading Applications & Takeaways
+#   - Limitations & Future Work

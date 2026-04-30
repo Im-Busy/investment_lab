@@ -1,0 +1,10 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"python.defaultInterpreterPath": "c:\\Dev\\projects\\investment_trying\\.venv\\Scripts\\python.exe"
+	}
+}

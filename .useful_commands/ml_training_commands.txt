@@ -4,17 +4,38 @@
 
 ### Local Training (uv run)
 
-# Train Default Model (LightGBM)
-uv run scripts/train_ml_model.py --symbol SPY --start 2015-01-01 --end 2024-12-31
+# Train Default Model (CatBoost)
+uv run scripts/train_ml_model.py --symbol SPY --model-type catboost --start 2015-01-01 --end 2024-12-31
 
-# Train with Different Model
-uv run scripts/train_ml_model.py --symbol SPY --model-type xgboost --start 2015-01-01 --end 2024-12-31
+# Train with Foundation Model (Chronos-2)
+uv run scripts/train_ml_model.py --symbol SPY --model-type chronos --start 2015-01-01 --end 2024-12-31
 
-# Train with Different Prediction Horizon
-uv run scripts/train_ml_model.py --symbol SPY --horizon 5 --start 2015-01-01 --end 2024-12-31
+# Train with xLSTM
+uv run scripts/train_ml_model.py --symbol SPY --model-type xlstm --start 2015-01-01 --end 2024-12-31
 
 # Memory-Safe Training (reduced features, shorter date range)
 uv run scripts/train_ml_model.py --symbol SPY --start 2019-01-01 --end 2024-12-31 --no-walk-forward --features momentum,volatility
+
+# Add Suffix to Model Filename
+uv run scripts/train_ml_model.py --symbol SPY --suffix v1 --start 2015-01-01 --end 2024-12-31
+
+### New ML Models (2025 Stack)
+
+# CatBoost - Gradient boosting with ordered boosting for time series
+# Advantages: Better calibration, robust to hyperparameters, native categorical features
+uv run -c "from src.ml.models import CatBoostForecaster; m = CatBoostForecaster(n_estimators=100); m.fit(X, y)"
+
+# Chronos-2 - Zero-shot time series foundation model
+# Supports: Univariate, multivariate, and covariate-informed forecasting
+uv run -c "from src.ml.models import ChronosForecaster; m = ChronosForecaster(model_size='base'); preds = m.predict(series)"
+
+# FinCast - Financial foundation model (pending release)
+# Use Chronos-2 as fallback until official FinCast release
+uv run -c "from src.ml.models import FinCastForecaster; m = FinCastForecaster.from_zero_shot()"
+
+# xLSTM - Extended LSTM with exponential gating
+# NeurIPS 2024 spotlight paper
+uv run -c "from src.ml.models import xLSTMForecaster; m = xLSTMForecaster(); m.fit(series)"
 
 ### Google Colab Training (Low RAM Alternative)
 

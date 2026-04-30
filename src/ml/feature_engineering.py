@@ -319,11 +319,23 @@ class FeatureExtractor:
         features["trend_strength"] = adx / 100
 
         vix = features.get("volatility_20", close.pct_change().rolling(20).std())
-        features["vol_regime_state"] = pd.cut(
-            vix,
-            bins=[-np.inf, vix.quantile(0.33), vix.quantile(0.67), np.inf],
-            labels=[0, 1, 2],
-        ).astype(float)
+        vix = vix.dropna()
+
+        if len(vix) > 0 and not vix.isna().all():
+            q33 = vix.quantile(0.33)
+            q67 = vix.quantile(0.67)
+            if not np.isnan(q33) and not np.isnan(q67) and q33 < q67:
+                bins = [-np.inf, q33, q67, np.inf]
+                features["vol_regime_state"] = pd.cut(
+                    vix,
+                    bins=bins,
+                    labels=[0, 1, 2],
+                    include_lowest=True,
+                ).astype(float)
+            else:
+                features["vol_regime_state"] = 1.0
+        else:
+            features["vol_regime_state"] = 1.0
 
         return features
 

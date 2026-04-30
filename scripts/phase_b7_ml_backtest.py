@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -200,10 +201,11 @@ def run_ml_enhanced_backtest(
             self.regime_labels = regime_labels
             self.bar_regime_counts = {"Trending": 0, "Ranging": 0, "Volatile": 0, "Transition": 0}
             self.trades_in_regime = {"Trending": 0, "Ranging": 0, "Volatile": 0, "Transition": 0}
+            self._bar_index = 0
 
         def next(self):
             try:
-                current_regime = self.regime_labels.iloc[self.data._i]
+                current_regime = self.regime_labels.iloc[self._bar_index]
                 regime_name = current_regime.value
 
                 self.bar_regime_counts[regime_name] += 1
@@ -211,14 +213,19 @@ def run_ml_enhanced_backtest(
                 strategy_name = self.__class__.__bases__[0].__name__
 
                 if not self.router.is_strategy_active(strategy_name, current_regime):
+                    self._bar_index += 1
                     return
 
                 if self.position:
                     self.trades_in_regime[regime_name] += 1
 
+                self._bar_index += 1
                 return super().next()
             except Exception as e:
-                pass
+                logging.getLogger(__name__).warning(
+                    f"ML-enhanced strategy error at bar {self._bar_index}: {e}"
+                )
+                self._bar_index += 1
 
     bt = Backtest(df, MLEnhancedStrategy, cash=1_000_000, commission=0.001, exclusive_orders=True)
     stats = bt.run()

@@ -125,10 +125,9 @@ class TestRegimeClassifier:
         """Generate features and labels, cleaning NaN."""
         eng = FeatureEngineer()
         features = eng.generate_features(df)
-        # Drop rows where any feature is NaN (warmup period)
+        features = features.select_dtypes(include=[np.number]).ffill().bfill()
         valid = features.notna().all(axis=1)
-        features = features[valid]
-        features = features.reset_index(drop=True)
+        features = features[valid].reset_index(drop=True)
         labels = self._make_synthetic_labels(features.index)
         return features, labels
 
@@ -291,6 +290,7 @@ class TestMLPipeline:
     def _prepare_features(self, df: pd.DataFrame) -> pd.DataFrame:
         eng = FeatureEngineer()
         features = eng.generate_features(df)
+        features = features.select_dtypes(include=[np.number]).ffill().bfill()
         valid = features.notna().all(axis=1)
         return features[valid].reset_index(drop=True)
 

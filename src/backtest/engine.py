@@ -18,6 +18,7 @@ from ..risk.circuit_breakers import CircuitBreaker, CircuitBreakerConfig
 from ..risk.position_probability import PositionRiskModel, PositionRiskConfig, RegimeState
 from ..risk.dynamic_rebalancing import DynamicRebalancer, DynamicRebalanceConfig
 from ..indicators.regime_detector import RegimeDetector, RegimeState as RuleRegimeState
+from .friction_scoring import FrictionScorer, FrictionConfig
 
 
 @dataclass
@@ -86,6 +87,10 @@ class BacktestConfig:
     tx_cost_pct: float = 0.001
 
     enable_regime_detection: bool = True
+
+    enable_friction_scoring: bool = True
+    friction_spread_bps: float = 5.0
+    friction_slippage_bps: float = 2.0
 
 
 @dataclass
@@ -209,6 +214,18 @@ class BacktestEngine:
             self.regime_detector = RegimeDetector()
         else:
             self.regime_detector = None
+
+        # R10: Friction Scoring
+        if self.config.enable_friction_scoring:
+            self.friction_scorer = FrictionScorer(
+                config=FrictionConfig(
+                    spread_bps=self.config.friction_spread_bps,
+                    slippage_bps=self.config.friction_slippage_bps,
+                    commission_bps=self.config.commission_pct * 100,
+                )
+            )
+        else:
+            self.friction_scorer = None
 
         # Results storage
         self.result = BacktestResult(config=self.config)
@@ -382,7 +399,13 @@ class BacktestEngine:
                 "position_probability_enabled": self.config.enable_position_probability,
                 "dynamic_rebalancing_enabled": self.config.enable_dynamic_re,
                 "regime_detection_enabled": self.config.enable_regime_detection,
+                "friction_scoring_enabled": self.config.enable_friction_scoring,
             }
+
+        # R10: Apply friction-adjusted metrics
+        if self.friction_scorer and len(self.result.trades) > 0:
+            friction_metrics = self._calculate_friction_metrics()
+            self.result.metrics["friction_adjusted"] = friction_metrics
 
         return self.result
 
@@ -548,6 +571,48 @@ class BacktestEngine:
                 equity_curve[-1]["equity_before_penalty"] = final_equity
                 equity_curve[-1]["equity"] = adjusted_equity
                 equity_curve[-1]["penalty_factor"] = penalty
+
+    def _calculate_friction_metrics(self) -> Dict[str, Any]:
+        """Calculate friction-adjusted performance metrics."""
+        trades_df = self.position_manager.positions
+        total_trades = self.position_manager.total_trades
+        n_days = len(self.result.equity_curve) if self.result.equity_curve is not None else 1
+
+        total_trade_value = sum(
+            abs(p.pnl or 0) + p.entry_price * p.size
+            for p in trades_df.values()
+            if p.status == PositionStatus.CLOSED
+        )
+
+        cost_per_trade_bps = (
+            self.config.friction_spread_bps + self.config.friction_slippage_bps + self.config.commission_pct * 100
+        )
+        total_friction_cost = total_trade_value * (cost_per_trade_bps / 10000.0)
+
+        avg_aum = self.config.initial_equity
+        turnover_ratio = (total_trade_value / avg_aum) * (252 / max(n_days, 1)) if avg_aum > 0 else 0.0
+        friction_drag = turnover_ratio * (cost_per_trade_bps / 10000.0)
+
+        gross_return = self.result.metrics.get("total_return_pct", 0) if self.result.metrics else 0
+        net_return = gross_return - friction_drag
+
+        gross_sharpe = self.result.metrics.get("sharpe_ratio", 0) if self.result.metrics else 0
+        net_sharpe = max(0, gross_sharpe - friction_drag * 2)
+
+        return {
+            "total_trade_value": total_trade_value,
+            "total_friction_cost": total_friction_cost,
+            "cost_per_trade_bps": cost_per_trade_bps,
+            "avg_cost_per_trade": total_friction_cost / max(total_trades, 1),
+            "turnover_ratio": turnover_ratio,
+            "friction_drag": friction_drag,
+            "gross_return_pct": gross_return,
+            "net_return_pct": net_return,
+            "gross_sharpe": gross_sharpe,
+            "net_sharpe": net_sharpe,
+            "n_trades": total_trades,
+            "n_days": n_days,
+        }
 
     def _compile_trades(self) -> pd.DataFrame:
         """Compile trades as DataFrame."""

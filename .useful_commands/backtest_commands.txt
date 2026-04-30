@@ -34,3 +34,18 @@ uv run scripts/backtest_ml_enhanced.py --symbol SPY --strategy vwap --export-res
 ```bash
 uv run scripts/train_ml_model.py --symbol SPY --walk-forward --n-splits 5
 ```
+
+## Portfolio Diversity Analysis (Q2)
+```bash
+uv run src/risk/diversity_calculator.py --data-dir <pattern_signals_dir> --output-dir reports/diversity --method simplified_bet
+```
+
+## Crash Factor Risk Analysis (R17)
+```bash
+uv run src/risk/crash_factor.py --data-dir <stock_data_dir> --output-dir reports/crash_risk --threshold 0.10
+```
+
+## Failure-Set Analysis (R9)
+```bash
+uv run src/risk/failure_set_analyzer.py --data-dir <strategy_returns_dir> --output-dir reports/failure_set
+```

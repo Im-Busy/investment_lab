@@ -155,7 +155,7 @@ class ExperimentLogger:
 
         Args:
             description: Human-readable description of the experiment.
-            model_type: Model type string (e.g., 'random_forest', 'lightgbm').
+            model_type: Model type string (e.g., 'catboost', 'chronos', 'fincast').
             task: Task type (e.g., 'regime_classification', 'signal_generation').
             tickers: List of ticker symbols used in training.
             data_start: Start date of the training data (YYYY-MM-DD).

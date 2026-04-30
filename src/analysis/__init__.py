@@ -1,80 +1,85 @@
-"""
-Contribution Analysis System and Pattern Selection Pipeline
+"""Pattern Selection Improvement Pipeline.
 
-This module provides tools for analyzing pattern contributions in multi-pattern trading strategies
-and selecting profitable patterns through a multi-phase filtering pipeline.
-
-Layers of Analysis:
-1. Signal Event Log (Layer 1) - Record all pattern detection events
-2. Trade Attributor (Layer 2) - Match trades to contributing patterns
-3. Ablation Engine (Layer 3) - Leave-one-out contribution analysis
-4. Synergy Analyzer (Layer 4) - Pairwise pattern interactions
-
-Pattern Selection Pipeline:
-- Statistical Filter - Filter patterns with insufficient data
-- Performance Filter - Filter unprofitable patterns
-- Correlation Analyzer - Remove redundant patterns
-- Walk-Forward Validator - Validate patterns out-of-sample
-- Signal Quality Filter - Quality gate before confluence
-- Pattern Performance Tracker - Rolling metrics dashboard
+Exports all key classes from the pattern selection analysis modules:
+- StatisticalSignificanceFilter: t-tests and performance filtering
+- CorrelationAnalyzer: correlation matrices and cluster deduplication
+- ContributionAnalyzer: leave-one-out ablation analysis
+- WalkForwardValidator: walk-forward analysis with overfitting detection
+- SignalQualityFilter: signal quality scoring and filtering
+- PatternSelector: orchestrator for the full selection pipeline
 """
 
-from .signal_event_log import SignalEvent, SignalEventLog
-from .trade_attributor import AttributedTrade, TradeAttributor
-from .ablation_engine import AblationResult, AblationEngine
-from .synergy_analyzer import SynergyResult, SynergyAnalyzer
-from .contribution_report import ContributionReport
-from .contribution_charts import create_contribution_charts
-from .statistical_filter import StatisticalFilter, StatisticalFilterResult
-from .performance_filter import PerformanceFilter, PerformanceFilterResult
-from .correlation_analyzer import CorrelationAnalyzer, CorrelationResult, CorrelationGroup
-from .walk_forward_validator import (
-    WalkForwardValidator,
-    WalkForwardResult,
-    OverfitStatus,
-    detect_overfitting,
+from .statistical_filter import (
+    DEFAULT_MIN_PROFIT_FACTOR,
+    DEFAULT_MIN_SHARPE,
+    DEFAULT_P_VALUE_THRESHOLD,
+    SignificanceResult,
+    StatisticalSignificanceFilter,
 )
-from .signal_quality_filter import SignalQualityFilter, SignalQualityResult, SignalQualityConfig
-from .pattern_performance_tracker import PatternPerformanceTracker, RollingMetrics
+
+from .correlation_analyzer import (
+    DEFAULT_CORRELATION_THRESHOLD,
+    CorrelationAnalyzer,
+)
+
+from .contribution_analyzer import (
+    DEFAULT_REDUNDANCY_THRESHOLD,
+    AblationResult,
+    ContributionAnalyzer,
+)
+
+from .walk_forward_validator import (
+    DEFAULT_OVERFITTING_DEGRADATION,
+    DEFAULT_TEST_DAYS,
+    DEFAULT_TRAIN_DAYS,
+    ValidationReport,
+    WalkForwardValidator,
+    WindowResult,
+)
+
+from .signal_quality_filter import (
+    DEFAULT_MIN_SIGNALS,
+    DEFAULT_MIN_WIN_RATE,
+    QualityMetrics,
+    QualityScore,
+    SignalQualityFilter,
+)
+
+from .pattern_selector import (
+    PatternSelector,
+    SelectionConfig,
+    SelectionResult,
+)
 
 __all__ = [
-    # Layer 1
-    "SignalEvent",
-    "SignalEventLog",
-    # Layer 2
-    "AttributedTrade",
-    "TradeAttributor",
-    # Layer 3
-    "AblationResult",
-    "AblationEngine",
-    # Layer 4
-    "SynergyResult",
-    "SynergyAnalyzer",
-    # Aggregation & Reporting
-    "ContributionReport",
-    "create_contribution_charts",
-    # Pattern Selection Pipeline
-    # Phase 1
-    "StatisticalFilter",
-    "StatisticalFilterResult",
-    # Phase 2
-    "PerformanceFilter",
-    "PerformanceFilterResult",
-    # Phase 3
+    # Statistical Significance Filter
+    "StatisticalSignificanceFilter",
+    "SignificanceResult",
+    "DEFAULT_P_VALUE_THRESHOLD",
+    "DEFAULT_MIN_SHARPE",
+    "DEFAULT_MIN_PROFIT_FACTOR",
+    # Correlation Analyzer
     "CorrelationAnalyzer",
-    "CorrelationResult",
-    "CorrelationGroup",
-    # Phase 4 - Covered by AblationEngine & SynergyAnalyzer
-    # Phase 5
+    "DEFAULT_CORRELATION_THRESHOLD",
+    # Contribution Analyzer
+    "ContributionAnalyzer",
+    "AblationResult",
+    "DEFAULT_REDUNDANCY_THRESHOLD",
+    # Walk-Forward Validator
     "WalkForwardValidator",
-    "WalkForwardResult",
-    "OverfitStatus",
-    "detect_overfitting",
-    # Signal Quality Gate
+    "WindowResult",
+    "ValidationReport",
+    "DEFAULT_TRAIN_DAYS",
+    "DEFAULT_TEST_DAYS",
+    "DEFAULT_OVERFITTING_DEGRADATION",
+    # Signal Quality Filter
     "SignalQualityFilter",
-    "SignalQualityResult",
-    "SignalQualityConfig",
-    # Performance Tracking
-    "PatternPerformanceTracker",
-    "RollingMetrics",
+    "QualityMetrics",
+    "QualityScore",
+    "DEFAULT_MIN_WIN_RATE",
+    "DEFAULT_MIN_SIGNALS",
+    # Pattern Selector Orchestrator
+    "PatternSelector",
+    "SelectionConfig",
+    "SelectionResult",
 ]

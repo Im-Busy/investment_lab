@@ -1,0 +1,74 @@
+## Research Logic Map Implementation Commands
+
+Commands generated from handover document `.kilo/plans/research_logic_map_handover_complete.md`
+High priority items from implementation_status.md and open_questions.md
+
+---
+
+## DIVERSITY SCORE ANALYSIS (Q2)
+
+# Calculate portfolio diversity score using Jorion's BET formula
+# Answers Q2: "What's our portfolio's effective diversity score (ρ)?"
+# Related: R7, H4, P3 (Jorion)
+uv run python src/risk/diversity_calculator.py --data-dir data/signals --output-dir reports/diversity --method simplified_bet
+
+# Q2 Target: 2026-05-01 | Priority: 🟠 High
+
+---
+
+## ABLATION STUDY (Q7)
+
+# Run ablation study to compare 34 vs. 10 patterns
+# Answers Q7: "What's the marginal benefit of 34 patterns vs. top 10?"
+# Related: R4, I4.1, I5.3
+uv run python src/analysis/ablation_study_runner.py --signal-matrix data/signal_matrix.csv --returns data/pattern_returns.csv --subsets 10 20 30 34 --output-dir reports/ablation_study
+
+# Q7 Target: 2026-06-15 | Priority: 🟠 High
+
+---
+
+## CRASH FACTOR MODEL (R17/H5)
+
+# Crash factor logistic model from P13 for pre-trade risk filtering
+# Tests H5: "Crash factor filter reduces tail loss (Δ99thLoss ≤ -25%)"
+# Related: P13, I13.1, I13.3, I13.4
+uv run python src/risk/crash_factor.py --data-dir data/symbols --output-dir reports/crash_risk --threshold 0.10
+
+# R17 Target: 2026-07-31 | Priority: 🟠 High
+
+---
+
+## VOLATILITY-ADAPTIVE THRESHOLDS (R21)
+
+# Dynamic z-score adjustment based on volatility regime
+# Related: P5, I5.3
+uv run python src/indicators/volatility_adaptive.py --data-dir data/symbols --output-dir reports/volatility_adaptive --baseline-threshold 2.0
+
+# R21 Target: 2026-08-31 | Priority: 🟡 Medium
+
+---
+
+## FAILURE-SET ANALYZER (R9)
+
+# Structured failure-set diagnosis (time-reversal, counter-trend, fat-tail tests)
+# Answers Q4: "Do failure-set analyzers prevent blow-ups or add false positives?"
+# Related: P4, I4.2, I4.3, H3
+uv run python src/risk/failure_set_analyzer.py --data-dir returns/strategies --output-dir reports/failure_set
+
+# R9 Target: 2026-07-31 | Priority: 🟠 High
+
+---
+
+## QUICK REFERENCE
+
+# All high-priority open questions
+grep "🔴 High\|🟠 High" docs/research_logic_map/open_questions.md
+
+# Hypotheses ready for testing (no dependencies)
+grep -A5 "Ready Now" docs/research_logic_map/hypothesis_backlog.md
+
+# Implementation gaps by tier
+grep -A10 "Tier 1:" docs/research_logic_map/implementation_status.md
+
+# Source implementations already done
+grep -r "friction_scoring\|diversity_score\|circuit_breaker" src/ --include="*.py" | head -20

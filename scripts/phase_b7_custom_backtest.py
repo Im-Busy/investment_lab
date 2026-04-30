@@ -30,7 +30,7 @@ from src.backtest.engine import BacktestEngine, BacktestConfig
 from src.indicators.regime_detector import RegimeDetector, RegimeState
 from src.ml.features import FeatureEngineer
 from src.ml.pipeline import MLPipeline
-from src.patterns.base import BasePattern
+from src.patterns.base import BasePattern, PatternResult
 from src.strategies.adaptive_router import AdaptiveRouter
 
 

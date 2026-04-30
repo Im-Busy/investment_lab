@@ -1,373 +1,247 @@
-"""
-Walk-Forward Validator for Pattern Selection
+"""Walk-Forward Validator for Pattern Selection.
 
-Validates patterns across in-sample, out-of-sample, and forward-validation
-periods to detect overfitting and ensure robustness.
-
-Data Split:
-- In-Sample (IS): 60% - Pattern selection and parameter optimization
-- Out-of-Sample (OOS): 20% - Validation of selected patterns
-- Forward Validation (FV): 20% - Final check on unseen data
+Implements rolling walk-forward analysis to detect overfitting by
+comparing in-sample vs out-of-sample performance across windows.
 """
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass, field
-from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
 
+logger = logging.getLogger(__name__)
 
-class OverfitStatus(Enum):
-    """Overfitting detection status."""
-
-    PASS = "PASS"
-    MEDIUM_OVERFIT = "MEDIUM_OVERFIT"
-    HIGH_OVERFIT = "HIGH_OVERFIT"
-    OOS_UNPROFITABLE = "OOS_UNPROFITABLE"
+DEFAULT_TRAIN_DAYS = 252
+DEFAULT_TEST_DAYS = 63
+DEFAULT_OVERFITTING_DEGRADATION = 0.5
 
 
 @dataclass
-class WalkForwardConfig:
-    """Configuration for walk-forward validation."""
+class WindowResult:
+    """Result for a single walk-forward window."""
 
-    # Data split percentages
-    in_sample_pct: float = 0.60
-    out_of_sample_pct: float = 0.20
-    forward_pct: float = 0.20
-
-    # Minimum Sharpe ratios per period
-    min_is_sharpe: float = 0.5
-    min_oos_sharpe: float = 0.3
-    min_fv_sharpe: float = 0.0
-
-    # Maximum degradation from IS to OOS
-    min_degradation_ratio: float = 0.5
-
-    # Minimum trades per period
-    min_trades_per_period: int = 10
+    window_idx: int
+    train_start: pd.Timestamp
+    train_end: pd.Timestamp
+    test_start: pd.Timestamp
+    test_end: pd.Timestamp
+    train_metrics: Dict[str, float]
+    oos_metrics: Dict[str, float]
+    patterns: List[str]
 
 
 @dataclass
-class PeriodResult:
-    """Results for a single validation period."""
+class ValidationReport:
+    """Aggregated walk-forward validation report."""
 
-    period_name: str
-    start_date: pd.Timestamp
-    end_date: pd.Timestamp
-    total_trades: int
-    win_rate: float
-    sharpe_ratio: float
-    total_return_pct: float
-    max_drawdown_pct: float
-    profit_factor: float
-    passes_threshold: bool
-    failure_reasons: List[str] = field(default_factory=list)
-
-
-@dataclass
-class WalkForwardResult:
-    """Complete walk-forward validation result for a pattern."""
-
-    pattern_name: str
-    is_result: PeriodResult
-    oos_result: PeriodResult
-    fv_result: Optional[PeriodResult]
-
-    # Cross-period metrics
-    degradation_absolute: float
-    degradation_percentage: float
-    overfit_status: OverfitStatus
-
-    # Overall validation
-    passes_validation: bool
-    all_failure_reasons: List[str] = field(default_factory=list)
-
-    # Period dates for reference
-    is_dates: Tuple[pd.Timestamp, pd.Timestamp] = field(default_factory=lambda: (pd.NaT, pd.NaT))
-    oos_dates: Tuple[pd.Timestamp, pd.Timestamp] = field(default_factory=lambda: (pd.NaT, pd.NaT))
-    fv_dates: Optional[Tuple[pd.Timestamp, pd.Timestamp]] = None
-
-
-def detect_overfitting(
-    is_sharpe: float,
-    oos_sharpe: float,
-    degradation_ratio: float = 0.5,
-) -> OverfitStatus:
-    """
-    Detect overfitting by comparing IS vs OOS performance.
-
-    Args:
-        is_sharpe: In-sample Sharpe ratio
-        oos_sharpe: Out-of-sample Sharpe ratio
-        degradation_ratio: Maximum allowed degradation (e.g., 0.5 = 50%)
-
-    Returns:
-        OverfitStatus indicating severity of overfitting
-    """
-    if is_sharpe <= 0:
-        return OverfitStatus.OOS_UNPROFITABLE
-
-    degradation = is_sharpe - oos_sharpe
-    degradation_pct = degradation / is_sharpe
-
-    if degradation_pct > 0.7:
-        return OverfitStatus.HIGH_OVERFIT
-    elif degradation_pct > degradation_ratio:
-        return OverfitStatus.MEDIUM_OVERFIT
-    elif oos_sharpe < 0:
-        return OverfitStatus.OOS_UNPROFITABLE
-    else:
-        return OverfitStatus.PASS
+    windows: List[WindowResult]
+    oos_aggregate: Dict[str, float]
+    overfitting_detected: bool
+    degradation_ratios: Dict[str, float]
 
 
 class WalkForwardValidator:
-    """
-    Walk-forward validation for pattern selection.
+    """Performs walk-forward analysis with configurable train/test windows."""
 
-    Splits data into IS/OOS/FV periods and validates patterns
-    across all periods to detect overfitting.
-    """
-
-    def __init__(self, config: Optional[WalkForwardConfig] = None):
-        self.config = config or WalkForwardConfig()
-
-    def split_data(
+    def __init__(
         self,
+        train_days: int = DEFAULT_TRAIN_DAYS,
+        test_days: int = DEFAULT_TEST_DAYS,
+        degradation_threshold: float = DEFAULT_OVERFITTING_DEGRADATION,
+        metric_fn: Optional[Callable[[List[str], pd.DataFrame], Dict[str, float]]] = None,
+    ):
+        self.train_days = train_days
+        self.test_days = test_days
+        self.degradation_threshold = degradation_threshold
+        self.metric_fn = metric_fn
+
+    def validate(
+        self,
+        patterns: List[str],
         data: pd.DataFrame,
-    ) -> Dict[str, pd.DataFrame]:
-        """
-        Split data into IS, OOS, and FV periods.
+        train_days: Optional[int] = None,
+        test_days: Optional[int] = None,
+    ) -> List[WindowResult]:
+        """Run walk-forward validation across rolling windows.
 
         Args:
-            data: OHLCV DataFrame with DatetimeIndex
+            patterns: List of pattern names to validate.
+            data: OHLCV DataFrame with DatetimeIndex.
+            train_days: Override training window size.
+            test_days: Override test window size.
 
         Returns:
-            Dict with keys 'is', 'oos', 'fv' (fv may be None if not enough data)
+            List of WindowResult for each window.
         """
-        n = len(data)
-        is_end = int(n * self.config.in_sample_pct)
-        oos_end = int(n * (self.config.in_sample_pct + self.config.out_of_sample_pct))
+        td = train_days if train_days is not None else self.train_days
+        ts = test_days if test_days is not None else self.test_days
 
-        is_data = data.iloc[:is_end]
-        oos_data = data.iloc[is_end:oos_end]
-        fv_data = data.iloc[oos_end:] if oos_end < n else None
+        if self.metric_fn is None:
+            raise ValueError("metric_fn must be set via constructor")
 
-        return {
-            "is": is_data,
-            "oos": oos_data,
-            "fv": fv_data,
-        }
-
-    def get_split_dates(
-        self,
-        data: pd.DataFrame,
-    ) -> Dict[str, Tuple[pd.Timestamp, pd.Timestamp]]:
-        """
-        Get the date ranges for each split.
-
-        Args:
-            data: OHLCV DataFrame with DatetimeIndex
-
-        Returns:
-            Dict with date ranges for each period
-        """
-        splits = self.split_data(data)
-
-        result = {}
-        for key, split_data in splits.items():
-            if split_data is not None and len(split_data) > 0:
-                result[key] = (split_data.index[0], split_data.index[-1])
-
-        return result
-
-    def run_validation(
-        self,
-        pattern_name: str,
-        performance_metrics: Dict[str, Dict[str, Any]],
-        config: Optional[WalkForwardConfig] = None,
-    ) -> WalkForwardResult:
-        """
-        Run walk-forward validation using pre-computed performance metrics.
-
-        This method expects metrics for each period to be provided, as the
-        actual backtesting is done externally.
-
-        Args:
-            pattern_name: Name of the pattern being validated
-            performance_metrics: Dict with keys 'is', 'oos', 'fv' (optional)
-                Each value should contain: sharpe_ratio, total_trades,
-                win_rate, total_return_pct, max_drawdown_pct, profit_factor,
-                start_date, end_date
-            config: Optional override for validation config
-
-        Returns:
-            WalkForwardResult with validation status
-        """
-        cfg = config or self.config
-        all_failures = []
-
-        # Build IS result
-        is_metrics = performance_metrics.get("is", {})
-        is_result = self._build_period_result(
-            "In-Sample",
-            is_metrics,
-            sharpe_threshold=cfg.min_is_sharpe,
-            cfg=cfg,
-        )
-        if not is_result.passes_threshold:
-            all_failures.extend([f"IS: {r}" for r in is_result.failure_reasons])
-
-        # Build OOS result
-        oos_metrics = performance_metrics.get("oos", {})
-        oos_result = self._build_period_result(
-            "Out-of-Sample",
-            oos_metrics,
-            sharpe_threshold=cfg.min_oos_sharpe,
-            cfg=cfg,
-        )
-        if not oos_result.passes_threshold:
-            all_failures.extend([f"OOS: {r}" for r in oos_result.failure_reasons])
-
-        # Calculate degradation
-        is_sharpe = is_metrics.get("sharpe_ratio", 0.0)
-        oos_sharpe = oos_metrics.get("sharpe_ratio", 0.0)
-        degradation = is_sharpe - oos_sharpe
-        degradation_pct = degradation / is_sharpe if is_sharpe > 0 else float("inf")
-
-        # Detect overfitting
-        overfit_status = detect_overfitting(is_sharpe, oos_sharpe, cfg.min_degradation_ratio)
-
-        if overfit_status == OverfitStatus.HIGH_OVERFIT:
-            all_failures.append(f"HIGH_OVERFIT: {degradation_pct:.0%} degradation from IS to OOS")
-        elif overfit_status == OverfitStatus.MEDIUM_OVERFIT:
-            all_failures.append(f"MEDIUM_OVERFIT: {degradation_pct:.0%} degradation from IS to OOS")
-        elif overfit_status == OverfitStatus.OOS_UNPROFITABLE:
-            all_failures.append("OOS_UNPROFITABLE: OOS Sharpe is negative")
-
-        # Build FV result if available
-        fv_result = None
-        fv_metrics = performance_metrics.get("fv")
-        if fv_metrics:
-            fv_result = self._build_period_result(
-                "Forward-Validation",
-                fv_metrics,
-                sharpe_threshold=cfg.min_fv_sharpe,
-                cfg=cfg,
+        total_days = len(data)
+        window_span = td + ts
+        if total_days < window_span:
+            logger.warning(
+                "Insufficient data for walk-forward: need %d days, have %d",
+                window_span,
+                total_days,
             )
-            if not fv_result.passes_threshold:
-                all_failures.extend([f"FV: {r}" for r in fv_result.failure_reasons])
+            return []
 
-        # Overall validation passes if no failures
-        passes_validation = len(all_failures) == 0
-
-        return WalkForwardResult(
-            pattern_name=pattern_name,
-            is_result=is_result,
-            oos_result=oos_result,
-            fv_result=fv_result,
-            degradation_absolute=degradation,
-            degradation_percentage=degradation_pct,
-            overfit_status=overfit_status,
-            passes_validation=passes_validation,
-            all_failure_reasons=all_failures,
-            is_dates=(
-                is_metrics.get("start_date", pd.NaT),
-                is_metrics.get("end_date", pd.NaT),
-            ),
-            oos_dates=(
-                oos_metrics.get("start_date", pd.NaT),
-                oos_metrics.get("end_date", pd.NaT),
-            ),
-            fv_dates=(
-                (fv_metrics.get("start_date"), fv_metrics.get("end_date")) if fv_metrics else None
-            ),
-        )
-
-    def _build_period_result(
-        self,
-        period_name: str,
-        metrics: Dict[str, Any],
-        sharpe_threshold: float,
-        cfg: WalkForwardConfig,
-    ) -> PeriodResult:
-        """Build PeriodResult from metrics dict and check thresholds."""
-        failures = []
-
-        sharpe = metrics.get("sharpe_ratio", 0.0)
-        trades = metrics.get("total_trades", 0)
-        win_rate = metrics.get("win_rate", 0.0)
-        profit_factor = metrics.get("profit_factor", 0.0)
-        max_dd = metrics.get("max_drawdown_pct", 0.0)
-
-        # Check minimum trades
-        if trades < cfg.min_trades_per_period:
-            failures.append(f"Insufficient trades: {trades} < {cfg.min_trades_per_period}")
-
-        # Check Sharpe threshold
-        if sharpe < sharpe_threshold:
-            failures.append(f"Sharpe {sharpe:.2f} < threshold {sharpe_threshold}")
-
-        # Check profit factor
-        if profit_factor < 1.0 and trades >= cfg.min_trades_per_period:
-            failures.append(f"Profit factor {profit_factor:.2f} < 1.0")
-
-        return PeriodResult(
-            period_name=period_name,
-            start_date=metrics.get("start_date", pd.NaT),
-            end_date=metrics.get("end_date", pd.NaT),
-            total_trades=trades,
-            win_rate=win_rate,
-            sharpe_ratio=sharpe,
-            total_return_pct=metrics.get("total_return_pct", 0.0),
-            max_drawdown_pct=max_dd,
-            profit_factor=profit_factor,
-            passes_threshold=len(failures) == 0,
-            failure_reasons=failures,
-        )
-
-    def validate_multiple_patterns(
-        self,
-        pattern_metrics: Dict[str, Dict[str, Dict[str, Any]]],
-        config: Optional[WalkForwardConfig] = None,
-    ) -> pd.DataFrame:
-        """
-        Validate multiple patterns and return summary DataFrame.
-
-        Args:
-            pattern_metrics: Dict[pattern_name -> Dict[period -> metrics]]
-            config: Optional validation config
-
-        Returns:
-            DataFrame with validation results for all patterns
-        """
         results = []
-        for pattern_name, metrics in pattern_metrics.items():
-            result = self.run_validation(pattern_name, metrics, config)
-            results.append(
-                {
-                    "pattern_name": pattern_name,
-                    "is_sharpe": result.is_result.sharpe_ratio,
-                    "is_trades": result.is_result.total_trades,
-                    "is_passes": result.is_result.passes_threshold,
-                    "oos_sharpe": result.oos_result.sharpe_ratio,
-                    "oos_trades": result.oos_result.total_trades,
-                    "oos_passes": result.oos_result.passes_threshold,
-                    "fv_sharpe": result.fv_result.sharpe_ratio if result.fv_result else None,
-                    "fv_trades": result.fv_result.total_trades if result.fv_result else None,
-                    "fv_passes": result.fv_result.passes_threshold if result.fv_result else None,
-                    "degradation_abs": result.degradation_absolute,
-                    "degradation_pct": result.degradation_percentage,
-                    "overfit_status": result.overfit_status.value,
-                    "passes_validation": result.passes_validation,
-                    "failure_reasons": "; ".join(result.all_failure_reasons),
-                }
+        idx = 0
+        while idx + window_span <= total_days:
+            train_end = idx + td
+            test_end = train_end + ts
+
+            train_data = data.iloc[idx:train_end]
+            test_data = data.iloc[train_end:test_end]
+
+            train_metrics = self.metric_fn(patterns, train_data)
+            oos_metrics = self.metric_fn(patterns, test_data)
+
+            wr = WindowResult(
+                window_idx=idx,
+                train_start=data.index[idx],
+                train_end=data.index[train_end - 1],
+                test_start=data.index[train_end],
+                test_end=data.index[test_end - 1],
+                train_metrics=train_metrics,
+                oos_metrics=oos_metrics,
+                patterns=patterns.copy(),
+            )
+            results.append(wr)
+
+            idx += ts
+
+        logger.info("Walk-forward: %d windows processed", len(results))
+        return results
+
+    def calculate_oos_metrics(self, wf_results: List[WindowResult]) -> Dict[str, float]:
+        """Aggregate out-of-sample metrics across all windows.
+
+        Args:
+            wf_results: List of WindowResult from validate().
+
+        Returns:
+            {metric_name: mean_value} across windows.
+        """
+        if not wf_results:
+            return {}
+
+        all_metrics = {}
+        for wr in wf_results:
+            for key, val in wr.oos_metrics.items():
+                if key not in all_metrics:
+                    all_metrics[key] = []
+                all_metrics[key].append(val)
+
+        return {key: float(np.mean(vals)) for key, vals in all_metrics.items()}
+
+    def check_overfitting(
+        self,
+        train_metrics: List[Dict[str, float]],
+        oos_metrics: Dict[str, float],
+    ) -> bool:
+        """Detect overfitting by comparing train vs OOS performance.
+
+        Overfitting is flagged when OOS Sharpe degrades by more than
+        the degradation_threshold relative to average train Sharpe.
+
+        Args:
+            train_metrics: List of per-window train metrics.
+            oos_metrics: Aggregated OOS metrics.
+
+        Returns:
+            True if overfitting detected.
+        """
+        if not train_metrics or not oos_metrics:
+            return False
+
+        avg_train_sharpe = np.mean([m.get("sharpe_ratio", 0.0) for m in train_metrics])
+        oos_sharpe = oos_metrics.get("sharpe_ratio", 0.0)
+
+        if avg_train_sharpe <= 0:
+            return oos_sharpe < 0
+
+        degradation = (avg_train_sharpe - oos_sharpe) / abs(avg_train_sharpe)
+        return degradation > self.degradation_threshold
+
+    def generate_validation_report(self, wf_results: List[WindowResult]) -> str:
+        """Generate a human-readable walk-forward validation report.
+
+        Args:
+            wf_results: List of WindowResult.
+
+        Returns:
+            Formatted report string.
+        """
+        if not wf_results:
+            return "No walk-forward results available."
+
+        oos_agg = self.calculate_oos_metrics(wf_results)
+        train_metrics_list = [w.train_metrics for w in wf_results]
+        is_overfit = self.check_overfitting(train_metrics_list, oos_agg)
+
+        lines = [
+            "=" * 70,
+            "WALK-FORWARD VALIDATION REPORT",
+            "=" * 70,
+            f"Windows evaluated: {len(wf_results)}",
+            f"Overfitting detected: {is_overfit}",
+            "",
+        ]
+
+        lines.append("Out-of-Sample Aggregate Metrics:")
+        for key, val in oos_agg.items():
+            lines.append(f"  {key}: {val:.4f}")
+        lines.append("")
+
+        lines.append("Per-Window Details:")
+        for w in wf_results:
+            train_sharpe = w.train_metrics.get("sharpe_ratio", 0.0)
+            oos_sharpe = w.oos_metrics.get("sharpe_ratio", 0.0)
+            degradation = (
+                (train_sharpe - oos_sharpe) / abs(train_sharpe)
+                if train_sharpe != 0
+                else float("inf")
+            )
+            lines.append(
+                f"  Window {w.window_idx}: "
+                f"Train Sharpe={train_sharpe:.4f}, "
+                f"OOS Sharpe={oos_sharpe:.4f}, "
+                f"Degradation={degradation:.2%}"
             )
 
-        df = pd.DataFrame(results)
-        if len(df) > 0:
-            df = df.sort_values("degradation_pct", ascending=True)
+        lines.append("")
+        degradation_ratios = self._calc_degradation_ratios(wf_results)
+        lines.append("Degradation Ratios by Metric:")
+        for key, ratio in degradation_ratios.items():
+            lines.append(f"  {key}: {ratio:.4f}")
 
-        return df
+        return "\n".join(lines)
+
+    def _calc_degradation_ratios(self, wf_results: List[WindowResult]) -> Dict[str, float]:
+        """Calculate per-metric degradation ratios."""
+        ratios = {}
+        if not wf_results:
+            return ratios
+
+        for key in wf_results[0].train_metrics:
+            train_vals = [w.train_metrics.get(key, 0.0) for w in wf_results]
+            oos_vals = [w.oos_metrics.get(key, 0.0) for w in wf_results]
+
+            avg_train = float(np.mean(train_vals))
+            avg_oos = float(np.mean(oos_vals))
+
+            if abs(avg_train) > 1e-12:
+                ratios[key] = (avg_train - avg_oos) / abs(avg_train)
+            else:
+                ratios[key] = 0.0
+
+        return ratios

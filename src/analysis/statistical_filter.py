@@ -1,341 +1,160 @@
-"""
-Statistical Significance Filter for Pattern Selection
+"""Statistical Significance Filter for Pattern Selection.
 
-Provides statistical tests to ensure pattern performance results are
-statistically significant and not due to random chance.
-
-Key Tests:
-- Wilson Score Confidence Interval for Win Rate
-- Sharpe Ratio Standard Error
-- Minimum Sample Size Calculation
-- Statistical Significance Testing
+Provides statistical tests to validate pattern returns significance
+and filter by performance thresholds (Sharpe > 0.5, PF > 1.2).
 """
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass, field
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional
 
 import numpy as np
 from scipy import stats
 
+logger = logging.getLogger(__name__)
 
-@dataclass
-class StatisticalFilterConfig:
-    """Configuration for statistical significance filters."""
-
-    # Minimum sample size requirements
-    min_trades: int = 30
-    min_sample_period_days: int = 365
-
-    # Confidence level for tests
-    confidence_level: float = 0.95
-
-    # Maximum acceptable confidence interval width
-    max_win_rate_ci_width: float = 0.20  # 20 percentage points
-
-    # Minimum acceptable Sharpe ratio standard error
-    max_sharpe_se: float = 0.5
+DEFAULT_P_VALUE_THRESHOLD = 0.05
+DEFAULT_MIN_SHARPE = 0.5
+DEFAULT_MIN_PROFIT_FACTOR = 1.2
 
 
 @dataclass
-class StatisticalFilterResult:
-    """Result of statistical significance testing for a pattern."""
+class SignificanceResult:
+    """Statistical significance result for a single pattern."""
 
     pattern_name: str
-    total_trades: int
-    win_rate: float
-    sharpe_ratio: float
-
-    # Wilson Score Confidence Interval for Win Rate
-    win_rate_ci_lower: float = 0.0
-    win_rate_ci_upper: float = 0.0
-    win_rate_ci_width: float = 0.0
-
-    # Sharpe Ratio Standard Error
-    sharpe_se: float = 0.0
-
-    # Statistical significance
-    is_significant: bool = False
-    failure_reasons: List[str] = field(default_factory=list)
-
-    def to_dict(self) -> dict:
-        """Convert to dictionary."""
-        return {
-            "pattern_name": self.pattern_name,
-            "total_trades": self.total_trades,
-            "win_rate": self.win_rate,
-            "sharpe_ratio": self.sharpe_ratio,
-            "win_rate_ci_lower": self.win_rate_ci_lower,
-            "win_rate_ci_upper": self.win_rate_ci_upper,
-            "win_rate_ci_width": self.win_rate_ci_width,
-            "sharpe_se": self.sharpe_se,
-            "is_significant": self.is_significant,
-            "failure_reasons": self.failure_reasons,
-        }
+    mean_return: float
+    std_return: float
+    t_statistic: float
+    p_value: float
+    is_significant: bool
+    sample_size: int
 
 
-class StatisticalFilter:
-    """
-    Statistical significance filter for pattern selection.
+class StatisticalSignificanceFilter:
+    """Filters patterns by statistical significance and performance thresholds."""
 
-    Tests whether pattern performance is statistically significant
-    using Wilson Score Confidence Intervals and Sharpe Ratio Standard Errors.
-
-    Usage:
-        config = StatisticalFilterConfig(min_trades=30)
-        filter = StatisticalFilter(config)
-        result = filter.test_pattern(
-            pattern_name="Double Bottom",
-            total_trades=45,
-            win_rate=0.52,
-            sharpe_ratio=0.85
-        )
-    """
-
-    def __init__(self, config: Optional[StatisticalFilterConfig] = None):
-        """
-        Initialize statistical filter.
-
-        Args:
-            config: Filter configuration (uses defaults if None)
-        """
-        self.config = config or StatisticalFilterConfig()
-
-    def wilson_score_interval(
-        self, successes: int, trials: int, confidence: float = 0.95
-    ) -> Tuple[float, float]:
-        """
-        Calculate Wilson Score Confidence Interval for a proportion.
-
-        The Wilson score interval is more accurate than the normal approximation
-        for proportions, especially with small sample sizes.
-
-        Args:
-            successes: Number of successful trials (wins)
-            trials: Total number of trials (trades)
-            confidence: Confidence level (default 0.95)
-
-        Returns:
-            Tuple of (lower_bound, upper_bound)
-        """
-        if trials == 0:
-            return (0.0, 0.0)
-
-        p_hat = successes / trials
-
-        # Z-score for confidence level
-        z = stats.norm.ppf(1 - (1 - confidence) / 2)
-
-        # Wilson score interval formula
-        denominator = 1 + z**2 / trials
-        center = (p_hat + z**2 / (2 * trials)) / denominator
-        margin = z * np.sqrt((p_hat * (1 - p_hat) + z**2 / (4 * trials)) / trials) / denominator
-
-        lower = max(0.0, center - margin)
-        upper = min(1.0, center + margin)
-
-        return (float(lower), float(upper))
-
-    def sharpe_standard_error(self, sharpe: float, n: int) -> float:
-        """
-        Calculate standard error of Sharpe ratio.
-
-        Formula: SE = sqrt((1 + 0.5 * Sharpe^2) / n)
-
-        Args:
-            sharpe: Sharpe ratio estimate
-            n: Number of observations
-
-        Returns:
-            Standard error of Sharpe ratio
-        """
-        if n <= 1:
-            return float("inf")
-
-        se = np.sqrt((1 + 0.5 * sharpe**2) / n)
-        return float(se)  # type: ignore[arg-type]
-
-    def minimum_sample_size(
-        self, margin_of_error: float = 0.10, p_estimate: float = 0.50, confidence: float = 0.95
-    ) -> int:
-        """
-        Calculate minimum sample size for desired margin of error.
-
-        Args:
-            margin_of_error: Desired maximum margin of error (e.g., 0.10 = 10%)
-            p_estimate: Estimated proportion (use 0.5 for conservative estimate)
-            confidence: Confidence level
-
-        Returns:
-            Minimum sample size required
-        """
-        z = stats.norm.ppf(1 - (1 - confidence) / 2)
-        n = (z / margin_of_error) ** 2 * p_estimate * (1 - p_estimate)
-        return int(np.ceil(n))
-
-    def test_pattern(
+    def __init__(
         self,
-        pattern_name: str,
-        total_trades: int,
-        win_rate: float,
-        sharpe_ratio: float,
-        confidence: Optional[float] = None,
-    ) -> StatisticalFilterResult:
-        """
-        Test whether a pattern's performance is statistically significant.
+        p_value_threshold: float = DEFAULT_P_VALUE_THRESHOLD,
+        min_sharpe: float = DEFAULT_MIN_SHARPE,
+        min_profit_factor: float = DEFAULT_MIN_PROFIT_FACTOR,
+    ):
+        self.p_value_threshold = p_value_threshold
+        self.min_sharpe = min_sharpe
+        self.min_profit_factor = min_profit_factor
+
+    def test_pattern_significance(self, pattern_returns: np.ndarray, pattern_name: str = "") -> SignificanceResult:
+        """One-sample t-test on pattern returns vs zero mean.
 
         Args:
-            pattern_name: Name of the pattern
-            total_trades: Number of trades
-            win_rate: Win rate (0.0 to 1.0)
-            sharpe_ratio: Sharpe ratio
-            confidence: Override confidence level (uses config default if None)
+            pattern_returns: Array of per-trade or per-bar returns.
+            pattern_name: Identifier for the pattern.
 
         Returns:
-            StatisticalFilterResult with test results
+            SignificanceResult with t-statistic and p-value.
         """
-        conf = confidence or self.config.confidence_level
-        failure_reasons = []
+        returns = np.asarray(pattern_returns, dtype=np.float64)
+        n = len(returns)
 
-        # Check for invalid inputs
-        if np.isnan(win_rate) or np.isnan(sharpe_ratio):
-            failure_reasons.append("NaN values detected in win_rate or sharpe_ratio")
-            return StatisticalFilterResult(
+        if n < 2:
+            return SignificanceResult(
                 pattern_name=pattern_name,
-                total_trades=total_trades,
-                win_rate=win_rate,
-                sharpe_ratio=sharpe_ratio,
-                win_rate_ci_lower=float("nan"),
-                win_rate_ci_upper=float("nan"),
-                win_rate_ci_width=float("nan"),
-                sharpe_se=float("nan"),
+                mean_return=float(np.mean(returns)) if n == 1 else 0.0,
+                std_return=0.0,
+                t_statistic=0.0,
+                p_value=1.0,
                 is_significant=False,
-                failure_reasons=failure_reasons,
+                sample_size=n,
             )
 
-        # Test 1: Minimum sample size
-        if total_trades < self.config.min_trades:
-            failure_reasons.append(
-                f"Insufficient trades ({total_trades} < {self.config.min_trades})"
-            )
+        mean_ret = float(np.mean(returns))
+        std_ret = float(np.std(returns, ddof=1))
 
-        # Test 2: Wilson Score Confidence Interval for Win Rate
-        successes = int(total_trades * win_rate)
-        ci_lower, ci_upper = self.wilson_score_interval(successes, total_trades, conf)
-        ci_width = ci_upper - ci_lower
+        if std_ret < 1e-12:
+            t_stat = float("inf") if mean_ret > 0 else 0.0
+            p_val = 0.0 if mean_ret > 0 else 1.0
+        else:
+            t_stat, p_val = stats.ttest_1samp(returns, 0.0, nan_policy="omit")
+            t_stat = float(t_stat)
+            p_val = float(p_val)
 
-        if total_trades >= self.config.min_trades:
-            if ci_width > self.config.max_win_rate_ci_width:
-                failure_reasons.append(
-                    f"Win rate CI too wide ({ci_width:.1%} > {self.config.max_win_rate_ci_width:.0%})"
-                )
-
-        # Test 3: Sharpe Ratio Standard Error
-        sharpe_se = self.sharpe_standard_error(sharpe_ratio, total_trades)
-
-        if total_trades >= self.config.min_trades:
-            if sharpe_se > self.config.max_sharpe_se:
-                failure_reasons.append(
-                    f"Sharpe SE too high ({sharpe_se:.3f} > {self.config.max_sharpe_se})"
-                )
-
-        # Determine overall significance
-        is_significant = len(failure_reasons) == 0
-
-        return StatisticalFilterResult(
+        return SignificanceResult(
             pattern_name=pattern_name,
-            total_trades=total_trades,
-            win_rate=win_rate,
-            sharpe_ratio=sharpe_ratio,
-            win_rate_ci_lower=ci_lower,
-            win_rate_ci_upper=ci_upper,
-            win_rate_ci_width=ci_width,
-            sharpe_se=sharpe_se,
-            is_significant=is_significant,
-            failure_reasons=failure_reasons,
+            mean_return=mean_ret,
+            std_return=std_ret,
+            t_statistic=t_stat,
+            p_value=p_val,
+            is_significant=p_val < self.p_value_threshold,
+            sample_size=n,
         )
 
-    def test_pattern_from_result(self, result: dict) -> StatisticalFilterResult:
-        """
-        Test pattern performance from a dictionary result.
+    def filter_by_performance(
+        self,
+        patterns_perf: Dict[str, Dict[str, float]],
+        min_sharpe: Optional[float] = None,
+        min_profit_factor: Optional[float] = None,
+    ) -> List[str]:
+        """Filter patterns meeting Sharpe and profit factor thresholds.
 
         Args:
-            result: Dictionary with pattern performance metrics
+            patterns_perf: {pattern_name: {"sharpe": X, "profit_factor": Y, ...}}
+            min_sharpe: Override minimum Sharpe ratio.
+            min_profit_factor: Override minimum profit factor.
 
         Returns:
-            StatisticalFilterResult
+            List of pattern names passing both thresholds.
         """
-        return self.test_pattern(
-            pattern_name=result.get("pattern_name", "Unknown"),
-            total_trades=result.get("total_trades", 0),
-            win_rate=result.get("win_rate", 0.0),
-            sharpe_ratio=result.get("sharpe_ratio", 0.0),
-        )
+        threshold_sharpe = min_sharpe if min_sharpe is not None else self.min_sharpe
+        threshold_pf = min_profit_factor if min_profit_factor is not None else self.min_profit_factor
 
+        passed = []
+        for name, metrics in patterns_perf.items():
+            sharpe = metrics.get("sharpe", metrics.get("sharpe_ratio", 0.0))
+            pf = metrics.get("profit_factor", 0.0)
+            if sharpe >= threshold_sharpe and pf >= threshold_pf:
+                passed.append(name)
+        return passed
 
-def calculate_statistical_power(win_rate: float, n_trades: int, alpha: float = 0.05) -> float:
-    """
-    Calculate statistical power of a win rate test.
+    def calculate_p_values(self, pattern_results: Dict[str, np.ndarray]) -> Dict[str, float]:
+        """Calculate p-value per pattern from return arrays.
 
-    Statistical power is the probability of correctly rejecting
-    the null hypothesis when it is false.
+        Args:
+            pattern_results: {pattern_name: returns_array}
 
-    Args:
-        win_rate: Observed win rate
-        n_trades: Number of trades
-        alpha: Significance level
+        Returns:
+            {pattern_name: p_value}
+        """
+        p_values = {}
+        for name, returns in pattern_results.items():
+            result = self.test_pattern_significance(returns, pattern_name=name)
+            p_values[name] = result.p_value
+        return p_values
 
-    Returns:
-        Statistical power (0.0 to 1.0)
-    """
-    if n_trades == 0:
-        return 0.0
+    def filter_significant_patterns(
+        self,
+        pattern_results: Dict[str, np.ndarray],
+        patterns_perf: Optional[Dict[str, Dict[str, float]]] = None,
+    ) -> List[str]:
+        """Filter patterns passing both statistical significance and performance.
 
-    # Null hypothesis: win_rate = 0.5 (random)
-    p0 = 0.5
+        Args:
+            pattern_results: {pattern_name: returns_array}
+            patterns_perf: Optional performance metrics dict.
 
-    # Effect size (Cohen's h)
-    h = 2 * np.arcsin(np.sqrt(win_rate)) - 2 * np.arcsin(np.sqrt(p0))
+        Returns:
+            List of pattern names passing all filters.
+        """
+        significant = []
+        for name, returns in pattern_results.items():
+            sig = self.test_pattern_significance(returns, pattern_name=name)
+            if sig.is_significant:
+                significant.append(name)
 
-    # Non-centrality parameter
-    ncp = h * np.sqrt(n_trades)
+        if patterns_perf is None:
+            return significant
 
-    # Critical value
-    z_crit = stats.norm.ppf(1 - alpha / 2)
-
-    # Power calculation
-    power = stats.norm.cdf(-z_crit + ncp) + stats.norm.cdf(-z_crit - ncp)
-
-    return float(power)
-
-
-def get_minimum_trades_for_power(win_rate: float, power: float = 0.80, alpha: float = 0.05) -> int:
-    """
-    Calculate minimum trades needed for desired statistical power.
-
-    Args:
-        win_rate: Expected win rate
-        power: Desired statistical power (default 0.80)
-        alpha: Significance level
-
-    Returns:
-        Minimum number of trades required
-    """
-    # Null hypothesis
-    p0 = 0.5
-
-    # Effect size
-    h = 2 * np.arcsin(np.sqrt(win_rate)) - 2 * np.arcsin(np.sqrt(p0))
-
-    if abs(h) < 1e-10:
-        return int(1e9)  # Return large number instead of inf for int return type
-
-    # Z-scores
-    z_alpha = stats.norm.ppf(1 - alpha / 2)
-    z_beta = stats.norm.ppf(power)
-
-    # Sample size formula
-    n = ((z_alpha + z_beta) / h) ** 2
-
-    return int(np.ceil(n))
+        perf_passed = self.filter_by_performance(patterns_perf)
+        return [n for n in significant if n in perf_passed]

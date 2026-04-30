@@ -16,3 +16,21 @@ uv run pytest tests/ -v
 uv run ruff check src/
 
 ================================================================================
+                        REGIME DETECTION COMMANDS
+================================================================================
+
+# Run regime detection comparison notebook
+uv run jupyter nbconvert --to notebook --execute notebooks/14_regime_comparison.ipynb --output 14_regime_comparison_executed.ipynb
+
+# Import regime detectors in Python
+from src.ml.regime_base import RegimeDetectorBase, RegimeSummary
+from src.ml.hmm_regime import HMMRegimeDetector
+from src.ml.pca_kmeans_regime import PCAKMeansRegimeDetector
+
+# Quick test of HMM detector
+uv run python -c "from src.ml.hmm_regime import HMMRegimeDetector; print('HMM OK')"
+
+# Quick test of PCA-kmeans detector
+uv run python -c "from src.ml.pca_kmeans_regime import PCAKMeansRegimeDetector; print('PCA-kmeans OK')"
+
+================================================================================

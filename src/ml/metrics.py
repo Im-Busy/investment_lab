@@ -252,6 +252,9 @@ def ic_summary(
         DataFrame: feature, ic, rank_ic, abs_ic, abs_rank_ic,
                    t_stat, p_value, hit_rate, n_samples, significant.
     """
+    if values.empty or forward_returns.empty:
+        return pd.DataFrame()
+
     ic_df = compute_ic(values, forward_returns)
     rank_ic_df = compute_rank_ic(values, forward_returns)
 

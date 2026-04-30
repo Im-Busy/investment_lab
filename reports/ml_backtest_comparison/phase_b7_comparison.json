@@ -1,58 +1,59 @@
 {
   "baseline": {
     "name": "Baseline",
-    "trades": 4,
-    "win_rate": 50.0,
-    "sharpe": 0.571721740131253,
-    "profit_factor": 4.21642847497764,
-    "max_drawdown": -33.71229714483308,
-    "return_pct": 132.5090638780129,
-    "buy_hold_return": 239.47974644064806,
-    "avg_trade": 11.650022326020014,
-    "best_trade": 40.22780914686296,
-    "worst_trade": -10.17299232917733
+    "trades": 1,
+    "win_rate": 100.0,
+    "sharpe": 0.11569448802886015,
+    "profit_factor": NaN,
+    "max_drawdown": -13.035583514164085,
+    "return_pct": 5.191855662264535,
+    "buy_hold_return": 79.99425888451832,
+    "avg_trade": 5.197901133200711,
+    "best_trade": 5.197901133200707,
+    "worst_trade": 5.197901133200707
   },
   "ml_enhanced": {
     "name": "ML-Enhanced",
-    "trades": 0,
-    "win_rate": NaN,
-    "sharpe": NaN,
+    "trades": 1,
+    "win_rate": 100.0,
+    "sharpe": 0.11569448802886015,
     "profit_factor": NaN,
-    "max_drawdown": -0.0,
-    "return_pct": 0.0,
-    "buy_hold_return": 239.47974644064806,
-    "avg_trade": NaN,
-    "best_trade": NaN,
-    "worst_trade": NaN
+    "max_drawdown": -13.035583514164085,
+    "return_pct": 5.191855662264535,
+    "buy_hold_return": 79.99425888451832,
+    "avg_trade": 5.197901133200711,
+    "best_trade": 5.197901133200707,
+    "worst_trade": 5.197901133200707
   },
   "comparison": {
-    "return_improvement_pct": -100.0,
-    "sharpe_improvement": NaN,
-    "win_rate_improvement": NaN,
-    "drawdown_reduction": -33.71229714483308,
+    "return_improvement_pct": 0.0,
+    "sharpe_improvement": 0.0,
+    "win_rate_improvement": 0.0,
+    "drawdown_reduction": 0.0,
     "profit_factor_improvement": NaN
   },
   "regime_stats": {
-    "total_bars": 2515,
+    "total_bars": 1257,
     "regime_distribution": {
-      "Trending": 1177,
-      "Ranging": 938,
-      "Volatile": 300,
+      "Trending": 531,
+      "Ranging": 433,
+      "Volatile": 193,
       "Transition": 100
     },
     "regime_distribution_pct": {
-      "Trending": 46.8,
-      "Ranging": 37.3,
-      "Volatile": 11.9,
-      "Transition": 4.0
+      "Trending": 42.2,
+      "Ranging": 34.4,
+      "Volatile": 15.4,
+      "Transition": 8.0
     }
   },
   "config": {
-    "start_date": "2015-01-01",
+    "start_date": "2020-01-01",
     "end_date": "2024-12-31",
     "strategies": [
-      "SMA Crossover 50/200"
+      "SMA Crossover 50/200",
+      "EMA Ribbon 9/21/55"
     ],
-    "num_strategies": 1
+    "num_strategies": 2
   }
 }

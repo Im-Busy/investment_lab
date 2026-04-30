@@ -55,6 +55,33 @@ from .technical import (
     true_range,
 )
 
+# Numba-optimized variants (optional - requires numba)
+try:
+    from .technical_numba import (
+        sma_numba,
+        ema_numba,
+        atr_numba,
+        rsi_numba,
+        adx_numba,
+        NUMBA_AVAILABLE as NUMBA_TECHNICAL_AVAILABLE,
+    )
+except ImportError:
+    NUMBA_TECHNICAL_AVAILABLE = False
+
+try:
+    from .pivots_numba import (
+        find_swing_highs_numba,
+        find_swing_lows_numba,
+        find_local_extrema_numba,
+        find_pivot_points_numba,
+        NUMBA_AVAILABLE as NUMBA_PIVOTS_AVAILABLE,
+    )
+except ImportError:
+    NUMBA_PIVOTS_AVAILABLE = False
+
+# VWAP indicator
+from .vwap import compute_vwap
+
 __all__ = [
     # Technical indicators
     "sma",
@@ -112,6 +139,20 @@ __all__ = [
     "validate_mss_with_htf",
     "MSSInfo",
     "PivotPoint",
+    # Numba-optimized indicators
+    "sma_numba",
+    "ema_numba",
+    "atr_numba",
+    "rsi_numba",
+    "adx_numba",
+    "NUMBA_TECHNICAL_AVAILABLE",
+    "find_swing_highs_numba",
+    "find_swing_lows_numba",
+    "find_local_extrema_numba",
+    "find_pivot_points_numba",
+    "NUMBA_PIVOTS_AVAILABLE",
+    # VWAP
+    "compute_vwap",
     # Performance Optimization
     "IndicatorCache",
 ]

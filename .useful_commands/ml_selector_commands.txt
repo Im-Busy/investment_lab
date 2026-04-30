@@ -1,0 +1,74 @@
+## ML Model Selector
+
+# Get model recommendation only (no training)
+uv run python scripts/run_ml.py --recommend
+
+# Auto-select and train best model
+uv run python scripts/run_ml.py --auto
+
+# Compare all suitable models
+uv run python scripts/run_ml.py --compare
+
+# With custom data source
+uv run python scripts/run_ml.py --auto --data features.csv
+
+# With specific priority mode
+uv run python scripts/run_ml.py --auto --priority fast
+uv run python scripts/run_ml.py --auto --priority accurate
+uv run python scripts/run_ml.py --auto --priority interpretable
+
+# Export results to JSON
+uv run python scripts/run_ml.py --auto --export json
+
+# Save to model registry
+uv run python scripts/run_ml.py --auto --registry --registry-name my_model
+
+# Force specific model and validation method
+uv run python scripts/run_ml.py --auto --model lightgbm --validation walk_forward
+
+# Regression task
+uv run python scripts/run_ml.py --auto --task regression
+
+# Verbose output with feature importance
+uv run python scripts/run_ml.py --auto --verbose
+
+## Streamlit Web UI
+
+# Start Streamlit ML selector app (auto-assigns port)
+uv run streamlit run scripts/ml_selector_app.py
+
+# Start on specific port
+uv run streamlit run scripts/ml_selector_app.py --server.port=8501
+
+# Start with headless mode (no browser)
+uv run streamlit run scripts/ml_selector_app.py --server.headless true
+
+## Gradio Web UI (Recommended - 100% Open Source, No Subscription)
+
+# Run Gradio app locally
+uv run python scripts/ml_selector_gradio.py
+
+# Run with sharing (creates temporary public link)
+# Add share=True to demo.launch() in scripts/ml_selector_gradio.py
+
+## Deployment: Hugging Face Spaces (Free, Forever)
+
+# 1. Create account at https://huggingface.co
+# 2. Create new Space with "Gradio" SDK
+# 3. Clone the space
+git clone https://huggingface.co/spaces/YOUR_USERNAME/ml-selector
+
+# 4. Copy files to space directory
+cp scripts/ml_selector_gradio.py ml-selector/app.py
+cp -r src ml-selector/
+cp pyproject.toml ml-selector/
+uv lock > ml-selector/uv.lock
+
+# 5. Deploy (automatic on git push)
+cd ml-selector
+git add .
+git commit -m "Deploy ML selector"
+git push
+
+# Access at: https://huggingface.co/spaces/YOUR_USERNAME/ml-selector
+# Cost: $0 forever

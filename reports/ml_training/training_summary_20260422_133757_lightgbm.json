@@ -1,0 +1,24 @@
+{
+  "run_id": "20260422_133757_lightgbm",
+  "symbol": "data/raw/SPY_daily.csv",
+  "model_type": "lightgbm",
+  "horizon": 5,
+  "n_samples": 2243,
+  "n_features": 152,
+  "train_auc": 1.0,
+  "test_auc": 1.0,
+  "test_accuracy": 1.0,
+  "calibration_error": 0.0005162959621790978,
+  "top_features": {
+    "max_drawdown_5": "695",
+    "forward_return_5": "641",
+    "max_runup_10": "597",
+    "forward_return_1": "405",
+    "max_runup_5": "273",
+    "max_drawdown_10": "213",
+    "forward_return_10": "151",
+    "adx_trend": "145",
+    "max_drawdown_3": "142",
+    "forward_return_3": "132"
+  }
+}

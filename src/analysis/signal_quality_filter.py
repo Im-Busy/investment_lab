@@ -1,315 +1,233 @@
-"""
-Signal Quality Filter for Pattern Selection
+"""Signal Quality Filter for Pattern Selection.
 
-Adds a quality gate between pattern detection and confluence scoring.
-Validates individual signals before they reach the confluence scorer.
-
-Quality Score Formula:
-Quality Score = (Pattern Confidence x 25%) +
-                (Risk/Reward Score x 30%) +
-                (Historical Performance x 25%) +
-                (Regime Alignment x 20%)
+Evaluates pattern signal quality using win rate, signal count,
+and composite scoring to filter out unreliable patterns.
 """
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional
 
 import numpy as np
 
+logger = logging.getLogger(__name__)
 
-@dataclass
-class SignalQualityConfig:
-    """Configuration for signal quality filtering."""
-
-    # Pattern detection confidence
-    min_pattern_confidence: float = 0.60
-
-    # Risk/Reward requirements
-    min_risk_reward_ratio: float = 1.5
-    max_stop_distance_pct: float = 5.0
-
-    # Historical performance thresholds
-    min_historical_win_rate: float = 0.35
-    min_historical_profit_factor: float = 1.1
-
-    # Regime alignment (optional)
-    require_regime_alignment: bool = False
-
-    # Quality score thresholds
-    min_quality_score: float = 0.50
-
-    # Component weights (must sum to 1.0)
-    weight_confidence: float = 0.25
-    weight_risk_reward: float = 0.30
-    weight_historical: float = 0.25
-    weight_regime: float = 0.20
+DEFAULT_MIN_WIN_RATE = 0.45
+DEFAULT_MIN_SIGNALS = 30
 
 
 @dataclass
-class SignalQualityResult:
-    """Result of signal quality evaluation."""
+class QualityMetrics:
+    """Quality metrics for a single pattern."""
 
-    signal_id: str
     pattern_name: str
-    passes_quality_gate: bool
-    quality_score: float
+    total_signals: int
+    win_rate: float
+    avg_return: float
+    std_return: float
+    sharpe_estimate: float
+    max_consecutive_losses: int
+    signal_consistency: float
 
-    # Component scores
-    confidence_score: float
-    risk_reward_score: float
-    historical_score: float
-    regime_score: float
 
-    # Failure reasons
-    failure_reasons: List[str] = field(default_factory=list)
+@dataclass
+class QualityScore:
+    """Composite quality score for a pattern."""
 
-    # Original signal data
-    original_confidence: float = 0.0
-    risk_reward_ratio: float = 0.0
-    stop_distance_pct: float = 0.0
-    historical_win_rate: float = 0.0
-    historical_profit_factor: float = 0.0
-    regime_aligned: bool = True
+    pattern_name: str
+    win_rate_score: float
+    signal_count_score: float
+    consistency_score: float
+    composite_score: float
+    passes: bool
 
 
 class SignalQualityFilter:
-    """
-    Filters signals based on quality criteria before confluence scoring.
+    """Filters patterns by signal quality metrics."""
 
-    Acts as a gate between pattern detection and confluence scoring to
-    ensure only high-quality signals reach the trading decision layer.
-    """
-
-    def __init__(self, config: Optional[SignalQualityConfig] = None):
-        self.config = config or SignalQualityConfig()
-
-    def evaluate_signal(
+    def __init__(
         self,
-        signal_id: str,
-        pattern_name: str,
-        confidence: float,
-        entry_price: float,
-        stop_loss: float,
-        take_profit: float,
-        historical_win_rate: Optional[float] = None,
-        historical_profit_factor: Optional[float] = None,
-        regime_aligned: Optional[bool] = None,
-        current_price: Optional[float] = None,
-    ) -> SignalQualityResult:
-        """
-        Evaluate a single signal against quality criteria.
+        min_win_rate: float = DEFAULT_MIN_WIN_RATE,
+        min_signals: int = DEFAULT_MIN_SIGNALS,
+    ):
+        self.min_win_rate = min_win_rate
+        self.min_signals = min_signals
+
+    def calculate_signal_quality(self, pattern_signals: Dict[str, List[float]]) -> Dict[str, QualityMetrics]:
+        """Calculate quality metrics from per-pattern signal returns.
 
         Args:
-            signal_id: Unique identifier for the signal
-            pattern_name: Name of the pattern that generated the signal
-            confidence: Pattern confidence score (0-1)
-            entry_price: Suggested entry price
-            stop_loss: Suggested stop loss price
-            take_profit: Suggested take profit price
-            historical_win_rate: Pattern's historical win rate (optional)
-            historical_profit_factor: Pattern's historical profit factor (optional)
-            regime_aligned: Whether signal aligns with current regime (optional)
-            current_price: Current market price for stop distance calculation
+            pattern_signals: {pattern_name: [returns_per_signal]}
 
         Returns:
-            SignalQualityResult with pass/fail and component scores
+            {pattern_name: QualityMetrics}
         """
-        failures = []
+        results = {}
+        for name, returns in pattern_signals.items():
+            ret_arr = np.asarray(returns, dtype=np.float64)
+            n = len(ret_arr)
 
-        # Calculate risk/reward ratio
-        if entry_price > 0 and stop_loss > 0 and take_profit > 0:
-            risk = abs(entry_price - stop_loss)
-            reward = abs(take_profit - entry_price)
-            rr_ratio = reward / risk if risk > 0 else 0.0
-        else:
-            rr_ratio = 0.0
+            if n == 0:
+                results[name] = QualityMetrics(
+                    pattern_name=name,
+                    total_signals=0,
+                    win_rate=0.0,
+                    avg_return=0.0,
+                    std_return=0.0,
+                    sharpe_estimate=0.0,
+                    max_consecutive_losses=0,
+                    signal_consistency=0.0,
+                )
+                continue
 
-        # Calculate stop distance percentage
-        if current_price and current_price > 0:
-            stop_distance_pct = abs(current_price - stop_loss) / current_price * 100
-        elif entry_price > 0:
-            stop_distance_pct = abs(entry_price - stop_loss) / entry_price * 100
-        else:
-            stop_distance_pct = float("inf")
+            wins = (ret_arr > 0).sum()
+            win_rate = float(wins / n)
+            avg_ret = float(np.mean(ret_arr))
+            std_ret = float(np.std(ret_arr, ddof=1)) if n > 1 else 0.0
 
-        # Check hard thresholds
-        if confidence < self.config.min_pattern_confidence:
-            failures.append(
-                f"Confidence {confidence:.2f} < minimum {self.config.min_pattern_confidence}"
+            sharpe = avg_ret / std_ret if std_ret > 1e-12 else 0.0
+            max_cons_loss = self._max_consecutive_loss(ret_arr)
+            consistency = self._signal_consistency(ret_arr)
+
+            results[name] = QualityMetrics(
+                pattern_name=name,
+                total_signals=n,
+                win_rate=win_rate,
+                avg_return=avg_ret,
+                std_return=std_ret,
+                sharpe_estimate=sharpe,
+                max_consecutive_losses=max_cons_loss,
+                signal_consistency=consistency,
             )
 
-        if rr_ratio < self.config.min_risk_reward_ratio:
-            failures.append(
-                f"Risk/Reward {rr_ratio:.2f} < minimum {self.config.min_risk_reward_ratio}"
-            )
+        return results
 
-        if stop_distance_pct > self.config.max_stop_distance_pct:
-            failures.append(
-                f"Stop distance {stop_distance_pct:.1f}% > maximum {self.config.max_stop_distance_pct}%"
-            )
-
-        if (
-            historical_win_rate is not None
-            and historical_win_rate < self.config.min_historical_win_rate
-        ):
-            failures.append(
-                f"Historical win rate {historical_win_rate:.0%} < minimum {self.config.min_historical_win_rate}"
-            )
-
-        if (
-            historical_profit_factor is not None
-            and historical_profit_factor < self.config.min_historical_profit_factor
-        ):
-            failures.append(
-                f"Historical profit factor {historical_profit_factor:.2f} < minimum {self.config.min_historical_profit_factor}"
-            )
-
-        if (
-            self.config.require_regime_alignment
-            and regime_aligned is not None
-            and not regime_aligned
-        ):
-            failures.append("Signal not aligned with current regime")
-
-        # Calculate component scores (all normalized to 0-1)
-        confidence_score = confidence
-
-        rr_score = min(rr_ratio / 3.0, 1.0)  # 3:1 RR = perfect score
-
-        if historical_win_rate is not None and historical_profit_factor is not None:
-            historical_score = (historical_win_rate * 0.5) + (
-                min(historical_profit_factor / 2.0, 1.0) * 0.5
-            )
-        else:
-            historical_score = 0.5  # Neutral when no history available
-
-        if regime_aligned is not None:
-            regime_score = 1.0 if regime_aligned else 0.0
-        else:
-            regime_score = 0.5  # Neutral when regime not specified
-
-        # Calculate weighted quality score
-        quality_score = (
-            confidence_score * self.config.weight_confidence
-            + rr_score * self.config.weight_risk_reward
-            + historical_score * self.config.weight_historical
-            + regime_score * self.config.weight_regime
-        )
-
-        # Check quality score threshold
-        if quality_score < self.config.min_quality_score:
-            failures.append(
-                f"Quality score {quality_score:.2f} < minimum {self.config.min_quality_score}"
-            )
-
-        passes = len(failures) == 0
-
-        return SignalQualityResult(
-            signal_id=signal_id,
-            pattern_name=pattern_name,
-            passes_quality_gate=passes,
-            quality_score=quality_score,
-            confidence_score=confidence_score,
-            risk_reward_score=rr_score,
-            historical_score=historical_score,
-            regime_score=regime_score,
-            failure_reasons=failures,
-            original_confidence=confidence,
-            risk_reward_ratio=rr_ratio,
-            stop_distance_pct=stop_distance_pct,
-            historical_win_rate=historical_win_rate or 0.0,
-            historical_profit_factor=historical_profit_factor or 0.0,
-            regime_aligned=regime_aligned if regime_aligned is not None else True,
-        )
-
-    def filter_signals(
+    def filter_by_win_rate(
         self,
-        signals: List[Dict[str, Any]],
-        historical_stats: Optional[Dict[str, Dict[str, float]]] = None,
-    ) -> Dict[str, List[SignalQualityResult]]:
-        """
-        Filter a batch of signals through the quality gate.
+        patterns_quality: Dict[str, QualityMetrics],
+        min_win_rate: Optional[float] = None,
+    ) -> List[str]:
+        """Filter patterns meeting minimum win rate threshold.
 
         Args:
-            signals: List of signal dicts with keys:
-                - signal_id, pattern_name, confidence, entry_price,
-                  stop_loss, take_profit, current_price (optional)
-            historical_stats: Optional Dict[pattern_name -> {win_rate, profit_factor}]
+            patterns_quality: {pattern_name: QualityMetrics}
+            min_win_rate: Override minimum win rate.
 
         Returns:
-            Dict with keys 'passed' and 'failed', each containing SignalQualityResult
+            List of pattern names passing the threshold.
         """
-        passed = []
-        failed = []
+        threshold = min_win_rate if min_win_rate is not None else self.min_win_rate
+        return [
+            name for name, qm in patterns_quality.items()
+            if qm.win_rate >= threshold
+        ]
 
-        for signal in signals:
-            pattern_name = signal.get("pattern_name", "")
+    def filter_by_signal_count(
+        self,
+        patterns_quality: Dict[str, QualityMetrics],
+        min_signals: Optional[int] = None,
+    ) -> List[str]:
+        """Filter patterns meeting minimum signal count.
 
-            # Get historical stats if available
-            hist_wr = None
-            hist_pf = None
-            if historical_stats and pattern_name in historical_stats:
-                stats = historical_stats[pattern_name]
-                hist_wr = stats.get("win_rate")
-                hist_pf = stats.get("profit_factor")
+        Args:
+            patterns_quality: {pattern_name: QualityMetrics}
+            min_signals: Override minimum signal count.
 
-            result = self.evaluate_signal(
-                signal_id=signal.get("signal_id", ""),
-                pattern_name=pattern_name,
-                confidence=signal.get("confidence", 0.0),
-                entry_price=signal.get("entry_price", 0.0),
-                stop_loss=signal.get("stop_loss", 0.0),
-                take_profit=signal.get("take_profit", 0.0),
-                historical_win_rate=hist_wr,
-                historical_profit_factor=hist_pf,
-                regime_aligned=signal.get("regime_aligned"),
-                current_price=signal.get("current_price"),
-            )
+        Returns:
+            List of pattern names passing the threshold.
+        """
+        threshold = min_signals if min_signals is not None else self.min_signals
+        return [
+            name for name, qm in patterns_quality.items()
+            if qm.total_signals >= threshold
+        ]
 
-            if result.passes_quality_gate:
-                passed.append(result)
+    def score_signal_quality(self, quality_metrics: QualityMetrics) -> float:
+        """Compute composite quality score (0.0 to 1.0).
+
+        Score = 0.4 * win_rate + 0.3 * signal_density + 0.3 * consistency.
+
+        Args:
+            quality_metrics: QualityMetrics for a pattern.
+
+        Returns:
+            Composite score in [0, 1].
+        """
+        wr_score = quality_metrics.win_rate
+
+        signal_density = min(quality_metrics.total_signals / max(self.min_signals, 1), 1.0)
+
+        consistency = quality_metrics.signal_consistency
+
+        return 0.4 * wr_score + 0.3 * signal_density + 0.3 * consistency
+
+    def apply_all_filters(
+        self,
+        pattern_signals: Dict[str, List[float]],
+        min_win_rate: Optional[float] = None,
+        min_signals: Optional[int] = None,
+        min_composite_score: float = 0.4,
+    ) -> List[str]:
+        """Apply all quality filters and return passing patterns.
+
+        Pipeline: win_rate -> signal_count -> composite_score.
+
+        Args:
+            pattern_signals: {pattern_name: [returns_per_signal]}
+            min_win_rate: Override minimum win rate.
+            min_signals: Override minimum signal count.
+            min_composite_score: Minimum composite quality score.
+
+        Returns:
+            List of pattern names passing all filters.
+        """
+        quality = self.calculate_signal_quality(pattern_signals)
+        wr_passed = set(self.filter_by_win_rate(quality, min_win_rate))
+        sc_passed = set(self.filter_by_signal_count(quality, min_signals))
+
+        candidate_names = wr_passed & sc_passed
+        final = []
+        for name in candidate_names:
+            score = self.score_signal_quality(quality[name])
+            if score >= min_composite_score:
+                final.append(name)
+
+        return sorted(final)
+
+    @staticmethod
+    def _max_consecutive_loss(returns: np.ndarray) -> int:
+        """Count maximum consecutive losing signals."""
+        max_count = 0
+        current = 0
+        for r in returns:
+            if r <= 0:
+                current += 1
+                max_count = max(max_count, current)
             else:
-                failed.append(result)
+                current = 0
+        return max_count
 
-        return {
-            "passed": passed,
-            "failed": failed,
-        }
+    @staticmethod
+    def _signal_consistency(returns: np.ndarray) -> float:
+        """Measure signal consistency via rolling win rate stability.
 
-    def get_quality_summary(
-        self,
-        results: List[SignalQualityResult],
-    ) -> Dict[str, Any]:
+        Returns a value in [0, 1] where higher means more consistent.
         """
-        Generate summary statistics for quality filter results.
+        n = len(returns)
+        if n < 10:
+            return 0.0
 
-        Args:
-            results: List of SignalQualityResult objects
+        window = min(30, n // 2)
+        rolling_wr = []
+        for i in range(n - window + 1):
+            wr = float(np.mean(returns[i : i + window] > 0))
+            rolling_wr.append(wr)
 
-        Returns:
-            Dict with summary statistics
-        """
-        if not results:
-            return {
-                "total_signals": 0,
-                "passed": 0,
-                "failed": 0,
-                "pass_rate": 0.0,
-                "avg_quality_score": 0.0,
-            }
+        if not rolling_wr:
+            return 0.0
 
-        scores = [r.quality_score for r in results]
-        passed_count = sum(1 for r in results if r.passes_quality_gate)
-
-        return {
-            "total_signals": len(results),
-            "passed": passed_count,
-            "failed": len(results) - passed_count,
-            "pass_rate": passed_count / len(results) if results else 0.0,
-            "avg_quality_score": np.mean(scores),
-            "min_quality_score": np.min(scores),
-            "max_quality_score": np.max(scores),
-            "median_quality_score": np.median(scores),
-        }
+        std_wr = float(np.std(rolling_wr))
+        consistency = max(0.0, 1.0 - std_wr * 2)
+        return consistency

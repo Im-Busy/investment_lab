@@ -11,6 +11,7 @@ from typing import Any, Dict, List, Optional
 import pandas as pd
 
 from ..patterns.base import BasePattern, PatternResult, SignalDirection, TradeSignal
+from .event_weighting import EventWeightedAggregator, EventWeightedSignal, EventType
 
 
 @dataclass
@@ -76,6 +77,9 @@ class SignalGenerator:
         max_signals_per_bar: int = 3,
         combine_same_direction: bool = True,
         conflict_resolution: str = "highest_confidence",
+        use_event_weighting: bool = True,
+        use_volume_confirmation: bool = True,
+        regime: Optional[str] = None,
     ):
         """
         Initialize Signal Generator.
@@ -89,12 +93,23 @@ class SignalGenerator:
                 - 'highest_confidence': Keep highest confidence signal
                 - 'majority': Use direction with most signals
                 - 'none': Don't generate signal on conflict
+            use_event_weighting: Use event-type weighted aggregation (R6)
+            use_volume_confirmation: Apply volume confirmation bonus
+            regime: Current market regime for event weighting
         """
         self.patterns = patterns
         self.min_confidence = min_confidence
         self.max_signals_per_bar = max_signals_per_bar
         self.combine_same_direction = combine_same_direction
         self.conflict_resolution = conflict_resolution
+        self.use_event_weighting = use_event_weighting
+        self.regime = regime
+        
+        # R6: Event-type weighted signal aggregator
+        self.event_aggregator = EventWeightedAggregator(
+            use_volume_confirmation=use_volume_confirmation,
+            use_holding_period_alignment=True,
+        )
 
     def detect_all_patterns(self, df: pd.DataFrame, i: int) -> List[PatternResult]:
         """
@@ -215,6 +230,11 @@ class SignalGenerator:
         if not results:
             return None
 
+        # R6: Use event-weighted aggregation if enabled
+        if self.use_event_weighting and len(results) > 1:
+            return self._aggregate_signals_event_weighted(results, direction, df, i)
+        
+        # Original equal-weight aggregation
         if self.combine_same_direction and len(results) > 1:
             # Combine signals (signal is guaranteed non-None by detect_all_patterns filter)
             signals = [r.signal for r in results if r.signal is not None]
@@ -286,6 +306,68 @@ class SignalGenerator:
                 pattern_count=1,
                 metadata=signal.metadata,
             )
+    
+    def _aggregate_signals_event_weighted(
+        self, results: List[PatternResult], direction: SignalDirection, df: pd.DataFrame, i: int
+    ) -> Optional[AggregatedSignal]:
+        """
+        Aggregate signals using event-type weighting (R6).
+
+        Args:
+            results: List of PatternResult objects
+            direction: Signal direction
+            df: DataFrame with OHLCV data
+            i: Bar index
+
+        Returns:
+            AggregatedSignal with event-weighted metrics
+        """
+        # Extract TradeSignal objects
+        signals = [r.signal for r in results if r.signal is not None]
+        if not signals:
+            return None
+        
+        # Extract volume data if available
+        volume_data = df["volume"].values if "volume" in df.columns else None
+        
+        try:
+            # Use event-weighted aggregator
+            event_signal = self.event_aggregator.aggregate(
+                signals=signals,
+                df=df,
+                i=i,
+                volume_data=volume_data,
+                regime=self.regime,
+            )
+            
+            pattern_names = [r.pattern_name for r in results]
+            
+            return AggregatedSignal(
+                timestamp=df.index[i],
+                direction=direction,
+                entry_price=event_signal.entry_price,
+                stop_loss=event_signal.stop_loss,
+                take_profit_1=event_signal.take_profit_1,
+                take_profit_2=event_signal.take_profit_2,
+                take_profit_3=event_signal.take_profit_3,
+                confidence=event_signal.confidence,
+                patterns=pattern_names,
+                pattern_count=len(results),
+                metadata={
+                    "combined": True,
+                    "event_weighted": True,
+                    "event_type": event_signal.event_type.value,
+                    "event_weight": event_signal.event_weight,
+                    "holding_period": event_signal.holding_period,
+                    "volume_confirmed": event_signal.volume_confirmed,
+                    "confluence_boost": event_signal.metadata.get("confluence_boost", 0.0),
+                    "individual_signals": event_signal.metadata.get("individual_signals", []),
+                },
+            )
+        except Exception as e:
+            # Fallback to equal-weight if event aggregation fails
+            print(f"Event-weighted aggregation failed: {e}, falling back to equal-weight")
+            return self._aggregate_signals(results, direction, df, i)
 
     def scan_dataframe(
         self, df: pd.DataFrame, start_index: Optional[int] = None, end_index: Optional[int] = None

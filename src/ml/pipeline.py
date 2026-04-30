@@ -125,8 +125,13 @@ class MLPipeline:
             y_regime = labels_aligned[valid].reset_index(drop=True)
 
             if len(X_regime) > 0:
-                regime_results = self.regime_classifier.train(X_regime, y_regime, test_size=0.3)
-                results["regime"] = regime_results
+                try:
+                    regime_results = self.regime_classifier.train(X_regime, y_regime, test_size=0.3)
+                    results["regime"] = regime_results
+                except ValueError:
+                    results["regime"] = {}
+            else:
+                results["regime"] = {}
 
         # Train signal scorer
         if signal_features is not None and signal_labels is not None:
@@ -223,9 +228,15 @@ class MLPipeline:
         y = labels_aligned[valid].reset_index(drop=True)
 
         if len(X) > 100:
-            results["regime"] = self.regime_classifier.walk_forward_validation(
+            wf_results = self.regime_classifier.walk_forward_validation(
                 X, y, train_size=min(300, len(X) // 3), step_size=min(100, len(X) // 5)
             )
+            if wf_results:
+                results["regime"] = wf_results
+            else:
+                results["regime"] = {}
+        else:
+            results["regime"] = {}
 
         if signal_features is not None and signal_labels is not None:
             results["signal"] = self.signal_scorer.walk_forward_validation(

@@ -1,49 +1,49 @@
 {
   "baseline": {
     "name": "Baseline",
-    "trades": 66,
-    "win_rate": 50.0,
-    "sharpe": -1.861688076795358,
-    "profit_factor": 0.13102247449690352,
-    "max_drawdown": 1678.2670245676995,
+    "trades": 59,
+    "win_rate": 74.57627118644068,
+    "sharpe": -0.254842566657406,
+    "profit_factor": 1.2314436901399788,
+    "max_drawdown": 1030.4587198976762,
     "return_pct": 0,
     "avg_trade": 0
   },
   "ml_enhanced": {
     "name": "ML-Enhanced",
-    "trades": 64,
-    "win_rate": 50.0,
-    "sharpe": -1.8625919568381002,
-    "profit_factor": 0.12574156945935527,
-    "max_drawdown": 1671.864795103735,
+    "trades": 59,
+    "win_rate": 74.57627118644068,
+    "sharpe": -0.24314564452460533,
+    "profit_factor": 1.2413190215148462,
+    "max_drawdown": 1016.2776085464919,
     "return_pct": 0,
     "avg_trade": 0
   },
   "comparison": {
     "return_improvement_pct": 0,
-    "sharpe_improvement": -0.0009038800427421112,
+    "sharpe_improvement": 0.011696922132800686,
     "win_rate_improvement": 0.0,
-    "drawdown_reduction": 6.4022294639644315,
-    "profit_factor_improvement": -0.005280905037548245
+    "drawdown_reduction": 14.181111351184313,
+    "profit_factor_improvement": 0.009875331374867402
   },
   "regime_stats": {
-    "total_bars": 252,
+    "total_bars": 1257,
     "regime_distribution": {
-      "Transition": 100,
-      "Ranging": 81,
-      "Trending": 39,
-      "Volatile": 32
+      "Trending": 531,
+      "Ranging": 433,
+      "Volatile": 193,
+      "Transition": 100
     },
     "regime_distribution_pct": {
-      "Transition": 39.7,
-      "Ranging": 32.1,
-      "Trending": 15.5,
-      "Volatile": 12.7
+      "Trending": 42.2,
+      "Ranging": 34.4,
+      "Volatile": 15.4,
+      "Transition": 8.0
     }
   },
   "config": {
-    "start_date": "2015-01-01",
-    "end_date": "2015-12-31",
+    "start_date": "2020-01-01",
+    "end_date": "2024-12-31",
     "num_patterns": 16
   }
 }

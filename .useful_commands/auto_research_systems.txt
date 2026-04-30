@@ -1,0 +1,44 @@
+## Auto-Research Systems Reference
+
+# Architecture analysis of 4 AI research systems
+# Location: useful_resources/papers_md/REPOS_ARCHITECTURE_ANALYSIS.md
+# Key patterns: Durable state + iterative refinement + versioned resources
+
+## RD-Agent (Microsoft)
+# Quant factor/model evolution with Qlib
+cd useful_resources/useful_repos/RD-Agent
+rdagent fin_factor   # Factor evolution
+rdagent fin_model    # Model evolution
+rdagent fin_quant    # Joint evolution
+rdagent health_check # Setup validation
+# Requires: Linux, Docker, LLM API key
+
+## DeepScientist (ResearAI/WestlakeNLP)
+# Local-first research OS, one quest = one Git repo
+npm install -g @researai/deepscientist
+ds --here            # Start workspace
+ds doctor            # Validate setup
+# Key concepts: Prompt-led workflow, 3 MCP namespaces, Findings Memory
+# Requires: npm, Python 3.11+, Linux/macOS (WSL2 on Windows)
+
+## Idea2Paper (AgentAlpha)
+# KG-based paper generation from research ideas
+cd useful_resources/useful_repos/Idea2Paper
+python Paper-KG-Pipeline/scripts/idea2story_pipeline.py "your idea"
+# Key concepts: Two-stage recall (13x speedup), Multi-role critic, Intelligent rollback
+# Requires: Python 3.10+, LLM API key, Embedding model
+
+## DeepResearchAgent/Autogenesis
+# Self-evolution protocol (RSPL + SEPL)
+cd useful_resources/useful_repos/DeepResearchAgent
+python examples/run_tool_calling_agent.py --config configs/tool_calling_agent.py
+# Key concepts: Act-Observe-Optimize-Remember loop, Reflection optimizer, Tool evolution
+# Requires: Python, LLM API key
+
+## MLE-Agent (MLSysOps)
+# ML engineering companion agent
+cd useful_resources/useful_repos/MLE-agent
+mle new <project>    # Create project
+mle start            # Start ML baseline
+mle kaggle           # Kaggle competition mode
+# Key concepts: Autonomous baseline, Smart debugging, Arxiv integration

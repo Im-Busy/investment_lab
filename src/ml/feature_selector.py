@@ -81,7 +81,7 @@ class FeatureSelector:
         Returns:
             SelectionResult with details of selection
         """
-        from sklearn.feature_selection import mutual_info_classif
+        from sklearn.feature_selection import mutual_info_classif, mutual_info_regression
 
         original_n = len(X.columns)
         removed_variance = 0
@@ -113,7 +113,16 @@ class FeatureSelector:
 
         # Step 3: Rank by mutual information
         X_mi = X.fillna(0)
-        mi_scores = mutual_info_classif(X_mi, y, random_state=self.random_state)
+        y_vals = np.asarray(y, dtype=np.float64)
+        y_clean = y_vals[~np.isnan(y_vals)]
+        n_unique = len(np.unique(y_clean))
+        is_discrete = np.issubdtype(y.dtype, np.integer) or np.issubdtype(y.dtype, np.bool_)
+        is_categorical = is_discrete and (n_unique < 0.1 * len(y_clean) or n_unique <= 10)
+
+        if is_categorical:
+            mi_scores = mutual_info_classif(X_mi, y, random_state=self.random_state)
+        else:
+            mi_scores = mutual_info_regression(X_mi, y_vals, random_state=self.random_state)
 
         mi_dict = dict(zip(X.columns, mi_scores))
         self.feature_scores_ = mi_dict
@@ -174,3 +183,182 @@ class FeatureSelector:
                 for f, s in sorted_items[:top_n]
             ]
         )
+
+
+@dataclass
+class SFIResult:
+    """Result of Sequential Feature Importance selection."""
+
+    selected_features: List[str]
+    feature_performance: list[dict]  # [{feature, ic, cumulative_ic, kept}, ...]
+    n_original: int
+    n_selected: int
+    target_metric: str = "rank_ic"
+
+
+class SFISelector:
+    """Sequential Feature Importance (Lopez de Prado method).
+
+    Iteratively builds the optimal feature subset by:
+    1. Start with the single best feature by IC
+    2. Try adding each remaining feature, train a model
+    3. Keep the feature if it improves OOS IC
+    4. Repeat until no feature improves performance
+
+    This is superior to simple IC filtering because it accounts for
+    feature interactions and redundancy.
+
+    Example:
+        >>> sfi = SFISelector(min_ic=0.02, max_features=40)
+        >>> result = sfi.fit(X, y)
+        >>> print(f"Selected {result.n_selected}/{result.n_original} features")
+    """
+
+    def __init__(
+        self,
+        min_ic: float = 0.02,
+        max_features: int = 40,
+        min_ic_improvement: float = 0.005,
+        random_state: int = 42,
+    ):
+        self.min_ic = min_ic
+        self.max_features = max_features
+        self.min_ic_improvement = min_ic_improvement
+        self.random_state = random_state
+        self.selected_features_: List[str] = []
+        self.result_: Optional[SFIResult] = None
+
+    def fit(
+        self,
+        X: pd.DataFrame,
+        y: pd.Series,
+        n_splits: int = 3,
+    ) -> SFIResult:
+        """Run Sequential Feature Importance.
+
+        Args:
+            X: Feature DataFrame.
+            y: Forward returns (continuous).
+            n_splits: Number of PurgedKFold splits (use small for speed).
+
+        Returns:
+            SFIResult with selected features and performance history.
+        """
+        from sklearn.ensemble import RandomForestRegressor
+
+        from src.ml.metrics import compute_rank_ic
+        from src.ml.purged_cv import PurgedKFold
+
+        X_clean = X.fillna(0).copy()
+        y_clean = y.fillna(0).copy()
+
+        idx = X_clean.index.intersection(y_clean.index)
+        X_arr = X_clean.loc[idx].values.astype(np.float64)
+        y_arr = y_clean.loc[idx].values.astype(np.float64)
+        col_names = list(X_clean.columns)
+
+        purged_cv = PurgedKFold(n_splits=n_splits, pct_embargo=0.01)
+
+        def _eval_features(feature_indices: list[int]) -> float:
+            """Evaluate a set of features using mean OOS rank IC across CV folds."""
+            if not feature_indices:
+                return 0.0
+            X_sub = X_arr[:, feature_indices]
+            ic_values: list[float] = []
+            for train_idx, test_idx in purged_cv.split(X_sub, y_arr):
+                if len(train_idx) < 50 or len(test_idx) < 20:
+                    continue
+                model = RandomForestRegressor(
+                    n_estimators=50,
+                    max_depth=3,
+                    random_state=self.random_state,
+                    n_jobs=-1,
+                )
+                model.fit(X_sub[train_idx], y_arr[train_idx])
+                y_pred = model.predict(X_sub[test_idx])
+                ic_df = compute_rank_ic(
+                    pd.DataFrame({"pred": y_pred}),
+                    pd.Series(y_arr[test_idx]),
+                )
+                if not ic_df.empty:
+                    ic_values.append(abs(ic_df["rank_ic"].iloc[0]))
+            return float(np.mean(ic_values)) if ic_values else 0.0
+
+        # Step 1: Evaluate each feature individually
+        feature_performance: list[dict] = []
+        single_ics = {}
+        for i, col in enumerate(col_names):
+            ic = _eval_features([i])
+            single_ics[i] = ic
+
+        # Step 2: Sort by single-feature IC and start with best
+        sorted_indices = sorted(single_ics.items(), key=lambda x: x[1], reverse=True)
+
+        if not sorted_indices or sorted_indices[0][1] < self.min_ic:
+            self.result_ = SFIResult(
+                selected_features=[],
+                feature_performance=[],
+                n_original=len(col_names),
+                n_selected=0,
+            )
+            return self.result_
+
+        selected_indices = [sorted_indices[0][0]]
+        best_ic = sorted_indices[0][1]
+        feature_performance.append({
+            "feature": col_names[selected_indices[0]],
+            "ic": best_ic,
+            "cumulative_ic": best_ic,
+            "kept": True,
+            "step": 0,
+        })
+
+        remaining_indices = [idx for idx, _ in sorted_indices[1:]]
+        step = 1
+
+        while len(selected_indices) < self.max_features and remaining_indices:
+            best_new_ic = best_ic
+            best_new_idx = -1
+
+            for idx in remaining_indices:
+                candidate_indices = selected_indices + [idx]
+                ic = _eval_features(candidate_indices)
+                if ic > best_new_ic:
+                    best_new_ic = ic
+                    best_new_idx = idx
+
+            if best_new_idx >= 0 and (best_new_ic - best_ic) >= self.min_ic_improvement:
+                selected_indices.append(best_new_idx)
+                remaining_indices.remove(best_new_idx)
+                feature_performance.append({
+                    "feature": col_names[best_new_idx],
+                    "ic": best_new_ic - best_ic,
+                    "cumulative_ic": best_new_ic,
+                    "kept": True,
+                    "step": step,
+                })
+                best_ic = best_new_ic
+                step += 1
+            else:
+                break
+
+        self.selected_features_ = [col_names[i] for i in selected_indices]
+
+        self.result_ = SFIResult(
+            selected_features=self.selected_features_,
+            feature_performance=feature_performance,
+            n_original=len(col_names),
+            n_selected=len(self.selected_features_),
+        )
+
+        return self.result_
+
+    def get_selected_features(self) -> list[str]:
+        """Get list of selected feature names."""
+        return self.selected_features_
+
+    def to_dataframe(self) -> pd.DataFrame:
+        """Get SFI results as a DataFrame."""
+        if self.result_ is None:
+            raise ValueError("Must call fit() first")
+        return pd.DataFrame(self.result_.feature_performance)

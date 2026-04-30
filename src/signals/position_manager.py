@@ -12,6 +12,7 @@ from enum import Enum
 from datetime import datetime
 
 from ..patterns.base import SignalDirection
+from ..risk.crash_factor import CrashFactorModel, CrashFactorConfig
 
 
 class PositionStatus(Enum):
@@ -62,6 +63,7 @@ class Position:
     exit_time: Optional[pd.Timestamp] = None
     pnl: Optional[float] = None
     pnl_pct: Optional[float] = None
+    crash_probability: Optional[float] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -128,6 +130,8 @@ class PositionManager:
         use_take_profit_1: bool = True,
         use_take_profit_2: bool = False,
         use_take_profit_3: bool = False,
+        use_crash_filter: bool = True,
+        crash_threshold: float = 0.10,
     ):
         """
         Initialize Position Manager.
@@ -142,6 +146,8 @@ class PositionManager:
             use_take_profit_1: Enable exit at TP1 level
             use_take_profit_2: Enable exit at TP2 level
             use_take_profit_3: Enable exit at TP3 level
+            use_crash_filter: Enable crash factor pre-trade filter (R17)
+            crash_threshold: Crash probability threshold for filtering
         """
         self.initial_equity = initial_equity
         self.equity = initial_equity
@@ -153,6 +159,11 @@ class PositionManager:
         self.use_take_profit_1 = use_take_profit_1
         self.use_take_profit_2 = use_take_profit_2
         self.use_take_profit_3 = use_take_profit_3
+        self.use_crash_filter = use_crash_filter
+        self.crash_threshold = crash_threshold
+        
+        # Crash factor model for pre-trade filtering (R17/H5)
+        self.crash_model = CrashFactorModel(CrashFactorConfig(crash_threshold=crash_threshold))
 
         # Track positions
         self.positions: Dict[str, Position] = {}
@@ -255,13 +266,14 @@ class PositionManager:
         ]
         return sum(losses) / len(losses) if losses else 0.0
 
-    def can_open_position(self, signal: Any, timestamp: Optional[pd.Timestamp] = None) -> tuple:
+    def can_open_position(self, signal: Any, timestamp: Optional[pd.Timestamp] = None, price_data: Optional[pd.DataFrame] = None) -> tuple:
         """
         Check if a new position can be opened.
 
         Args:
             signal: Trading signal
             timestamp: Signal timestamp
+            price_data: Optional OHLCV price data for crash factor analysis
 
         Returns:
             Tuple of (can_open: bool, reason: str)
@@ -277,10 +289,20 @@ class PositionManager:
             if daily_count >= self.max_daily_trades:
                 return False, "Maximum daily trades reached"
 
+        # H5: Check crash factor filter (R17)
+        if self.use_crash_filter and price_data is not None and len(price_data) > 60:
+            try:
+                crash_result = self.crash_model.predict(price_data, symbol="UNKNOWN")
+                if crash_result.crash_probability >= self.crash_threshold:
+                    return False, f"Crash risk too high (p={crash_result.crash_probability:.2%})"
+            except Exception:
+                # If crash model fails, allow trade but log warning
+                pass
+
         return True, "Position allowed"
 
     def open_position(
-        self, signal: Any, timestamp: Optional[pd.Timestamp] = None, atr: Optional[float] = None
+        self, signal: Any, timestamp: Optional[pd.Timestamp] = None, atr: Optional[float] = None, price_data: Optional[pd.DataFrame] = None
     ) -> Optional[Position]:
         """
         Open a new position from a signal.
@@ -289,11 +311,12 @@ class PositionManager:
             signal: Trading signal
             timestamp: Entry timestamp
             atr: Current ATR value
+            price_data: Optional OHLCV data for crash factor analysis
 
         Returns:
             Position object or None if cannot open
         """
-        can_open, reason = self.can_open_position(signal, timestamp)
+        can_open, reason = self.can_open_position(signal, timestamp, price_data)
         if not can_open:
             return None
 
@@ -315,6 +338,15 @@ class PositionManager:
             else "Unknown"
         )
 
+        # Calculate crash probability for the position
+        crash_prob = None
+        if self.use_crash_filter and price_data is not None and len(price_data) > 60:
+            try:
+                crash_result = self.crash_model.predict(price_data, symbol="UNKNOWN")
+                crash_prob = crash_result.crash_probability
+            except Exception:
+                pass
+
         position = Position(
             id=position_id,
             pattern_name=pattern_name,
@@ -327,6 +359,7 @@ class PositionManager:
             size=size,
             status=PositionStatus.OPEN,
             entry_time=timestamp,
+            crash_probability=crash_prob,
             metadata=signal.metadata.copy() if hasattr(signal, "metadata") else {},
         )
 

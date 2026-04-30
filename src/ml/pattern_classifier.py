@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 import joblib
+from sklearn.metrics import brier_score_loss
 
 
 @dataclass
@@ -57,14 +58,14 @@ class PatternClassifier:
         >>> predictions = clf.predict(X_test)
     """
 
-    SUPPORTED_MODELS = ["lightgbm", "xgboost", "random_forest", "gradient_boosting"]
+    SUPPORTED_MODELS = ["catboost", "chronos", "fincast", "xlstm"]
 
     def __init__(
         self,
-        model_type: str = "lightgbm",
-        n_estimators: int = 200,
+        model_type: str = "catboost",
+        n_estimators: int = 500,
         max_depth: int = 6,
-        learning_rate: float = 0.05,
+        learning_rate: float = 0.03,
         min_child_samples: int = 20,
         subsample: float = 0.8,
         colsample_bytree: float = 0.8,
@@ -105,72 +106,51 @@ class PatternClassifier:
         self.calibration_slope_: Optional[float] = None
         self.calibration_intercept_: Optional[float] = None
 
+    def _has_gpu(self) -> bool:
+        """Check if GPU is available."""
+        try:
+            import torch
+
+            return torch.cuda.is_available()
+        except ImportError:
+            return False
+
     def _create_model(self):
         """Create the underlying ML model."""
-        if self.model_type == "lightgbm":
+        if self.model_type == "catboost":
             try:
-                import lightgbm as lgb
+                from catboost import CatBoostClassifier
 
-                return lgb.LGBMClassifier(
-                    n_estimators=self.n_estimators,
-                    max_depth=self.max_depth,
+                return CatBoostClassifier(
+                    iterations=self.n_estimators,
+                    depth=self.max_depth,
                     learning_rate=self.learning_rate,
-                    min_child_samples=self.min_child_samples,
-                    subsample=self.subsample,
-                    colsample_bytree=self.colsample_bytree,
+                    l2_leaf_reg=3.0,
                     random_state=self.random_state,
-                    n_jobs=self.n_jobs,
-                    class_weight="balanced",
-                    verbosity=-1,
+                    verbose=False,
+                    loss_function="Logloss",
+                    task_type="GPU" if self._has_gpu() else "CPU",
                 )
             except ImportError:
-                raise ImportError("lightgbm not installed. Run: uv add lightgbm")
+                raise ImportError("catboost not installed. Run: uv add catboost")
 
-        elif self.model_type == "xgboost":
-            try:
-                import xgboost as xgb
+        elif self.model_type == "chronos":
+            from src.ml.models.chronos import ChronosForecaster
 
-                return xgb.XGBClassifier(
-                    n_estimators=self.n_estimators,
-                    max_depth=self.max_depth,
-                    learning_rate=self.learning_rate,
-                    min_child_weight=self.min_child_samples,
-                    subsample=self.subsample,
-                    colsample_bytree=self.colsample_bytree,
-                    random_state=self.random_state,
-                    n_jobs=self.n_jobs,
-                    scale_pos_weight=1,
-                    eval_metric="logloss",
-                    use_label_encoder=False,
-                )
-            except ImportError:
-                raise ImportError("xgboost not installed. Run: uv add xgboost")
+            return ChronosForecaster(model_size="base")
 
-        elif self.model_type == "random_forest":
-            from sklearn.ensemble import RandomForestClassifier
+        elif self.model_type == "fincast":
+            from src.ml.models.fincast import FinCastForecaster
 
-            return RandomForestClassifier(
-                n_estimators=self.n_estimators,
-                max_depth=self.max_depth,
-                min_samples_leaf=self.min_child_samples,
-                max_features=self.colsample_bytree,
-                random_state=self.random_state,
-                n_jobs=self.n_jobs,
-                class_weight="balanced",
-            )
+            return FinCastForecaster.from_zero_shot()
+
+        elif self.model_type == "xlstm":
+            from src.ml.models.xlstm import xLSTMForecaster
+
+            return xLSTMForecaster(hidden_size=128, num_layers=4)
 
         else:
-            from sklearn.ensemble import GradientBoostingClassifier
-
-            return GradientBoostingClassifier(
-                n_estimators=self.n_estimators,
-                max_depth=self.max_depth,
-                learning_rate=self.learning_rate,
-                min_samples_leaf=self.min_child_samples,
-                subsample=self.subsample,
-                max_features=self.colsample_bytree,
-                random_state=self.random_state,
-            )
+            raise ValueError(f"Unknown model type: {self.model_type}")
 
     def train(
         self,

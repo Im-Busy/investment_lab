@@ -3,9 +3,13 @@ analysis
 backtest
 config
 data_ingestion
+features
 indicators
 main
+ml
+optimizer
 patterns
+portfolio
 risk
 signals
 strategies

@@ -16,8 +16,8 @@ dependencies = [
     "numba>=0.59.0",  # JIT compilation for Phase 2 performance optimization
     # Machine Learning
     "scikit-learn>=1.8.0",
-    "lightgbm>=4.6.0",
-    "xgboost>=3.1.3",
+    "catboost>=1.2.8",
+    "chronos-forecasting>=2.0.0",
     # Backtesting & Trading
     "backtesting>=0.6.5",
     "vectorbt>=0.25.0",  # Portfolio-level vectorized backtesting (Phase 3)
@@ -57,6 +57,18 @@ dependencies = [
     "nbconvert>=7.17.0",
     "nbformat>=5.10.4",
     "nbclient>=0.10.4",
+    "streamlit>=1.56.0",
+    "gradio>=6.13.0",
+    "hmmlearn>=0.3.3",
+    "pyts>=0.13.0",
+    "esig>=1.0.0",
+    "fredapi>=0.5.2",
+    "pymupdf4llm>=1.27.2.3",
+    # GPU Acceleration
+    "torch>=2.0.0",
+    "cupy-cuda12x>=12.0.0; sys_platform == 'linux'",
+    "lightgbm>=4.6.0",
+    "shap>=0.51.0",
 ]
 
 [dependency-groups]

@@ -5,8 +5,9 @@ Trains pattern classifier with walk-forward validation.
 Generates feature importance visualizations and model persistence.
 
 Usage:
-    uv run scripts/train_ml_model.py --data data/processed/pattern_signals.parquet
-    uv run scripts/train_ml_model.py --symbol SPY --start 2015-01-01 --end 2024-12-31
+    uv run scripts/train_ml_model.py --symbol data/raw/SPY_daily.csv
+    uv run scripts/train_ml_model.py --symbol data/raw/BTC_USD_daily.csv --iterations 5
+    uv run scripts/train_ml_model.py --symbol SPY --start 2015-01-01 --end 2024-12-31 --iterations -1 --sleep 60
 """
 
 from __future__ import annotations
@@ -15,6 +16,7 @@ import argparse
 import json
 import logging
 import sys
+import time
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -45,29 +47,44 @@ PLOT_DIR = Path("reports/ml_plots")
 
 
 def load_pattern_data(
-    symbol: str = "SPY",
+    symbol_or_path: str = "SPY",
     start: str = "2015-01-01",
     end: str = "2024-12-31",
-    data_path: Optional[Path] = None,
-) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    """Load OHLCV data and generate pattern signals."""
+) -> pd.DataFrame:
+    """Load OHLCV data from file or download from Yahoo Finance.
+
+    Args:
+        symbol_or_path: Either a symbol name (e.g., "SPY") or file path (e.g., "SPY_daily.csv")
+        start: Start date for Yahoo Finance download
+        end: End date for Yahoo Finance download
+
+    Returns:
+        OHLCV DataFrame
+    """
     import yfinance as yf
 
-    if data_path is not None and data_path.exists():
-        logger.info(f"Loading data from {data_path}")
-        if data_path.suffix == ".parquet":
-            df = pd.read_parquet(data_path)
+    path = Path(symbol_or_path)
+
+    if path.exists():
+        logger.info(f"Loading data from {path}")
+        if path.suffix == ".csv":
+            df = pd.read_csv(path, parse_dates=True, index_col=0)
+        elif path.suffix == ".parquet":
+            df = pd.read_parquet(path)
         else:
-            df = pd.read_csv(data_path, parse_dates=True, index_col=0)
+            raise ValueError(f"Unsupported file format: {path.suffix}")
     else:
-        logger.info(f"Downloading {symbol} data from Yahoo Finance")
-        df = yf.download(symbol, start=start, end=end, progress=False)
+        logger.info(f"Downloading {symbol_or_path} data from Yahoo Finance")
+        df = yf.download(symbol_or_path, start=start, end=end, progress=False)
 
         if isinstance(df.columns, pd.MultiIndex):
             df.columns = df.columns.get_level_values(0)
 
-        df = df.dropna()
-        logger.info(f"Loaded {len(df)} bars")
+    df = df.dropna()
+    logger.info(f"Loaded {len(df)} bars")
+
+    if len(df) == 0:
+        raise ValueError("No data loaded. Check file path or symbol.")
 
     if "Close" not in df.columns:
         raise ValueError("Data must contain 'Close' column")
@@ -401,15 +418,31 @@ def save_training_artifacts(
 def main():
     """Main training pipeline."""
     parser = argparse.ArgumentParser(description="Train ML pattern classifier")
-    parser.add_argument("--data", type=Path, help="Path to pattern signals parquet")
-    parser.add_argument("--symbol", default="SPY", help="Symbol to train on")
-    parser.add_argument("--start", default="2015-01-01", help="Start date")
-    parser.add_argument("--end", default="2024-12-31", help="End date")
+    parser.add_argument(
+        "--symbol",
+        default="SPY",
+        help="Symbol name (e.g., 'SPY') or file path (e.g., 'data/raw/SPY_daily.csv')",
+    )
+    parser.add_argument(
+        "--start", default="2015-01-01", help="Start date for Yahoo Finance download"
+    )
+    parser.add_argument("--end", default="2024-12-31", help="End date for Yahoo Finance download")
     parser.add_argument(
         "--model-type",
         default="lightgbm",
         choices=["lightgbm", "xgboost", "random_forest", "gradient_boosting"],
         help="Model type",
+    )
+    parser.add_argument(
+        "--suffix",
+        type=str,
+        default="",
+        help="Suffix for model filename (e.g., '_v1', '_experimental')",
+    )
+    parser.add_argument(
+        "--compare-models",
+        action="store_true",
+        help="Train and compare all model types",
     )
     parser.add_argument(
         "--horizon",
@@ -422,12 +455,52 @@ def main():
         action="store_true",
         help="Skip walk-forward validation",
     )
+    parser.add_argument(
+        "--iterations",
+        type=int,
+        default=1,
+        help="Number of training iterations (default: 1, use -1 for indefinite loop)",
+    )
+    parser.add_argument(
+        "--sleep",
+        type=int,
+        default=0,
+        help="Sleep seconds between iterations (default: 0)",
+    )
 
     args = parser.parse_args()
+    model_types = (
+        ["lightgbm", "xgboost", "random_forest", "gradient_boosting"]
+        if args.compare_models
+        else [args.model_type]
+    )
 
+    iteration = 0
+    while True:
+        if args.iterations != -1 and iteration >= args.iterations:
+            logger.info(f"Completed {iteration} iterations")
+            break
+
+        iteration += 1
+        logger.info("=" * 80)
+        logger.info(f"ITERATION {iteration}")
+        logger.info("=" * 80)
+
+        for model_type in model_types:
+            args.model_type = model_type
+            _run_training(args, model_type)
+
+        if args.sleep > 0 and (args.iterations == -1 or iteration < args.iterations):
+            logger.info(f"Sleeping for {args.sleep} seconds...")
+            time.sleep(args.sleep)
+
+
+def _run_training(args, model_type):
     run_id = f"{datetime.now():%Y%m%d_%H%M%S}"
+    suffix = f"_{args.suffix}" if args.suffix else ""
+    run_id = f"{run_id}{suffix}_{model_type}"
     logger.info(f"Run ID: {run_id}")
-    logger.info(f"Model type: {args.model_type}")
+    logger.info(f"Model type: {model_type}")
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     PLOT_DIR.mkdir(parents=True, exist_ok=True)
@@ -435,7 +508,7 @@ def main():
     logger.info("=" * 60)
     logger.info("Loading Data")
     logger.info("=" * 60)
-    df = load_spy_data(args.symbol, args.start, args.end, args.data)
+    df = load_pattern_data(args.symbol, args.start, args.end)
 
     logger.info("=" * 60)
     logger.info("Feature Extraction")
@@ -453,7 +526,7 @@ def main():
         wf_results = train_with_walk_forward(
             X=X,
             y=y,
-            model_type=args.model_type,
+            model_type=model_type,
             train_size=500,
             step_size=100,
         )
@@ -469,7 +542,7 @@ def main():
     classifier, training_results = train_final_model(
         X=X,
         y=y,
-        model_type=args.model_type,
+        model_type=model_type,
         test_size=0.3,
     )
 
@@ -484,7 +557,7 @@ def main():
     summary = {
         "run_id": run_id,
         "symbol": args.symbol,
-        "model_type": args.model_type,
+        "model_type": model_type,
         "horizon": args.horizon,
         "n_samples": len(X),
         "n_features": len(feature_names),

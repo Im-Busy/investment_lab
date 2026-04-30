@@ -42,6 +42,34 @@ uv run scripts/patterns/detect_all.py --symbol SPY --start 2020-01-01 --end 2024
 uv run scripts/patterns/detect_pattern.py --pattern head_and_shoulders --symbol SPY
 ```
 
+## Auto-Research Skills (Installed in .kilo/skills/)
+
+# 10 ML/Data skills from K-Dense scientific-agent-skills (19.4k stars)
+# Skills: scikit-learn, timesfm-forecasting, pymc, shap, statistical-analysis,
+#         statsmodels, aeon, scikit-survival, database-lookup, networkx
+
+# 7 skills from Orchestra AI-Research-SKILLs (7.4k stars)
+# Skills: faiss, qdrant, weights-and-biases, mlflow, brainstorming-research-ideas,
+#         creative-thinking-for-research, autoresearch
+
+# Kilo auto-discovers these skills when relevant. Invoke by mentioning skill name.
+
+## Research Repos (C:\Dev\research\Researcher_Workstation\)
+
+# High Priority - Install & Integrate
+# RD-Agent (microsoft) → uv run rdagent --help (quant factor/model evolution)
+# AIDE (WecoAI) → uv run aide data_dir=... goal="..." (ML code tree-search optimization)
+# OpenScholar → python run.py --input_file ... --model_name OpenScholar/... (paper Q&A)
+# GPT-Researcher → uv run gptr --query "..." (web market research)
+# STORM → uv run python -m knowledge_storm ... (knowledge base generation)
+# PaperQA2 → uv run pqa ask '...' (local paper Q&A)
+
+# Read-Only (Architecture Study)
+# DeepScientist → Findings Memory + Bayesian optimization patterns
+# Idea2Paper → Anchored multi-agent review + KG pipeline
+# DeepResearchAgent → Autogenesis protocol (RSPL/SEPL)
+# MLE-Agent → Baseline auto-creation + arxiv integration
+
 ## Risk Analysis
 ```bash
 # Portfolio risk metrics

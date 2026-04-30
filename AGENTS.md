@@ -155,35 +155,71 @@ See `.useful_commands/paper_summarization.txt` for detailed commands and model o
 
 ---
 
-## Pending Items Tracking — CRITICAL FOR ALL FUTURE SESSIONS
+## Progress Documentation — CRITICAL FOR ALL SESSIONS
 
-This project maintains a centralized **Pending Items** file at `plans/pending_items.md`.
+This project maintains structured progress tracking in `progress_docs/`. This is the single source of truth for project state, phase status, pending work, and session context.
 
-### Instructions for All AI Assistants
+### File Structure
+```
+progress_docs/
+├── README.md           # Navigation index + type catalog + conventions
+├── current.md          # Session-level live log (append-at-top) — READ FIRST
+├── plans/
+│   ├── full.md         # Master plan — ALL phases/studies/evaluations/setups aggregated
+│   ├── 01-*.md         # Phase plans (NN-short-name.md, type: phase)
+│   ├── study-*.md      # Study plans (type: study)
+│   ├── eval-*.md       # Evaluation plans (type: eval)
+│   └── setup-*.md      # Setup plans (type: setup)
+└── logs/
+    ├── full.md         # Single chronological log — ALL types interleaved
+    ├── 01-*.md         # Phase-specific logs
+    ├── study-*.md      # Study-specific logs
+    └── ...             # Mirrors plans/ structure
+```
 
-**At session start:**
-1. Read `plans/pending_items.md` to understand what work is pending
-2. Items are ordered by priority (P0 = critical → P3 = low)
-3. Use this file to determine what to work on next when given open-ended tasks
+### At Session Start (MANDATORY)
+1. **Read `progress_docs/current.md`** — understand all actions from the interrupted session
+2. **Read `progress_docs/plans/full.md`** — see all phases, studies, deferred items, and pending work
+3. **Read `progress_docs/README.md`** — check type catalog for conventions
+4. Resume from the last incomplete action in `current.md`
 
-**When completing a task:**
-1. **DELETE the item** from `plans/pending_items.md`
-2. **Update the status** in the original plan file (e.g., change `[ ]` to `[x]`, update progress percentage)
-3. If the item was not in pending_items.md but should have been, add it before deleting
+### During Work (MANDATORY)
+1. **Log every significant action** to `progress_docs/current.md` using the table format:
+   ```
+   | Time | Action | Files | Result |
+   ```
+2. **Determine activity type** from README.md type catalog (`phase`, `study`, `eval`, `setup`, `migration`)
+3. **If no matching type exists**, create one:
+   - Define the `type` name
+   - Create plan file with `{type}-{descriptor}.md` naming
+   - Add to README.md type catalog
+   - Add section in `plans/full.md`
 
-**When creating a new plan:**
-1. **Add all actionable items** to `plans/pending_items.md` with appropriate priority level
-2. Reference the source plan file in each item
-3. Keep items specific and actionable (not vague goals)
+### When Completing a Task or Activity
+1. **Update frontmatter** in the plan file (`status: complete`, add `completed` date)
+2. **Update aggregated status** in `progress_docs/plans/full.md`
+3. **Archive** `current.md` content into both `logs/full.md` and the type-specific log file
+4. **Reset** `current.md` for the next activity
 
-**When planning what to work on:**
-1. Check `plans/pending_items.md` first
-2. Consider dependencies (some P2 items depend on P0/P1 completion)
-3. If user asks "what's left to do?" — reference this file
+### When the User Defers Work
+1. Mark the phase/task as `status: deferred` in YAML frontmatter
+2. Add `deferred_reason` and `revisit_when` fields
+3. Add to the **Deferred** section in `progress_docs/plans/full.md`
+4. Log in `current.md`: `"Deferred Phase XX per user instruction"`
 
-### File Locations
-- **Pending Items:** `plans/pending_items.md` (single source of truth for pending work)
-- **Original Plans:** `plans/*.md` (detailed implementation plans — update status here too)
-- **Completed Items Reference:** Bottom of `plans/pending_items.md` (for historical context)
+### File Conventions
+| Convention | Rule |
+|------------|------|
+| **Folder** | `progress_docs/` — single entry point |
+| **Naming** | Phases: `NN-short-name.md`. Non-phases: `{type}-{descriptor}.md`. All snake_case. |
+| **Plan format** | Markdown + YAML frontmatter (metadata) + Markdown tables (tasks) |
+| **Log format** | Markdown tables — append-only, chronological |
+| **Completion marker** | YAML `status: complete` — NEVER rename files |
+| **Deferral marker** | YAML `status: deferred` + `deferred_reason` + `revisit_when` |
+| **Aggregation** | `plans/full.md` has Deferred + Pending sections pulled from all files |
+
+### Legacy Files
+- `plans/pending_items.md` — superseded by `progress_docs/plans/full.md`
+- `HANDOVER*.md`, `PHASE*.md` at root — content archived into `progress_docs/logs/`
 
 

@@ -169,4 +169,3 @@ Detailed documentation for each PyTorch Lightning component:
 - `logging.md` - Logger integrations and usage
 - `distributed_training.md` - DDP, FSDP, DeepSpeed comparison and setup
 - `best_practices.md` - Common patterns, tips, and pitfalls
-

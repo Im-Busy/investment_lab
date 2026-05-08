@@ -369,4 +369,3 @@ Detailed information available in `references/`:
 - GitHub: https://github.com/aeon-toolkit/aeon
 - Examples: https://www.aeon-toolkit.org/en/stable/examples.html
 - API Reference: https://www.aeon-toolkit.org/en/stable/api_reference.html
-

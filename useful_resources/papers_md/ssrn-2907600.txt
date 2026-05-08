@@ -4,11 +4,11 @@ Page 1: Complete Research Paper
 Page 1: Zvi Ben-Ami
 Page 1: The Hebrew University
 Page 1: zvi.benami@mail.huji.ac.il
-Page 1: 
+Page 1:
 Page 1: Ronen Feldman
 Page 1: The Hebrew University
 Page 1: ronen.feldman@huji.ac.il
-Page 1: 
+Page 1:
 Page 1: Abstract
 Page 1: Advanced sentiment analysis systems, which typically produce a positive or negative
 Page 1: signal on firms for financial traders, consider financial events when calculating aggregate
@@ -21,24 +21,24 @@ Page 1: periods. In this work we evaluate and compare the effects of event-type 
 Page 1: sentiment analysis signals, automatically extracted from a given text, on stock prices in
 Page 1: different investment periods. We show that traders using trading strategies based on eventtypes and sentiment analysis obtain superior performance compared to acceptable
 Page 1: benchmarks.
-Page 1: 
+Page 1:
 Page 1: Introduction
 Page 1: Current technological advancements in data science open new avenues to financial traders,
 Page 1: who are constantly looking for new strategies, methods and tools to assist them in making
 Page 1: better investment decisions. Powerful computers regularly monitor and analyze structured
 Page 1: 1
-Page 1: 
+Page 1:
 Page 1: Electronic copy available at: https://ssrn.com/abstract=2907600
-Page 1: 
-Page 1: 
+Page 1:
+Page 1:
 Page 2: Event-Based Trading
-Page 2: 
+Page 2:
 Page 2: data to provide signals to traders, and High Frequency Trading algorithms even execute
 Page 2: trades on their behalf, with the goal of generating arbitrage profits from short-term
 Page 2: fluctuations (Terrence and Riordan 2013; Treleaven et al. 2013).
-Page 2: 
+Page 2:
 Page 2: Although traders
-Page 2: 
+Page 2:
 Page 2: commonly use computers to process and analyze financial structured data, they less
 Page 2: frequently rely on computational abilities to process and analyze unstructured data.
 Page 2: Technological advancements in the field of Natural Language Processing (NLP) offer
@@ -59,12 +59,12 @@ Page 2: should not treat all sentiment expressions evenly, and different event-t
 Page 2: sentiments should be considered and used as trading signals relevant for specific
 Page 2: investment periods.
 Page 2: 2
-Page 2: 
+Page 2:
 Page 2: Electronic copy available at: https://ssrn.com/abstract=2907600
-Page 2: 
-Page 2: 
+Page 2:
+Page 2:
 Page 3: Event-Based Trading
-Page 3: 
+Page 3:
 Page 3: News of financial events is presumed to affect stock prices. There are different opinions in
 Page 3: the literature on the extent to which news is reflected in stock prices and the time lag
 Page 3: involved before such news is reflected. These questions are fundamentally tied to Eugene
@@ -88,12 +88,12 @@ Page 3: algorithms and test them against historical data (a process known as bac
 Page 3: used Alphalens, a component of the Quantopian Research Platform, which was designed
 Page 3: to analyze alpha factors.
 Page 3: 3
-Page 3: 
+Page 3:
 Page 3: Electronic copy available at: https://ssrn.com/abstract=2907600
-Page 3: 
-Page 3: 
+Page 3:
+Page 3:
 Page 4: Event-Based Trading
-Page 4: 
+Page 4:
 Page 4: Related work
 Page 4: The question of how to exploit unstructured firm-related digital data has occupied many
 Page 4: financial economists and computer scientists. Early work argues that by merely observing
@@ -116,19 +116,19 @@ Page 4: example, product events might involve product trials or product recalls.
 Page 4: would obviously have a very different impact on stock prices. Boudoukh et al. ( 2016) do
 Page 4: not make such distinction. Ding et al. (2014) used a deep neural network model in order to
 Page 4: 4
-Page 4: 
+Page 4:
 Page 4: Electronic copy available at: https://ssrn.com/abstract=2907600
-Page 4: 
-Page 4: 
+Page 4:
+Page 4:
 Page 5: Event-Based Trading
-Page 5: 
+Page 5:
 Page 5: predict stock price movements, but similarly to Boudoukh et al. (2016), they aggregated
 Page 5: eventsΓÇÖ sentiments to determine the polarity of the news.
 Page 5: To the best of our knowledge, no other study considers the impact of individual events,
 Page 5: identified by an automatic Information extraction platform, and compares the excess return
 Page 5: generated when such signals are used separately or together with the sentiment scores
 Page 5: (tones), over various time horizons.
-Page 5: 
+Page 5:
 Page 5: Data and data processing
 Page 5: To test which event-types on digital media might be valuable signals for investors making
 Page 5: trading decisions, whether events should be used as isolated or aggregate signals, and to
@@ -139,22 +139,22 @@ Page 5: ΓùÅ Corpus C: 1,567,260 Dow Jones newswires articles3.
 Page 5: We processed these corpora using VIP to extract sentiments and events related to different
 Page 5: firms. VIP processes, analyzes, and converts unstructured financial data into structured
 Page 5: data sets of stock-specific sentiments tied to business events. VIP uses state-of-the-art NLP
-Page 5: 
+Page 5:
 Page 5: 1 downloaded from Yahoo Finance (https://finance.yahoo.com) and Google Finance
-Page 5: 
+Page 5:
 Page 5: (https://www.google.com/finance)
 Page 5: 2 downloaded from Yahoo Finance (https://finance.yahoo.com) and Google Finance
 Page 5: (https://www.google.com/finance)
 Page 5: 3 Downloaded from the Dow Jones newswires website (http://www.dowjones.com/products/djnews). The articles were published between March 2011 and March 2016 and discuss 613 different
 Page 5: firms traded on the NYSE, NASDAQ and AMEX that are mostly included in the S&P 500 index.
-Page 5: 
+Page 5:
 Page 5: 5
-Page 5: 
+Page 5:
 Page 5: Electronic copy available at: https://ssrn.com/abstract=2907600
-Page 5: 
-Page 5: 
+Page 5:
+Page 5:
 Page 6: Event-Based Trading
-Page 6: 
+Page 6:
 Page 6: techniques, specifically a proprietary, leading-edge pattern language designed to identify
 Page 6: relevant linguistic patterns in context-free grammar involving sentiments or business
 Page 6: events. The core of the VIP system is an integrated sentiment analysis engine that
@@ -162,12 +162,12 @@ Page 6: incorporates knowledge from multiple sources, and performs a relevance a
 Page 6: determine sentiment and event scores of financial content of potential significance for
 Page 6: financial traders. Using VIP, we generated the following outputs for every company: Daily
 Page 6: sentiment score ΓÇô ranges between -1 and 1 and is calculated as: ≡¥æå≡¥æÉ≡¥æ£≡¥æƒ≡¥æÆ =
-Page 6: 
+Page 6:
 Page 6: ≡¥æâΓêÆ≡¥æü
 Page 6: ≡¥æâ+≡¥æü+3
-Page 6: 
+Page 6:
 Page 6: (where P
-Page 6: 
+Page 6:
 Page 6: and N represent the number of positive and negative sentiment expressions, respectively);
 Page 6: Time-weighted sentiment score ΓÇô the sum of all sentiment scores of a particular ticker,
 Page 6: while weighting older articles with a decay factor of a half-life of 10 days.; and Daily event
@@ -184,12 +184,12 @@ Page 6: skewness of the data. We ended up with the following daily signals for e
 Page 6: our corpora: Daily Sentiment Score; Time-weighted Sentiment Score; Normalized
 Page 6: Aggregated Event Score; and Normalized Event Score by event-type.
 Page 6: 6
-Page 6: 
+Page 6:
 Page 6: Electronic copy available at: https://ssrn.com/abstract=2907600
-Page 6: 
-Page 6: 
+Page 6:
+Page 6:
 Page 7: Event-Based Trading
-Page 7: 
+Page 7:
 Page 7: The Quantopian Research Platform
 Page 7: The Quantopian Research platform4 is an IPython notebook environment that is used for
 Page 7: research and data analysis during algorithm creation. It is also used for analyzing the past
@@ -206,21 +206,21 @@ Page 7: symbols to security objects in Quantopian; Index the dataframe properly,
 Page 7: similar to pipeline output; Convert the dates to UTC; Obtain pricing data from the earliest
 Page 7: date up to a month after the final date; Use the signal of t-1 and trade on the open date of
 Page 7: t; Create the factor tear sheet using the signal and six periods (1, 5, 10, 15, 20 and 30 days).
-Page 7: 
+Page 7:
 Page 7: Experiments
 Page 7: To evaluate the economic value of events and sentiment signals generated from an
 Page 7: automated information extraction platform, we conducted a set of experiments. First, we
-Page 7: 
+Page 7:
 Page 7: 4 https://www.quantopian.com/research
 Page 7: 5 http://quantopian.github.io/alphalens/
-Page 7: 
+Page 7:
 Page 7: 7
-Page 7: 
+Page 7:
 Page 7: Electronic copy available at: https://ssrn.com/abstract=2907600
-Page 7: 
-Page 7: 
+Page 7:
+Page 7:
 Page 8: Event-Based Trading
-Page 8: 
+Page 8:
 Page 8: tested whether the polarity of specific events can be used as a signal for financial traders.
 Page 8: More specifically, we identified which positive (negative) events were followed by an
 Page 8: increase (decrease) in stock prices and after what interval. Second, we looked at whether
@@ -243,29 +243,29 @@ Page 8: time periods. For example, the effect of negative financial results seem
 Page 8: after one trading day, and fades off over time, while positive financial results seem to have
 Page 8: a weaker effect after one trading day, but this effect becomes stronger over time
 Page 8: 8
-Page 8: 
+Page 8:
 Page 8: Electronic copy available at: https://ssrn.com/abstract=2907600
-Page 8: 
-Page 8: 
+Page 8:
+Page 8:
 Page 9: Event-Based Trading
 Page 9: 80%
-Page 9: 
+Page 9:
 Page 9: t1
-Page 9: 
+Page 9:
 Page 9: t2
-Page 9: 
+Page 9:
 Page 9: t5
-Page 9: 
+Page 9:
 Page 9: t7
-Page 9: 
+Page 9:
 Page 9: t10
-Page 9: 
+Page 9:
 Page 9: t15
-Page 9: 
+Page 9:
 Page 9: t20
-Page 9: 
+Page 9:
 Page 9: 60%
-Page 9: 
+Page 9:
 Page 9: 40%
 Page 9: 20%
 Page 9: 0%
@@ -280,14 +280,14 @@ Page 9: NEG
 Page 9: POS
 Page 9: POS
 Page 9: Deal POS
-Page 9: 
+Page 9:
 Page 9: Alliance Asset Sale
 Page 9: POS
 Page 9: POS
-Page 9: 
+Page 9:
 Page 9: Figure 1: Predicting stock returns using event polarity, by event, by time period. The Figure shows
 Page 9: the correlation between the eventsΓÇÖ polarity and the corresponding stock return after t-days.
-Page 9: 
+Page 9:
 Page 9: Experiment II - Comparing performance to benchmarks
 Page 9: In the third experiment, we explored whether trading specific stocks when certain events
 Page 9: appear in digital media outperforms trading a benchmark portfolio (Russel, 2000). We
@@ -317,7 +317,7 @@ Page 9: Positive Service Product Deal (n=226,043)
 Page 9: Negative Forecast (n=226,016)
 Page 9: Negative Lawsuit (n=209,818)
 Page 9: Positive Stock Buyback (n=172,491)
-Page 9: 
+Page 9:
 Page 9: + + + + +
 Page 9: +
 Page 9: +
@@ -325,7 +325,7 @@ Page 9: + +
 Page 9: + +
 Page 9: +
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: + + + + + + +
 Page 9: +
 Page 9: + + + + + + +
@@ -342,286 +342,286 @@ Page 9: + + +
 Page 9: + +
 Page 9: + +
 Page 9: + + + + + + + + +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: + +
 Page 9: +
 Page 9: + +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: + +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
-Page 9: 
-Page 9: + +
-Page 9: + +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: +
-Page 9: +
-Page 9: 
+Page 9:
 Page 9: + +
 Page 9: + +
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
 Page 9: +
-Page 9: 
-Page 9: +
-Page 9: 
-Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
 Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
 Page 9: +
-Page 9: 
+Page 9:
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9:
 Page 9: +
 Page 9: +
 Page 9: +
-Page 9: 
-Page 9: +
-Page 9: 
+Page 9:
 Page 9: +
 Page 9: +
-Page 9: 
+Page 9: +
+Page 9:
 Page 9: +
 Page 9: +
-Page 9: 
+Page 9: +
+Page 9:
 Page 9: +
 Page 9: +
-Page 9: 
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9:
+Page 9: +
+Page 9:
+Page 9: +
+Page 9:
+Page 9: +
+Page 9:
+Page 9: +
+Page 9:
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: + +
+Page 9: + +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9:
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9:
+Page 9: +
+Page 9: +
+Page 9:
 Page 9: + +
 Page 9: + + +
 Page 9: + + + + + + +
 Page 9: t0 t1 t2 t3 t4 t5 t6 t7 t8 t9 t10 t11 t12 t13 t14 t15 t16 t17 t18 t19 t20 t21 t22 t23 t24 t25 t26 t27 t28 t29 t30
-Page 9: 
+Page 9:
 Page 9: Figure 3: Trading based on events compared to trading a benchmark portfolio. (+) signifies that
 Page 9: trading on event signals significantly outperforms trading the benchmark portfolio.
-Page 9: 
+Page 9:
 Page 9: 9
-Page 9: 
+Page 9:
 Page 9: Electronic copy available at: https://ssrn.com/abstract=2907600
-Page 9: 
-Page 9: 
+Page 9:
+Page 9:
 Page 10: Event-Based Trading
-Page 10: 
+Page 10:
 Page 10: Experiment III ΓÇô Events in different sectors
 Page 10: In the fourth experiment, we tested whether similar event-types in different sectors have
 Page 10: different economic value for traders. In particular we looked at the following nine sectors:
@@ -633,9 +633,9 @@ Page 10: similar event-type in different sectors showed no significant differenc
 Page 10: of one day. The adjacency matrices in Figure 4 below outline the significant differences
 Page 10: between similar events in different sectors for trading horizons of 2 and 5 days
 Page 10: T=2
-Page 10: 
+Page 10:
 Page 10: T-5
-Page 10: 
+Page 10:
 Page 10: SnPEnergy
 Page 10: SnPTech
 Page 10: Industrials
@@ -646,7 +646,7 @@ Page 10: TelecomUtilities
 Page 10: HealthCare
 Page 10: Discretionary
 Page 10: All sectors
-Page 10: 
+Page 10:
 Page 10: SnPEnergy
 Page 10: SnPTech
 Page 10: Industrials
@@ -657,87 +657,87 @@ Page 10: TelecomUtilities
 Page 10: HealthCare
 Page 10: Discretionary
 Page 10: All sectors
-Page 10: 
+Page 10:
 Page 10: 0.04
 Page 10: 0.04
-Page 10: 
+Page 10:
 Page 10: 0.05
-Page 10: 
+Page 10:
 Page 10: 0.04
-Page 10: 
+Page 10:
 Page 10: 0.05
 Page 10: 0.04
-Page 10: 
+Page 10:
 Page 10: 0.035
-Page 10: 
+Page 10:
 Page 10: 0.035
-Page 10: 
+Page 10:
 Page 10: 0.019
-Page 10: 
+Page 10:
 Page 10: 0.027 0.018
-Page 10: 
+Page 10:
 Page 10: 0.019
 Page 10: 0.027
 Page 10: 0.018
-Page 10: 
+Page 10:
 Page 10: All Sectors
-Page 10: 
+Page 10:
 Page 10: Discretionary
-Page 10: 
+Page 10:
 Page 10: HealthCare
-Page 10: 
+Page 10:
 Page 10: TelecomUtilities
-Page 10: 
+Page 10:
 Page 10: SnPFinance
-Page 10: 
+Page 10:
 Page 10: SnPMaterials
-Page 10: 
+Page 10:
 Page 10: Staples
-Page 10: 
+Page 10:
 Page 10: Industrials
-Page 10: 
+Page 10:
 Page 10: SnPTech
-Page 10: 
+Page 10:
 Page 10: SnPEnergy
-Page 10: 
+Page 10:
 Page 10: All Sectors
-Page 10: 
+Page 10:
 Page 10: Discretionary
-Page 10: 
+Page 10:
 Page 10: HealthCare
-Page 10: 
+Page 10:
 Page 10: TelecomUtilities
-Page 10: 
+Page 10:
 Page 10: SnPFinance
-Page 10: 
+Page 10:
 Page 10: SnPMaterials
-Page 10: 
+Page 10:
 Page 10: Staples
-Page 10: 
+Page 10:
 Page 10: Industrials
-Page 10: 
+Page 10:
 Page 10: SnPTech
-Page 10: 
+Page 10:
 Page 10: SnPEnergy
-Page 10: 
+Page 10:
 Page 10: Figure 4: Adjacency matrix of significant differences between similar events in different sectors
 Page 10: (p-values)
-Page 10: 
+Page 10:
 Page 10: The results indicate that for a time period of two days, similar event-type signals generated
 Page 10: significantly different effects in Staples, SnPFinance, and SnPTech sectors. For a five-day
 Page 10: period, event-type signals generated significantly different effects in SnPMaterials and
 Page 10: Health Care as well as SnPFinance and SnPTech. In general, each event-type signal
-Page 10: 
+Page 10:
 Page 10: 10
-Page 10: 
+Page 10:
 Page 10: Electronic copy available at: https://ssrn.com/abstract=2907600
-Page 10: 
-Page 10: 
+Page 10:
+Page 10:
 Page 11: Event-Based Trading
-Page 11: 
+Page 11:
 Page 11: generated a similar effect in most sectors, which led us to believe that sectors should not
 Page 11: play an important role when considering event signals in short-term trading periods.
-Page 11: 
+Page 11:
 Page 11: Experiment IV ΓÇô Developing superior trading strategies using event detection
 Page 11: For our final experiment, we used Alphalens and the Quantopian Research Platform to
 Page 11: conduct a return analysis when investing according to combinations of sentiment signals
@@ -765,17 +765,17 @@ Page 11: Sentiment Score
 Page 11: Aggregated
 Page 11: 0.272 (0.001) 0.054 (-0.011) 0.019 (-0.005) 0.01 (-0.008) 0.01 (-0.013) 0.01 (-0.003)
 Page 11: Event Score
-Page 11: 
+Page 11:
 Page 11: Of these three signals, the best alpha for the short run (shorter than 10 days) was obtained
 Page 11: using the Daily Sentiment Score signal, which outperformed the alphas of Time-weighted
 Page 11: Sentiment Score and Aggregated Event Score signals. In the longer run (10 days and
 Page 11: 11
-Page 11: 
+Page 11:
 Page 11: Electronic copy available at: https://ssrn.com/abstract=2907600
-Page 11: 
-Page 11: 
+Page 11:
+Page 11:
 Page 12: Event-Based Trading
-Page 12: 
+Page 12:
 Page 12: longer), however, the alpha of the Time-weighted Sentiment Score signal outperformed the
 Page 12: alpha of Daily Sentiment Score and Aggregated Event Score signals.
 Page 12: Since specific event-types do not occur on most days, it is not practical to use these eventtypes as daily trading signals, unlike the Daily Sentiment Score, Time-weighted Sentiment
@@ -797,12 +797,12 @@ Page 12: do not seem to have a positive effect in any time period (e.g., ΓÇ£A
 Page 12: ChangesΓÇ¥). Third, of the event-type signals that we tested, the ΓÇ£Financial ResultsΓÇ¥ signal
 Page 12: seems to have the most positive impact on the Daily Sentiment Score signal. Fourth, the
 Page 12: 12
-Page 12: 
+Page 12:
 Page 12: Electronic copy available at: https://ssrn.com/abstract=2907600
-Page 12: 
-Page 12: 
+Page 12:
+Page 12:
 Page 13: Event-Based Trading
-Page 13: 
+Page 13:
 Page 13: low betas of all tested event-types indicate that event-based trading generates less volatile
 Page 13: results compared to a benchmark.
 Page 13: Table 2: Alphas and betas resulting from an investment strategy based on Daily Sentiment Score and the
@@ -867,18 +867,18 @@ Page 13: Settlement
 Page 13: 0.297 (-0.023) 0.065 (-0.018) 0.029 (-0.016) 0.019 (-0.016) 0.015 (-0.019) 0.011 (-0.026)
 Page 13: Investigation
 Page 13: Product Update 0.295 (-0.025) 0.065 (-0.021) 0.03 (-0.019) 0.019 (-0.016) 0.016 (-0.017) 0.011 (-0.026)
-Page 13: 
+Page 13:
 Page 13: Conclusions and future work
 Page 13: In this paper, we evaluated whether financial events extracted from digital media using an
 Page 13: automatic information extraction platform constitute valuable trading signals. The effect
 Page 13: of different events was determined in different time lags. We established that the polarity
 Page 13: 13
-Page 13: 
+Page 13:
 Page 13: Electronic copy available at: https://ssrn.com/abstract=2907600
-Page 13: 
-Page 13: 
+Page 13:
+Page 13:
 Page 14: Event-Based Trading
-Page 14: 
+Page 14:
 Page 14: of different event-types is, indeed, reflected in the stock price in different time periods. We
 Page 14: concluded that in contrast to aggregate polarity of events, which is typically used in
 Page 14: sentiment analysis systems, event-types should be used as isolated signals. We further used
@@ -897,7 +897,7 @@ Page 14: developing event-based trading strategies.
 Page 14: Future work might further investigate how to use automated information extraction
 Page 14: platforms to further enhance event-based trading strategies, or might focus on determining
 Page 14: the effect of events in non-financial domains.
-Page 14: 
+Page 14:
 Page 14: References
 Page 14: Antweiler, W., and Frank, M. Z. 2004. ΓÇ£Is All That Talk Just Noise ? The Information
 Page 14: Content of Internet Stock Message Boards,ΓÇ¥ (LIX:3).
@@ -905,12 +905,12 @@ Page 14: Bollen, J., Mao, H., and Zeng, X. 2011. ΓÇ£Twitter mood predicts the
 Page 14: of Computational Science
 Page 14: (2:1), Elsevier B.V., pp. 1ΓÇô8 (doi:
 Page 14: 14
-Page 14: 
+Page 14:
 Page 14: Electronic copy available at: https://ssrn.com/abstract=2907600
-Page 14: 
-Page 14: 
+Page 14:
+Page 14:
 Page 15: Event-Based Trading
-Page 15: 
+Page 15:
 Page 15: 10.1016/j.jocs.2010.12.007).
 Page 15: Boudoukh, J., Feldman, R., Kogan, S., and Richardson, M. P. 2016. ΓÇ£Information, Trading,
 Page 15: and Volatility: Evidence from Firm-Specific New,ΓÇ¥ (available at
@@ -955,7 +955,7 @@ Page 15: Zhang, W., and Skiena, S. 2010. ΓÇ£Trading Strategies to Exploit Blo
 Page 15: in Proceedings of the Fourth International AAAI Conference on Weblogs and Social
 Page 15: Media (Vol. d), pp. 375ΓÇô378.
 Page 15: 15
-Page 15: 
+Page 15:
 Page 15: Electronic copy available at: https://ssrn.com/abstract=2907600
-Page 15: 
-Page 15: 
+Page 15:
+Page 15:

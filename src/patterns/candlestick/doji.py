@@ -20,7 +20,7 @@ Signal Generation:
 Confidence: 0.30 (low - requires confirmation)
 """
 
-from typing import Dict, Optional, Tuple
+from typing import Optional, Tuple
 
 import numpy as np
 import pandas as pd
@@ -43,7 +43,7 @@ class Doji(BasePattern):
         shadow_threshold: float = 0.1,
         long_leg_threshold: float = 0.3,
         dragonfly_threshold: float = 0.6,
-        require_confirmation: bool = True,
+        require_confirmation: bool = False,
         trend_lookback: int = 10,
     ):
         """
@@ -71,10 +71,10 @@ class Doji(BasePattern):
 
     def _get_candle_data(self, df: pd.DataFrame, i: int) -> Tuple[float, float, float, float]:
         """Get OHLC values for a candle."""
-        open_price = float(df['Open'].iloc[i])
-        high = float(df['High'].iloc[i])
-        low = float(df['Low'].iloc[i])
-        close = float(df['Close'].iloc[i])
+        open_price = float(df["Open"].iloc[i])
+        high = float(df["High"].iloc[i])
+        low = float(df["Low"].iloc[i])
+        close = float(df["Close"].iloc[i])
         return open_price, high, low, close
 
     def _classify_doji(
@@ -115,19 +115,28 @@ class Doji(BasePattern):
 
         # Classify Doji type
         # Dragonfly: Open=Close=High, long lower shadow
-        if upper_shadow < self.shadow_threshold * total_range and lower_shadow > self.dragonfly_threshold * total_range:
-            return True, 'dragonfly'
+        if (
+            upper_shadow < self.shadow_threshold * total_range
+            and lower_shadow > self.dragonfly_threshold * total_range
+        ):
+            return True, "dragonfly"
 
         # Gravestone: Open=Close=Low, long upper shadow
-        if lower_shadow < self.shadow_threshold * total_range and upper_shadow > self.dragonfly_threshold * total_range:
-            return True, 'gravestone'
+        if (
+            lower_shadow < self.shadow_threshold * total_range
+            and upper_shadow > self.dragonfly_threshold * total_range
+        ):
+            return True, "gravestone"
 
         # Long-legged: Both shadows are significant
-        if upper_shadow > self.long_leg_threshold * total_range and lower_shadow > self.long_leg_threshold * total_range:
-            return True, 'long_legged'
+        if (
+            upper_shadow > self.long_leg_threshold * total_range
+            and lower_shadow > self.long_leg_threshold * total_range
+        ):
+            return True, "long_legged"
 
         # Standard Doji
-        return True, 'standard'
+        return True, "standard"
 
     def _get_trend_direction(self, df: pd.DataFrame, i: int) -> str:
         """
@@ -141,13 +150,13 @@ class Doji(BasePattern):
             'up', 'down', or 'sideways'
         """
         if i < self.trend_lookback:
-            return 'sideways'
+            return "sideways"
 
         start_idx = i - self.trend_lookback
-        closes = np.asarray(df['Close'].iloc[start_idx:i].values, dtype=np.float64)
+        closes = np.asarray(df["Close"].iloc[start_idx:i].values, dtype=np.float64)
 
         if len(closes) < 2:
-            return 'sideways'
+            return "sideways"
 
         # Calculate trend using linear regression slope
         x = np.arange(len(closes))
@@ -159,11 +168,11 @@ class Doji(BasePattern):
 
         # Threshold for trend determination (0.1% per bar)
         if normalized_slope > 0.001:
-            return 'up'
+            return "up"
         elif normalized_slope < -0.001:
-            return 'down'
+            return "down"
         else:
-            return 'sideways'
+            return "sideways"
 
     def _check_confirmation(
         self,
@@ -173,7 +182,10 @@ class Doji(BasePattern):
         trend: str,
     ) -> bool:
         """
-        Check if the Doji is confirmed by the next candle.
+        Check if the Doji is confirmed using bar-i data only (no look-ahead).
+
+        Confirms via volume spike and trend alignment.
+        Does NOT read bar i+1 (eliminates look-ahead bias).
 
         Args:
             df: DataFrame with OHLC data
@@ -184,27 +196,9 @@ class Doji(BasePattern):
         Returns:
             True if confirmed
         """
-        if i >= len(df) - 1:
+        if trend == "sideways":
             return False
-
-        # Get Doji candle data
-        _, doji_high, doji_low, _ = self._get_candle_data(df, i)
-
-        # Get next candle data
-        next_open, next_high, next_low, next_close = self._get_candle_data(df, i + 1)
-
-        # Confirmation depends on Doji type and trend
-        if doji_type == 'dragonfly':
-            # Bullish signal - confirm with higher close
-            return next_close > doji_high
-
-        elif doji_type == 'gravestone':
-            # Bearish signal - confirm with lower close
-            return next_close < doji_low
-
-        else:
-            # Standard/long-legged - confirm with breakout in either direction
-            return next_close > doji_high or next_close < doji_low
+        return self._check_volume_spike(df, i)
 
     def _check_volume_spike(
         self,
@@ -223,15 +217,86 @@ class Doji(BasePattern):
         Returns:
             True if volume spike detected
         """
-        if 'Volume' not in df.columns or i < 20:
+        if "Volume" not in df.columns or i < 20:
             return False
 
-        avg_volume = df['Volume'].iloc[i - 20:i].mean()
+        avg_volume = df["Volume"].iloc[i - 20 : i].mean()
         if avg_volume == 0:
             return False
 
-        current_volume = float(df['Volume'].iloc[i])
+        current_volume = float(df["Volume"].iloc[i])
         return bool(current_volume > avg_volume * threshold)
+
+    def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Vectorized detection of Doji signals across the entire DataFrame.
+
+        Args:
+            df: DataFrame with 'Open', 'High', 'Low', 'Close' columns
+
+        Returns:
+            np.ndarray of np.int8: 0=no signal, 1=LONG, -1=SHORT
+        """
+        n = len(df)
+        result = np.zeros(n, dtype=np.int8)
+        if n < self.trend_lookback + 3:
+            return result
+
+        open_a = df["Open"].to_numpy(dtype=np.float64)
+        high_a = df["High"].to_numpy(dtype=np.float64)
+        low_a = df["Low"].to_numpy(dtype=np.float64)
+        close_a = df["Close"].to_numpy(dtype=np.float64)
+
+        body = np.abs(close_a - open_a)
+        total_range = high_a - low_a
+        upper_shadow = high_a - np.maximum(open_a, close_a)
+        lower_shadow = np.minimum(open_a, close_a) - low_a
+
+        x_trend = np.arange(self.trend_lookback, dtype=np.float64)
+
+        for i in range(self.trend_lookback + 1, n):
+            rng = total_range[i]
+            if rng == 0:
+                continue
+
+            body_ratio = body[i] / rng
+            if body_ratio > self.body_threshold:
+                continue
+
+            up_s = upper_shadow[i]
+            low_s = lower_shadow[i]
+
+            if up_s < self.shadow_threshold * rng and low_s > self.dragonfly_threshold * rng:
+                doji_type = "dragonfly"
+            elif low_s < self.shadow_threshold * rng and up_s > self.dragonfly_threshold * rng:
+                doji_type = "gravestone"
+            elif up_s > self.long_leg_threshold * rng and low_s > self.long_leg_threshold * rng:
+                doji_type = "long_legged"
+            else:
+                doji_type = "standard"
+
+            close_slice = close_a[i - self.trend_lookback : i]
+            slope = np.polyfit(x_trend, close_slice, 1)[0]
+            avg_price = np.mean(close_slice)
+            normalized_slope = slope / avg_price if avg_price > 0 else 0.0
+
+            trend = "sideways"
+            if normalized_slope > 0.001:
+                trend = "up"
+            elif normalized_slope < -0.001:
+                trend = "down"
+
+            if doji_type == "dragonfly" and trend == "down":
+                result[i] = 1
+            elif doji_type == "gravestone" and trend == "up":
+                result[i] = -1
+            elif doji_type in ("standard", "long_legged"):
+                if trend == "down":
+                    result[i] = 1
+                elif trend == "up":
+                    result[i] = -1
+
+        return result
 
     def detect(
         self,
@@ -250,6 +315,11 @@ class Doji(BasePattern):
         Returns:
             PatternResult with detection status and any signal
         """
+        if not self._validate_data(df, i, window_start):
+            return PatternResult(
+                detected=False, pattern_name=self.name, pattern_type=self.pattern_type
+            )
+
         # Validate index
         if i < 1 or i >= len(df):
             return PatternResult(
@@ -293,20 +363,18 @@ class Doji(BasePattern):
         signal_direction = None
         confidence = 0.30  # Low base confidence for Doji
 
-        if doji_type == 'dragonfly' and trend == 'down':
+        if doji_type == "dragonfly" and trend == "down":
             signal_direction = SignalDirection.LONG
             confidence = 0.35
-        elif doji_type == 'gravestone' and trend == 'up':
+        elif doji_type == "gravestone" and trend == "up":
             signal_direction = SignalDirection.SHORT
             confidence = 0.35
-        elif doji_type in ['standard', 'long_legged']:
-            # Indecision - direction depends on confirmation
+        elif doji_type in ["standard", "long_legged"]:
+            # Direction from trend context (no look-ahead)
             if confirmed:
-                _, doji_high, doji_low, _ = self._get_candle_data(df, i)
-                next_close = float(df['Close'].iloc[i + 1])
-                if next_close > doji_high:
+                if trend == "down":
                     signal_direction = SignalDirection.LONG
-                elif next_close < doji_low:
+                elif trend == "up":
                     signal_direction = SignalDirection.SHORT
 
         # Increase confidence if volume spike
@@ -359,10 +427,10 @@ class Doji(BasePattern):
             confidence=confidence,
             pattern_name=self.name,
             metadata={
-                'doji_type': doji_type,
-                'trend': trend,
-                'confirmed': True,
-                'volume_spike': self._check_volume_spike(df, i),
+                "doji_type": doji_type,
+                "trend": trend,
+                "confirmed": True,
+                "volume_spike": self._check_volume_spike(df, i),
             },
         )
 
@@ -378,14 +446,14 @@ class Doji(BasePattern):
     def generate_signal(self, df: pd.DataFrame, i: int) -> Optional[TradeSignal]:
         """
         Generate trade signal for Doji pattern.
-        
+
         This method is called by detect() when a pattern is found.
         Doji requires confirmation, so this returns the signal from detect().
-        
+
         Args:
             df: DataFrame with OHLC data
             i: Current bar index
-            
+
         Returns:
             TradeSignal if confirmed pattern, None otherwise
         """
@@ -398,9 +466,9 @@ class Doji(BasePattern):
             return None
 
         try:
-            high = df['High'].iloc[i - period:i + 1].values
-            low = df['Low'].iloc[i - period:i + 1].values
-            close = df['Close'].iloc[i - period - 1:i].values
+            high = df["High"].iloc[i - period : i + 1].values
+            low = df["Low"].iloc[i - period : i + 1].values
+            close = df["Close"].iloc[i - period - 1 : i].values
 
             tr_list = []
             for j in range(len(high)):

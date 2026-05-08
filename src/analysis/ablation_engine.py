@@ -7,7 +7,10 @@ Quantify each pattern's marginal contribution to the system by running leave-one
 import json
 import os
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from contextlib import redirect_stdout
 from dataclasses import asdict, dataclass
+from io import StringIO
 from typing import Any, Callable, Dict, List, Optional, Type
 
 import pandas as pd
@@ -44,6 +47,10 @@ class AblationEngine:
         commission: float = 0.001,
         base_params: Optional[Dict[str, Any]] = None,
         output_dir: str = "reports/ablation",
+        max_workers: int = 1,
+        verbose: bool = False,
+        quick_test: bool = False,
+        quick_test_patterns: int = 5,
     ):
         """
         Args:
@@ -53,6 +60,10 @@ class AblationEngine:
             commission: Commission rate
             base_params: Base strategy parameters
             output_dir: Directory to cache results
+            max_workers: Max parallel threads for backtest execution
+            verbose: Print per-backtest details
+            quick_test: If True, only test top N patterns
+            quick_test_patterns: Number of patterns to test in quick_test mode
         """
         self.data = data
         self.strategy_class = strategy_class
@@ -60,6 +71,10 @@ class AblationEngine:
         self.commission = commission
         self.base_params = base_params or {}
         self.output_dir = output_dir
+        self.max_workers = max_workers
+        self.verbose = verbose
+        self.quick_test = quick_test
+        self.quick_test_patterns = quick_test_patterns
 
         # Ensure output directory exists
         os.makedirs(output_dir, exist_ok=True)
@@ -70,6 +85,9 @@ class AblationEngine:
 
         # Get all pattern names
         self.all_patterns = self._get_all_pattern_names()
+
+        if quick_test:
+            self.all_patterns = self.all_patterns[:quick_test_patterns]
 
     def _get_all_pattern_names(self) -> List[str]:
         """
@@ -125,6 +143,7 @@ class AblationEngine:
             cash=self.cash,
             commission=self.commission,
             exclusive_orders=True,
+            verbose=self.verbose,
         )
 
         results = runner.run(strategy_class=self.strategy_class, **params)
@@ -150,11 +169,13 @@ class AblationEngine:
         Returns:
             Dictionary with baseline results
         """
-        print("Running baseline backtest (all patterns)...")
+        if self.verbose:
+            print("Running baseline backtest (all patterns)...")
         self.baseline_result = self._run_backtest()
-        print(f"  Return: {self.baseline_result['total_return_pct']:.2%}")
-        print(f"  Sharpe: {self.baseline_result['sharpe_ratio']:.3f}")
-        print(f"  Trades: {self.baseline_result['total_trades']}")
+        if self.verbose:
+            print(f"  Return: {self.baseline_result['total_return_pct']:.2%}")
+            print(f"  Sharpe: {self.baseline_result['sharpe_ratio']:.3f}")
+            print(f"  Trades: {self.baseline_result['total_trades']}")
         return self.baseline_result
 
     def run_ablation(self, exclude_pattern: str) -> AblationResult:
@@ -167,7 +188,8 @@ class AblationEngine:
         Returns:
             AblationResult with ablation metrics
         """
-        print(f"Running ablation for: {exclude_pattern}")
+        if self.verbose:
+            print(f"Running ablation for: {exclude_pattern}")
         results = self._run_backtest(exclude_patterns=[exclude_pattern])
 
         ablation_result = AblationResult(
@@ -176,16 +198,17 @@ class AblationEngine:
             win_rate=results["win_rate"],
             total_return_pct=results["total_return_pct"],
             sharpe_ratio=results["sharpe_ratio"],
-            sortino_ratio=results["sortino_ratio"],
+            sortino_ratio=results.get("sortino_ratio", 0.0),
             max_drawdown_pct=results["max_drawdown_pct"],
             profit_factor=results["profit_factor"],
             equity_final=results["equity_final"],
             duration_seconds=results["duration_seconds"],
         )
 
-        print(f"  Return: {ablation_result.total_return_pct:.2%}")
-        print(f"  Sharpe: {ablation_result.sharpe_ratio:.3f}")
-        print(f"  Trades: {ablation_result.total_trades}")
+        if self.verbose:
+            print(f"  Return: {ablation_result.total_return_pct:.2%}")
+            print(f"  Sharpe: {ablation_result.sharpe_ratio:.3f}")
+            print(f"  Trades: {ablation_result.total_trades}")
 
         return ablation_result
 
@@ -202,22 +225,35 @@ class AblationEngine:
         Returns:
             DataFrame sorted by marginal contribution
         """
+        # Auto-cache: skip if results already exist on disk
+        if self.load_results():
+            return self.get_contribution_report()
+
         # Run baseline if not already done
         if self.baseline_result is None:
             self.run_baseline()
 
-        # Run ablation for each pattern
+        # Run ablation for each pattern in parallel
         self.ablation_results = []
         total_patterns = len(self.all_patterns)
 
-        for i, pattern in enumerate(self.all_patterns):
-            if progress_callback:
-                progress_callback(i + 1, total_patterns)
+        def _run_one(pattern: str) -> AblationResult:
+            with redirect_stdout(StringIO()):
+                return self.run_ablation(pattern)
 
-            ablation_result = self.run_ablation(pattern)
-            self.ablation_results.append(ablation_result)
+        with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+            futures = {executor.submit(_run_one, p): p for p in self.all_patterns}
+            for i, future in enumerate(as_completed(futures)):
+                if progress_callback:
+                    progress_callback(i + 1, total_patterns)
+                try:
+                    result = future.result()
+                    self.ablation_results.append(result)
+                except Exception as e:
+                    pattern = futures[future]
+                    print(f"  [SKIP] Ablation for {pattern} failed: {e}")
 
-        # Convert to DataFrame
+        # Convert to DataFrame (re-sort by pattern order for consistency)
         df = self.get_contribution_report()
 
         # Save results
@@ -343,15 +379,17 @@ class AblationEngine:
         Returns:
             Dictionary with solo backtest results
         """
-        print(f"Running solo backtest for: {pattern_name}")
+        if self.verbose:
+            print(f"Running solo backtest for: {pattern_name}")
         results = self._run_backtest(
             include_patterns_only=[pattern_name],
             min_confluence_count=min_confluence_count,
         )
 
-        print(f"  Return: {results['total_return_pct']:.2%}")
-        print(f"  Sharpe: {results['sharpe_ratio']:.3f}")
-        print(f"  Trades: {results['total_trades']}")
+        if self.verbose:
+            print(f"  Return: {results['total_return_pct']:.2%}")
+            print(f"  Sharpe: {results['sharpe_ratio']:.3f}")
+            print(f"  Trades: {results['total_trades']}")
 
         return results
 
@@ -368,19 +406,43 @@ class AblationEngine:
         Returns:
             DataFrame with solo backtest results for each pattern
         """
+        # Auto-cache: try loading cached results first
+        solo_path = os.path.join(self.output_dir, "solo_results.json")
+        if os.path.exists(solo_path):
+            try:
+                df = pd.read_json(solo_path)
+                if len(df) > 0:
+                    print(f"Loaded {len(df)} solo results from cache")
+                    return df.sort_values("sharpe_ratio", ascending=False).reset_index(drop=True)
+            except Exception:
+                pass
+
         results = []
         total_patterns = len(self.all_patterns)
 
-        for i, pattern in enumerate(self.all_patterns):
-            if progress_callback:
-                progress_callback(i + 1, total_patterns)
+        def _run_one(pattern: str) -> Optional[Dict[str, Any]]:
+            try:
+                with redirect_stdout(StringIO()):
+                    result = self.run_solo_backtest(pattern)
+                result["pattern_name"] = pattern
+                return result
+            except Exception as e:
+                print(f"  [SKIP] Solo backtest for {pattern} failed: {e}")
+                return None
 
-            solo_result = self.run_solo_backtest(pattern)
-            solo_result["pattern_name"] = pattern
-            results.append(solo_result)
+        with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+            futures = {executor.submit(_run_one, p): p for p in self.all_patterns}
+            for i, future in enumerate(as_completed(futures)):
+                if progress_callback:
+                    progress_callback(i + 1, total_patterns)
+                r = future.result()
+                if r is not None:
+                    results.append(r)
 
         df = pd.DataFrame(results)
-        df = df.sort_values("sharpe_ratio", ascending=False).reset_index(drop=True)
+        if not df.empty:
+            df = df.sort_values("sharpe_ratio", ascending=False).reset_index(drop=True)
+            self.save_solo_results(df)
 
         return df
 

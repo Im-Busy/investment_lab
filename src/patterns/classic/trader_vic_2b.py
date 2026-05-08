@@ -216,6 +216,97 @@ class TraderVic2B(BasePattern):
 
         return None
 
+    def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Vectorized detection of Trader Vic's 2B patterns across the entire DataFrame.
+
+        Returns:
+            np.ndarray of np.int8: 0=no signal, 1=LONG (bullish 2B), -1=SHORT (bearish 2B)
+        """
+        n = len(df)
+        result = np.zeros(n, dtype=np.int8)
+        min_bars = self.lookback + self.test_bars
+        if n < min_bars:
+            return result
+
+        high_a = df["High"].to_numpy()
+        low_a = df["Low"].to_numpy()
+        close_a = df["Close"].to_numpy()
+
+        lb = self.lookback
+        pb_bars = self.pullback_bars
+        tb = self.test_bars
+
+        for i in range(min_bars, n):
+            # Bearish 2B: failed new high
+            for new_high_idx in range(i - tb, i - pb_bars, -1):
+                if new_high_idx < lb:
+                    continue
+                new_high = high_a[new_high_idx]
+                prev_highs = high_a[new_high_idx - lb : new_high_idx]
+                if new_high <= float(np.max(prev_highs)):
+                    continue
+
+                # Check pullback
+                pull_end = min(new_high_idx + pb_bars + 1, i + 1)
+                pb_slice = slice(new_high_idx + 1, pull_end)
+                if pb_slice.stop - pb_slice.start < 1:
+                    continue
+                pullback_low = float(np.min(low_a[pb_slice]))
+                if pullback_low >= new_high:
+                    continue
+
+                # Check failed test + breakdown
+                test_end = min(new_high_idx + tb + 1, i + 1)
+                bear_signal = False
+                for j in range(new_high_idx + pb_bars, test_end):
+                    if j >= i:
+                        continue
+                    if high_a[j] >= new_high and close_a[j] < new_high:
+                        if close_a[i] < low_a[new_high_idx]:
+                            bear_signal = True
+                            break
+
+                if bear_signal:
+                    result[i] = -1
+                    break
+
+            if result[i] != 0:
+                continue
+
+            # Bullish 2B: failed new low
+            for new_low_idx in range(i - tb, i - pb_bars, -1):
+                if new_low_idx < lb:
+                    continue
+                new_low = low_a[new_low_idx]
+                prev_lows = low_a[new_low_idx - lb : new_low_idx]
+                if new_low >= float(np.min(prev_lows)):
+                    continue
+
+                pull_end = min(new_low_idx + pb_bars + 1, i + 1)
+                pb_slice = slice(new_low_idx + 1, pull_end)
+                if pb_slice.stop - pb_slice.start < 1:
+                    continue
+                pullback_high = float(np.max(high_a[pb_slice]))
+                if pullback_high <= new_low:
+                    continue
+
+                test_end = min(new_low_idx + tb + 1, i + 1)
+                bull_signal = False
+                for j in range(new_low_idx + pb_bars, test_end):
+                    if j >= i:
+                        continue
+                    if low_a[j] <= new_low and close_a[j] > new_low:
+                        if close_a[i] > high_a[new_low_idx]:
+                            bull_signal = True
+                            break
+
+                if bull_signal:
+                    result[i] = 1
+                    break
+
+        return result
+
     def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
         """
         Detect 2B pattern at bar index i.

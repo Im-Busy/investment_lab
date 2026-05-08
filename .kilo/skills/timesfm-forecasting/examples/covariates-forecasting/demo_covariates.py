@@ -99,9 +99,7 @@ def generate_sales_data() -> dict:
         promotion = rng.choice([0.0, 1.0], TOTAL_LEN, p=[0.8, 0.2]).astype(np.float32)
         promo_effect = (150 * promotion).astype(np.float32)
 
-        day_of_week = np.tile(np.arange(7), TOTAL_LEN // 7 + 1)[:TOTAL_LEN].astype(
-            np.int32
-        )
+        day_of_week = np.tile(np.arange(7), TOTAL_LEN // 7 + 1)[:TOTAL_LEN].astype(np.int32)
 
         sales = np.maximum(base + price_effect + holiday_effect + promo_effect, 50.0)
 
@@ -162,9 +160,7 @@ def create_visualization(data: dict) -> None:
 
     def add_divider(ax, label_top=True):
         ax.axvline(CONTEXT_LEN - 0.5, color="#9ca3af", lw=1.3, ls="--", alpha=0.8)
-        ax.axvspan(
-            CONTEXT_LEN - 0.5, TOTAL_LEN - 0.5, alpha=0.06, color="grey", zorder=0
-        )
+        ax.axvspan(CONTEXT_LEN - 0.5, TOTAL_LEN - 0.5, alpha=0.06, color="grey", zorder=0)
         if label_top:
             ax.text(
                 CONTEXT_LEN + 0.3,
@@ -280,20 +276,14 @@ def create_visualization(data: dict) -> None:
 
     add_divider(ax)
     ax.set_ylabel("Weekly Sales (units)", fontsize=10)
-    ax.set_title(
-        "Store A -- Actual vs Baseline (No Covariates)", fontsize=11, fontweight="bold"
-    )
+    ax.set_title("Store A -- Actual vs Baseline (No Covariates)", fontsize=11, fontweight="bold")
     ax.legend(fontsize=7.5, loc="upper left", ncol=2)
     ax.grid(True, alpha=0.22)
 
     hm = holiday_A[:CONTEXT_LEN] > 0
     pm = promo_A[:CONTEXT_LEN] > 0
-    h_lift = (
-        (sales_A[:CONTEXT_LEN][hm] - base_A[:CONTEXT_LEN][hm]).mean() if hm.any() else 0
-    )
-    p_lift = (
-        (sales_A[:CONTEXT_LEN][pm] - base_A[:CONTEXT_LEN][pm]).mean() if pm.any() else 0
-    )
+    h_lift = (sales_A[:CONTEXT_LEN][hm] - base_A[:CONTEXT_LEN][hm]).mean() if hm.any() else 0
+    p_lift = (sales_A[:CONTEXT_LEN][pm] - base_A[:CONTEXT_LEN][pm]).mean() if pm.any() else 0
     ax.annotate(
         f"Holiday weeks: +{h_lift:.0f} units avg\n"
         f"Promotion weeks: +{p_lift:.0f} units avg\n"
@@ -319,9 +309,7 @@ def create_visualization(data: dict) -> None:
     add_divider(ax, label_top=False)
     ax.set_xlabel("Week", fontsize=10)
     ax.set_ylabel("Price ($)", fontsize=10)
-    ax.set_title(
-        "Price Covariate -- Context + Forecast Horizon", fontsize=11, fontweight="bold"
-    )
+    ax.set_title("Price Covariate -- Context + Forecast Horizon", fontsize=11, fontweight="bold")
     ax.legend(fontsize=8, loc="upper right")
     ax.grid(True, alpha=0.22)
     ax.annotate(
@@ -374,9 +362,7 @@ def create_visualization(data: dict) -> None:
     add_divider(ax, label_top=False)
     ax.set_xlabel("Week", fontsize=10)
     ax.set_ylabel("Effect on sales (units)", fontsize=10)
-    ax.set_title(
-        "Store A -- Covariate Effect Decomposition", fontsize=11, fontweight="bold"
-    )
+    ax.set_title("Store A -- Covariate Effect Decomposition", fontsize=11, fontweight="bold")
     ax.legend(fontsize=7.5, loc="upper right")
     ax.grid(True, alpha=0.22, axis="y")
     ax.annotate(
@@ -478,9 +464,7 @@ def main() -> None:
                     "week": i,
                     "split": "context" if i < CONTEXT_LEN else "horizon",
                     "sales": round(float(store_data["sales"][i]), 2),
-                    "base_sales": round(
-                        float(data["components"][store_id]["base"][i]), 2
-                    ),
+                    "base_sales": round(float(data["components"][store_id]["base"][i]), 2),
                     "price": round(float(data["covariates"]["price"][store_id][i]), 4),
                     "price_effect": round(
                         float(data["components"][store_id]["price_effect"][i]), 2
@@ -507,9 +491,7 @@ def main() -> None:
         "stores": {
             sid: {
                 **sdata["config"],
-                "mean_sales_context": round(
-                    float(sdata["sales"][:CONTEXT_LEN].mean()), 1
-                ),
+                "mean_sales_context": round(float(sdata["sales"][:CONTEXT_LEN].mean()), 1),
             }
             for sid, sdata in data["stores"].items()
         },

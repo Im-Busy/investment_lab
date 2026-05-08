@@ -46,6 +46,14 @@
 | Pixi to UV Migration | [plan](plans/setup-pixi-migration.md) | [log](logs/setup-pixi-migration.md) | ✅ Done |
 | SearXNG MCP Setup | [plan](plans/setup-searxng-mcp.md) | [log](logs/setup-searxng-mcp.md) | 🔄 Partial |
 | Jupyter + VS Code Setup | [plan](plans/setup-jupyter-vscode.md) | [log](logs/setup-jupyter-vscode.md) | ✅ Done |
+| Tooling Audit & Adoption | [plan](plans/setup-tooling.md) | [log](logs/setup-tooling.md) | 🔴 Active — See T1-T3 |
+
+## Enhancements
+
+| Name | Plan | Status |
+|------|------|--------|
+| ML Capability Enhancements (GWO, InterpretML, AutoGluon) | [plan](plans/enhance-ml-capabilities.md) | ✅ Done (Phases 1-4+) |
+| Pioneer Research — Experimental Features | [plan](plans/enhance-pioneer-research.md) | 🔴 Planned |
 
 ---
 
@@ -60,6 +68,7 @@ Plans are categorized by a `type` field in YAML frontmatter. Each type has diffe
 | `eval` | `eval-` | name, status, criteria, decision | rationale | Comparing tools/approaches, making a go/no-go choice |
 | `setup` | `setup-` | name, status | tools_installed, configs_changed | Environment, tooling, infrastructure changes |
 | `migration` | `migration-` | name, status, from, to | rollback | One-off system/data migrations |
+| `enhancement` | `enhance-` | name, status, depends_on, blocks | rationale, tasks | Cross-cutting capability improvements that touch multiple existing modules |
 
 **Agent Self-Extension:** When encountering a new activity type not in the catalog above:
 1. Determine a short `type` name (lowercase, no spaces)

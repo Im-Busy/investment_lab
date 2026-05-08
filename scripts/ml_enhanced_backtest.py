@@ -23,15 +23,10 @@ import yfinance as yf
 project_root = Path(__file__).parent.parent
 
 from src.backtest.engine import BacktestEngine
-from src.backtest.metrics import compute_metrics
 from src.indicators.regime_detector import RegimeDetector
 from src.ml.features import FeatureEngineer
 from src.ml.pipeline import MLPipeline
-from src.ml.regime_model import RegimeClassifier
-from src.ml.signal_scorer import SignalScorer
-from src.patterns.base import BasePattern, PatternResult
 from src.signals.signal_generator import SignalGenerator
-from src.strategies.confluence import ConfluenceScorer
 
 
 def load_price_data(symbol: str, start: str, end: str) -> pd.DataFrame:
@@ -121,7 +116,7 @@ def run_ml_backtest(
         scored_signals.extend(signals)
 
     if verbose:
-        print(f"\n=== ML-Enhanced Backtest ===")
+        print("\n=== ML-Enhanced Backtest ===")
         print(f"Total signals: {len(scored_signals)}")
         print(f"Regime predictions: {regime_pred.value_counts().to_dict()}")
 

@@ -5,7 +5,7 @@
 
 ## Summary
 
-Phase 3 originally planned to migrate to VectorBT for portfolio-level backtesting. However, VectorBT installation fails on Windows due to C++ compilation issues. 
+Phase 3 originally planned to migrate to VectorBT for portfolio-level backtesting. However, VectorBT installation fails on Windows due to C++ compilation issues.
 
 **Solution:** Created a custom **Vectorized Portfolio Engine** (`src/backtest/vectorbt_alternative.py`) that provides similar performance benefits using pure NumPy vectorization without external dependencies.
 
@@ -53,7 +53,7 @@ signal_dict = {
 }
 
 portfolio_result = engine.run_portfolio_backtest(
-    df, 
+    df,
     signal_dict,
     weight_type="equal_weight",  # or "sharpe_weighted", "inverse_vol"
 )

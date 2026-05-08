@@ -188,7 +188,7 @@ This study provides a framework for sentiment analysis on Twitter, which can be 
 - **Source**: `TwitterDistantSupervision09.md`
 
 ### TL;DR
-* Automate sentiment classification on Twitter messages without manual labeling to help consumers and businesses analyze customer feedback. 
+* Automate sentiment classification on Twitter messages without manual labeling to help consumers and businesses analyze customer feedback.
 * Three machine learning algorithms (Naive Bayes, Maximum Entropy, and SVM) achieve accuracy above 80% when trained on Twitter data with emoticons as noisy labels.
 * The study demonstrates the effectiveness of distant supervision in sentiment analysis, but notes limitations such as handling neutral tweets and the potential for imperfect emoticon-based training data.
 

@@ -567,4 +567,3 @@ with model:
 - Save results with `idata.to_netcdf('results.nc')`
 - Load with `az.from_netcdf('results.nc')`
 - For very large models, consider minibatch ADVI or data subsampling
-

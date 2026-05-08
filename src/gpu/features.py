@@ -227,7 +227,9 @@ class GPUFeatureEngineer:
         pos[:period] = float("nan")
         return pos
 
-    def bollinger_bands(self, period: int = 20, num_std: float = 2.0) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    def bollinger_bands(
+        self, period: int = 20, num_std: float = 2.0
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         """Bollinger Bands: middle, upper, lower."""
         middle = self.rolling_mean(self.close, period)
         std = self.rolling_std(self.close, period)
@@ -301,10 +303,24 @@ class GPUFeatureEngineer:
         """
         features: List[torch.Tensor] = []
         self._feature_names = [
-            "SMA_20", "EMA_14", "RSI_14", "ATR_14", "ADX_14",
-            "RET_1", "RET_5", "VOL_20", "VOL_RATIO_20", "PRICE_POS_20",
-            "BB_MIDDLE_20", "BB_WIDTH_20", "DONCHIAN_POS", "Z_SCORE_20",
-            "PRICE_DIFF", "HIGH_LOW", "BODY_RATIO", "CLOSE_CHANGE",
+            "SMA_20",
+            "EMA_14",
+            "RSI_14",
+            "ATR_14",
+            "ADX_14",
+            "RET_1",
+            "RET_5",
+            "VOL_20",
+            "VOL_RATIO_20",
+            "PRICE_POS_20",
+            "BB_MIDDLE_20",
+            "BB_WIDTH_20",
+            "DONCHIAN_POS",
+            "Z_SCORE_20",
+            "PRICE_DIFF",
+            "HIGH_LOW",
+            "BODY_RATIO",
+            "CLOSE_CHANGE",
         ]
 
         features.append(self.rolling_mean(self.close, 20))  # SMA_20
@@ -336,7 +352,9 @@ class GPUFeatureEngineer:
         features.append(daily_range)  # HIGH_LOW
 
         body = torch.abs(self.close - self.open)
-        body_ratio = torch.where(daily_range > 0, body / daily_range, torch.tensor(0.0, device=self.device))
+        body_ratio = torch.where(
+            daily_range > 0, body / daily_range, torch.tensor(0.0, device=self.device)
+        )
         features.append(body_ratio)  # BODY_RATIO
 
         features.append(self.close - torch.roll(self.close, 1, 0))  # CLOSE_CHANGE

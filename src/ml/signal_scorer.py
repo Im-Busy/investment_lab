@@ -75,7 +75,7 @@ class SignalRegressor:
 
     def __init__(
         self,
-        model_type: str = "gradient_boosting",
+        model_type: str = "catboost",
         n_estimators: int = 100,
         max_depth: int = 3,
         learning_rate: float = 0.05,
@@ -158,6 +158,7 @@ class SignalRegressor:
         X: pd.DataFrame,
         y: pd.Series,
         test_size: float = 0.2,
+        purge_window: int = 5,
     ) -> Dict[str, Any]:
         """Train the regressor on features and forward returns.
 
@@ -165,6 +166,9 @@ class SignalRegressor:
             X: Feature DataFrame.
             y: Forward return series (continuous labels).
             test_size: Fraction of data for testing.
+            purge_window: Number of training samples at the split boundary
+                to exclude from training (prevents label overlap leakage).
+                Set to match the forward-return horizon used for labels.
 
         Returns:
             Dict with train/test IC, R², and feature importance.
@@ -180,9 +184,10 @@ class SignalRegressor:
             return {"error": f"Only {len(X_clean)} valid samples after NaN filtering"}
 
         split_idx = int(len(X_clean) * (1 - test_size))
-        X_train = X_clean.iloc[:split_idx]
+        train_end = max(0, split_idx - purge_window)
+        X_train = X_clean.iloc[:train_end]
         X_test = X_clean.iloc[split_idx:]
-        y_train = y_clean.iloc[:split_idx]
+        y_train = y_clean.iloc[:train_end]
         y_test = y_clean.iloc[split_idx:]
 
         self.model = self._create_model()
@@ -210,7 +215,11 @@ class SignalRegressor:
             "test_r2": r2_score(y_test, test_pred),
             "train_hit_rate": train_hit,
             "test_hit_rate": test_hit,
-            "overfit_gap_ic": float(abs(train_ic_df["rank_ic"].iloc[0]) - abs(test_ic_df["rank_ic"].iloc[0])) if not train_ic_df.empty and not test_ic_df.empty else 0,
+            "overfit_gap_ic": float(
+                abs(train_ic_df["rank_ic"].iloc[0]) - abs(test_ic_df["rank_ic"].iloc[0])
+            )
+            if not train_ic_df.empty and not test_ic_df.empty
+            else 0,
             "n_train": len(y_train),
             "n_test": len(y_test),
         }
@@ -219,7 +228,8 @@ class SignalRegressor:
             results["feature_importance"] = dict(
                 sorted(
                     zip(self.feature_names_, self.model.feature_importances_),
-                    key=lambda x: x[1], reverse=True,
+                    key=lambda x: x[1],
+                    reverse=True,
                 )[:20]
             )
 
@@ -261,12 +271,16 @@ class SignalRegressor:
         pearson_df = compute_ic(preds, actuals)
         hit = compute_hit_rate(preds.values, actuals.values)
 
-        return pd.DataFrame([{
-            "rank_ic": rank_ic_df["rank_ic"].iloc[0] if not rank_ic_df.empty else np.nan,
-            "ic": pearson_df["ic"].iloc[0] if not pearson_df.empty else np.nan,
-            "hit_rate": hit,
-            "n_samples": len(preds),
-        }])
+        return pd.DataFrame(
+            [
+                {
+                    "rank_ic": rank_ic_df["rank_ic"].iloc[0] if not rank_ic_df.empty else np.nan,
+                    "ic": pearson_df["ic"].iloc[0] if not pearson_df.empty else np.nan,
+                    "hit_rate": hit,
+                    "n_samples": len(preds),
+                }
+            ]
+        )
 
     def train_with_purged_cv(
         self,
@@ -378,7 +392,8 @@ class SignalRegressor:
             results["feature_importance"] = dict(
                 sorted(
                     zip(self.feature_names_, self.model.feature_importances_),
-                    key=lambda x: x[1], reverse=True,
+                    key=lambda x: x[1],
+                    reverse=True,
                 )[:20]
             )
 
@@ -391,7 +406,11 @@ class SignalRegressor:
                     "learning_rate": self.learning_rate,
                 },
                 features=self.feature_names_,
-                cv_params={"n_splits": n_splits, "pct_embargo": pct_embargo, "label_span": label_span},
+                cv_params={
+                    "n_splits": n_splits,
+                    "pct_embargo": pct_embargo,
+                    "label_span": label_span,
+                },
             )
             experiment_logger.log_feature_importance(
                 mdi=results.get("feature_importance", {}),
@@ -460,12 +479,20 @@ class SignalRegressor:
             train_pred = model.predict(X_train[valid_train])
             test_pred = model.predict(X_test[valid_test])
 
-            train_ic = compute_rank_ic(pd.Series(train_pred, index=y_train[valid_train].index), y_train[valid_train])
-            test_ic = compute_rank_ic(pd.Series(test_pred, index=y_test[valid_test].index), y_test[valid_test])
+            train_ic = compute_rank_ic(
+                pd.Series(train_pred, index=y_train[valid_train].index), y_train[valid_train]
+            )
+            test_ic = compute_rank_ic(
+                pd.Series(test_pred, index=y_test[valid_test].index), y_test[valid_test]
+            )
             hit = compute_hit_rate(test_pred, y_test[valid_test].values)
 
-            results["train_rank_ic"].append(float(train_ic["rank_ic"].iloc[0]) if not train_ic.empty else 0)
-            results["test_rank_ic"].append(float(test_ic["rank_ic"].iloc[0]) if not test_ic.empty else 0)
+            results["train_rank_ic"].append(
+                float(train_ic["rank_ic"].iloc[0]) if not train_ic.empty else 0
+            )
+            results["test_rank_ic"].append(
+                float(test_ic["rank_ic"].iloc[0]) if not test_ic.empty else 0
+            )
             results["test_hit_rate"].append(hit)
             results["dates"].append(str(window_start))
 
@@ -493,10 +520,12 @@ class SignalRegressor:
             return pd.DataFrame()
 
         return (
-            pd.DataFrame({
-                "feature": self.feature_names_,
-                "importance": self.model.feature_importances_,
-            })
+            pd.DataFrame(
+                {
+                    "feature": self.feature_names_,
+                    "importance": self.model.feature_importances_,
+                }
+            )
             .sort_values("importance", ascending=False)
             .head(top_n)
         )
@@ -528,17 +557,21 @@ class SignalRegressor:
         y_clean = y.loc[idx]
 
         result = permutation_importance(
-            self.model, X_clean, y_clean,
+            self.model,
+            X_clean,
+            y_clean,
             n_repeats=n_repeats,
             random_state=self.random_state,
             scoring="neg_mean_squared_error",
         )
 
-        return pd.DataFrame({
-            "feature": self.feature_names_,
-            "importance_mean": result.importances_mean,
-            "importance_std": result.importances_std,
-        }).sort_values("importance_mean", ascending=False)
+        return pd.DataFrame(
+            {
+                "feature": self.feature_names_,
+                "importance_mean": result.importances_mean,
+                "importance_std": result.importances_std,
+            }
+        ).sort_values("importance_mean", ascending=False)
 
     @staticmethod
     def compare_models(
@@ -570,13 +603,15 @@ class SignalRegressor:
                 reg = SignalRegressor(model_type=mt)
                 result = reg.train_with_purged_cv(X, y, n_splits=n_splits)
                 if "error" not in result:
-                    results.append({
-                        "model": mt,
-                        "mean_test_rank_ic": result.get("mean_test_rank_ic", 0),
-                        "std_test_rank_ic": result.get("std_test_rank_ic", 0),
-                        "mean_test_hit_rate": result.get("mean_test_hit_rate", 0),
-                        "n_folds": result.get("n_folds", 0),
-                    })
+                    results.append(
+                        {
+                            "model": mt,
+                            "mean_test_rank_ic": result.get("mean_test_rank_ic", 0),
+                            "std_test_rank_ic": result.get("std_test_rank_ic", 0),
+                            "mean_test_hit_rate": result.get("mean_test_hit_rate", 0),
+                            "n_folds": result.get("n_folds", 0),
+                        }
+                    )
             except ImportError:
                 logger.warning(f"Skipping {mt}: not installed")
             except Exception as e:
@@ -588,6 +623,7 @@ class SignalRegressor:
 
 
 # ── Legacy classifier (kept for backward compatibility) ──────────────────
+
 
 class SignalScorer:
     """Legacy ML-based signal quality scorer (classification).
@@ -691,6 +727,12 @@ class SignalScorer:
         X_clean = X[valid_mask]
         y_clean = y[valid_mask]
 
+        if len(X_clean) < 2:
+            raise ValueError(
+                f"Need at least 2 samples for training, got {len(X_clean)}. "
+                "The strategy may not have generated enough trades."
+            )
+
         split_idx = int(len(X_clean) * 0.7)
         X_train = X_clean.iloc[:split_idx]
         X_test = X_clean.iloc[split_idx:]
@@ -703,21 +745,35 @@ class SignalScorer:
         self.model.fit(X_train, y_train)
 
         train_pred = self.model.predict(X_train)
-        test_pred = self.model.predict(X_test)
-        test_proba = self.model.predict_proba(X_test)[:, 1]
 
-        if threshold is None:
-            precision, recall, thresholds = precision_recall_curve(y_test, test_proba)
-            f1_scores = 2 * (precision * recall) / (precision + recall + 1e-8)
-            optimal_idx = np.argmax(f1_scores)
-            self.threshold_ = thresholds[min(optimal_idx, len(thresholds) - 1)]
+        if len(X_test) > 0:
+            test_pred = self.model.predict(X_test)
+            test_proba = self.model.predict_proba(X_test)[:, 1]
+            test_accuracy = accuracy_score(y_test, test_pred)
+            test_auc_roc = roc_auc_score(y_test, test_proba)
+            if threshold is None:
+                precision, recall, thresholds = precision_recall_curve(y_test, test_proba)
+                f1_scores = 2 * (precision * recall) / (precision + recall + 1e-8)
+                optimal_idx = np.argmax(f1_scores)
+                self.threshold_ = thresholds[min(optimal_idx, len(thresholds) - 1)]
+            test_precision = (
+                float((y_test[test_pred == 1] == 1).mean()) if (test_pred == 1).any() else 0
+            )
+            test_report = classification_report(y_test, test_pred, output_dict=True)
+        else:
+            test_pred = None
+            test_proba = None
+            test_accuracy = None
+            test_auc_roc = None
+            test_precision = None
+            test_report = {}
 
         results = {
             "train_accuracy": accuracy_score(y_train, train_pred),
-            "test_accuracy": accuracy_score(y_test, test_pred),
-            "test_auc_roc": roc_auc_score(y_test, test_proba),
-            "test_precision": float((y_test[test_pred == 1] == 1).mean()) if (test_pred == 1).any() else 0,
-            "test_report": classification_report(y_test, test_pred, output_dict=True),
+            "test_accuracy": test_accuracy,
+            "test_auc_roc": test_auc_roc,
+            "test_precision": test_precision,
+            "test_report": test_report,
             "n_train": len(X_train),
             "n_test": len(X_test),
             "optimal_threshold": self.threshold_,
@@ -729,7 +785,8 @@ class SignalScorer:
             results["feature_importance"] = dict(
                 sorted(
                     zip(self.feature_names_, self.model.feature_importances_),
-                    key=lambda x: x[1], reverse=True,
+                    key=lambda x: x[1],
+                    reverse=True,
                 )[:15]
             )
 

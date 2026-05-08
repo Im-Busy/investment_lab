@@ -32,6 +32,7 @@ from .utils import get_device, to_numpy, to_tensor
 @dataclass
 class GPUSignalBatch:
     """Batch of detection signals across all bars for a pattern."""
+
     pattern_name: str
     detected: torch.Tensor  # [N] bool
     direction: torch.Tensor  # [N] int8: 0=neutral, 1=long, -1=short
@@ -143,7 +144,9 @@ class GPUPatternDetector:
         total_range = self.high - self.low
         valid_range = total_range > 0
 
-        body_ratio = torch.where(valid_range, body / total_range, torch.tensor(1.0, device=self.device))
+        body_ratio = torch.where(
+            valid_range, body / total_range, torch.tensor(1.0, device=self.device)
+        )
         is_doji = body_ratio <= body_ratio_threshold
 
         upper_shadow = self.high - torch.maximum(self.open, self.close)
@@ -152,12 +155,16 @@ class GPUPatternDetector:
         shadow_sum = upper_shadow + lower_shadow
         valid_shadow = shadow_sum > 0
 
-        dragonfly = torch.where(valid_range & valid_shadow,
-                                (upper_shadow / total_range) <= 0.1,
-                                torch.tensor(False, device=self.device))
-        gravestone = torch.where(valid_range & valid_shadow,
-                                 (lower_shadow / total_range) <= 0.1,
-                                 torch.tensor(False, device=self.device))
+        dragonfly = torch.where(
+            valid_range & valid_shadow,
+            (upper_shadow / total_range) <= 0.1,
+            torch.tensor(False, device=self.device),
+        )
+        gravestone = torch.where(
+            valid_range & valid_shadow,
+            (lower_shadow / total_range) <= 0.1,
+            torch.tensor(False, device=self.device),
+        )
 
         direction = torch.where(
             is_doji & dragonfly,
@@ -169,10 +176,18 @@ class GPUPatternDetector:
             ),
         )
 
-        confidence = torch.where(is_doji, torch.tensor(0.30, device=self.device), torch.zeros(self._n_bars, device=self.device))
-        entry_price = torch.where(direction > 0, self.high + 0.01,
-                          torch.where(direction < 0, self.low - 0.01,
-                              torch.zeros(self._n_bars, device=self.device)))
+        confidence = torch.where(
+            is_doji,
+            torch.tensor(0.30, device=self.device),
+            torch.zeros(self._n_bars, device=self.device),
+        )
+        entry_price = torch.where(
+            direction > 0,
+            self.high + 0.01,
+            torch.where(
+                direction < 0, self.low - 0.01, torch.zeros(self._n_bars, device=self.device)
+            ),
+        )
 
         return GPUSignalBatch(
             pattern_name="Doji",
@@ -180,9 +195,13 @@ class GPUPatternDetector:
             direction=direction,
             confidence=confidence,
             entry_price=entry_price,
-            stop_loss=torch.where(direction > 0, self.low - 0.01,
-                          torch.where(direction < 0, self.high + 0.01,
-                              torch.zeros(self._n_bars, device=self.device))),
+            stop_loss=torch.where(
+                direction > 0,
+                self.low - 0.01,
+                torch.where(
+                    direction < 0, self.high + 0.01, torch.zeros(self._n_bars, device=self.device)
+                ),
+            ),
             take_profit_1=entry_price * (1 + 0.02 * direction.float()),
         )
 
@@ -224,29 +243,41 @@ class GPUPatternDetector:
         bear_engulf = is_engulfing & is_red
 
         direction = torch.where(
-            bull_engulf, torch.tensor(1, dtype=torch.int8, device=self.device),
-            torch.where(bear_engulf, torch.tensor(-1, dtype=torch.int8, device=self.device),
-                torch.zeros(self._n_bars, dtype=torch.int8, device=self.device)),
+            bull_engulf,
+            torch.tensor(1, dtype=torch.int8, device=self.device),
+            torch.where(
+                bear_engulf,
+                torch.tensor(-1, dtype=torch.int8, device=self.device),
+                torch.zeros(self._n_bars, dtype=torch.int8, device=self.device),
+            ),
         )
 
-        confidence_base = torch.where(bull_engulf | bear_engulf,
-                                      torch.tensor(0.65, device=self.device),
-                                      torch.zeros(self._n_bars, device=self.device))
+        confidence_base = torch.where(
+            bull_engulf | bear_engulf,
+            torch.tensor(0.65, device=self.device),
+            torch.zeros(self._n_bars, device=self.device),
+        )
 
         return GPUSignalBatch(
             pattern_name="Engulfing",
             detected=is_engulfing,
             direction=direction,
             confidence=confidence_base,
-            entry_price=torch.where(bull_engulf, h + 0.01,
-                            torch.where(bear_engulf, l - 0.01,
-                                torch.zeros(self._n_bars, device=self.device))),
-            stop_loss=torch.where(bull_engulf, l - 0.01,
-                          torch.where(bear_engulf, h + 0.01,
-                              torch.zeros(self._n_bars, device=self.device))),
-            take_profit_1=torch.where(direction != 0,
-                                      self.close + (self.close * 0.03 * direction.float()),
-                                      torch.zeros(self._n_bars, device=self.device)),
+            entry_price=torch.where(
+                bull_engulf,
+                h + 0.01,
+                torch.where(bear_engulf, l - 0.01, torch.zeros(self._n_bars, device=self.device)),
+            ),
+            stop_loss=torch.where(
+                bull_engulf,
+                l - 0.01,
+                torch.where(bear_engulf, h + 0.01, torch.zeros(self._n_bars, device=self.device)),
+            ),
+            take_profit_1=torch.where(
+                direction != 0,
+                self.close + (self.close * 0.03 * direction.float()),
+                torch.zeros(self._n_bars, device=self.device),
+            ),
         )
 
     def detect_hammer(
@@ -260,7 +291,9 @@ class GPUPatternDetector:
         body_ratio = torch.where(valid, body / total_range, torch.tensor(1.0, device=self.device))
         upper_shadow = self.high - torch.maximum(self.open, self.close)
         lower_shadow = torch.minimum(self.open, self.close) - self.low
-        lower_ratio = torch.where(valid, lower_shadow / total_range, torch.tensor(0.0, device=self.device))
+        lower_ratio = torch.where(
+            valid, lower_shadow / total_range, torch.tensor(0.0, device=self.device)
+        )
 
         is_hammer_body = body_ratio <= body_ratio_max
         is_hammer_shadow = lower_ratio >= lower_shadow_min
@@ -272,26 +305,43 @@ class GPUPatternDetector:
         hammer_bear = is_hammer & ~trend_mask  # uptrend -> bear
 
         direction = torch.where(
-            hammer_bull, torch.tensor(1, dtype=torch.int8, device=self.device),
-            torch.where(hammer_bear, torch.tensor(-1, dtype=torch.int8, device=self.device),
-                torch.zeros(self._n_bars, dtype=torch.int8, device=self.device)),
+            hammer_bull,
+            torch.tensor(1, dtype=torch.int8, device=self.device),
+            torch.where(
+                hammer_bear,
+                torch.tensor(-1, dtype=torch.int8, device=self.device),
+                torch.zeros(self._n_bars, dtype=torch.int8, device=self.device),
+            ),
         )
 
         return GPUSignalBatch(
             pattern_name="Hammer",
             detected=is_hammer,
             direction=direction,
-            confidence=torch.where(is_hammer, torch.tensor(0.45, device=self.device),
-                                   torch.zeros(self._n_bars, device=self.device)),
-            entry_price=torch.where(hammer_bull, self.high + 0.01,
-                            torch.where(hammer_bear, self.low - 0.01,
-                                torch.zeros(self._n_bars, device=self.device))),
-            stop_loss=torch.where(hammer_bull, self.low - 0.01,
-                          torch.where(hammer_bear, self.high + 0.01,
-                              torch.zeros(self._n_bars, device=self.device))),
-            take_profit_1=torch.where(direction != 0,
-                                      self.close * (1 + 0.04 * direction.float()),
-                                      torch.zeros(self._n_bars, device=self.device)),
+            confidence=torch.where(
+                is_hammer,
+                torch.tensor(0.45, device=self.device),
+                torch.zeros(self._n_bars, device=self.device),
+            ),
+            entry_price=torch.where(
+                hammer_bull,
+                self.high + 0.01,
+                torch.where(
+                    hammer_bear, self.low - 0.01, torch.zeros(self._n_bars, device=self.device)
+                ),
+            ),
+            stop_loss=torch.where(
+                hammer_bull,
+                self.low - 0.01,
+                torch.where(
+                    hammer_bear, self.high + 0.01, torch.zeros(self._n_bars, device=self.device)
+                ),
+            ),
+            take_profit_1=torch.where(
+                direction != 0,
+                self.close * (1 + 0.04 * direction.float()),
+                torch.zeros(self._n_bars, device=self.device),
+            ),
         )
 
     def detect_harami(self, body_ratio_min: float = 0.3) -> GPUSignalBatch:
@@ -311,7 +361,9 @@ class GPUPatternDetector:
 
         range_prev = torch.roll(h - l, 1, 0)
         valid = range_prev > 0
-        body_ratio_prev = torch.where(valid, body_prev / range_prev, torch.tensor(0.0, device=self.device))
+        body_ratio_prev = torch.where(
+            valid, body_prev / range_prev, torch.tensor(0.0, device=self.device)
+        )
 
         large_prev = body_ratio_prev >= body_ratio_min
         contained = (body_high <= body_high_prev) & (body_low >= body_low_prev)
@@ -319,32 +371,51 @@ class GPUPatternDetector:
         is_harami = large_prev & contained & opposite_color
 
         bull_harami = is_harami & is_green  # green inside red prev
-        bear_harami = is_harami & is_red    # red inside green prev
+        bear_harami = is_harami & is_red  # red inside green prev
 
         direction = torch.where(
-            bull_harami, torch.tensor(1, dtype=torch.int8, device=self.device),
-            torch.where(bear_harami, torch.tensor(-1, dtype=torch.int8, device=self.device),
-                torch.zeros(self._n_bars, dtype=torch.int8, device=self.device)),
+            bull_harami,
+            torch.tensor(1, dtype=torch.int8, device=self.device),
+            torch.where(
+                bear_harami,
+                torch.tensor(-1, dtype=torch.int8, device=self.device),
+                torch.zeros(self._n_bars, dtype=torch.int8, device=self.device),
+            ),
         )
 
         return GPUSignalBatch(
             pattern_name="Harami",
             detected=is_harami,
             direction=direction,
-            confidence=torch.where(is_harami, torch.tensor(0.40, device=self.device),
-                                   torch.zeros(self._n_bars, device=self.device)),
-            entry_price=torch.where(bull_harami, h + 0.01,
-                            torch.where(bear_harami, l - 0.01,
-                                torch.zeros(self._n_bars, device=self.device))),
-            stop_loss=torch.where(bull_harami, body_low_prev - 0.01,
-                          torch.where(bear_harami, body_high_prev + 0.01,
-                              torch.zeros(self._n_bars, device=self.device))),
-            take_profit_1=torch.where(direction != 0,
-                                      self.close * (1 + 0.03 * direction.float()),
-                                      torch.zeros(self._n_bars, device=self.device)),
+            confidence=torch.where(
+                is_harami,
+                torch.tensor(0.40, device=self.device),
+                torch.zeros(self._n_bars, device=self.device),
+            ),
+            entry_price=torch.where(
+                bull_harami,
+                h + 0.01,
+                torch.where(bear_harami, l - 0.01, torch.zeros(self._n_bars, device=self.device)),
+            ),
+            stop_loss=torch.where(
+                bull_harami,
+                body_low_prev - 0.01,
+                torch.where(
+                    bear_harami,
+                    body_high_prev + 0.01,
+                    torch.zeros(self._n_bars, device=self.device),
+                ),
+            ),
+            take_profit_1=torch.where(
+                direction != 0,
+                self.close * (1 + 0.03 * direction.float()),
+                torch.zeros(self._n_bars, device=self.device),
+            ),
         )
 
-    def detect_dark_cloud_cover(self, body_ratio_min: float = 0.3, penetration_min: float = 0.5) -> GPUSignalBatch:
+    def detect_dark_cloud_cover(
+        self, body_ratio_min: float = 0.3, penetration_min: float = 0.5
+    ) -> GPUSignalBatch:
         """GPU Dark Cloud Cover / Piercing Line detection."""
         o, c = self.open, self.close
         o_prev = torch.roll(o, 1, 0)
@@ -361,12 +432,19 @@ class GPUPatternDetector:
         range_prev = h_prev - l_prev
         valid_prev = range_prev > 0
 
-        large_prev = torch.where(valid_prev, body_prev / range_prev >= body_ratio_min,
-                                 torch.tensor(False, device=self.device))
+        large_prev = torch.where(
+            valid_prev,
+            body_prev / range_prev >= body_ratio_min,
+            torch.tensor(False, device=self.device),
+        )
 
         dark_cloud = is_green_prev & is_red_curr & large_prev
         open_above_prev_high = o > h_prev
-        close_below_mid = c < (o_prev + c_prev) / 2 * (1 - penetration_min) + (o_prev + c_prev) / 2 * penetration_min
+        close_below_mid = (
+            c
+            < (o_prev + c_prev) / 2 * (1 - penetration_min)
+            + (o_prev + c_prev) / 2 * penetration_min
+        )
         dark_cloud_confirmed = dark_cloud & open_above_prev_high & close_below_mid
 
         piercing = is_red_prev & is_green_curr & large_prev
@@ -377,26 +455,43 @@ class GPUPatternDetector:
         is_detected = dark_cloud_confirmed | piercing_confirmed
 
         direction = torch.where(
-            dark_cloud_confirmed, torch.tensor(-1, dtype=torch.int8, device=self.device),
-            torch.where(piercing_confirmed, torch.tensor(1, dtype=torch.int8, device=self.device),
-                torch.zeros(self._n_bars, dtype=torch.int8, device=self.device)),
+            dark_cloud_confirmed,
+            torch.tensor(-1, dtype=torch.int8, device=self.device),
+            torch.where(
+                piercing_confirmed,
+                torch.tensor(1, dtype=torch.int8, device=self.device),
+                torch.zeros(self._n_bars, dtype=torch.int8, device=self.device),
+            ),
         )
 
         return GPUSignalBatch(
             pattern_name="DarkCloudCover",
             detected=is_detected,
             direction=direction,
-            confidence=torch.where(is_detected, torch.tensor(0.55, device=self.device),
-                                   torch.zeros(self._n_bars, device=self.device)),
-            entry_price=torch.where(dark_cloud_confirmed, o - 0.01,
-                            torch.where(piercing_confirmed, c + 0.01,
-                                torch.zeros(self._n_bars, device=self.device))),
-            stop_loss=torch.where(dark_cloud_confirmed, h_prev + 0.01,
-                          torch.where(piercing_confirmed, l_prev - 0.01,
-                              torch.zeros(self._n_bars, device=self.device))),
-            take_profit_1=torch.where(direction != 0,
-                                      self.close * (1 + 0.03 * direction.float().abs()),
-                                      torch.zeros(self._n_bars, device=self.device)),
+            confidence=torch.where(
+                is_detected,
+                torch.tensor(0.55, device=self.device),
+                torch.zeros(self._n_bars, device=self.device),
+            ),
+            entry_price=torch.where(
+                dark_cloud_confirmed,
+                o - 0.01,
+                torch.where(
+                    piercing_confirmed, c + 0.01, torch.zeros(self._n_bars, device=self.device)
+                ),
+            ),
+            stop_loss=torch.where(
+                dark_cloud_confirmed,
+                h_prev + 0.01,
+                torch.where(
+                    piercing_confirmed, l_prev - 0.01, torch.zeros(self._n_bars, device=self.device)
+                ),
+            ),
+            take_profit_1=torch.where(
+                direction != 0,
+                self.close * (1 + 0.03 * direction.float().abs()),
+                torch.zeros(self._n_bars, device=self.device),
+            ),
         )
 
     # ------------------------------------------------------------------
@@ -422,24 +517,33 @@ class GPUPatternDetector:
 
         valid_range = torch.arange(n, device=self.device) >= 3
 
-        direction = torch.where(confirmed & valid_range,
-                                torch.tensor(1, dtype=torch.int8, device=self.device),
-                                torch.zeros(n, dtype=torch.int8, device=self.device))
+        direction = torch.where(
+            confirmed & valid_range,
+            torch.tensor(1, dtype=torch.int8, device=self.device),
+            torch.zeros(n, dtype=torch.int8, device=self.device),
+        )
 
-        entry_price = torch.where(confirmed & valid_range,
-                                  max_close + confirmation_offset,
-                                  torch.zeros(n, device=self.device))
-        stop_loss = torch.where(confirmed & valid_range,
-                                torch.roll(self.low, 1, 0) - confirmation_offset,
-                                torch.zeros(n, device=self.device))
+        entry_price = torch.where(
+            confirmed & valid_range,
+            max_close + confirmation_offset,
+            torch.zeros(n, device=self.device),
+        )
+        stop_loss = torch.where(
+            confirmed & valid_range,
+            torch.roll(self.low, 1, 0) - confirmation_offset,
+            torch.zeros(n, device=self.device),
+        )
         risk = entry_price - stop_loss
 
         return GPUSignalBatch(
             pattern_name="MSL",
             detected=confirmed & valid_range,
             direction=direction,
-            confidence=torch.where(confirmed & valid_range, torch.tensor(0.60, device=self.device),
-                                   torch.zeros(n, device=self.device)),
+            confidence=torch.where(
+                confirmed & valid_range,
+                torch.tensor(0.60, device=self.device),
+                torch.zeros(n, device=self.device),
+            ),
             entry_price=entry_price,
             stop_loss=stop_loss,
             take_profit_1=entry_price + risk * 2,
@@ -465,24 +569,33 @@ class GPUPatternDetector:
 
         valid_range = torch.arange(n, device=self.device) >= 3
 
-        direction = torch.where(confirmed & valid_range,
-                                torch.tensor(-1, dtype=torch.int8, device=self.device),
-                                torch.zeros(n, dtype=torch.int8, device=self.device))
+        direction = torch.where(
+            confirmed & valid_range,
+            torch.tensor(-1, dtype=torch.int8, device=self.device),
+            torch.zeros(n, dtype=torch.int8, device=self.device),
+        )
 
-        entry_price = torch.where(confirmed & valid_range,
-                                  min_close - confirmation_offset,
-                                  torch.zeros(n, device=self.device))
-        stop_loss = torch.where(confirmed & valid_range,
-                                torch.roll(self.high, 1, 0) + confirmation_offset,
-                                torch.zeros(n, device=self.device))
+        entry_price = torch.where(
+            confirmed & valid_range,
+            min_close - confirmation_offset,
+            torch.zeros(n, device=self.device),
+        )
+        stop_loss = torch.where(
+            confirmed & valid_range,
+            torch.roll(self.high, 1, 0) + confirmation_offset,
+            torch.zeros(n, device=self.device),
+        )
         risk = stop_loss - entry_price
 
         return GPUSignalBatch(
             pattern_name="MSH",
             detected=confirmed & valid_range,
             direction=direction,
-            confidence=torch.where(confirmed & valid_range, torch.tensor(0.60, device=self.device),
-                                   torch.zeros(n, device=self.device)),
+            confidence=torch.where(
+                confirmed & valid_range,
+                torch.tensor(0.60, device=self.device),
+                torch.zeros(n, device=self.device),
+            ),
             entry_price=entry_price,
             stop_loss=stop_loss,
             take_profit_1=entry_price - risk * 2,
@@ -511,20 +624,26 @@ class GPUPatternDetector:
         bar1_c = torch.roll(c, 1, 0)
         bar1_range_val = torch.roll(bar_range, 1, 0)
 
-        bar1_close_ratio = torch.where(bar1_range_val > 0,
-                                       (bar1_c - bar1_l) / bar1_range_val,
-                                       torch.tensor(0.5, device=self.device))
-        bar2_close_ratio = torch.where(bar_range > 0,
-                                       (c - l) / bar_range,
-                                       torch.tensor(0.5, device=self.device))
+        bar1_close_ratio = torch.where(
+            bar1_range_val > 0,
+            (bar1_c - bar1_l) / bar1_range_val,
+            torch.tensor(0.5, device=self.device),
+        )
+        bar2_close_ratio = torch.where(
+            bar_range > 0, (c - l) / bar_range, torch.tensor(0.5, device=self.device)
+        )
 
         pipe_bottom = is_wide & bar1_bear & (bar1_close_ratio < 0.3) & (bar2_close_ratio > 0.5)
         pipe_top = is_wide & (~bar1_bear) & (bar1_close_ratio > 0.7) & (bar2_close_ratio < 0.5)
 
         direction = torch.where(
-            pipe_bottom, torch.tensor(1, dtype=torch.int8, device=self.device),
-            torch.where(pipe_top, torch.tensor(-1, dtype=torch.int8, device=self.device),
-                torch.zeros(n, dtype=torch.int8, device=self.device)),
+            pipe_bottom,
+            torch.tensor(1, dtype=torch.int8, device=self.device),
+            torch.where(
+                pipe_top,
+                torch.tensor(-1, dtype=torch.int8, device=self.device),
+                torch.zeros(n, dtype=torch.int8, device=self.device),
+            ),
         )
 
         is_detected = pipe_bottom | pipe_top
@@ -533,17 +652,26 @@ class GPUPatternDetector:
             pattern_name="TwoBarReversal",
             detected=is_detected,
             direction=direction,
-            confidence=torch.where(is_detected, torch.tensor(0.50, device=self.device),
-                                   torch.zeros(n, device=self.device)),
-            entry_price=torch.where(direction > 0, h + 0.01,
-                            torch.where(direction < 0, l - 0.01,
-                                torch.zeros(n, device=self.device))),
-            stop_loss=torch.where(direction > 0, l - 0.01,
-                          torch.where(direction < 0, h + 0.01,
-                              torch.zeros(n, device=self.device))),
-            take_profit_1=torch.where(direction != 0,
-                                      self.close * (1 + 0.04 * direction.float()),
-                                      torch.zeros(n, device=self.device)),
+            confidence=torch.where(
+                is_detected,
+                torch.tensor(0.50, device=self.device),
+                torch.zeros(n, device=self.device),
+            ),
+            entry_price=torch.where(
+                direction > 0,
+                h + 0.01,
+                torch.where(direction < 0, l - 0.01, torch.zeros(n, device=self.device)),
+            ),
+            stop_loss=torch.where(
+                direction > 0,
+                l - 0.01,
+                torch.where(direction < 0, h + 0.01, torch.zeros(n, device=self.device)),
+            ),
+            take_profit_1=torch.where(
+                direction != 0,
+                self.close * (1 + 0.04 * direction.float()),
+                torch.zeros(n, device=self.device),
+            ),
         )
 
     def detect_nr7id(self, lookback: int = 50) -> GPUSignalBatch:
@@ -557,7 +685,9 @@ class GPUPatternDetector:
         is_nr7 = (bar_range == range_min7) & (bar_range > 0)
         is_nr7[:6] = False
 
-        vol_window = F.pad(self.volume.unsqueeze(0).unsqueeze(0), (lookback - 1, 0), mode="replicate")
+        vol_window = F.pad(
+            self.volume.unsqueeze(0).unsqueeze(0), (lookback - 1, 0), mode="replicate"
+        )
         vol_max = vol_window.unfold(2, lookback, 1).max(dim=3).values.squeeze(0).squeeze(0)
 
         is_id = self.volume >= vol_max
@@ -569,9 +699,11 @@ class GPUPatternDetector:
             pattern_name="NR7ID",
             detected=combined & valid,
             direction=torch.zeros(n, dtype=torch.int8, device=self.device),
-            confidence=torch.where(combined & valid,
-                                   torch.tensor(0.35, device=self.device),
-                                   torch.zeros(n, device=self.device)),
+            confidence=torch.where(
+                combined & valid,
+                torch.tensor(0.35, device=self.device),
+                torch.zeros(n, device=self.device),
+            ),
             entry_price=self.close,
             stop_loss=self.close * 0.98,
             take_profit_1=self.close * 1.04,
@@ -581,7 +713,9 @@ class GPUPatternDetector:
     # Breakout Pattern Detections
     # ------------------------------------------------------------------
 
-    def detect_donchian_breakout(self, period: int = 20) -> Tuple[GPUSignalBatch, torch.Tensor, torch.Tensor, torch.Tensor]:
+    def detect_donchian_breakout(
+        self, period: int = 20
+    ) -> Tuple[GPUSignalBatch, torch.Tensor, torch.Tensor, torch.Tensor]:
         """
         GPU Donchian Channel Breakout: parallel rolling max/min via unfolding.
 
@@ -606,35 +740,56 @@ class GPUPatternDetector:
         is_breakout = breakout_up | breakdown_dn
 
         direction = torch.where(
-            breakout_up, torch.tensor(1, dtype=torch.int8, device=self.device),
-            torch.where(breakdown_dn, torch.tensor(-1, dtype=torch.int8, device=self.device),
-                torch.zeros(n, dtype=torch.int8, device=self.device)),
+            breakout_up,
+            torch.tensor(1, dtype=torch.int8, device=self.device),
+            torch.where(
+                breakdown_dn,
+                torch.tensor(-1, dtype=torch.int8, device=self.device),
+                torch.zeros(n, dtype=torch.int8, device=self.device),
+            ),
         )
 
         vol_ratio = self.volume / (self._rolling_mean(self.volume, 20) + 1e-9)
         vol_confirmed = vol_ratio > 1.5
 
-        confidence = torch.where(is_breakout & vol_confirmed,
-                                 torch.tensor(0.65, device=self.device),
-                                 torch.where(is_breakout,
-                                             torch.tensor(0.50, device=self.device),
-                                             torch.zeros(n, device=self.device)))
+        confidence = torch.where(
+            is_breakout & vol_confirmed,
+            torch.tensor(0.65, device=self.device),
+            torch.where(
+                is_breakout,
+                torch.tensor(0.50, device=self.device),
+                torch.zeros(n, device=self.device),
+            ),
+        )
 
-        return GPUSignalBatch(
-            pattern_name="DonchianBreakout",
-            detected=is_breakout,
-            direction=direction,
-            confidence=confidence,
-            entry_price=torch.where(direction > 0, prev_upper,
-                            torch.where(direction < 0, prev_lower,
-                                torch.zeros(n, device=self.device))),
-            stop_loss=torch.where(direction > 0, middle,
-                          torch.where(direction < 0, middle,
-                              torch.zeros(n, device=self.device))),
-            take_profit_1=torch.where(direction > 0, c + (c - lower) * 2,
-                              torch.where(direction < 0, c - (upper - c) * 2,
-                                  torch.zeros(n, device=self.device))),
-        ), upper, lower, middle
+        return (
+            GPUSignalBatch(
+                pattern_name="DonchianBreakout",
+                detected=is_breakout,
+                direction=direction,
+                confidence=confidence,
+                entry_price=torch.where(
+                    direction > 0,
+                    prev_upper,
+                    torch.where(direction < 0, prev_lower, torch.zeros(n, device=self.device)),
+                ),
+                stop_loss=torch.where(
+                    direction > 0,
+                    middle,
+                    torch.where(direction < 0, middle, torch.zeros(n, device=self.device)),
+                ),
+                take_profit_1=torch.where(
+                    direction > 0,
+                    c + (c - lower) * 2,
+                    torch.where(
+                        direction < 0, c - (upper - c) * 2, torch.zeros(n, device=self.device)
+                    ),
+                ),
+            ),
+            upper,
+            lower,
+            middle,
+        )
 
     def detect_gap(self, gap_threshold_pct: float = 0.005) -> GPUSignalBatch:
         """GPU Gap detection: opening gap vs previous close."""
@@ -651,21 +806,30 @@ class GPUPatternDetector:
         valid = torch.arange(n, device=self.device) >= 1
 
         direction = torch.where(
-            gap_up, torch.tensor(1, dtype=torch.int8, device=self.device),
-            torch.where(gap_dn, torch.tensor(-1, dtype=torch.int8, device=self.device),
-                torch.zeros(n, dtype=torch.int8, device=self.device)),
+            gap_up,
+            torch.tensor(1, dtype=torch.int8, device=self.device),
+            torch.where(
+                gap_dn,
+                torch.tensor(-1, dtype=torch.int8, device=self.device),
+                torch.zeros(n, dtype=torch.int8, device=self.device),
+            ),
         )
 
         return GPUSignalBatch(
             pattern_name="Gap",
             detected=is_gap & valid,
             direction=direction,
-            confidence=torch.where(is_gap & valid, torch.tensor(0.45, device=self.device),
-                                   torch.zeros(n, device=self.device)),
+            confidence=torch.where(
+                is_gap & valid,
+                torch.tensor(0.45, device=self.device),
+                torch.zeros(n, device=self.device),
+            ),
             entry_price=o,
-            stop_loss=torch.where(direction > 0, c_prev,
-                          torch.where(direction < 0, c_prev,
-                              torch.zeros(n, device=self.device))),
+            stop_loss=torch.where(
+                direction > 0,
+                c_prev,
+                torch.where(direction < 0, c_prev, torch.zeros(n, device=self.device)),
+            ),
             take_profit_1=o * (1 + 0.02 * direction.float()),
         )
 
@@ -702,8 +866,8 @@ class GPUPatternDetector:
         swing_lows[:lookback] = False
 
         n = self._n_bars
-        swing_highs[n - lookback:] = False
-        swing_lows[n - lookback:] = False
+        swing_highs[n - lookback :] = False
+        swing_lows[n - lookback :] = False
 
         return swing_highs, swing_lows
 
@@ -786,16 +950,18 @@ class GPUPatternDetector:
 
             for i in range(self._n_bars):
                 if detected_np[i]:
-                    rows.append({
-                        "date": df.index[i],
-                        "bar_index": i,
-                        "pattern_name": pattern_name,
-                        "direction": "Long" if dir_np[i] > 0 else "Short",
-                        "confidence": conf_np[i],
-                        "entry_price": entry_np[i],
-                        "stop_loss": stop_np[i],
-                        "take_profit_1": tp1_np[i],
-                    })
+                    rows.append(
+                        {
+                            "date": df.index[i],
+                            "bar_index": i,
+                            "pattern_name": pattern_name,
+                            "direction": "Long" if dir_np[i] > 0 else "Short",
+                            "confidence": conf_np[i],
+                            "entry_price": entry_np[i],
+                            "stop_loss": stop_np[i],
+                            "take_profit_1": tp1_np[i],
+                        }
+                    )
 
         return pd.DataFrame(rows)
 

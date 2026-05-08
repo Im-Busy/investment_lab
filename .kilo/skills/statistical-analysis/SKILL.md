@@ -627,4 +627,3 @@ For questions about:
 **Online resources**:
 - APA Style Guide: https://apastyle.apa.org/
 - Statistical Consulting: Cross Validated (stats.stackexchange.com)
-

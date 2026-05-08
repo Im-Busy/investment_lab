@@ -1,28 +1,28 @@
 Page 1: Algorithmic Trading and
 Page 1: Quantitative Strategies
-Page 1: 
-Page 1: 
-Page 2: 
+Page 1:
+Page 1:
+Page 2:
 Page 3: Algorithmic Trading and
 Page 3: Quantitative Strategies
-Page 3: 
+Page 3:
 Page 3: Raja Velu
-Page 3: 
+Page 3:
 Page 3: Department of Finance
 Page 3: Whitman School of Management
 Page 3: Syracuse University
-Page 3: 
+Page 3:
 Page 3: Maxence Hardy
-Page 3: 
+Page 3:
 Page 3: eTrading Quantitative Research
 Page 3: J.P. Morgan
-Page 3: 
+Page 3:
 Page 3: Daniel Nehren
-Page 3: 
+Page 3:
 Page 3: Statistical Modeling & Development
 Page 3: Barclays
-Page 3: 
-Page 3: 
+Page 3:
+Page 3:
 Page 4: First edition published 2020
 Page 4: by CRC Press
 Page 4: 6000 Broken Sound Parkway NW, Suite 300, Boca Raton, FL 33487-2742
@@ -48,23 +48,23 @@ Page 4: ISBN: 9781498737166 (hbk)
 Page 4: ISBN: 9780429183942 (ebk)
 Page 4: Typeset in STIXGeneral
 Page 4: by Nova Techset Private Limited, Bengaluru & Chennai, India
-Page 4: 
-Page 4: 
+Page 4:
+Page 4:
 Page 5: Contents
-Page 5: 
+Page 5:
 Page 5: Preface
-Page 5: 
+Page 5:
 Page 5: xi
-Page 5: 
+Page 5:
 Page 5: I
-Page 5: 
+Page 5:
 Page 5: 1
-Page 5: 
+Page 5:
 Page 5: 1
-Page 5: 
+Page 5:
 Page 5: II
 Page 5: 2
-Page 5: 
+Page 5:
 Page 5: Introduction to Trading
 Page 5: Trading Fundamentals
 Page 5: 1.1 A Brief History of Stock Trading . . . . . . . . . . . . . . . . . .
@@ -83,7 +83,7 @@ Page 5: 1.4.3 Market Data Derived Statistics . . . . . . . . . . . . . . . .
 Page 5: 1.4.4 Fundamental Data and Other Data Sets . . . . . . . . . . .
 Page 5: 1.5 Market Microstructure: Economic Fundamentals of Trading . . . .
 Page 5: 1.5.1 Liquidity and Market Making . . . . . . . . . . . . . . . .
-Page 5: 
+Page 5:
 Page 5: Foundations: Basic Models and Empirics
 Page 5: Univariate Time Series Models
 Page 5: 2.1 Trades and Quotes Data and Their Aggregation: From Point
@@ -98,7 +98,7 @@ Page 5: Difference or Not To . . . . . . . . . . . . . . . . . . . . . . . . .
 Page 5: 2.8 Forecasting for ARIMA Processes . . . . . . . . . . . . . . . . . .
 Page 5: 2.9 Stylized Models for Asset Returns . . . . . . . . . . . . . . . . . .
 Page 5: 2.10 Time Series Models for Aggregated Data: Modeling the Variance . .
-Page 5: 
+Page 5:
 Page 5: 3
 Page 5: 3
 Page 5: 7
@@ -116,7 +116,7 @@ Page 5: 39
 Page 5: 42
 Page 5: 44
 Page 5: 45
-Page 5: 
+Page 5:
 Page 5: 51
 Page 5: 53
 Page 5: 54
@@ -130,21 +130,21 @@ Page 5: 78
 Page 5: 82
 Page 5: 84
 Page 5: v
-Page 5: 
-Page 5: 
+Page 5:
+Page 5:
 Page 6: vi
-Page 6: 
+Page 6:
 Page 6: 3
-Page 6: 
+Page 6:
 Page 6: 4
-Page 6: 
+Page 6:
 Page 6: Contents
 Page 6: 2.11 Stylized Models for Variance of Asset Returns . . . . . . . . . . .
 Page 6: 2.12 Exercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-Page 6: 
+Page 6:
 Page 6: 90
 Page 6: 92
-Page 6: 
+Page 6:
 Page 6: Multivariate Time Series Models
 Page 6: 3.1 Multivariate Regression . . . . . . . . . . . . . . . . . . . . . . .
 Page 6: 3.2 Dimension-Reduction Methods . . . . . . . . . . . . . . . . . . .
@@ -155,7 +155,7 @@ Page 6: 3.5 Applications in Finance . . . . . . . . . . . . . . . . . . . . . . 
 Page 6: 3.6 Multivariate GARCH Models . . . . . . . . . . . . . . . . . . . .
 Page 6: 3.7 Illustrative Examples . . . . . . . . . . . . . . . . . . . . . . . . .
 Page 6: 3.8 Exercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-Page 6: 
+Page 6:
 Page 6: 95
 Page 6: 96
 Page 6: 99
@@ -165,7 +165,7 @@ Page 6: 110
 Page 6: 112
 Page 6: 114
 Page 6: 122
-Page 6: 
+Page 6:
 Page 6: Advanced Topics
 Page 6: 4.1 State-Space Modeling . . . . . . . . . . . . . . . . . . . . . . . .
 Page 6: 4.2 Regime Switching and Change-Point Models . . . . . . . . . . . .
@@ -181,7 +181,7 @@ Page 6: 4.6.1 Neural Networks . . . . . . . . . . . . . . . . . . . . . . .
 Page 6: 4.6.2 Reinforcement Learning . . . . . . . . . . . . . . . . . . .
 Page 6: 4.6.3 Multiple Indicators and Boosting Methods . . . . . . . . . .
 Page 6: 4.7 Exercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-Page 6: 
+Page 6:
 Page 6: 125
 Page 6: 125
 Page 6: 128
@@ -197,12 +197,12 @@ Page 6: 147
 Page 6: 150
 Page 6: 152
 Page 6: 154
-Page 6: 
+Page 6:
 Page 6: III
 Page 6: 5
-Page 6: 
+Page 6:
 Page 6: Trading Algorithms
-Page 6: 
+Page 6:
 Page 6: Statistical Trading Strategies and Back-Testing
 Page 6: 5.1 Introduction to Trading Strategies: Origin and History . . . . . . .
 Page 6: 5.2 Evaluation of Strategies: Various Measures . . . . . . . . . . . . .
@@ -217,7 +217,7 @@ Page 6: Performance Evaluation . . . . . . . . . . . . . . . . . . . . . . .
 Page 6: 5.8 Pairs Trading . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 Page 6: 5.8.1 Distance-Based Algorithms . . . . . . . . . . . . . . . . .
 Page 6: 5.8.2 Co-Integration . . . . . . . . . . . . . . . . . . . . . . . .
-Page 6: 
+Page 6:
 Page 6: 157
 Page 6: 159
 Page 6: 159
@@ -232,12 +232,12 @@ Page 6: 171
 Page 6: 174
 Page 6: 175
 Page 6: 176
-Page 6: 
-Page 6: 
+Page 6:
+Page 6:
 Page 7: Contents
-Page 7: 
+Page 7:
 Page 7: vii
-Page 7: 
+Page 7:
 Page 7: 5.8.3 Some General Comments . . . . . . . . . . . . . . . . . .
 Page 7: 5.8.4 Practical Considerations . . . . . . . . . . . . . . . . . . .
 Page 7: 5.9 Cross-Sectional Momentum Strategies . . . . . . . . . . . . . . . .
@@ -248,7 +248,7 @@ Page 7: 5.11 Trading in Multiple Markets . . . . . . . . . . . . . . . . . . . .
 Page 7: 5.12 Other Topics: Trade Size, etc. . . . . . . . . . . . . . . . . . . . .
 Page 7: 5.13 Machine Learning Methods in Trading . . . . . . . . . . . . . . .
 Page 7: 5.14 Exercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-Page 7: 
+Page 7:
 Page 7: 180
 Page 7: 181
 Page 7: 184
@@ -259,9 +259,9 @@ Page 7: 198
 Page 7: 202
 Page 7: 204
 Page 7: 207
-Page 7: 
+Page 7:
 Page 7: 6
-Page 7: 
+Page 7:
 Page 7: Dynamic Portfolio Management and Trading Strategies
 Page 7: 6.1 Introduction to Modern Portfolio Theory . . . . . . . . . . . . . .
 Page 7: 6.1.1 Mean-Variance Portfolio Theory . . . . . . . . . . . . . . .
@@ -277,7 +277,7 @@ Page 7: 6.4 Portfolio Tracking and Rebalancing . . . . . . . . . . . . . . . . .
 Page 7: 6.5 Transaction Costs, Shorting and Liquidity Constraints . . . . . . .
 Page 7: 6.6 Portfolio Trading Strategies . . . . . . . . . . . . . . . . . . . . .
 Page 7: 6.7 Exercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-Page 7: 
+Page 7:
 Page 7: 215
 Page 7: 215
 Page 7: 215
@@ -293,9 +293,9 @@ Page 7: 236
 Page 7: 239
 Page 7: 242
 Page 7: 244
-Page 7: 
+Page 7:
 Page 7: 7
-Page 7: 
+Page 7:
 Page 7: News Analytics: From Market Attention and Sentiment to Trading
 Page 7: 7.1 Introduction to News Analytics: Behavioral Finance and Investor
 Page 7: Cognitive Biases . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -303,14 +303,14 @@ Page 7: 7.2 Automated News Analysis and Market Sentiment . . . . . . . . . .
 Page 7: 7.3 News Analytics and Applications to Trading . . . . . . . . . . . .
 Page 7: 7.4 Discussion / Future of Social Media and News in Algorithmic
 Page 7: Trading . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-Page 7: 
+Page 7:
 Page 7: 251
-Page 7: 
+Page 7:
 Page 7: IV
 Page 7: 8
-Page 7: 
+Page 7:
 Page 7: Execution Algorithms
-Page 7: 
+Page 7:
 Page 7: Modeling Trade Data
 Page 7: 8.1 Normalizing Analytics . . . . . . . . . . . . . . . . . . . . . . . .
 Page 7: 8.1.1 Order Size Normalization: ADV . . . . . . . . . . . . . . .
@@ -320,12 +320,12 @@ Page 7: 8.1.4 Other Microstructure Normalizations . . . . . . . . . . . .
 Page 7: 8.1.5 Intraday Normalization: Profiles . . . . . . . . . . . . . . .
 Page 7: 8.1.6 Remainder (of the Day) Volume . . . . . . . . . . . . . . .
 Page 7: 8.1.7 Auctions Volume . . . . . . . . . . . . . . . . . . . . . . .
-Page 7: 
+Page 7:
 Page 7: 251
 Page 7: 256
 Page 7: 258
 Page 7: 267
-Page 7: 
+Page 7:
 Page 7: 269
 Page 7: 271
 Page 7: 271
@@ -336,14 +336,14 @@ Page 7: 276
 Page 7: 277
 Page 7: 282
 Page 7: 283
-Page 7: 
-Page 7: 
+Page 7:
+Page 7:
 Page 8: viii
-Page 8: 
+Page 8:
 Page 8: Contents
 Page 8: 8.2
 Page 8: 8.3
-Page 8: 
+Page 8:
 Page 8: Microstructure Signals . . . . . . . . . . . . . . . . . . . . . . . .
 Page 8: Limit Order Book (LOB): Studying Its Dynamics . . . . . . . . . .
 Page 8: 8.3.1 LOB Construction and Key Descriptives . . . . . . . . . . .
@@ -351,7 +351,7 @@ Page 8: 8.3.2 Modeling LOB Dynamics . . . . . . . . . . . . . . . . . .
 Page 8: 8.3.3 Models Based on Hawkes Processes . . . . . . . . . . . . .
 Page 8: Models for Hidden Liquidity . . . . . . . . . . . . . . . . . . . . .
 Page 8: Modeling LOB: Some Concluding Thoughts . . . . . . . . . . . .
-Page 8: 
+Page 8:
 Page 8: 283
 Page 8: 286
 Page 8: 287
@@ -359,7 +359,7 @@ Page 8: 289
 Page 8: 295
 Page 8: 306
 Page 8: 310
-Page 8: 
+Page 8:
 Page 8: Market Impact Models
 Page 8: 9.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 Page 8: 9.2 What Is Market Impact? . . . . . . . . . . . . . . . . . . . . . . .
@@ -370,7 +370,7 @@ Page 8: 9.6 Price Impact in the High Frequency Setting . . . . . . . . . . . . .
 Page 8: 9.7 Models Based on LOB . . . . . . . . . . . . . . . . . . . . . . . .
 Page 8: 9.8 Empirical Estimation of Transaction Costs . . . . . . . . . . . . .
 Page 8: 9.8.1 Review of Select Empirical Studies . . . . . . . . . . . . .
-Page 8: 
+Page 8:
 Page 8: 313
 Page 8: 313
 Page 8: 314
@@ -381,7 +381,7 @@ Page 8: 323
 Page 8: 324
 Page 8: 327
 Page 8: 328
-Page 8: 
+Page 8:
 Page 8: 10 Execution Strategies
 Page 8: 10.1 Execution Benchmarks: PractitionerΓÇÖs View . . . . . . . . . . . . .
 Page 8: 10.2 Evolution of Execution Strategies . . . . . . . . . . . . . . . . . .
@@ -395,7 +395,7 @@ Page 8: 10.4.2 Second Generation Algorithms . . . . . . . . . . . . . . . .
 Page 8: 10.5 Multiple Exchanges: Smart Order Routing Algorithm . . . . . . . .
 Page 8: 10.6 Execution Algorithms for Multiple Assets . . . . . . . . . . . . . .
 Page 8: 10.7 Extending the Algorithms to Other Asset Classes . . . . . . . . . .
-Page 8: 
+Page 8:
 Page 8: 335
 Page 8: 336
 Page 8: 344
@@ -409,17 +409,17 @@ Page 8: 361
 Page 8: 367
 Page 8: 371
 Page 8: 375
-Page 8: 
+Page 8:
 Page 8: V
-Page 8: 
+Page 8:
 Page 8: 381
-Page 8: 
+Page 8:
 Page 8: 8.4
 Page 8: 8.5
 Page 8: 9
-Page 8: 
+Page 8:
 Page 8: Technology Considerations
-Page 8: 
+Page 8:
 Page 8: 11 The Technology Stack
 Page 8: 11.1 From Client Instruction to Trade Reconciliation . . . . . . . . . . .
 Page 8: 11.2 Algorithmic Trading Infrastructure . . . . . . . . . . . . . . . . .
@@ -428,7 +428,7 @@ Page 8: 11.4 ATS Infrastructure . . . . . . . . . . . . . . . . . . . . . . . . 
 Page 8: 11.4.1 Regulatory Considerations . . . . . . . . . . . . . . . . . .
 Page 8: 11.4.2 Matching Engine . . . . . . . . . . . . . . . . . . . . . . .
 Page 8: 11.4.3 Client Tiering and Other Rules . . . . . . . . . . . . . . . .
-Page 8: 
+Page 8:
 Page 8: 383
 Page 8: 383
 Page 8: 387
@@ -437,38 +437,38 @@ Page 8: 395
 Page 8: 395
 Page 8: 397
 Page 8: 397
-Page 8: 
-Page 8: 
+Page 8:
+Page 8:
 Page 9: Contents
-Page 9: 
+Page 9:
 Page 9: ix
-Page 9: 
+Page 9:
 Page 9: 12 The Research Stack
 Page 9: 12.1 Data Infrastructure . . . . . . . . . . . . . . . . . . . . . . . . . .
 Page 9: 12.2 Calibration Infrastructure . . . . . . . . . . . . . . . . . . . . . .
 Page 9: 12.3 Simulation Environment . . . . . . . . . . . . . . . . . . . . . . .
 Page 9: 12.4 TCA Environment . . . . . . . . . . . . . . . . . . . . . . . . . .
 Page 9: 12.5 Conclusion . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-Page 9: 
+Page 9:
 Page 9: 401
 Page 9: 401
 Page 9: 403
 Page 9: 404
 Page 9: 408
 Page 9: 410
-Page 9: 
+Page 9:
 Page 9: Bibliography
-Page 9: 
+Page 9:
 Page 9: 411
-Page 9: 
+Page 9:
 Page 9: Subject Index
-Page 9: 
+Page 9:
 Page 9: 433
-Page 9: 
-Page 9: 
-Page 10: 
+Page 9:
+Page 9:
+Page 10:
 Page 11: Preface
-Page 11: 
+Page 11:
 Page 11: Algorithms have been around since the day trading has started. But they have
 Page 11: gained importance with the advent of computers and the automation of trading. Efficiency in execution has taken center stage and with that, speed and instantaneous
 Page 11: processing of asset related information have become important. In this book, we will
@@ -499,12 +499,12 @@ Page 11: Our unique approach in this book is to provide the reader with hands-on
 Page 11: This book will be accompanied by a collection of practical Jupyter Notebooks where
 Page 11: select methods are applied to real data. This will allow the readers to go beyond theory
 Page 11: xi
-Page 11: 
-Page 11: 
+Page 11:
+Page 11:
 Page 12: xii
-Page 12: 
+Page 12:
 Page 12: Preface
-Page 12: 
+Page 12:
 Page 12: into the actual implementation, while familiarizing them with the libraries available.
 Page 12: Wherever possible the charts and tables in the book can be generated directly from
 Page 12: these notebooks and the data sets provided bring further life to the treatment of the
@@ -543,12 +543,12 @@ Page 12: as this from behavioral finance) are embraced by practitioners once the
 Page 12: available.
 Page 12: ΓÇó Part IV covers Execution Algorithms, a sub-field of Quantitative Trading
 Page 12: which has evolved separately from simple mechanical workflow tools, into a
-Page 12: 
-Page 12: 
+Page 12:
+Page 12:
 Page 13: Preface
-Page 13: 
+Page 13:
 Page 13: xiii
-Page 13: 
+Page 13:
 Page 13: multi-billion dollar business. We begin by reviewing various approaches to modeling trade data, and then dive into the fundamental subject of Market Impact, a
 Page 13: complex and least understood concept in finance. Having set the stage, the final
 Page 13: section presents a review of the evolution and the current state of the art in Execution Algorithms.
@@ -581,12 +581,12 @@ Page 13: Lo and MacKinlay (1996) on finance; Friedman, Hastie and Tibshirani (20
 Page 13: is already said in these classics and so the readers may notice some similarities.
 Page 13: We have relied heavily on the able assistance of Caleb McWhorter, who has put
 Page 13: the book together with all the demands of his own graduate work. We want to thank
-Page 13: 
-Page 13: 
+Page 13:
+Page 13:
 Page 14: xiv
-Page 14: 
+Page 14:
 Page 14: Preface
-Page 14: 
+Page 14:
 Page 14: our doctoral students, Kris Herman and Zhaoque Zhou (Chosen) for their help at various stages of the book. The joint work with them was useful to draw upon for content.
 Page 14: As the focus of this book is on the use of real data, we relied upon several sources for
 Page 14: help. We want to thank Professor Ravi Jagannathan for sharing his thoughts and data
@@ -605,14 +605,14 @@ Page 14: is a beautiful example of Algorithmic Art representing the trading inte
 Page 14: stock universe on the various trading venues. We cannot think of a more fitting image
 Page 14: for this book.
 Page 14: Finally, no words will suffice for the love and support of our families.
-Page 14: 
+Page 14:
 Page 14: Raja Velu
 Page 14: Maxence Hardy
 Page 14: Daniel Nehren
-Page 14: 
-Page 14: 
+Page 14:
+Page 14:
 Page 15: About the Authors
-Page 15: 
+Page 15:
 Page 15: Raja Velu
 Page 15: Raja Velu is a Professor of Finance and Business Analytics in the Whitman School
 Page 15: of Management at Syracuse University. He obtained his Ph.D. in Business/Statistics from University of Wisconsin-Madison in 1983. He served as a marketing faculty at the University of Wisconsin-Whitewater from 1984 to 1998 before moving
@@ -620,7 +620,7 @@ Page 15: to Syracuse University. He was a Technical Architect at Yahoo! in the S
 Page 15: Search Division and was a visiting scientist at IBM-Almaden, Microsoft Research,
 Page 15: Google and JPMC. He has also held visiting positions at StanfordΓÇÖs Statistics Department from 2005 to 2016 and was a visiting faculty at the Indian School of Business,
 Page 15: National University of Singapore and Singapore Management University. His current research includes Modeling Big Chronological Data and Forecasting in HighDimensional settings. He has published in leading journals such as Biometrika, Journal of Econometrics and Journal of Financial and Quantitative Analysis.
-Page 15: 
+Page 15:
 Page 15: Maxence Hardy
 Page 15: Maxence Hardy is a Managing Director and the Head of eTrading Quantitative
 Page 15: Research for Equities and Futures at J.P. Morgan, based in New York. Mr. Hardy
@@ -631,7 +631,7 @@ Page 15: Systematic Trading Quantitative Research for three years, as well as As
 Page 15: of Product for agency electronic trading, based in Hong Kong. Mr. Hardy joined J.P.
 Page 15: Morgan in 2010 from Societe Generale where he was part of the algo team developing execution solutions for Program Trading. Mr. Hardy holds a masterΓÇÖs degree in
 Page 15: quantitative finance from the University Paris IX Dauphine in France.
-Page 15: 
+Page 15:
 Page 15: Daniel Nehren
 Page 15: Daniel Nehren is a Managing Director and the Head of Statistical Modelling and
 Page 15: Development for Equities at Barclays. Based in New York, Mr. Nehren is responsible
@@ -644,35 +644,35 @@ Page 15: Deutsche Bank as the Director and Co-Head of Delta One Quantitative Pro
 Page 15: Goldman Sachs as the Executive Director of Equity Strategy. Mr. Nehren holds a
 Page 15: doctorate in electrical engineering from Politecnico Di Milano in Italy.
 Page 15: xv
-Page 15: 
-Page 15: 
+Page 15:
+Page 15:
 Page 16: xvi
-Page 16: 
+Page 16:
 Page 16: About the Authors
 Page 16: Dedicated to. . .
 Page 16: Yasodha, without her love and support, this is not possible.
-Page 16: 
+Page 16:
 Page 16: Melissa, for her patience every step of the way, and her never
 Page 16: ending support.
-Page 16: 
+Page 16:
 Page 16: R.V.
-Page 16: 
+Page 16:
 Page 16: M.H.
-Page 16: 
+Page 16:
 Page 16: Alyson, the muse, the patient partner, the inspiration for this work
 Page 16: and the next. And the box is still not full.
 Page 16: D.N.
-Page 16: 
-Page 16: 
+Page 16:
+Page 16:
 Page 17: Part I
-Page 17: 
+Page 17:
 Page 17: Introduction to Trading
-Page 17: 
-Page 17: 
+Page 17:
+Page 17:
 Page 18: 2
-Page 18: 
+Page 18:
 Page 18: Algorithmic Trading and Quantitative Strategies
-Page 18: 
+Page 18:
 Page 18: We provide a brief introduction to market microstructure and trading from a practitionerΓÇÖs point of view. The terms used in this part, all can be traced back to academic
 Page 18: literature; but the discussion is kept simple and direct. The data, which is central to
 Page 18: all the analyses and inferences, is then introduced. The complexity of using data that
@@ -681,15 +681,15 @@ Page 18: here. Finally, the last part of this chapter contains a brief academic 
 Page 18: microstructureΓÇöa topic about the mechanics of trading and how the trading can be
 Page 18: influenced by various market designs. This is an evolving field that is of much interest
 Page 18: to all: regulators, practitioners and academics.
-Page 18: 
-Page 18: 
+Page 18:
+Page 18:
 Page 19: 1
 Page 19: Trading Fundamentals
-Page 19: 
+Page 19:
 Page 19: 1.1
-Page 19: 
+Page 19:
 Page 19: A Brief History of Stock Trading
-Page 19: 
+Page 19:
 Page 19: Why We Trade: Companies need capital to operate and expand their businesses. To
 Page 19: raise capital, they can either borrow money then pay it back over time with interest,
 Page 19: or they can sell a stake (equity) in the company to an investor. As part owner of
@@ -716,14 +716,14 @@ Page 19: The Origins of Equity Trading: The tale begins on May 17, 1792 when a g
 Page 19: 24 brokers signed the Buttonwood Agreement. This bound the group to trade only
 Page 19: with each other under specific rules. This agreement marked the birth of the New
 Page 19: York Stock Exchange (NYSE). While the NYSE is not the oldest Stock Exchange in
-Page 19: 
+Page 19:
 Page 19: 3
-Page 19: 
-Page 19: 
+Page 19:
+Page 19:
 Page 20: 4
-Page 20: 
+Page 20:
 Page 20: Algorithmic Trading and Quantitative Strategies
-Page 20: 
+Page 20:
 Page 20: the world,1 nor the oldest in the US,2 it is without a question the most historically
 Page 20: important and undisputed symbol of all financial markets. Thus in our opinion, it is
 Page 20: the most suitable place to start our discussion. The NYSE soon after moved their
@@ -761,12 +761,12 @@ Page 20: increment on any exchange should change from 1/16th of a dollar (Γëê
 Page 20: 1 This honor sits with the Amsterdam Stock Exchange dating back to 1602.
 Page 20: 2 The Philadelphia Stock Exchange has a 2 year head start having been established in 1790.
 Page 20: 3 SEC is an independent federal government agency responsible for protecting investors, and maintaining fair and orderly functioning of the securities market http://www.sec.gov
-Page 20: 
-Page 20: 
+Page 20:
+Page 20:
 Page 21: Trading Fundamentals
-Page 21: 
+Page 21:
 Page 21: 5
-Page 21: 
+Page 21:
 Page 21: 1 cent.4 This seemingly minor rule change with the benign name of ΓÇÿDecimalizationΓÇÖ (moving from fractions to decimal increments) had a dramatic effect, causing
 Page 21: the average spread to significantly drop and with that, the profits of market makers
 Page 21: and broker dealers also declined. The reduction in profit forced many market making firms to exit the business which in turn reduced available market liquidity. To
@@ -803,12 +803,12 @@ Page 21: 4 The 1/16th price increment was a vestige of Spanish monetary standard
 Page 21: where divided in 2, 4, 8 parts.
 Page 21: 5 For some readers the concepts of providing and taking liquidity might be murky at best. Do not fret,
 Page 21: this will all become clear when we discuss the trading process and introduce Market Microstructure.
-Page 21: 
-Page 21: 
+Page 21:
+Page 21:
 Page 22: 6
-Page 22: 
+Page 22:
 Page 22: Algorithmic Trading and Quantitative Strategies
-Page 22: 
+Page 22:
 Page 22: it accelerated the transformation of market structure in the US. Through its two main
 Page 22: rules, the intent of Reg NMS was to promote best price execution for investors by
 Page 22: encouraging competition among individual exchanges and individual orders. The
@@ -835,20 +835,20 @@ Page 22: that may be difficult to comprehend without the appropriate context. Al
 Page 22: overview was limited to the USA alone, it is not meant to imply that the rest of the
 Page 22: world stayed still. Europe and Asia both progressed along similar lines, although at a
 Page 22: slower and more compressed pace.
-Page 22: 
-Page 22: 
+Page 22:
+Page 22:
 Page 23: Trading Fundamentals
-Page 23: 
+Page 23:
 Page 23: 1.2
-Page 23: 
+Page 23:
 Page 23: Market Structure and Trading Venues: A Review
-Page 23: 
+Page 23:
 Page 23: 1.2.1
-Page 23: 
+Page 23:
 Page 23: Equity Markets Participants
-Page 23: 
+Page 23:
 Page 23: 7
-Page 23: 
+Page 23:
 Page 23: With the context presented in the previous section, we now provide a brief review
 Page 23: of the state of modern Market Structure. In order to get a sense of the underpinnings
 Page 23: of equity markets, it is important to understand who are the various participants, why
@@ -875,15 +875,15 @@ Page 23: they are shorter than their Long Only counterparts. They also tend to b
 Page 23: on minimizing transaction costs, because they often make many more smaller short
 Page 23: term investments and the transaction costs can add up to be a significant fraction of
 Page 23: their expected profits.
-Page 23: 
+Page 23:
 Page 23: 6 In recent years though, competitive pressure as well as Best Execution regulatory obligations have
 Page 23: brought a lot of focus on transaction costs minimization to the Long Only community as well.
-Page 23: 
-Page 23: 
+Page 23:
+Page 23:
 Page 24: 8
-Page 24: 
+Page 24:
 Page 24: Algorithmic Trading and Quantitative Strategies
-Page 24: 
+Page 24:
 Page 24: Broker-Dealers (a.k.a. Sell Side): These firms reside between the ΓÇ£Buy SideΓÇ¥
 Page 24: (generic term for asset management firms and hedge funds) and the various
 Page 24: exchanges.7 They can act either as Agent for the client (i.e., Broker) or provide liquidity as Principal (i.e., Dealer) from their own accounts. They historically also had
@@ -898,11 +898,11 @@ Page 24: also act as aggregators of retail liquidity, e.g., individual investors
 Page 24: online providers like ETrade. Usually the most technology savvy operators in the
 Page 24: market place, they leverage ultra-low-latency infrastructure in order to be extremely
 Page 24: nimble. They get in and out of positions rapidly, taking advantage of tiny mis-pricing.
-Page 24: 
+Page 24:
 Page 24: 1.2.2
-Page 24: 
+Page 24:
 Page 24: Watering Holes of Equity Markets
-Page 24: 
+Page 24:
 Page 24: Now that we know who the players are, we briefly review various ways they access
 Page 24: liquidity.
 Page 24: Exchanges: This is still the standard approach to trading and accounts for about 60ΓÇô
@@ -921,12 +921,12 @@ Page 24: 7 Note that only member firms are allowed to trade on exchange and most
 Page 24: non-members thus need an intermediary to trade on their behalf.
 Page 24: 8 https://www.cftc.gov/LawRegulation/DoddFrankAct/index.htm
 Page 24: 9 https://www.sec.gov/fast-answers/divisionsmarketregmrexchangesshtml.html
-Page 24: 
-Page 24: 
+Page 24:
+Page 24:
 Page 25: Trading Fundamentals
-Page 25: 
+Page 25:
 Page 25: 9
-Page 25: 
+Page 25:
 Page 25: reroute to other exchanges where price is better (charging a fee for it). Smart Order
 Page 25: Routers have evolved to manage this complexity.
 Page 25: Recent years have seen a consolidation of these exchanges in the hands of mainly
@@ -959,12 +959,12 @@ Page 25: 10 In 2019, a group of financial institutions filed an application for 
 Page 25: 11 https://www.sifma.org/wp-content/uploads/2019/01/Expand-and-SIFMA-AnAnalysis-of-Market-Data-Fees-08-2018.pdf
 Page 25: 12 https://www.sec.gov/tm/staff-guidance-sro-rule-filings-fees
 Page 25: 13 Certain Futures and Options exchanges have a pro-rata matching mechanism which is discussed later.
-Page 25: 
-Page 25: 
+Page 25:
+Page 25:
 Page 26: 10
-Page 26: 
+Page 26:
 Page 26: Algorithmic Trading and Quantitative Strategies
-Page 26: 
+Page 26:
 Page 26: Most of the exchanges use the maker-taker fee model that we discussed earlier but
 Page 26: some: BYX, EDGA, NSX, BX, have adopted an ΓÇÿinvertedΓÇÖ fee model, where posting liquidity incurs a fee while a rebate is provided for taking liquidity. This change
 Page 26: causes these venues to display a markedly different behavior. The cost for providing
@@ -1001,12 +1001,12 @@ Page 26: 14 https://www.sec.gov/comments/10-222/10-222.shtml
 Page 26: 15 https://www.bloomberg.com/news/articles/2016-06-14/sec-staff-recommendsapproving-iex-application-wsj-reports
 Page 26: 16 https://iextrading.com/insights
 Page 26: 17 https://iextrading.com/trading/market-data/
-Page 26: 
-Page 26: 
+Page 26:
+Page 26:
 Page 27: Trading Fundamentals
-Page 27: 
+Page 27:
 Page 27: 11
-Page 27: 
+Page 27:
 Page 27: years and now accounts for 30ΓÇô40% of all traded volume in certain markets like the
 Page 27: US. ATS/Dark Pool volume makes up roughly 30% of this US equities off-exchange
 Page 27: volume. Clearly, the growth of dark execution has spurred a lot of competition in the
@@ -1045,12 +1045,12 @@ Page 27: Auctions: Primary exchanges (exchanges where a particular instrument is
 Page 27: begin and end the day with a (primary) auction procedure, that leverages special order
 Page 27: 18 http://www.finra.org/industry/equity-ats-firms
 Page 27: 19 https://otctransparency.finra.org/otctransparency/AtsData
-Page 27: 
-Page 27: 
+Page 27:
+Page 27:
 Page 28: 12
-Page 28: 
+Page 28:
 Page 28: Algorithmic Trading and Quantitative Strategies
-Page 28: 
+Page 28:
 Page 28: types to accumulate supply and demand and then run an algorithm that determines
 Page 28: the price that would at best pair off the most volume. The Closing Auction is of particular importance because many funds set their Net Asset Value (NAV) using the
 Page 28: official closing price. This generally leads traders to trade as close as possible to the
@@ -1087,31 +1087,31 @@ Page 28: Fully understanding the implications of these different methods of trad
 Page 28: regulation, competition, behavioral idiosyncrasies (at times due to participants lack
 Page 28: of understanding and preconceived notions) is a daunting task. It is however an environment that all practitioners have to navigate, and it remains difficult to formulate
 Page 28: these issues in mathematical models as they could be based on questionable heuristics to account for the residual complexity. But even with the dizzying complexity,
-Page 28: 
-Page 28: 
+Page 28:
+Page 28:
 Page 29: Trading Fundamentals
-Page 29: 
+Page 29:
 Page 29: 13
-Page 29: 
+Page 29:
 Page 29: modern market structure is a fascinating ecosystem. It is a continuously evolving system through the forces of ingenuity and competition. It provides tools and services to
 Page 29: institutional investors who strive to reduce the cost of execution, an investment mandate. We hope the above treatment provides the reader with at least a foothold in the
 Page 29: exploration of this amazing social and financial experimentation.
-Page 29: 
+Page 29:
 Page 29: 1.3
-Page 29: 
+Page 29:
 Page 29: The Mechanics of Trading
-Page 29: 
+Page 29:
 Page 29: In order to fully grasp the main topics of this book, one requires at least a good
 Page 29: understanding of the mechanics of trading. This process is somewhat complicated
 Page 29: and requires some technical details and terminology. In this section, we will strive to
 Page 29: provide a brief but fairly complete overview of the fundamentals. This should suffice
 Page 29: for our purposes. For a more complete and thorough treatment we refer the readers to
 Page 29: the existing literature, most notably Harris (2003) [178].
-Page 29: 
+Page 29:
 Page 29: 1.3.1
-Page 29: 
+Page 29:
 Page 29: How Double Auction Markets Work
-Page 29: 
+Page 29:
 Page 29: The most common approach used by modern electronic exchanges can be termed,
 Page 29: as time/price priority, continuous double auction trading system. The term double
 Page 29: auction signifies that, unlike a common auction with one auctioneer dealing with
@@ -1132,12 +1132,12 @@ Page 29: initiating a new order, cancel removing an existing order from the mark
 Page 29: modifying some of the parameters of the existing order. New orders must specify
 Page 29: ΓÇ£order typeΓÇ¥ and associated parameters necessary to fully encapsulate the trader decision. We will review order types in more detail later, but we start with the two main
 Page 29: types: The limit order and the market order. The main difference between the two
-Page 29: 
-Page 29: 
+Page 29:
+Page 29:
 Page 30: 14
-Page 30: 
+Page 30:
 Page 30: Algorithmic Trading and Quantitative Strategies
-Page 30: 
+Page 30:
 Page 30: order types is that a limit order has a price associated to it while a market order does
 Page 30: not.
 Page 30: Accounting for limit and market orders, there are eight events at any given time,
@@ -1162,11 +1162,11 @@ Page 30: order to ensure an orderly start and end, this continuous session is us
 Page 30: auction, then followed by the main continuous session, and ends with a closing auction. Some markets like Japan also have a lunch break which might be preceded by a
 Page 30: morning closing auction and followed by an afternoon opening auction. We will now
 Page 30: discuss these main market phases in chronological order.
-Page 30: 
+Page 30:
 Page 30: 1.3.2
-Page 30: 
+Page 30:
 Page 30: The Open Auction
-Page 30: 
+Page 30:
 Page 30: The Open Auction is only one type of call auction that is commonly held on
 Page 30: exchanges. The term ΓÇ£call auctionΓÇ¥ explains the liquidity-aggregating nature of this
 Page 30: event. Market participants are ΓÇÿcalledΓÇÖ to submit their quotes to the market place in
@@ -1176,16 +1176,16 @@ Page 30: dissemination to prevent wild price fluctuations and ensure that the pr
 Page 30: for price discovery.
 Page 30: Most exchanges publish order imbalance that exists among orders on the opening
 Page 30: or closing books, along with the indicative price and volume. For instance, Nasdaq
-Page 30: 
-Page 30: 
+Page 30:
+Page 30:
 Page 31: 15
-Page 31: 
+Page 31:
 Page 31: Trading Fundamentals
 Page 31: Table 1.1: Nasdaq Opening Cross
 Page 31: 4:00 a.m. EST
 Page 31: 9:25 a.m. EST
 Page 31: 9:28 a.m. EST
-Page 31: 
+Page 31:
 Page 31: Extended hours trading and order entry begins.
 Page 31: Nasdaq enters quotes for participants with no open interest.
 Page 31: Dissemination of order imbalance information every 1 second.
@@ -1215,10 +1215,10 @@ Page 31: the closest from the last price.
 Page 31: ΓÇó The crossing price is identical for all orders executed.
 Page 31: ΓÇó If two orders are submitted at the same price, the order submitted first has priority.
 Page 31: 20 Source: Nasdaq Trader website.
-Page 31: 
-Page 31: 
+Page 31:
+Page 31:
 Page 32: 16
-Page 32: 
+Page 32:
 Page 32: Algorithmic Trading and Quantitative Strategies
 Page 32: Table 1.2: Pre-Open Order Book Submissions
 Page 32: Timestamp
@@ -1247,7 +1247,7 @@ Page 32: 9:17:11
 Page 32: 9:18:27
 Page 32: 9:19:13
 Page 32: 9:19:54
-Page 32: 
+Page 32:
 Page 32: Seq. Number
 Page 32: 1
 Page 32: 2
@@ -1274,7 +1274,7 @@ Page 32: 22
 Page 32: 23
 Page 32: 24
 Page 32: 25
-Page 32: 
+Page 32:
 Page 32: Side
 Page 32: B
 Page 32: S
@@ -1301,7 +1301,7 @@ Page 32: B
 Page 32: S
 Page 32: S
 Page 32: B
-Page 32: 
+Page 32:
 Page 32: Quantity
 Page 32: 1500
 Page 32: 1750
@@ -1328,7 +1328,7 @@ Page 32: 12500
 Page 32: 450
 Page 32: 3500
 Page 32: 1120
-Page 32: 
+Page 32:
 Page 32: Price
 Page 32: 12.10
 Page 32: 12.12
@@ -1355,7 +1355,7 @@ Page 32: 12.15
 Page 32: 12.23
 Page 32: 12.20
 Page 32: 12.16
-Page 32: 
+Page 32:
 Page 32: ΓÇó It is possible for an order to be partially executed if the other side quantity is not
 Page 32: sufficient.
 Page 32: ΓÇó ΓÇ£At MarketΓÇ¥ orders are executed against each other at the determined crossing
@@ -1368,10 +1368,10 @@ Page 32: intent to execute at any price lower or equal to 12.25. Similarly, a se
 Page 32: each price level, we can then determine the cumulative buy interest and sell interest.
 Page 32: The theoretical cross quantity at each price point is then simply the minimum of the
 Page 32: cumulative buy interest and the cumulative sell interest as shown in Table 1.4. The
-Page 32: 
-Page 32: 
+Page 32:
+Page 32:
 Page 33: 17
-Page 33: 
+Page 33:
 Page 33: Trading Fundamentals
 Page 33: Table 1.3: Ranked Order Book Submissions
 Page 33: Timestamp
@@ -1400,7 +1400,7 @@ Page 33: 9:02:36
 Page 33: 9:06:59
 Page 33: 9:01:21
 Page 33: 9:10:04
-Page 33: 
+Page 33:
 Page 33: Seq. Number Buy Price
 Page 33: 17
 Page 33: 12.35
@@ -1440,7 +1440,7 @@ Page 33: 5
 Page 33: 1
 Page 33: 12.10
 Page 33: 11
-Page 33: 
+Page 33:
 Page 33: Buy Quantity Sell Quantity
 Page 33: 5500
 Page 33: 2000
@@ -1467,9 +1467,9 @@ Page 33: 1750
 Page 33: 2500
 Page 33: 1500
 Page 33: 3500
-Page 33: 
+Page 33:
 Page 33: Sell Price
-Page 33: 
+Page 33:
 Page 33: 12.33
 Page 33: 12.30
 Page 33: 12.25
@@ -1482,7 +1482,7 @@ Page 33: 12.16
 Page 33: 12.12
 Page 33: 12.11
 Page 33: 12.05
-Page 33: 
+Page 33:
 Page 33: crossing price is determined as the price that would maximize the crossed quantity. In
 Page 33: our example, the opening price will be 12.19, and the opening quantity will be 15,750
 Page 33: shares.
@@ -1498,13 +1498,13 @@ Page 33: as such, setting the price), the price discovery mechanism is often con
 Page 33: quite volatile and more suited for short-term alpha investors. Similarly, the period
 Page 33: immediately following the open auction also tends to be much more volatile than the
 Page 33: rest of the day. As a result of which, most markets experience wider spreads while
-Page 33: 
-Page 33: 
+Page 33:
+Page 33:
 Page 34: 18
-Page 34: 
+Page 34:
 Page 34: Algorithmic Trading and Quantitative Strategies
 Page 34: Table 1.4: Cumulative Order Book Quantities
-Page 34: 
+Page 34:
 Page 34: Sequence Cumulative
 Page 34: Buy
 Page 34: Sell
@@ -1661,7 +1661,7 @@ Page 34: 3500
 Page 34: 3500
 Page 34: 3500
 Page 34: Price
-Page 34: 
+Page 34:
 Page 34: market makers try to protect themselves against information asymmetry by quoting
 Page 34: wider bids and offers. The increased volatility and wider spreads might discourage
 Page 34: certain investors from participating in the market at the open auction and in the period
@@ -1675,10 +1675,10 @@ Page 34: but also in the afternoon open auction that follows the market lunch br
 Page 34: From an execution standpoint, though, the usage of the open auction has to be considered carefully. While this represents a liquidity opportunity, the first print of the
 Page 34: day can also have a significant anchoring effect on the stock price for the remainder
 Page 34: of the day. So, participating in the open should be considered in light of the liquidity
-Page 34: 
-Page 34: 
+Page 34:
+Page 34:
 Page 35: 19
-Page 35: 
+Page 35:
 Page 35: Trading Fundamentals
 Page 35: Table 1.5: Crossed Buy Orders
 Page 35: Price
@@ -1690,7 +1690,7 @@ Page 35: 12.25
 Page 35: 12.23
 Page 35: 12.21
 Page 35: 12.19Γêù
-Page 35: 
+Page 35:
 Page 35: Seq. Number
 Page 35: 17
 Page 35: 12
@@ -1700,7 +1700,7 @@ Page 35: 8
 Page 35: 6
 Page 35: 10
 Page 35: 14
-Page 35: 
+Page 35:
 Page 35: Buy Qty
 Page 35: 5500
 Page 35: 2000
@@ -1710,12 +1710,12 @@ Page 35: 500
 Page 35: 1200
 Page 35: 1000
 Page 35: 2050
-Page 35: 
+Page 35:
 Page 35: *Order number 14 was for 2750 shares but did not get fully executed
 Page 35: as the bid quantity up to 12.19 exceeded the offered quantity at that
 Page 35: price. The balance of order 14 will then be posted as a limit order in
 Page 35: the continuous trading session
-Page 35: 
+Page 35:
 Page 35: Table 1.6: Crossed Sell Orders
 Page 35: Price Seq. Number
 Page 35: 12.19
@@ -1730,7 +1730,7 @@ Page 35: 12.11
 Page 35: 5
 Page 35: 12.05
 Page 35: 11
-Page 35: 
+Page 35:
 Page 35: Sell Qty
 Page 35: 1200
 Page 35: 1800
@@ -1738,17 +1738,17 @@ Page 35: 5000
 Page 35: 1750
 Page 35: 2500
 Page 35: 3500
-Page 35: 
+Page 35:
 Page 35: demand of the order: Orders that are small enough can likely do without participating
 Page 35: in the open auction and the period that continues immediately following, while large
 Page 35: orders that try to extract significant liquidity from the market might benefit from participating in the open auction. The market intraday momentum study by Gao, Han,
 Page 35: Li and Zhou (2018) [156] demonstrates how the first half-hour return on the market,
 Page 35: as measured from the previous dayΓÇÖs market close predicts the last half hour return.
-Page 35: 
+Page 35:
 Page 35: 1.3.3
-Page 35: 
+Page 35:
 Page 35: Continuous Trading
-Page 35: 
+Page 35:
 Page 35: This refers to the main market phase between the auctions. During this market
 Page 35: session the state of the order book changes quite rapidly due to the multi-agent nature
 Page 35: of financial markets and the prevalence of high frequency trading. Consequently, it
@@ -1760,12 +1760,12 @@ Page 35: A limit order has an associated side (Buy or Sell), a quantity and a pr
 Page 35: represent the highest (lowest) price the trader is willing to buy (sell). As previously
 Page 35: discussed, once a limit order is received by the exchange it is inserted in a data structure called a Limit Order Book (LOB) which contains two sub-structures, one per
 Page 35: side. Orders are inserted in this structure in price priority, higher prices for buys,
-Page 35: 
-Page 35: 
+Page 35:
+Page 35:
 Page 36: 20
-Page 36: 
+Page 36:
 Page 36: Algorithmic Trading and Quantitative Strategies
-Page 36: 
+Page 36:
 Page 36: lower prices for sells, and for orders at the same price the orders are stored in the
 Page 36: order in which they were received. That is what is meant by price/time priority.21 If
 Page 36: the price of a newly arrived order overlaps with the best price available on the opposite side, the order is executed either fully or up to the available quantity on the other
@@ -1783,123 +1783,123 @@ Page 36: the number of outstanding asks at the best price. All unexecuted limit 
 Page 36: be canceled. When a cancellation occurs, it will decrease the number of outstanding
 Page 36: orders at the specified price level.
 Page 36: 60
-Page 36: 
+Page 36:
 Page 36: bids
 Page 36: asks
-Page 36: 
+Page 36:
 Page 36: 50
-Page 36: 
+Page 36:
 Page 36: volume
-Page 36: 
+Page 36:
 Page 36: 40
-Page 36: 
+Page 36:
 Page 36: limit bid
-Page 36: 
+Page 36:
 Page 36: 30
 Page 36: 20
 Page 36: 10
 Page 36: 0
 Page 36: 73600
-Page 36: 
+Page 36:
 Page 36: 73800
-Page 36: 
+Page 36:
 Page 36: 74000
-Page 36: 
+Page 36:
 Page 36: 74200
-Page 36: 
+Page 36:
 Page 36: 74400
-Page 36: 
+Page 36:
 Page 36: 74600
-Page 36: 
+Page 36:
 Page 36: 74800
-Page 36: 
+Page 36:
 Page 36: 75000
-Page 36: 
+Page 36:
 Page 36: price
 Page 36: Figure 1.1: Limit Order BookΓÇöLimit Bid.
-Page 36: 
+Page 36:
 Page 36: 21 Note: Not all exchanges are matching orders following a price/time priority algorithm; a key characteristic of the Futures market, for instance, is the existence of pro-rata markets for some fixed income
 Page 36: contracts, where passive child orders receive fills from aggressive orders based on their size as a fraction
 Page 36: of the total passive posted quantity.
-Page 36: 
-Page 36: 
+Page 36:
+Page 36:
 Page 37: 21
-Page 37: 
+Page 37:
 Page 37: Trading Fundamentals
 Page 37: 60
-Page 37: 
+Page 37:
 Page 37: bids
 Page 37: asks
-Page 37: 
+Page 37:
 Page 37: 50
-Page 37: 
+Page 37:
 Page 37: volume
-Page 37: 
+Page 37:
 Page 37: 40
 Page 37: 30
 Page 37: 20
 Page 37: market bid
-Page 37: 
+Page 37:
 Page 37: 10
 Page 37: 0
 Page 37: 73600
-Page 37: 
+Page 37:
 Page 37: 73800
-Page 37: 
+Page 37:
 Page 37: 74000
-Page 37: 
+Page 37:
 Page 37: 74200
-Page 37: 
+Page 37:
 Page 37: 74400
-Page 37: 
+Page 37:
 Page 37: 74600
-Page 37: 
+Page 37:
 Page 37: 74800
-Page 37: 
+Page 37:
 Page 37: 75000
-Page 37: 
+Page 37:
 Page 37: 74800
-Page 37: 
+Page 37:
 Page 37: 75000
-Page 37: 
+Page 37:
 Page 37: price
 Page 37: Figure 1.2: Limit Order BookΓÇöMarketable Bid.
 Page 37: 60
-Page 37: 
+Page 37:
 Page 37: bids
 Page 37: asks
-Page 37: 
+Page 37:
 Page 37: ask cancellation
-Page 37: 
+Page 37:
 Page 37: 50
-Page 37: 
+Page 37:
 Page 37: volume
-Page 37: 
+Page 37:
 Page 37: 40
 Page 37: 30
 Page 37: 20
 Page 37: 10
 Page 37: 0
 Page 37: 73600
-Page 37: 
+Page 37:
 Page 37: 73800
-Page 37: 
+Page 37:
 Page 37: 74000
-Page 37: 
+Page 37:
 Page 37: 74200
-Page 37: 
+Page 37:
 Page 37: 74400
-Page 37: 
+Page 37:
 Page 37: 74600
-Page 37: 
+Page 37:
 Page 37: price
 Page 37: Figure 1.3: Limit Order BookΓÇöAsk Cancellation.
-Page 37: 
-Page 37: 
+Page 37:
+Page 37:
 Page 38: 22
-Page 38: 
+Page 38:
 Page 38: Algorithmic Trading and Quantitative Strategies
-Page 38: 
+Page 38:
 Page 38: Limit orders make up a significant percentage (70%) of stock market trading activity. The main advantage of a limit order is that there is no price risk associated to it,
 Page 38: that is, when the order is executed the limit price is the maximum (for a buy order) or
 Page 38: minimum (for a sell order) price that will be achieved. But if the limit order is not marketable, the execution is not guaranteed and the time to get an order executed depends
@@ -1935,12 +1935,12 @@ Page 38: quantity at a given price might elect to use an iceberg order with a sm
 Page 38: size of 2,000 shares. Only 2,000 shares would be displayed in the order book.
 Page 38: Once that quantity is executed, the order would automatically reload another
 Page 38: 22 Depending on the Time-in-Force selected.
-Page 38: 
-Page 38: 
+Page 38:
+Page 38:
 Page 39: Trading Fundamentals
-Page 39: 
+Page 39:
 Page 39: 23
-Page 39: 
+Page 39:
 Page 39: 2,000 shares at $20, and so on, until the full quantity is executed. Note that for
 Page 39: iceberg orders, only the visible quantity has time priority and once that quantity has been executed the new tip of the iceberg will be placed at the back of
 Page 39: the queue.
@@ -1971,12 +1971,12 @@ Page 39: duration of the trading session, Extended Day orders allow trading in e
 Page 39: and Good-Till-Cancel (GTC) orders will be placed again on the exchange the next
 Page 39: day with similar instructions if they were not completely filled. More sophisticated
 Page 39: market participants aiming at achieving greater control over their executions tend to
-Page 39: 
-Page 39: 
+Page 39:
+Page 39:
 Page 40: 24
-Page 40: 
+Page 40:
 Page 40: Algorithmic Trading and Quantitative Strategies
-Page 40: 
+Page 40:
 Page 40: also favor Immediate-or-Cancel (IOC) and Fill-or-Kill (FOK) Time-in-Force instructions. An IOC order will get immediately canceled back to the sender after reaching
 Page 40: the matching engine if it does not get an immediate fill, and in case of a partial fill, the
 Page 40: unfilled portion will be canceled, thus preventing it from creating a new price level in
@@ -1992,11 +1992,11 @@ Page 40: minimizing the number of small fills which carry the risk of excessive 
 Page 40: dissemination. This happens, in particular, in dark pools, where they can be used to
 Page 40: detect the presence of larger limit orders that would be otherwise not visible to market
 Page 40: participants.
-Page 40: 
+Page 40:
 Page 40: 1.3.4
-Page 40: 
+Page 40:
 Page 40: The Closing Auction
-Page 40: 
+Page 40:
 Page 40: The Closing Auction tends to be the most popular call auction for a variety of reasons. First, it is the last opportunity (unless one engages in the risky practice of offhours trading) for market participants to transact in a relatively liquid environment,
 Page 40: before being exposed to the overnight period (when new information accumulates,
 Page 40: but trades cannot easily take place). Second, with the increase in passive investment
@@ -2017,14 +2017,14 @@ Page 40: 3:55 p.m. EST Cutoff for entry of MOC/LOC orders
 Page 40: 3:58 p.m. EST Freeze period - Late LOC orders cannot be added
 Page 40: OI orders offsetting the imbalance are still accepted
 Page 40: 4:00 p.m. EST The Closing Cross occurs
-Page 40: 
-Page 40: 
+Page 40:
+Page 40:
 Page 41: 25
-Page 41: 
+Page 41:
 Page 41: Trading Fundamentals
 Page 41: Table 1.8: NYSE Closing Cross
 Page 41: 3:50 p.m. EST
-Page 41: 
+Page 41:
 Page 41: Cutoff for MOC/LOC order entry and modifications
 Page 41: Dissemination of imbalance information begins
 Page 41: Closing Offset orders can be entered until 4:00 p.m.
@@ -2046,7 +2046,7 @@ Page 41: 12:02-4:30 p.m. GMT
 Page 41: 4:30-4:35* p.m. GMT
 Page 41: 4:35-4:40 p.m. GMT
 Page 41: 4:40-5:15 p.m. GMT
-Page 41: 
+Page 41:
 Page 41: Pre-Trading
 Page 41: Opening Auction Call
 Page 41: Regular Trading
@@ -2055,13 +2055,13 @@ Page 41: Regular Trading
 Page 41: Closing Auction Call
 Page 41: Closing Price Crossing
 Page 41: Post-Close Trading
-Page 41: 
+Page 41:
 Page 41: *Each auction end time is subject to a random 30 second uncross period.
 Page 41: An additional intraday auction call takes place every 3rd Friday of each month for stocks underlying FTSE 100 index options, and the 3rd Friday of every quarter for stocks underlying FTSE
 Page 41: 100/250 Index Futures to determine the EDSP (Exchange Delivery Settlement Price). The settlement price is determined as the index value derived from the individual constituents intraday
 Page 41: auction taking place between 10 a.m. and 10:15 a.m. and during which the electronic continuous trading is suspended. Using a call auction ensures the settlement price for these contracts
 Page 41: is more representative of a fair market price.
-Page 41: 
+Page 41:
 Page 41: An aspect of the NYSE is the presence of floor brokers operating in an agency
 Page 41: capacity for their customers. They play a particular role during the close auction
 Page 41: thanks to their ability to handle discretionary electronic quote orders (known as ΓÇ£dQuoteΓÇ¥ orders) that offer more flexibility than traditional market-on-close (MOC) and
@@ -2074,30 +2074,30 @@ Page 41: of the early published imbalance while there is still significant time 
 Page 41: session for other participants to drive the price away. Since there is no restriction on
 Page 41: the side of d-Quote orders submission, it is possible to see the total imbalance sign flip
 Page 41: once the d-Quotes are added to the publication at 3:55 p.m., creating opportunities
-Page 41: 
-Page 41: 
+Page 41:
+Page 41:
 Page 42: 26
-Page 42: 
+Page 42:
 Page 42: Algorithmic Trading and Quantitative Strategies
-Page 42: 
+Page 42:
 Page 42: for other market participants to adjust their own close trading via d-Quotes or change
 Page 42: their positioning in the continuous session.
-Page 42: 
+Page 42:
 Page 42: 1.4
-Page 42: 
+Page 42:
 Page 42: Taxonomy of Data Used in Algorithmic Trading
-Page 42: 
+Page 42:
 Page 42: Running a successful trading operation requires availability of different data sets.
 Page 42: Data availability, storage, management, and cleaning are some of the most important
 Page 42: aspects of a functioning trading business and the core of any research environment.
 Page 42: The amount of data and the complexity of maintaining such a ΓÇ£Data LakeΓÇ¥ can be
 Page 42: daunting and very few excel at this aspect. In this section, we will review the most
 Page 42: important data sets and their role in algorithmic trading research.
-Page 42: 
+Page 42:
 Page 42: 1.4.1
-Page 42: 
+Page 42:
 Page 42: Reference Data
-Page 42: 
+Page 42:
 Page 42: While often overlooked, or merely considered as an afterthought in the development of a research platform,23 reliable reference data is the key foundation of a robust
 Page 42: quantitative strategy development. The experienced practitioner may want to skip this
 Page 42: section, however we encourage the neophyte to read through the tedious details to get
@@ -2121,12 +2121,12 @@ Page 42: is the first step in any data merging exercise. Such data is not static
 Page 42: symbols can change on a given day and others remain unchanged for some time,
 Page 42: complicating historical data merges.
 Page 42: 23 More details on research platforms are presented in Chapter 12.
-Page 42: 
-Page 42: 
+Page 42:
+Page 42:
 Page 43: Trading Fundamentals
-Page 43: 
+Page 43:
 Page 43: 27
-Page 43: 
+Page 43:
 Page 43: It is important to note that such mapping needs to persist as point-in-time data
 Page 43: and allow for historical ΓÇ£as of dateΓÇ¥ usage, requiring the implementation of a
 Page 43: bi-temporal data structure. Over the course of time, some instruments undergo
@@ -2142,13 +2142,13 @@ Page 43: that it will allow to seamlessly query the data for the underlying asse
 Page 43: of scenarios such as:
 Page 43: ΓÇô Signal generation: 30-day backward close time series as of date ≡¥æç < ≡¥æç0 :
 Page 43: select close from data where date in [T-30, T], sym = ABC
-Page 43: 
+Page 43:
 Page 43: ΓÇô Signal generation: 30-day backward close time series as of date ≡¥æç = ≡¥æç0 +10:
 Page 43: select close from data where date in [T0 -20, T0 +10], sym = DEF
-Page 43: 
+Page 43:
 Page 43: ΓÇô Position holding: 30-day forward close time series as of date ≡¥æç = ≡¥æç0 ΓêÆ 10:
 Page 43: select close from data where date in [T0 -10, T0 +20], sym = ABC
-Page 43: 
+Page 43:
 Page 43: ΓÇó Ticker Changes: For comparable reasons as the ones described above in the
 Page 43: Symbology Mapping section, one needs to maintain a historical table of ticker
 Page 43: changes allowing to seamlessly go up and down time series data.
@@ -2165,10 +2165,10 @@ Page 43: or, conversely, to build strategies that look to benefit from the added
 Page 43: Another type of corporate events generating discontinuity in historical time series
 Page 43: are stock splits or reverse splits and right offers. When the price of a stock
 Page 43: becomes too low or too high, a company may seek to split it to bring the price
-Page 43: 
-Page 43: 
+Page 43:
+Page 43:
 Page 44: 28
-Page 44: 
+Page 44:
 Page 44: Algorithmic Trading and Quantitative Strategies
 Page 44: back to a level that is more conducive to liquid trading on exchanges.24 When a
 Page 44: stock experiences a 2:1 split, everything else being equal, its price will be halved
@@ -2188,7 +2188,7 @@ Page 44: stock has a significant weight in ETFs or Indexes, etc.). Some markets 
 Page 44: suspend trading if the price swings more than a predefined amount (limit up / limit
 Page 44: down situations), either for a period of time or for the remainder of the trading
 Page 44: session.
-Page 44: 
+Page 44:
 Page 44: ΓÇó Static Data: Country, sector, primary exchange, currency and quote factor. Static
 Page 44: data is also relevant for the development of quantitative trading strategies. In particular, country, currency and sector are useful to group instruments based on
 Page 44: their fundamental similarities. A well known example is the usage of sectors to
@@ -2209,12 +2209,12 @@ Page 44: 25 For instance, it was the case for a large number of companies in Chi
 Page 44: 26 The Global Industry Classification Standard (GICS┬« ) structure consists of 11 sectors, 24 industry
 Page 44: groups, 68 industries and 157 sub-industries. An example of this hierarchical structure would be: Industrials
 Page 44: / Capital Goods / Machinery / Agricultural & Farm Machinery.
-Page 44: 
-Page 44: 
+Page 44:
+Page 44:
 Page 45: Trading Fundamentals
-Page 45: 
+Page 45:
 Page 45: 29
-Page 45: 
+Page 45:
 Page 45: the exchange is located.27 Additionally, thus, the Quote Factor associated with
 Page 45: the quotation currency data needs to be stored. To account for the wide range
 Page 45: of currency values and preserve pricing precision, market data providers may
@@ -2253,10 +2253,10 @@ Page 45: Daylight Saving Time (DST) adjustments that might affect the relative t
 Page 45: at all, while for countries that do have one, the dates at which it applies are
 Page 45: 27 For example, Jardine Matheson Holdings quotes in USD on the Singapore exchange while most of the
 Page 45: other securities quote in Singapore Dollars.
-Page 45: 
-Page 45: 
+Page 45:
+Page 45:
 Page 46: 30
-Page 46: 
+Page 46:
 Page 46: Algorithmic Trading and Quantitative Strategies
 Page 46: not always coordinated). Usually, US DST starts about two weeks prior to
 Page 46: its start in Europe, bringing the time difference between New York and London to four hours instead of five hours. This results in the volume spike in
@@ -2289,12 +2289,12 @@ Page 46: Long-Short strategies as this impacts the ability to source liquidity.
 Page 46: Because these values and their potential activation threshold can vary over time,
 Page 46: one needs to maintain historic values as well, in order to run realistic historical
 Page 46: backtests.
-Page 46: 
-Page 46: 
+Page 46:
+Page 46:
 Page 47: Trading Fundamentals
-Page 47: 
+Page 47:
 Page 47: 31
-Page 47: 
+Page 47:
 Page 47: ΓÇó Market Data Condition Codes: With ever-growing complexity in market
 Page 47: microstructure, the dissemination of market data has grown complex as well.
 Page 47: While it is possible to store daily data as a single entry per day and per instrument, investors building intraday strategies likely need tick by tick data of all the
@@ -2329,10 +2329,10 @@ Page 47: Quotations in Japan, etc.) tend to experience excess trading volume and
 Page 47: intraday patterns resulting from hedging activity and portfolio adjustments. Consequently, they need to be handled separately, in particular, when modeling trad28 Triple witching days happen four times a year on the third Friday of March, June, September and
 Page 47: December. On these days, the contracts for stock index futures, stock index options and stock options
 Page 47: expire concurrently.
-Page 47: 
-Page 47: 
+Page 47:
+Page 47:
 Page 48: 32
-Page 48: 
+Page 48:
 Page 48: Algorithmic Trading and Quantitative Strategies
 Page 48: ing volume. As most execution strategies make use of relatively short interval volume metrics (e.g., 30-day or 60-day ADV), one single data point can impact the
 Page 48: overall level inferred. Similarly autoregressive models of low order may underperform both on special days and on the days following them. As a result, modelers
@@ -2349,7 +2349,7 @@ Page 48: managers to try to rebalance their holdings at a price as close as poss
 Page 48: official close price, on the day the index rebalance becomes effective. As a result,
 Page 48: on these days, intraday volume distribution is significantly skewed toward the end
 Page 48: of day and requires some adjustment in the execution strategies.
-Page 48: 
+Page 48:
 Page 48: ΓÇó Futures-Specific Reference Data: Futures contracts present particular characteristics requiring additional reference data to be collected. One of the core differences of futures contracts compared to regular stocks is the fact that instruments have an expiry date, after which the instrument ceases to exist. For the
 Page 48: purpose of backtesting strategies, it is necessary to know which contract was live
 Page 48: at any point in time through the use of an expiry calendar, but also which contract was the most liquid. For instance, equity index futures tend to be the most
@@ -2364,12 +2364,12 @@ Page 48: the fact there is no real standardized frequency that applies across ma
 Page 48: instance, European equity index futures tend to expire monthly, while US index
 Page 48: futures expire quarterly. Some contracts even follow an irregular cycle through
 Page 48: the course of the year as it is the case for grain futures (e.g., wheat) that were
-Page 48: 
-Page 48: 
+Page 48:
+Page 48:
 Page 49: Trading Fundamentals
-Page 49: 
+Page 49:
 Page 49: 33
-Page 49: 
+Page 49:
 Page 49: originally created for hedging purposes and as a result have expiry months that
 Page 49: follow the crop cycle.29
 Page 49: The fact futures contracts expire on a regular basis has further implications in
@@ -2407,12 +2407,12 @@ Page 49: it is possible to see most of the open interest switch from the front m
 Page 49: day prior to the expiry. For quarterly contracts it is not uncommon to see the roll happen over the course
 Page 49: of a week or more, and the front month liquidity vanish several days ahead of the actual expiry. Careful
 Page 49: modeling is recommended on a case by case basis.
-Page 49: 
-Page 49: 
+Page 49:
+Page 49:
 Page 50: 34
-Page 50: 
+Page 50:
 Page 50: Algorithmic Trading and Quantitative Strategies
-Page 50: 
+Page 50:
 Page 50: Figure 1.4: Futures Volume Rolling.
 Page 50: ΓÇó Options-Specific Reference Data (Options Chain): Similar to futures contracts,
 Page 50: options contracts present a certain number of specificities for which reference data
@@ -2436,12 +2436,12 @@ Page 50: also stock specific releases that need to be tracked: Earning calendars
 Page 50: ΓÇó Related Tickers: There is a wide range of tickers that are related to each other,
 Page 50: often because they fundamentally represent the same underlying asset. Maintaining a proper reference allows to efficiently exploit opportunities in the market. Some non-exhaustive examples include: Primary tickers to composite tickers
 Page 50: mapping (for markets with fragmented liquidity), dual listed/fungible securities
-Page 50: 
-Page 50: 
+Page 50:
+Page 50:
 Page 51: Trading Fundamentals
-Page 51: 
+Page 51:
 Page 51: 35
-Page 51: 
+Page 51:
 Page 51: in US and Canada, American Depository Receipt (ADR) or Global Depository
 Page 51: Receipt (GDR), local and foreign boards in Thailand, etc.
 Page 51: ΓÇó Composite Assets: Some instruments represent several underlying assets (ETFs,
@@ -2458,11 +2458,11 @@ Page 51: that may have been recorded in different locations.
 Page 51: While the above discussion provides a non-exhaustive list of issues on the reference data available to build a quantitative research platform, they highlight the challenges that must be taken into account when designing and implementing algorithmic
 Page 51: trading strategies. Once in place, a proper set of reference data will allow the quantitative trader to systematically harness the actual content of various types of data
 Page 51: (described later) without being caught off-guard by the minutiae of trading.
-Page 51: 
+Page 51:
 Page 51: 1.4.2
-Page 51: 
+Page 51:
 Page 51: Market Data
-Page 51: 
+Page 51:
 Page 51: While historically a large swath of modeling for developing strategies was carried
 Page 51: out on daily or minute bar data sets, the past fifteen years have seen a significant
 Page 51: rise in the usage of raw market data in an attempt to extract as much information
@@ -2478,12 +2478,12 @@ Page 51: trade feed updates with each trade printed on the tape, the quote feed 
 Page 51: much more frequently each time liquidity is added to, or removed from, the top of
 Page 51: book (a rough estimate in liquid markets is the quotes present more updates than the
 Page 51: trades by about an order of magnitude).
-Page 51: 
-Page 51: 
+Page 51:
+Page 51:
 Page 52: 36
-Page 52: 
+Page 52:
 Page 52: Algorithmic Trading and Quantitative Strategies
-Page 52: 
+Page 52:
 Page 52: In order to build strategies, the timing of each event must be as precise as possible. While the time reported for trade and quotes is the matching engine time at the
 Page 52: exchange, most databases also store a reception or record time to reflect the potential
 Page 52: latency between the trade event and one being aware that it did happen and being able
@@ -2525,33 +2525,33 @@ Page 52: is precisely identified when it is executed, canceled or amended. Simil
 Page 52: the data set contains intraday depth of book activity for all securities in an exchange.
 Page 52: Once all messages from different exchanges are consolidated into one single data set
 Page 52: ordered by timestamp, it is possible to build a full (with national depth) book at any
-Page 52: 
-Page 52: 
+Page 52:
+Page 52:
 Page 53: 37
-Page 53: 
+Page 53:
 Page 53: Trading Fundamentals
-Page 53: 
+Page 53:
 Page 53: moment intraday. For illustration purposes, we take the example of US Level III data
 Page 53: and provide a short description below in Table 1.10.
 Page 53: Table 1.10: Level III Data
 Page 53: Variable:
-Page 53: 
+Page 53:
 Page 53: Description
-Page 53: 
+Page 53:
 Page 53: Timestamp:
-Page 53: 
+Page 53:
 Page 53: Number of milliseconds after the midnight.
-Page 53: 
+Page 53:
 Page 53: Ticker:
-Page 53: 
+Page 53:
 Page 53: Equity symbol (up to 8 characters)
-Page 53: 
+Page 53:
 Page 53: Order:
-Page 53: 
+Page 53:
 Page 53: Unique order ID.
-Page 53: 
+Page 53:
 Page 53: T:
-Page 53: 
+Page 53:
 Page 53: Message type. Allowed values:
 Page 53: ΓÇó ΓÇ£BΓÇ¥ΓÇöAdd buy order
 Page 53: ΓÇó ΓÇ£SΓÇ¥ΓÇöAdd sell order
@@ -2561,41 +2561,41 @@ Page 53: ΓÇó ΓÇ£FΓÇ¥ΓÇöExecute outstanding order in full
 Page 53: ΓÇó ΓÇ£DΓÇ¥ΓÇöDelete outstanding order in full
 Page 53: ΓÇó ΓÇ£XΓÇ¥ΓÇöBulk volume for the cross event
 Page 53: ΓÇó ΓÇ£TΓÇ¥ΓÇöExecute non-displayed order
-Page 53: 
+Page 53:
 Page 53: Shares:
-Page 53: 
+Page 53:
 Page 53: Order quantity for the ΓÇ£B,ΓÇ¥ ΓÇ£S,ΓÇ¥ ΓÇ£E,ΓÇ¥ ΓÇ£X,ΓÇ¥ ΓÇ£C,ΓÇ¥ ΓÇ£TΓÇ¥ messages. Zero
 Page 53: for ΓÇ£FΓÇ¥ and ΓÇ£DΓÇ¥ messages.
-Page 53: 
+Page 53:
 Page 53: Price:
-Page 53: 
+Page 53:
 Page 53: Order price, available for the ΓÇ£B,ΓÇ¥ ΓÇ£S,ΓÇ¥ ΓÇ£XΓÇ¥ and ΓÇ£TΓÇ¥ messages.
 Page 53: Zero for cancellations and executions. The last 4 digits are decimal
 Page 53: digits. The decimal portion is padded on the right with zeros. The
 Page 53: decimal point is implied by position; it does not appear inside the
 Page 53: price field. Divide by 10000 to convert into currency value.
-Page 53: 
+Page 53:
 Page 53: MPID:
-Page 53: 
+Page 53:
 Page 53: Market Participant ID associated with the transaction (4 characters)
-Page 53: 
+Page 53:
 Page 53: MCID:
-Page 53: 
+Page 53:
 Page 53: Market Center Code (originating exchangeΓÇö1 character)
-Page 53: 
+Page 53:
 Page 53: While the display and issuance of a new ID to the modified order varies from
 Page 53: exchange to exchange, a few special types of orders are worth mentioning:
 Page 53: 1. Order subject to price sliding: The execution price could be one cent worse than the
 Page 53: display price at NASDAQ; it is ranked at the locking price as a hidden order, and
-Page 53: 
-Page 53: 
+Page 53:
+Page 53:
 Page 54: 38
-Page 54: 
+Page 54:
 Page 54: Algorithmic Trading and Quantitative Strategies
 Page 54: is displayed at the price, one minimum price variation (normally 1 cent) inferior
 Page 54: to the locking price. New order ID will be used if the order is replaced as a display
 Page 54: order. At other exchanges the old order ID will be used.
-Page 54: 
+Page 54:
 Page 54: 2. Pegged order: Based on NBBO, not routable, new timestamp given upon repricing; display rules vary over exchanges.
 Page 54: 3. Mid-point peg order: Non-displayed, can result in half-penny execution.
 Page 54: 4. Reserve order: Displayed size is ranked as a displayed limit order and the reserve
@@ -2624,12 +2624,12 @@ Page 54: ΓÇó What are the chances for a limit order to move up the queue from
 Page 54: position?
 Page 54: ΓÇó What is the probability of earning the spread?
 Page 54: ΓÇó What is the expected direction of the price movement over a short horizon?
-Page 54: 
-Page 54: 
+Page 54:
+Page 54:
 Page 55: Trading Fundamentals
-Page 55: 
+Page 55:
 Page 55: 39
-Page 55: 
+Page 55:
 Page 55: As illustrated by the diversity and granularity of information available to traders,
 Page 55: markets mechanics have grown ever more complex over time, and a great deal of
 Page 55: peculiarities (in particular at the reference data level) need to be accounted for in
@@ -2641,11 +2641,11 @@ Page 55: strategies relying essentially on binned data. This simplifies the data
 Page 55: handling processes and also greatly reduces the dimension of the data sets so one can
 Page 55: focus more on modeling rather than data wrangling. Most of the time series models
 Page 55: and techniques described in subsequent chapters are suited to daily or binned data.
-Page 55: 
+Page 55:
 Page 55: 1.4.3
-Page 55: 
+Page 55:
 Page 55: Market Data Derived Statistics
-Page 55: 
+Page 55:
 Page 55: Most quantitative strategies, even the higher frequency strategies that leverage
 Page 55: more and more granular data also leverage derived statistics from the binned data,
 Page 55: such as daily data. Here we give a list of the most common ones used by practitioners
@@ -2669,12 +2669,12 @@ Page 55: ΓÇó Auctions Volume and Price: Depending on the exchange, there can 
 Page 55: auctions in a day (Open, Close, Morning Close and Afternoon OpenΓÇöfor markets with a lunch breakΓÇöas well as ad hoc liquidity or intraday auctions). Owing
 Page 55: to their liquidity aggregation nature, they can be considered as a valuable price
 Page 55: discovery event when significant volume prints occur.
-Page 55: 
-Page 55: 
+Page 55:
+Page 55:
 Page 56: 40
-Page 56: 
+Page 56:
 Page 56: Algorithmic Trading and Quantitative Strategies
-Page 56: 
+Page 56:
 Page 56: ΓÇó VWAP: Similar to the OHLC, the intraday VWAP price gives a good indication
 Page 56: of the trading activity on the day. It is not uncommon to build trading strategies
 Page 56: using VWAP time series instead of just close-to-close prices. The main advantage
@@ -2711,12 +2711,12 @@ Page 56: ΓÇô Yield / benchmark rates (repo, 2y, 10y, 30y)
 Page 56: ΓÇô CDS Spreads
 Page 56: ΓÇô US Dollar Index
 Page 56: The second group of daily data represents granular intraday microstructure activity and is mostly of interest to intraday or execution trading strategies:
-Page 56: 
-Page 56: 
+Page 56:
+Page 56:
 Page 57: Trading Fundamentals
-Page 57: 
+Page 57:
 Page 57: 41
-Page 57: 
+Page 57:
 Page 57: ΓÇó Number and Frequency of Trades: A proxy for the activity level of an instrument, and how continuous it is. Instruments with a low number of trades are
 Page 57: harder to execute and can be more volatile.
 Page 57: ΓÇó Number and Frequency of Quote Updates: Similar proxy for the activity level.
@@ -2747,12 +2747,12 @@ Page 57: As a reminder to the reader, aggregated data need to fully support the 
 Page 57: event days which, if included, can significantly skew intraday distribution of values;
 Page 57: mishandling of market asynchronicity resulting in inaccurate computations of key
 Page 57: quantities such as beta or correlation, etc.).
-Page 57: 
-Page 57: 
+Page 57:
+Page 57:
 Page 58: 42
-Page 58: 
+Page 58:
 Page 58: Algorithmic Trading and Quantitative Strategies
-Page 58: 
+Page 58:
 Page 58: Binned Data
 Page 58: The first natural extension to daily data sets is a discretization of the day into bins
 Page 58: ranging from a few seconds to 30 minutes. The features collected are comparable to
@@ -2775,11 +2775,11 @@ Page 58: signals become harder to extract (e.g., drop in correlation between ass
 Page 58: inefficiency moves due to sudden liquidity demand, etc.). Similarly, for less liquid
 Page 58: assets with a low trade frequency, there may not be any trading activity for shorter
 Page 58: durations, resulting in empty bins.
-Page 58: 
+Page 58:
 Page 58: 1.4.4
-Page 58: 
+Page 58:
 Page 58: Fundamental Data and Other Data Sets
-Page 58: 
+Page 58:
 Page 58: A very large number of quantitative investment strategies are still based on fundamental data, and consequently countless research papers are available to the interested
 Page 58: reader describing examples of their usage. Here we will only describe the main classes
 Page 58: of existing fundamental data:
@@ -2792,12 +2792,12 @@ Page 58: aggregate values across a large number of institutions can be interpret
 Page 58: consensus valuation of a given stock, and changes in consensus can have a direct
 Page 58: impact on price.
 Page 58: ΓÇó Earnings Data: Similarly research analysts also provide quarterly earning estimates that can be used as an indication of the performance of a stock before the
-Page 58: 
-Page 58: 
+Page 58:
+Page 58:
 Page 59: Trading Fundamentals
-Page 59: 
+Page 59:
 Page 59: 43
-Page 59: 
+Page 59:
 Page 59: actual value gets published by the company. Here, too, consensus values tend to
 Page 59: play a larger role. In particular, when the difference between the forecast consensus and the realized value is large (known as earning surprise), as the stock might
 Page 59: then experience outsized returns in the following days. Thus, collecting analystsΓÇÖ
@@ -2834,18 +2834,18 @@ Page 59: changes. The forms are then publicly available via the SECΓÇÖs EDGAR
 Page 59: 33 For instance, www.orbitalinsight.com offers daily retail traffic analytics, derived from satellite
 Page 59: imagery analysis monitoring over 260,000 parking lots, as well as estimates of oil inventories through
 Page 59: satellite monitoring of oil storage facilities.
-Page 59: 
-Page 59: 
+Page 59:
+Page 59:
 Page 60: 44
-Page 60: 
+Page 60:
 Page 60: Algorithmic Trading and Quantitative Strategies
 Page 60: set. As more investors get access to it, the harder it becomes to extract meaningful
 Page 60: alpha from it.
-Page 60: 
+Page 60:
 Page 60: 1.5
-Page 60: 
+Page 60:
 Page 60: Market Microstructure: Economic Fundamentals of Trading
-Page 60: 
+Page 60:
 Page 60: We first provide a brief review of market microstructure, an area of finance that
 Page 60: studies how the supply and demand of liquidity results in actual transactions and modifies the subsequent state of the market, and then delve into some critical operational
 Page 60: concepts. We draw upon key review papers by Madhavan (2000) [254], Biais, Glosten
@@ -2876,12 +2876,12 @@ Page 60: information (See Mendelson (1982) [263] and Ho et al. (1985) [197]).
 Page 60: ΓÇô Transparency: How do the quantity, quality and speed of information provided to
 Page 60: market participants affect the trading process?
 Page 60: Transparency which is broadly classified into pre-trade (lit order book) and posttrade (trade reporting to the public, though at different time lags) is often a trade-off.
-Page 60: 
-Page 60: 
+Page 60:
+Page 60:
 Page 61: Trading Fundamentals
-Page 61: 
+Page 61:
 Page 61: 45
-Page 61: 
+Page 61:
 Page 61: While in theory more transparency should lead to better price discovery, the wide
 Page 61: disclosure of order book depth information can lead to thinner posted sizes and
 Page 61: wider bid-ask spreads if participants fear revealing their intent and possibly their
@@ -2912,20 +2912,20 @@ Page 61: the data related to trade sequences, patterns of cancellations across f
 Page 61: we do not present any models explicitly and these will be covered throughout this
 Page 61: book. Now keeping in line with the practical perspectives of this book, we highlight
 Page 61: some key concepts.
-Page 61: 
+Page 61:
 Page 61: 1.5.1
-Page 61: 
+Page 61:
 Page 61: Liquidity and Market Making
-Page 61: 
+Page 61:
 Page 61: (a) A Definition of Liquidity: Financial markets are commonly described as carrying the function of efficiently directing the flow of savings and investments to the
 Page 61: real economy to allow the production of goods and services. An important factor
 Page 61: contributing to well-developed financial markets is in facilitating liquidity which
 Page 61: enables investors to diversify their asset allocation and the transfers of securities
 Page 61: at a reasonable transaction cost.
-Page 61: 
-Page 61: 
+Page 61:
+Page 61:
 Page 62: 46
-Page 62: 
+Page 62:
 Page 62: Algorithmic Trading and Quantitative Strategies
 Page 62: Properly describing ΓÇ£liquidityΓÇ¥ often proves to be elusive as there is no commonly
 Page 62: agreed upon definition. Black (1971) [42] proposes a relatively intuitive description of a liquid market: ΓÇ£The market for a stock is liquid if the following conditions
@@ -2945,7 +2945,7 @@ Page 62: the limit order book to accommodate instantaneous trading of small orde
 Page 62: which is resilient enough to allow large orders to be traded slowly without significant impact on the price of the asset. This general definition remains particularly
 Page 62: well suited to todayΓÇÖs modern electronic markets and can be used by practitioners to assess the difference in liquidity between various markets when choosing
 Page 62: where to deploy a strategy.
-Page 62: 
+Page 62:
 Page 62: (b) Model for Market Friction: We begin with a model to accommodate the friction
 Page 62: in stock price (≡¥æâ≡¥æí ). If ≡¥æ¥Γêù≡¥æí is the (log) true value of the asset which can vary over
 Page 62: time due to expected cash flows or due to variation in the discount rate. Given the
@@ -2966,12 +2966,12 @@ Page 62: Informed Traders, making trading decisions based on superior informatio
 Page 62: is not yet fully reflected in the asset price. That knowledge can be derived from
 Page 62: either fundamental analysis or information not directly available nor known to
 Page 62: other market participants.
-Page 62: 
-Page 62: 
+Page 62:
+Page 62:
 Page 63: Trading Fundamentals
-Page 63: 
+Page 63:
 Page 63: 47
-Page 63: 
+Page 63:
 Page 63: News Traders, making trading decisions based on market news or announcements and trying to make profits by anticipating the marketΓÇÖs response to a particular catalyst. The electronification of news dissemination offers new opportunities for developing quantitative trading strategies by leveraging text-mining tools
 Page 63: such as natural language processing to interpret, and trade on, machine readable
 Page 63: news before it is fully reflected in the market prices.
@@ -3004,10 +3004,10 @@ Page 63: as intermediaries and maintaining significant inventories. Such market 
 Page 63: usually transact through a non-continuous, negotiated, process based on their current inventory, as well as their assessment of the risk involved in liquidation of the
 Page 63: position in the future. Larger or more volatile positions generally tend to come at
 Page 63: a higher cost, reflecting the increased risk for the intermediary. But they provide
-Page 63: 
-Page 63: 
+Page 63:
+Page 63:
 Page 64: 48
-Page 64: 
+Page 64:
 Page 64: Algorithmic Trading and Quantitative Strategies
 Page 64: the end investor with a certain price and an immediate execution bearing no timing risk that is associated with execution over time. These transactions, because
 Page 64: they involve negotiations between two parties, still mostly happen in a manual
@@ -3024,7 +3024,7 @@ Page 64: be concentrated in large liquid stocks and postulate that this can be a
 Page 64: to a combination of larger profit opportunities emanating from trades happening
 Page 64: more often, and from easier risk management due to larger liquidity that allows
 Page 64: for easier exit of unfavorable positions at a reasonable cost.
-Page 64: 
+Page 64:
 Page 64: (e) Risk Management: In the existing literature on informed trading, it is observed
 Page 64: that liquidity supplying risk-neutral market makers are adversely selected by
 Page 64: informed traders suddenly moving prices against them. For example, a market
@@ -3044,12 +3044,12 @@ Page 64: and ask prices. Their model also incorporates the relevant notion of th
 Page 64: the greater potential for adverse move risk for liquidity providers, and vice versa.
 Page 64: This is consistent with observed spreads. In most markets, the spread is wider at the
 Page 64: beginning of the day, narrowing toward the close. An additional reason annotated for
-Page 64: 
-Page 64: 
+Page 64:
+Page 64:
 Page 65: Trading Fundamentals
-Page 65: 
+Page 65:
 Page 65: 49
-Page 65: 
+Page 65:
 Page 65: the wider spread right after the beginning of the trading day is due to the existence
 Page 65: of potentially significant information asymmetry accumulated overnight. As market
 Page 65: makers are directly exposed to that information asymmetry, they tend to quote wider
@@ -3075,11 +3075,11 @@ Page 65: try to minimize their directional risk, they can only accommodate a lim
 Page 65: of non-diversified inventory over a finite period of time. As such, spread sizes, and
 Page 65: more particularly their sudden variation, have also been used as proxies for detecting
 Page 65: excess inventory forcing liquidity providers to adjust their positions.
-Page 65: 
-Page 65: 
-Page 66: 
+Page 65:
+Page 65:
+Page 66:
 Page 67: Bibliography
-Page 67: 
+Page 67:
 Page 67: [1] F. Abdi and A. Ranaldo. A simple estimation of bid-ask spreads from daily
 Page 67: close, high and low prices. The Review of Financial Studies, 30:4437ΓÇô4480,
 Page 67: 2017.
@@ -3109,12 +3109,12 @@ Page 67: [13] N. Amenc, F. Goltz, A. Lodh, and L. Martellini. Diversifying the d
 Page 67: limited risk of underperformance. The Journal of Portfolio Management,
 Page 67: 38(3):72ΓÇô88, 2012.
 Page 67: 51
-Page 67: 
-Page 67: 
+Page 67:
+Page 67:
 Page 68: 52
-Page 68: 
+Page 68:
 Page 68: Bibliography
-Page 68: 
+Page 68:
 Page 68: [14] S. Anatolyev and A. Gospodinov. A trading approach to testing for predictability. Journal of Business & Economic Statistics, 23:455ΓÇô461, 2005.
 Page 68: [15] S. Anatolyev and A. Gospodinov. Modeling financial return dynamics via
 Page 68: decomposition. Journal of Business & Economic Statistics, 28:232ΓÇô245, 2010.
@@ -3144,12 +3144,12 @@ Page 68: [27] M. Baker and J. Wurgler. Investor sentiment and the cross-section 
 Page 68: returns. Journal of Finance, 61(4):1645ΓÇô1680, 2006.
 Page 68: [28] M. Baker and J. Wurgler. Investor sentiment in the stock market. Journal of
 Page 68: Economic Perspectives, 21(2):129ΓÇô151, 2007.
-Page 68: 
-Page 68: 
+Page 68:
+Page 68:
 Page 69: Bibliography
-Page 69: 
+Page 69:
 Page 69: 53
-Page 69: 
+Page 69:
 Page 69: [29] F.M. Bandi and J.R. Russell. Separating microstructure noise from volatility.
 Page 69: Journal of Financial Economics, 79:655ΓÇô692, 2006.
 Page 69: [30] N. Barberis, A. Shleifer, and R. Vishny. A model of investor sentiment. Journal
@@ -3182,12 +3182,12 @@ Page 69: [41] J.P. Bialkowski, S. Darolles, and Ga├½lle G. Le Fol. Improving 
 Page 69: 2006.
 Page 69: [42] F. Black. Towards a fully automated exchange, Part I. Financial Analysts
 Page 69: Journal, 27:29ΓÇô34, 1971.
-Page 69: 
-Page 69: 
+Page 69:
+Page 69:
 Page 70: 54
-Page 70: 
+Page 70:
 Page 70: Bibliography
-Page 70: 
+Page 70:
 Page 70: [43] F. Black. Capital market equilibrium with restricted borrowing. The Journal
 Page 70: of Business, 45:444ΓÇô454, 1972.
 Page 70: [44] F. Black and R. Litterman. Global portfolio optimization. Financial Analysts
@@ -3220,12 +3220,12 @@ Page 70: the asset space. Journal of Finance, 61:2187ΓÇô2217, 2006.
 Page 70: [57] L. Breiman. Bagging predictors. Machine Learning, 24(2):123ΓÇô140, 1996.
 Page 70: [58] L. Breiman. Prediction games and arcing algorithms. Neural Computation,
 Page 70: 11(7):1493ΓÇô1517, 1999.
-Page 70: 
-Page 70: 
+Page 70:
+Page 70:
 Page 71: Bibliography
-Page 71: 
+Page 71:
 Page 71: 55
-Page 71: 
+Page 71:
 Page 71: [59] D.R. Brillinger. Time Series: Data Analysis and Theory. Expanded edition.
 Page 71: Holden-Day, San Francisco, 1981.
 Page 71: [60] W. Brock, J. Lakonishok, and B. LeBaron. Simple technical trading rules and
@@ -3248,9 +3248,9 @@ Page 71: [67] C. Cao, O. Hansch, and X. Wang. The information content of an open
 Page 71: order book. The Journal of Futures Markets, 29:16ΓÇô41, 2009.
 Page 71: [68] M.M. Carhart. On persistence in mutual fund performance.
 Page 71: Finance, 52(1):57ΓÇô82, 1997.
-Page 71: 
+Page 71:
 Page 71: Journal of
-Page 71: 
+Page 71:
 Page 71: [69] M. Centoni and G. Cubadda. Modeling co-movements of economic time
 Page 71: series: A selective survey. Statistica, 71:267ΓÇô293, 2011.
 Page 71: [70] A.P. Chaboud, B. Chiquoine, E. Hjalmarsson, and C. Vega. Rise of the
@@ -3262,12 +3262,12 @@ Page 71: Markets, 15(4):467ΓÇô491, 2012.
 Page 71: [72] K. Chan and W.-M. Fong. Trade size, order imbalance and the volatilityvolume relation. Journal of Financial Economics, 57:247ΓÇô273, 2000.
 Page 71: [73] L. Chan and J. Lakonishok. Institutional equity trading costs, NYSE versus
 Page 71: Nasdaq. Journal of Finance, 52:713ΓÇô735, 1997.
-Page 71: 
-Page 71: 
+Page 71:
+Page 71:
 Page 72: 56
-Page 72: 
+Page 72:
 Page 72: Bibliography
-Page 72: 
+Page 72:
 Page 72: [74] L.K.C. Chan and J. Lakonishok. The behavior of stock prices around institutional trades. Journal of Finance, 50:1147ΓÇô1174, 1995.
 Page 72: [75] L.K.C. Chan and J. Lakonishok. Institutional equity trading costs: NYSE versus Nasdaq. Journal of Finance, 52(2):176ΓÇô190, 1997.
 Page 72: [76] N.F. Chen, R. Roll, and S.A. Ross. Economic forces and the stock market. The
@@ -3298,12 +3298,12 @@ Page 72: The Journal of Financial Econometrics, 12:47ΓÇô88, 2014.
 Page 72: [88] R. Cont, S. Stoikov, and R. Talreja. A stochastic model for order book dynamics. Operations Research, 58:549ΓÇô563, 2010.
 Page 72: [89] M. Cooper. Filter values based on price and volume in individual security
 Page 72: overreaction. The Review of Financial Studies, 12:901ΓÇô935, 1999.
-Page 72: 
-Page 72: 
+Page 72:
+Page 72:
 Page 73: Bibliography
-Page 73: 
+Page 73:
 Page 73: 57
-Page 73: 
+Page 73:
 Page 73: [90] S.A. Corwin and P. Schultz. A simple way to estimate bid-ask spreads from
 Page 73: daily high and low prices. Journal of Finance, 67:719ΓÇô759, 2012.
 Page 73: [91] A. Cowles. Can stock market forecasters forecast. Econometrica, 1:309ΓÇô324,
@@ -3336,12 +3336,12 @@ Page 73: 22:1915ΓÇô1953, 2009.
 Page 73: [105] A.P. Dempster, N.-M. Laird, and D.B. Rubin. Maximum likelihood from
 Page 73: incomplete data via the EM algorithm. Journal of the Royal Statistical Society,
 Page 73: Series B, 39:1ΓÇô38, 1977.
-Page 73: 
-Page 73: 
+Page 73:
+Page 73:
 Page 74: 58
-Page 74: 
+Page 74:
 Page 74: Bibliography
-Page 74: 
+Page 74:
 Page 74: [106] B. Do and R. Faff. Does simple pairs trading still work? The Financial Analysts
 Page 74: Journal, 66(4):83ΓÇô95, 2010.
 Page 74: [107] I. Domowitz, J. Glen, and A. Madhavan. Liquidity, volatility and equity trading
@@ -3371,12 +3371,12 @@ Page 74: Journal of Financial Economics, 1:159ΓÇô188, 2003.
 Page 74: [120] R.F. Engle. Autoregressive conditional heteroscedasticity with estimates of the
 Page 74: variance of United Kingdom inflations. Econometrica, 50:987ΓÇô1007, 1982.
 Page 74: [121] R.F. Engle, R. Ferstenberg, and J.R. Russell. Measuring and modeling execution cost and risk. The Journal of Portfolio Management, 38(2):14ΓÇô28, 2012.
-Page 74: 
-Page 74: 
+Page 74:
+Page 74:
 Page 75: Bibliography
-Page 75: 
+Page 75:
 Page 75: 59
-Page 75: 
+Page 75:
 Page 75: [122] R.F. Engle and C.W.J. Granger. Co-integration and error correction: Representation, estimation, and testing. Econometrica, 55:251ΓÇô276, 1987.
 Page 75: [123] R.F. Engle and S. Kozicki. Testing for common features. Journal of Business
 Page 75: & Economic Statistics, 11(4):369ΓÇô380, 1993.
@@ -3408,12 +3408,12 @@ Page 75: [135] J. Fan, Y. Fan, and J. Lv. High dimensional covariance matrix est
 Page 75: a factor model. Journal of Econometrics, 147:187ΓÇô197, 2008.
 Page 75: [136] J. Fan, F. Han, H. Liu, and B. Vickers. Robust inference of risks of large
 Page 75: portfolios. Journal of Econometrics, 194:298ΓÇô308, 2016.
-Page 75: 
-Page 75: 
+Page 75:
+Page 75:
 Page 76: 60
-Page 76: 
+Page 76:
 Page 76: Bibliography
-Page 76: 
+Page 76:
 Page 76: [137] J. Fan, J. Zhang, H. Liu, and K. Yu. Vast portfolio selection with crossexposure constraints.
 Page 76: Journal of the American Statistical Association,
 Page 76: 107:592ΓÇô606, 2012.
@@ -3447,12 +3447,12 @@ Page 76: [150] A. Frino, E. Jarnecic, and A. Lepone. The determinants of price i
 Page 76: block trades: Further evidence. Abacus, 43(2):94ΓÇô106, 2007.
 Page 76: [151] K.A. Froot and E.M. Dabora. How are stock prices affected by the location of
 Page 76: trade? Journal of Financial Economics, 53(2):189ΓÇô216, 1999.
-Page 76: 
-Page 76: 
+Page 76:
+Page 76:
 Page 77: Bibliography
-Page 77: 
+Page 77:
 Page 77: 61
-Page 77: 
+Page 77:
 Page 77: [152] P. Fryzlewicz, T. Sapatinas, and S. Subba Rao. Normalized least-squared estimation in time-varying ARCH models. The Annals of Statistics, 36:742ΓÇô786,
 Page 77: 2008.
 Page 77: [153] W.A. Fuller. Introduction to Statistical Time Series, Second Edition. John
@@ -3485,12 +3485,12 @@ Page 77: Journal of Econometrics, 119:413ΓÇô433, 2004.
 Page 77: [166] M.R. Gibbons, S.A. Ross, and J. Shanken. A test of the efficiency of a given
 Page 77: portfolio. Econometrica, 57:1121ΓÇô1152, 1989.
 Page 77: [167] L.R. Glosten and P.R. Milgrom. Bid, ask and transaction prices in a specialist market with heterogeneously informed traders. Journal of Financial Economics, 14:71ΓÇô100, 1985.
-Page 77: 
-Page 77: 
+Page 77:
+Page 77:
 Page 78: 62
-Page 78: 
+Page 78:
 Page 78: Bibliography
-Page 78: 
+Page 78:
 Page 78: [168] I. Goodfellow, Y. Bengio, and A. Courville. Deep Learning. M.I.T. Press,
 Page 78: Boston, 2016.
 Page 78: [169] R.C. Grinold and R.N. Kahn. Active Portfolio Management, Second Edition.
@@ -3523,12 +3523,12 @@ Page 78: price discovery. Journal of Finance, 50(4):1175ΓÇô1199, 1995.
 Page 78: [182] J. Hasbrouck and G. Saar. Technology and liquidity provision: The blurring
 Page 78: of traditional definitions. Journal of Financial Markets, 12:143ΓÇô172, 2009.
 Page 78: [183] J. Hasbrouck and D.J. Seppi. Common factors in prices, order flows, and liquidity. Journal of Financial Economics, 59:383ΓÇô411, 2001.
-Page 78: 
-Page 78: 
+Page 78:
+Page 78:
 Page 79: Bibliography
-Page 79: 
+Page 79:
 Page 79: 63
-Page 79: 
+Page 79:
 Page 79: [184] T. Hastie, R. Tibshirani, and J. Friedman. The Elements of Statistical Learning;
 Page 79: Data Mining, Inference and Prediction, Second Edition. Springer-Verlag, New
 Page 79: York, 2009.
@@ -3562,12 +3562,12 @@ Page 79: Journal of Financial Economics, 73:525ΓÇô565, 2004.
 Page 79: [199] R.W. Holthausen, R.W. Leftwich, and D. Mayers. Large-block transactions, the
 Page 79: speed of response, and temporary and permanent stock-price effect. Journal
 Page 79: of Financial Economics, 26:71ΓÇô95, 1990.
-Page 79: 
-Page 79: 
+Page 79:
+Page 79:
 Page 80: 64
-Page 80: 
+Page 80:
 Page 80: Bibliography
-Page 80: 
+Page 80:
 Page 80: [200] H. Hotelling. Analysis of a complex of statistical variables into principal components. Journal of Educational Psychology, 4:417ΓÇô441, 498ΓÇô520, 1933.
 Page 80: [201] H. Hotelling. The most predictable criterion. Journal of Educational Psychology, 26:139ΓÇô142, 1935.
 Page 80: [202] H. Hotelling. Relations between two sets of variables. Biometrika, 28:321ΓÇô
@@ -3601,12 +3601,12 @@ Page 80: [214] N. Jegadeesh. Discussion of LMW (2000). Journal of Finance, pages
 Page 80: 1770, 2000.
 Page 80: [215] N. Jegadeesh and S. Titman. Returns to buying winners and selling losers:
 Page 80: Implications for stock market efficiency. Journal of Finance, 48:65ΓÇô91, 1993.
-Page 80: 
-Page 80: 
+Page 80:
+Page 80:
 Page 81: Bibliography
-Page 81: 
+Page 81:
 Page 81: 65
-Page 81: 
+Page 81:
 Page 81: [216] N. Jegadeesh and S. Titman. Profitability of momentum strategies: An evaluation of alternative explanations. Journal of Finance, 56:699ΓÇô720, 2001.
 Page 81: [217] N. Jegadeesh and S. Titman. Cross-sectional time series determinants of
 Page 81: momentum returns. The Review of Financial Studies, 15:143ΓÇô157, 2002.
@@ -3638,21 +3638,21 @@ Page 81: Economics, pages 209ΓÇô223, 1937.
 Page 81: [231] P.D. Koch and T.W. Koch. Evolution in dynamic linkages across daily national
 Page 81: stock indexes. Journal of International Money and Finance, 10.2:231ΓÇô251,
 Page 81: 1991.
-Page 81: 
-Page 81: 
+Page 81:
+Page 81:
 Page 82: 66
-Page 82: 
+Page 82:
 Page 82: Bibliography
-Page 82: 
+Page 82:
 Page 82: [232] A. Kourtis. On the distribution and estimation of trading costs. Journal of
 Page 82: Empirical Finance, 29:230ΓÇô245, 2014.
 Page 82: [233] P. Kratz and T. Sch├╢neborn. Optimal liquidity in dark pools. Quantitative
 Page 82: Finance, 14:1519ΓÇô1539, 2014.
 Page 82: [234] A. Kyle. Continuous time auctions and insider trading.
 Page 82: 53:1315ΓÇô1336, 1985.
-Page 82: 
+Page 82:
 Page 82: Econometrics,
-Page 82: 
+Page 82:
 Page 82: [235] T.L. Lai and H. Xing. Statistical Models and Methods for Financial Markets.
 Page 82: Springer, 2008.
 Page 82: [236] T.L. Lai and H. Xing. Stochastic change-point ARX GARCH models and their
@@ -3681,12 +3681,12 @@ Page 82: in stock portfolios and capital budgets. Review of Economics and Statis
 Page 82: 47:13ΓÇô37, 1965.
 Page 82: [246] G. Llorente, R. Michaely, G. Saar, and J. Wang. Dynamic volume-return relation of individual stocks. The Review of Financial Studies, 15:1005ΓÇô1047,
 Page 82: 2002.
-Page 82: 
-Page 82: 
+Page 82:
+Page 82:
 Page 83: Bibliography
-Page 83: 
+Page 83:
 Page 83: 67
-Page 83: 
+Page 83:
 Page 83: [247] A.W. Lo, H. Mamaysky, and J. Wang. Foundation of technical analysis:
 Page 83: Computational algorithms, statistical inference and empirical implementation.
 Page 83: Journal of Finance, LV(4):1705ΓÇô1765, 2000.
@@ -3722,12 +3722,12 @@ Page 83: Journal of Econometrics, 138:181ΓÇô207, 2007.
 Page 83: [262] R. McCulloch and R. Tsay. Nonlinearity in high-frequency financial data
 Page 83: and hierarchical models. Studies in Nonlinear Dynamics and Econometrics,
 Page 83: 5:1067ΓÇô1077, 2001.
-Page 83: 
-Page 83: 
+Page 83:
+Page 83:
 Page 84: 68
-Page 84: 
+Page 84:
 Page 84: Bibliography
-Page 84: 
+Page 84:
 Page 84: [263] H. Mendelson. Market behavior in a clearing house. Econometrica: Journal of
 Page 84: the Econometric Society, 1505ΓÇô1524, 1982.
 Page 84: [264] L. Menkhoff, L. Sarno, M. Schmeling, and A. Schrimpf. Currency momentum
@@ -3758,12 +3758,12 @@ Page 84: [276] M. OΓÇÖHara. High frequency market microstructure. Journal of 
 Page 84: [277] J. Okunev and D. White. Do momentum - based strategies still work in foreign
 Page 84: currency markets? Journal of Financial and Quantitative Analysis, 38:425ΓÇô
 Page 84: 447, 2003.
-Page 84: 
-Page 84: 
+Page 84:
+Page 84:
 Page 85: Bibliography
-Page 85: 
+Page 85:
 Page 85: 69
-Page 85: 
+Page 85:
 Page 85: [278] J.K. Ord, A.B. Koehler, and R.D. Snyder. Estimation and prediction for a class
 Page 85: of dynamic nonlinear statistical models. Journal of the American Statistical
 Page 85: Association, 92(440):1621ΓÇô1629, 1997.
@@ -3796,12 +3796,12 @@ Page 85: [291] R. Roll. A simple model of the implicit bid-ask spread in an effi
 Page 85: Journal of Finance, 39:1127ΓÇô1139, 1984.
 Page 85: [292] J.P. Romano and M. Wolf. Stepwise multiple testing as formalized data snooping. Econometrica, 73:1237ΓÇô1282, 2005.
 Page 85: [293] S.A. Ross. The arbitrage theory of capital asset pricing. The Journal of Economic Theory, 13:341ΓÇô360, 1976.
-Page 85: 
-Page 85: 
+Page 85:
+Page 85:
 Page 86: 70
-Page 86: 
+Page 86:
 Page 86: Bibliography
-Page 86: 
+Page 86:
 Page 86: [294] I. Rosu. A dynamic model of the limit order book. The Review of Financial
 Page 86: Studies, 22:4601ΓÇô4641, 2009.
 Page 86: [295] T.H. Rydberg and N. Shephard. Dynamic trade-by-trade price movement:
@@ -3833,12 +3833,12 @@ Page 86: [308] R. Sullivan, A. Timmermann, and H. White. Data snooping, technica
 Page 86: rule performance, and the bootstrap. Journal of Finance, 54:1647ΓÇô1691, 1999.
 Page 86: [309] R.S. Sulton and A.G. Barks. Reinforcement Learning, An Introduction, Second
 Page 86: Edition. MIT Press, Boston, 2018.
-Page 86: 
-Page 86: 
+Page 86:
+Page 86:
 Page 87: Bibliography
-Page 87: 
+Page 87:
 Page 87: 71
-Page 87: 
+Page 87:
 Page 87: [310] R.J. Sweeney. Some new filter rule tests: Methods and results. Journal of
 Page 87: Financial and Quantitative Analysis, 20(3):285ΓÇô300, 1988.
 Page 87: [311] G.E. Tauchen and M. Pitts. The price variability-volume relationship on speculative markets. Econometrica, 51:485ΓÇô505, 1983.
@@ -3872,12 +3872,12 @@ Page 87: [325] H. Wold. PLS regression, volume 6. Eds. N.L. Johnson and S. Kotz,
 Page 87: [326] H. Working. Note on the correlation of first differences of averages in a random
 Page 87: chain. Econometrica: Journal of the Econometric Society, pages 916ΓÇô918,
 Page 87: 1960.
-Page 87: 
-Page 87: 
+Page 87:
+Page 87:
 Page 88: 72
-Page 88: 
+Page 88:
 Page 88: Bibliography
-Page 88: 
+Page 88:
 Page 88: [327] D. Yang and Q. Zhang. Drift-independent volatility estimation based on high,
 Page 88: low, open and close prices. The Journal of Business, 73:477ΓÇô491, 2000.
 Page 88: [328] J.W. Yang. Transaction duration and asymmetric price impact of trades - Evidence from Australia. Journal of Empirical Finance, 18:91ΓÇô102, 2011.
@@ -3888,5 +3888,5 @@ Page 88: Evidence for logarithmic dependence of market impact on size and partic
 Page 88: [331] G. Zhou. Measuring investor sentiment. Annual Review of Financial Economics, 10:239ΓÇô259, 2018.
 Page 88: [332] Y. Zhu and G. Zhou. Technical analysis: An asset allocation perspective on the
 Page 88: use of moving averages. Journal of Financial Economics, 92:519ΓÇô544, 2009.
-Page 88: 
-Page 88: 
+Page 88:
+Page 88:

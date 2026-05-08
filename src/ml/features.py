@@ -17,7 +17,7 @@ Includes IC-based feature evaluation and filtering against forward returns.
 
 from __future__ import annotations
 
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 import numpy as np
 import pandas as pd
@@ -50,6 +50,7 @@ class FeatureEngineer:
         self,
         df: pd.DataFrame,
         include_alphas: bool = True,
+        drop_na: bool = False,
     ) -> pd.DataFrame:
         """
         Generate all features from OHLCV data.
@@ -57,6 +58,9 @@ class FeatureEngineer:
         Args:
             df: OHLCV DataFrame with columns: High, Low, Close, Open, Volume
             include_alphas: Whether to include formulaic alpha factors.
+            drop_na: If True, drop rows with any NaN after filling.
+                     If False, forward/backward fill NaN (suitable for
+                     testing or when caller handles NaN).
 
         Returns:
             DataFrame with feature columns
@@ -72,6 +76,19 @@ class FeatureEngineer:
 
         if include_alphas:
             features = self._add_alpha_factors(features, df)
+
+        # Replace inf/-inf with NaN before any NaN handling
+        features = features.replace([np.inf, -np.inf], np.nan)
+        # Drop columns that are entirely NaN (insufficient data for rolling windows)
+        features = features.dropna(axis=1, how="all")
+
+        if drop_na:
+            # Forward-fill then drop any remaining NaN rows
+            features = features.ffill()
+            features = features.dropna()
+        else:
+            # Fill NaN gracefully (suitable for testing or preprocessing)
+            features = features.ffill().bfill()
 
         return features
 
@@ -343,7 +360,6 @@ class FeatureEngineer:
             DataFrame with IC, rank_IC, hit_rate per feature, sorted by abs_rank_ic desc.
         """
         from src.ml.metrics import ic_summary
-        from src.ml.metrics import compute_ic, compute_rank_ic, compute_hit_rate
 
         if isinstance(forward_returns, str):
             y = df[forward_returns]
@@ -353,7 +369,8 @@ class FeatureEngineer:
             raise TypeError("forward_returns must be str (column name) or pd.Series")
 
         feature_cols = [
-            c for c in df.columns
+            c
+            for c in df.columns
             if c not in ("forward_return_1d", "forward_return_5d", "forward_return_20d")
             and not c.startswith("forward_return_")
         ]
@@ -386,10 +403,7 @@ class FeatureEngineer:
         else:
             y = forward_returns
 
-        feature_cols = [
-            c for c in df.columns
-            if not c.startswith("forward_return_")
-        ]
+        feature_cols = [c for c in df.columns if not c.startswith("forward_return_")]
         X = df[feature_cols].dropna()
 
         idx = X.index.intersection(y.dropna().index)
@@ -399,7 +413,9 @@ class FeatureEngineer:
         selected = filter_features_by_ic(X_clean, y_clean, min_abs_ic, min_abs_rank_ic)
 
         if isinstance(forward_returns, str):
-            selected_cols = selected + [forward_returns] if forward_returns in df.columns else selected
+            selected_cols = (
+                selected + [forward_returns] if forward_returns in df.columns else selected
+            )
         else:
             selected_cols = selected
 
@@ -434,7 +450,9 @@ class FeatureEngineer:
         features["alpha_3"] = -open_price.rolling(10).corr(volume)
 
         # Alpha 4: (-1 * Ts_Rank(rank(low), 9))
-        features["alpha_4"] = -low.rolling(9).apply(lambda x: (x.rank().iloc[-1] - 1) / (len(x) - 1))
+        features["alpha_4"] = -low.rolling(9).apply(
+            lambda x: (x.rank().iloc[-1] - 1) / (len(x) - 1)
+        )
 
         # Alpha 6: (-1 * correlation(open, volume, 10))
         features["alpha_6"] = -open_price.rolling(10).corr(volume)
@@ -444,8 +462,10 @@ class FeatureEngineer:
         vol_ma_20 = volume.rolling(20).mean()
         close_delta_7 = close.diff(7)
         sign_mom = np.sign(close_delta_7)
-        ts_rank = close_delta_7.abs().rolling(60).apply(
-            lambda x: (x.rank().iloc[-1] - 1) / (max(len(x) - 1, 1))
+        ts_rank = (
+            close_delta_7.abs()
+            .rolling(60)
+            .apply(lambda x: (x.rank().iloc[-1] - 1) / (max(len(x) - 1, 1)))
         )
         features["alpha_7"] = np.where(volume > vol_ma_20, -ts_rank * sign_mom, -1.0)
 
@@ -459,12 +479,16 @@ class FeatureEngineer:
         close_delta = close.diff()
         ts_min_delta = close_delta.rolling(5).min()
         ts_max_delta = close_delta.rolling(5).max()
-        features["alpha_9"] = np.where(ts_min_delta > 0, close_delta, np.where(ts_max_delta < 0, close_delta, -close_delta))
+        features["alpha_9"] = np.where(
+            ts_min_delta > 0, close_delta, np.where(ts_max_delta < 0, close_delta, -close_delta)
+        )
 
         # Alpha 10: rank(((0 < ts_min(delta(close, 1), 4)) ? delta(close, 1) : ((ts_max(delta(close, 1), 4) < 0) ? delta(close, 1) : (-1 * delta(close, 1)))))
         ts_min_d4 = close_delta.rolling(4).min()
         ts_max_d4 = close_delta.rolling(4).max()
-        raw_alpha_10 = np.where(ts_min_d4 > 0, close_delta, np.where(ts_max_d4 < 0, close_delta, -close_delta))
+        raw_alpha_10 = np.where(
+            ts_min_d4 > 0, close_delta, np.where(ts_max_d4 < 0, close_delta, -close_delta)
+        )
         features["alpha_10"] = pd.Series(raw_alpha_10, index=close.index).rolling(20).rank(pct=True)
 
         # Alpha 12: (sign(delta(volume, 1)) * (-1 * delta(close, 1)))
@@ -511,12 +535,16 @@ class FeatureEngineer:
         features["alpha_49"] = (mom_decay < -0.1 * volume).astype(float)
 
         # Alpha 54: (-1 * ((low - close) * power(open, 5)) / ((low - high) * power(close, 5)))
-        features["alpha_54"] = -(low - close) * (open_price * 0.01) / ((low - high) * (close * 0.01) + 1e-10)
+        features["alpha_54"] = (
+            -(low - close) * (open_price * 0.01) / ((low - high) * (close * 0.01) + 1e-10)
+        )
 
         # Alpha 101: ((close - open) / ((high - low) + .001))
         features["alpha_101"] = (close - open_price) / (high - low + 0.001)
 
-        features = self._add_alpha_factors_extended(features, df, volume, open_price, close, high, low, returns)
+        features = self._add_alpha_factors_extended(
+            features, df, volume, open_price, close, high, low, returns
+        )
 
         return features
 
@@ -533,7 +561,9 @@ class FeatureEngineer:
     ) -> pd.DataFrame:
         """Add extended WorldQuant 101 alpha factors (additional ~35)."""
         adv20 = volume.rolling(20).mean()
-        vwap_approx = ((high + low + close) / 3 * volume).rolling(1).sum() / (volume.rolling(1).sum() + 1e-10)
+        vwap_approx = ((high + low + close) / 3 * volume).rolling(1).sum() / (
+            volume.rolling(1).sum() + 1e-10
+        )
 
         # Alpha 5: volume-high rank correlation decay
         vol_rank5 = volume.rolling(5).rank(pct=True)
@@ -544,7 +574,8 @@ class FeatureEngineer:
         vc_diff = vwap_approx - close
         features["alpha_11"] = (
             (vc_diff.rolling(3).max().rank(pct=True) + vc_diff.rolling(3).min().rank(pct=True))
-            * volume.diff(3).rank(pct=True) * 0.01
+            * volume.diff(3).rank(pct=True)
+            * 0.01
         )
 
         # Alpha 22: high-volume correlation change * close volatility rank
@@ -569,15 +600,16 @@ class FeatureEngineer:
         sr2 = returns.rolling(2).std()
         sr5 = returns.rolling(5).std()
         features["alpha_34"] = (
-            (1 - (sr2 / (sr5 + 1e-10)).rank(pct=True))
-            + (1 - close.diff().rank(pct=True))
+            (1 - (sr2 / (sr5 + 1e-10)).rank(pct=True)) + (1 - close.diff().rank(pct=True))
         ).rank(pct=True)
 
         # Alpha 41: geometric mean vs vwap
         features["alpha_41"] = np.sqrt(high * low) - vwap_approx
 
         # Alpha 42: high volatility rank * high-volume correlation
-        features["alpha_42"] = -high.rolling(10).std().rank(pct=True) * high.rolling(10).corr(volume)
+        features["alpha_42"] = -high.rolling(10).std().rank(pct=True) * high.rolling(10).corr(
+            volume
+        )
 
         # Alpha 46: volume-weighted mid-price momentum
         mid_price = close * 0.5 + vwap_approx * 0.5
@@ -591,14 +623,20 @@ class FeatureEngineer:
         lmin5 = low.rolling(5).min()
         rs240 = returns.rolling(240).sum()
         rs20 = returns.rolling(20).sum()
-        features["alpha_52"] = (-lmin5 + lmin5.shift(5)) * ((rs240 - rs20) / 220).rank(pct=True) * volume.rolling(5).rank(pct=True)
+        features["alpha_52"] = (
+            (-lmin5 + lmin5.shift(5))
+            * ((rs240 - rs20) / 220).rank(pct=True)
+            * volume.rolling(5).rank(pct=True)
+        )
 
         # Alpha 53: candle efficiency delta
         c_eff = ((close - low) - (high - close)) / (close - low + 1e-10)
         features["alpha_53"] = -c_eff.diff(9)
 
         # Alpha 55: -corr(close_position_rank, volume_rank, 6)
-        rel_pos = (close - low.rolling(12).min()) / (high.rolling(12).max() - low.rolling(12).min() + 1e-10)
+        rel_pos = (close - low.rolling(12).min()) / (
+            high.rolling(12).max() - low.rolling(12).min() + 1e-10
+        )
         features["alpha_55"] = -rel_pos.rank(pct=True).rolling(6).corr(volume.rank(pct=True))
 
         # Alpha 56: inverse close-vwap correlation rank
@@ -606,7 +644,11 @@ class FeatureEngineer:
         features["alpha_56"] = 0.001 / (cvc10.rank(pct=True) + 0.001)
 
         # Alpha 57: mean reversion away from vwap
-        decay_r = vwap_approx.diff().rolling(2).apply(lambda x: (x.rank().iloc[-1] - 1) / max(len(x) - 1, 1))
+        decay_r = (
+            vwap_approx.diff()
+            .rolling(2)
+            .apply(lambda x: (x.rank().iloc[-1] - 1) / max(len(x) - 1, 1))
+        )
         features["alpha_57"] = -(close - vwap_approx) / (decay_r.abs() + 1e-10) * 0.01
 
         # Alpha 65: ranked abs close delta * sign
@@ -623,10 +665,14 @@ class FeatureEngineer:
         hl_r = (high - low) / (cma5 + 1e-10)
         num = (hl_r.shift(1).shift(1) * (close.shift(1) / close)).rank(pct=True)
         denom = hl_r / (vwap_approx - close).abs().replace(0, 1e-10)
-        features["alpha_83"] = (num * volume.rank(pct=True).rank(pct=True) / (denom.abs() + 1e-10)).clip(-10, 10)
+        features["alpha_83"] = (
+            num * volume.rank(pct=True).rank(pct=True) / (denom.abs() + 1e-10)
+        ).clip(-10, 10)
 
         # Alpha 85: squared vwap/close ratio rank
-        features["alpha_85"] = ((vwap_approx / close.replace(0, np.nan)) ** 2).rolling(10).rank(pct=True)
+        features["alpha_85"] = (
+            ((vwap_approx / close.replace(0, np.nan)) ** 2).rolling(10).rank(pct=True)
+        )
 
         # Alpha 88: 20-day price momentum percentage
         features["alpha_88"] = (close - close.shift(20)) / close.shift(20).replace(0, np.nan) * 100
@@ -635,16 +681,17 @@ class FeatureEngineer:
         r_pos = returns.clip(lower=0)
         r_neg = returns.clip(upper=0).abs()
         features["alpha_96"] = (
-            r_pos.rolling(10).sum() / (r_neg.rolling(10).sum() + 1e-10)
-            * volume.rolling(10).mean() / (volume.rolling(50).mean() + 1e-10)
+            r_pos.rolling(10).sum()
+            / (r_neg.rolling(10).sum() + 1e-10)
+            * volume.rolling(10).mean()
+            / (volume.rolling(50).mean() + 1e-10)
         )
 
         # Alpha 98: vwap-adv5 vs open-adv15 correlation rank diff
         adv5s26 = volume.rolling(5).mean().rolling(26).sum()
-        features["alpha_98"] = (
-            vwap_approx.rolling(5).corr(adv5s26).rank(pct=True)
-            - open_price.rank(pct=True).rolling(21).corr(adv15.rank(pct=True)).rank(pct=True)
-        )
+        features["alpha_98"] = vwap_approx.rolling(5).corr(adv5s26).rank(
+            pct=True
+        ) - open_price.rank(pct=True).rolling(21).corr(adv15.rank(pct=True)).rank(pct=True)
 
         # Alpha 99: hl-adv60 vs low-volume correlation threshold
         hl_avg = (high + low) / 2
@@ -654,7 +701,9 @@ class FeatureEngineer:
         features["alpha_99"] = np.where(hl_corr < lv_corr, -1.0, 1.0)
 
         # Alpha 100: -high-vol corr rank * close-vol corr rank
-        features["alpha_100"] = -high.rolling(5).corr(volume).rank(pct=True) * close.rolling(5).corr(volume).rank(pct=True)
+        features["alpha_100"] = -high.rolling(5).corr(volume).rank(pct=True) * close.rolling(
+            5
+        ).corr(volume).rank(pct=True)
 
         return features
 

@@ -19,9 +19,7 @@ import timesfm
 
 # Configuration
 MIN_CONTEXT = 12  # Minimum points to start forecasting
-MAX_HORIZON = (
-    36  # Max forecast length (when we have 12 points, forecast 36 months to 2025-12)
-)
+MAX_HORIZON = 36  # Max forecast length (when we have 12 points, forecast 36 months to 2025-12)
 TOTAL_MONTHS = 48  # Total months from 2022-01 to 2025-12 (graph extent)
 INPUT_FILE = Path(__file__).parent / "temperature_anomaly.csv"
 OUTPUT_FILE = Path(__file__).parent / "output" / "animation_data.json"
@@ -41,17 +39,13 @@ def main() -> None:
     all_values = df["anomaly_c"].values.astype(np.float32)
 
     print(f"\n📊 Total data: {len(all_values)} months")
-    print(
-        f"   Date range: {all_dates[0].strftime('%Y-%m')} to {all_dates[-1].strftime('%Y-%m')}"
-    )
+    print(f"   Date range: {all_dates[0].strftime('%Y-%m')} to {all_dates[-1].strftime('%Y-%m')}")
     print(f"   Animation steps: {len(all_values) - MIN_CONTEXT + 1}")
 
     # Load TimesFM with max horizon (will truncate output for shorter forecasts)
     print(f"\n🤖 Loading TimesFM 1.0 (200M) PyTorch (horizon={MAX_HORIZON})...")
     hparams = timesfm.TimesFmHparams(horizon_len=MAX_HORIZON)
-    checkpoint = timesfm.TimesFmCheckpoint(
-        huggingface_repo_id="google/timesfm-1.0-200m-pytorch"
-    )
+    checkpoint = timesfm.TimesFmCheckpoint(huggingface_repo_id="google/timesfm-1.0-200m-pytorch")
     model = timesfm.TimesFm(hparams=hparams, checkpoint=checkpoint)
 
     # Generate forecasts for each step
@@ -135,12 +129,12 @@ def main() -> None:
     with open(OUTPUT_FILE, "w") as f:
         json.dump(output, f, indent=2)
 
-    print(f"\n" + "=" * 60)
+    print("\n" + "=" * 60)
     print("  ✅ ANIMATION DATA COMPLETE")
     print("=" * 60)
     print(f"\n📁 Output: {OUTPUT_FILE}")
     print(f"   Total steps: {len(animation_steps)}")
-    print(f"   Each forecast extends to 2025-12")
+    print("   Each forecast extends to 2025-12")
 
 
 if __name__ == "__main__":

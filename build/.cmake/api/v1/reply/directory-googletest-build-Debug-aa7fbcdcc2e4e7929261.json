@@ -1,12 +1,12 @@
 {
-	"backtraceGraph" : 
+	"backtraceGraph" :
 	{
 		"commands" : [],
 		"files" : [],
 		"nodes" : []
 	},
 	"installers" : [],
-	"paths" : 
+	"paths" :
 	{
 		"build" : "googletest-build",
 		"source" : "C:/Dev/projects/investment_trying/build/googletest-src"

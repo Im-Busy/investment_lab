@@ -25,7 +25,6 @@ import os
 import sys
 import time
 from dataclasses import asdict, dataclass
-from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
@@ -188,7 +187,9 @@ class AblationStudyRunner:
 
         turnover = float(subset_signals.sum().sum() / len(subset_signals))
 
-        concentration = self.calculate_concentration_hhi(np.ones(len(pattern_subset)) * equal_weight)
+        concentration = self.calculate_concentration_hhi(
+            np.ones(len(pattern_subset)) * equal_weight
+        )
 
         return {
             "total_return": total_return,
@@ -325,7 +326,6 @@ class AblationStudyRunner:
     def get_optimal_subset(
         self,
         results_df: pd.DataFrame,
-        Sharpe_ratio for each subset
         max_subset_size: Optional[int] = None,
     ) -> Dict[str, Any]:
         """
@@ -381,7 +381,7 @@ def run_full_study(
 
     print("Loading data...")
     signal_matrix = pd.read_csv(signal_matrix_path, index_col=0, parse_dates=True)
-    returns = pd.read_csv(returns_path, index_col=0, parse_dates=True)
+    returns = pd.read_csv(Returns_path, index_col=0, parse_dates=True)
 
     print(f"  Signals: {signal_matrix.shape}")
     print(f"  Returns: {returns.shape}")
@@ -478,7 +478,7 @@ def main():
         print(f"Error: Returns not found: {args.returns}")
         sys.exit(1)
 
-    results = run_full_study(
+    run_full_study(
         signal_matrix_path=args.signal_matrix,
         returns_path=args.returns,
         output_dir=args.output_dir,

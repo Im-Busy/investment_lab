@@ -14,12 +14,12 @@ Key Principles:
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, List, Literal, Optional, Tuple
+from typing import Dict, List, Literal, Optional
 
 import numpy as np
 import pandas as pd
 
-from ..indicators.technical import atr, ema, sma
+from ..indicators.technical import atr, sma
 
 
 class BiasState(Enum):

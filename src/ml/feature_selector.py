@@ -305,13 +305,15 @@ class SFISelector:
 
         selected_indices = [sorted_indices[0][0]]
         best_ic = sorted_indices[0][1]
-        feature_performance.append({
-            "feature": col_names[selected_indices[0]],
-            "ic": best_ic,
-            "cumulative_ic": best_ic,
-            "kept": True,
-            "step": 0,
-        })
+        feature_performance.append(
+            {
+                "feature": col_names[selected_indices[0]],
+                "ic": best_ic,
+                "cumulative_ic": best_ic,
+                "kept": True,
+                "step": 0,
+            }
+        )
 
         remaining_indices = [idx for idx, _ in sorted_indices[1:]]
         step = 1
@@ -330,13 +332,15 @@ class SFISelector:
             if best_new_idx >= 0 and (best_new_ic - best_ic) >= self.min_ic_improvement:
                 selected_indices.append(best_new_idx)
                 remaining_indices.remove(best_new_idx)
-                feature_performance.append({
-                    "feature": col_names[best_new_idx],
-                    "ic": best_new_ic - best_ic,
-                    "cumulative_ic": best_new_ic,
-                    "kept": True,
-                    "step": step,
-                })
+                feature_performance.append(
+                    {
+                        "feature": col_names[best_new_idx],
+                        "ic": best_new_ic - best_ic,
+                        "cumulative_ic": best_new_ic,
+                        "kept": True,
+                        "step": step,
+                    }
+                )
                 best_ic = best_new_ic
                 step += 1
             else:

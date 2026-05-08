@@ -27,6 +27,13 @@ from .portfolio_risk import (
     RiskLimitType,
 )
 
+from .black_litterman import (
+    BlackLittermanOptimizer,
+    BLConfig,
+    BLResult,
+    BLView,
+)
+
 __all__ = [
     "SignalAggregator",
     "AggregationMethod",
@@ -47,4 +54,8 @@ __all__ = [
     "DynamicRiskAdjuster",
     "RiskLimit",
     "RiskLimitType",
+    "BlackLittermanOptimizer",
+    "BLConfig",
+    "BLResult",
+    "BLView",
 ]

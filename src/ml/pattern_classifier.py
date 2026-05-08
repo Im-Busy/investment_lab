@@ -7,12 +7,11 @@ Provides probability calibration, feature importance, and walk-forward validatio
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
+from dataclasses import dataclass
+from typing import Dict, List, Optional, Tuple
 import numpy as np
 import pandas as pd
 from pathlib import Path
-import joblib
 from sklearn.metrics import brier_score_loss
 
 
@@ -71,6 +70,11 @@ class PatternClassifier:
         colsample_bytree: float = 0.8,
         random_state: int = 42,
         n_jobs: int = -1,
+        l2_leaf_reg: float = 3.0,
+        random_strength: float = 1.0,
+        bagging_temperature: float = 1.0,
+        border_count: int = 128,
+        min_data_in_leaf: int = 20,
     ):
         """
         Initialize pattern classifier.
@@ -85,6 +89,11 @@ class PatternClassifier:
             colsample_bytree: Feature subsample ratio
             random_state: Random seed
             n_jobs: Number of parallel jobs
+            l2_leaf_reg: L2 regularization coefficient (CatBoost)
+            random_strength: Random score strength for overfitting (CatBoost)
+            bagging_temperature: Bayesian bootstrap temperature (CatBoost)
+            border_count: Number of splits for numeric features (CatBoost)
+            min_data_in_leaf: Minimum training samples in leaf (CatBoost)
         """
         if model_type not in self.SUPPORTED_MODELS:
             raise ValueError(
@@ -100,6 +109,11 @@ class PatternClassifier:
         self.colsample_bytree = colsample_bytree
         self.random_state = random_state
         self.n_jobs = n_jobs
+        self.l2_leaf_reg = l2_leaf_reg
+        self.random_strength = random_strength
+        self.bagging_temperature = bagging_temperature
+        self.border_count = border_count
+        self.min_data_in_leaf = min_data_in_leaf
 
         self.model = None
         self.feature_names_: Optional[List[str]] = None
@@ -125,7 +139,11 @@ class PatternClassifier:
                     iterations=self.n_estimators,
                     depth=self.max_depth,
                     learning_rate=self.learning_rate,
-                    l2_leaf_reg=3.0,
+                    l2_leaf_reg=self.l2_leaf_reg,
+                    random_strength=self.random_strength,
+                    bagging_temperature=self.bagging_temperature,
+                    border_count=self.border_count,
+                    min_data_in_leaf=self.min_data_in_leaf,
                     random_state=self.random_state,
                     verbose=False,
                     loss_function="Logloss",
@@ -157,6 +175,7 @@ class PatternClassifier:
         X: pd.DataFrame,
         y: pd.Series,
         calibration_data: Optional[Tuple[pd.DataFrame, pd.Series]] = None,
+        purge_window: int = 5,
     ) -> ClassifierTrainingResult:
         """
         Train the pattern classifier.
@@ -165,14 +184,15 @@ class PatternClassifier:
             X: Feature matrix (patterns x features)
             y: Labels (1 = profitable, 0 = not profitable)
             calibration_data: Optional held-out data for probability calibration
+            purge_window: Number of training samples at the split boundary
+                to exclude from training (prevents label overlap leakage).
+                Set to match the forward-return horizon used for labels.
 
         Returns:
             Training results with metrics and feature importance
         """
         from sklearn.metrics import (
             accuracy_score,
-            brier_score_loss,
-            classification_report,
             roc_auc_score,
         )
 
@@ -180,13 +200,14 @@ class PatternClassifier:
         X_clean = X[clean_mask].copy()
         y_clean = y[clean_mask].copy()
 
-        if len(X_clean) < 100:
+        if len(X_clean) < 50:
             raise ValueError(f"Insufficient samples after cleaning: {len(X_clean)}")
 
         split_idx = int(len(X_clean) * 0.7)
-        X_train = X_clean.iloc[:split_idx]
+        train_end = max(0, split_idx - purge_window)
+        X_train = X_clean.iloc[:train_end]
         X_test = X_clean.iloc[split_idx:]
-        y_train = y_clean.iloc[:split_idx]
+        y_train = y_clean.iloc[:train_end]
         y_test = y_clean.iloc[split_idx:]
 
         self.feature_names_ = list(X_train.columns)

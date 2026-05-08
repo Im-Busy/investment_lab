@@ -15,11 +15,8 @@ sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import pandas as pd
-import numpy as np
 from src.strategies.pairs_scanner import PairsScanner
-from src.strategies.pair_trading import PairTradingStrategy
 from src.data_ingestion.fetch_data import fetch_daily_data
-import matplotlib.pyplot as plt
 import json
 
 
@@ -71,7 +68,7 @@ def run_pair_backtest(
         return {"status": "no_cointegration", "pair": f"{symbol_a}/{symbol_b}"}
 
     pair = pairs[0]
-    print(f"OK Cointegrated pair found:")
+    print("OK Cointegrated pair found:")
     print(f"   Hedge Ratio: {pair.hedge_ratio:.4f}")
     print(f"   P-value: {pair.p_value:.4f}")
     print(f"   Half-life: {pair.half_life:.2f} days")
@@ -177,17 +174,17 @@ def generate_report(results: list) -> None:
             f.write(f"### {result['pair']}\n\n")
 
             if result["status"] == "cointegrated":
-                f.write(f"- **Status:** Cointegrated\n")
+                f.write("- **Status:** Cointegrated\n")
                 f.write(f"- **Hedge Ratio:** {result['hedge_ratio']:.4f}\n")
                 f.write(f"- **P-value:** {result['p_value']:.4f}\n")
                 f.write(f"- **Half-life:** {result['half_life']:.2f} days\n")
                 f.write(f"- **Correlation:** {result['correlation']:.4f}\n")
                 f.write(f"- **ADF Statistic:** {result.get('adf_statistic', 'N/A')}\n")
             elif result["status"] == "no_cointegration":
-                f.write(f"- **Status:** No cointegration found\n")
-                f.write(f"- **Reason:** P-value exceeded significance threshold\n")
+                f.write("- **Status:** No cointegration found\n")
+                f.write("- **Reason:** P-value exceeded significance threshold\n")
             else:
-                f.write(f"- **Status:** Error\n")
+                f.write("- **Status:** Error\n")
                 f.write(f"- **Error:** {result.get('error', 'Unknown')}\n")
 
             f.write("\n---\n\n")

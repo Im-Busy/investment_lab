@@ -1,17 +1,17 @@
 {
-	"backtraceGraph" : 
+	"backtraceGraph" :
 	{
-		"commands" : 
+		"commands" :
 		[
 			"install",
 			"install_project"
 		],
-		"files" : 
+		"files" :
 		[
 			"C:/Dev/projects/investment_trying/build/googletest-src/googletest/cmake/internal_utils.cmake",
 			"C:/Dev/projects/investment_trying/build/googletest-src/googlemock/CMakeLists.txt"
 		],
-		"nodes" : 
+		"nodes" :
 		[
 			{
 				"file" : 1
@@ -48,13 +48,13 @@
 			}
 		]
 	},
-	"installers" : 
+	"installers" :
 	[
 		{
 			"backtrace" : 2,
 			"component" : "Unspecified",
 			"destination" : "include",
-			"paths" : 
+			"paths" :
 			[
 				{
 					"from" : "C:/Dev/projects/investment_trying/build/googletest-src/googlemock/include",
@@ -67,7 +67,7 @@
 			"backtrace" : 3,
 			"component" : "Unspecified",
 			"destination" : "lib",
-			"paths" : 
+			"paths" :
 			[
 				"lib/libgmockd.a"
 			],
@@ -79,7 +79,7 @@
 			"backtrace" : 3,
 			"component" : "Unspecified",
 			"destination" : "lib",
-			"paths" : 
+			"paths" :
 			[
 				"lib/libgmock_maind.a"
 			],
@@ -91,7 +91,7 @@
 			"backtrace" : 4,
 			"component" : "Unspecified",
 			"destination" : "lib/pkgconfig",
-			"paths" : 
+			"paths" :
 			[
 				"C:/Dev/projects/investment_trying/build/googletest-build/googletest/generated/gmock.pc"
 			],
@@ -101,14 +101,14 @@
 			"backtrace" : 5,
 			"component" : "Unspecified",
 			"destination" : "lib/pkgconfig",
-			"paths" : 
+			"paths" :
 			[
 				"C:/Dev/projects/investment_trying/build/googletest-build/googletest/generated/gmock_main.pc"
 			],
 			"type" : "file"
 		}
 	],
-	"paths" : 
+	"paths" :
 	{
 		"build" : "googletest-build/googlemock",
 		"source" : "C:/Dev/projects/investment_trying/build/googletest-src/googlemock"

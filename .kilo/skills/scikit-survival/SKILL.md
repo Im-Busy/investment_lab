@@ -394,4 +394,3 @@ from sksurv.datasets import load_gbsg2, load_breast_cancer, load_veterans_lung_c
 # Kernels
 from sksurv.kernels import ClinicalKernelTransform
 ```
-

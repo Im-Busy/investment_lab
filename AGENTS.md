@@ -59,7 +59,7 @@ When completing tasks:
 2. **Use this format**:
    ```
    ## Feature Name
-   
+
    # Description
    command
    ```
@@ -159,67 +159,91 @@ See `.useful_commands/paper_summarization.txt` for detailed commands and model o
 
 This project maintains structured progress tracking in `progress_docs/`. This is the single source of truth for project state, phase status, pending work, and session context.
 
-### File Structure
+[... same content until end of file ...]
+
+---
+
+## Tool & Concept Documentation Protocol
+
+**When introducing any new tool, library, algorithm, or ML concept to the project, you MUST:**
+
+1. **First, check** `docs/ML_TRAINING_GUIDE.md` — can this new item be added to an existing section?
+2. **If a suitable section exists:** add a row to the relevant table, a brief description, and a code example if applicable. Update the table of contents.
+3. **If no suitable document exists:** create a new doc in `docs/` with the prefix `tool-` or `guide-` (e.g., `docs/tool-purged-kfold.md`, `docs/guide-metaheuristics.md`). Link it from `docs/README.md`.
+4. **Required information for each new tool/concept:**
+   - **What it is** (1-2 sentences, beginner-friendly)
+   - **Why it exists** (what problem it solves)
+   - **Where it lives** (file path)
+   - **When to use it** (decision criteria)
+   - **How to use it** (code example, CLI command)
+   - **Relationship to other tools** (what it depends on, what depends on it)
+5. **Update `AGENTS.md`** if a new documentation category or convention is created.
+
+### Tool Inventory
+
+The current tool inventory is maintained in `docs/ML_TRAINING_GUIDE.md` Section 7 (File Location Reference). Before creating new documentation, verify the tool isn't already documented there.
+
+| Doc | Coverage |
+|-----|----------|
+| `docs/ML_TRAINING_GUIDE.md` | All ML components, optimizers, concepts, decision tree, data flow |
+| `COMMAND_CHEATSHEET.md` | CLI commands for every script |
+| `.useful_commands/` | Detailed command workflows by category |
+
+---
+
+## Housekeeper Mode — File System Cleanup
+
+Use `/housekeeper` to audit and clean the project file system. It flags misplaced files, duplicate directories, stray artifacts, and produces a safe migration plan.
+
+### Safety Rules (CRITICAL)
+
+When moving or renaming files, **never delete a file before the destination is verified**:
+
+| Scenario | Safe Method |
+|----------|------------|
+| Git-tracked file move/rename | `git mv <source> <destination>` (atomic, revertible) |
+| Same-dir rename (non-git) | `ren "old" "new"` |
+| Cross-dir move (non-git) | `robocopy <srcdir> <dstdir> <file> /MOV /R:3 /W:5 /NP /LOG:move.log` |
+| Bulk directory move | `robocopy <srcdir> <dstdir> /E /MOV /R:3 /W:5 /NP /LOG:move.log` |
+
+**robocopy `/MOV`** copies then deletes source per-file — it never deletes before a successful copy. Always verify the log for `FAILED Files = 0` after each operation.
+
+### Useful robocopy flags
+
+| Flag | Purpose |
+|------|---------|
+| `/MOV` | Move (copy then delete) |
+| `/E` | Include subdirectories |
+| `/R:3` | Retry 3 times |
+| `/W:5` | Wait 5s between retries |
+| `/NP` | No progress |
+| `/LOG:file` | Output to log |
+
+### Target Directory Conventions
+
 ```
-progress_docs/
-├── README.md           # Navigation index + type catalog + conventions
-├── current.md          # Session-level live log (append-at-top) — READ FIRST
-├── plans/
-│   ├── full.md         # Master plan — ALL phases/studies/evaluations/setups aggregated
-│   ├── 01-*.md         # Phase plans (NN-short-name.md, type: phase)
-│   ├── study-*.md      # Study plans (type: study)
-│   ├── eval-*.md       # Evaluation plans (type: eval)
-│   └── setup-*.md      # Setup plans (type: setup)
-└── logs/
-    ├── full.md         # Single chronological log — ALL types interleaved
-    ├── 01-*.md         # Phase-specific logs
-    ├── study-*.md      # Study-specific logs
-    └── ...             # Mirrors plans/ structure
+root/
+├── src/           # Python source
+├── tests/         # All tests
+├── scripts/       # CLI scripts
+├── data/          # Data files
+├── docs/          # Documentation
+├── models/        # ML models
+├── outputs/       # Generated outputs
+├── logs/          # Log files
+├── notebooks/     # Jupyter notebooks
+├── reports/       # Analysis reports
+├── pipeline/      # Pipeline definitions
+├── plans/         # Planning docs
+├── progress_docs/ # Progress tracking
+├── useful_resources/useful_repos/  # Cloned reference repos
+└── experiments/   # Experiment outputs
 ```
 
-### At Session Start (MANDATORY)
-1. **Read `progress_docs/current.md`** — understand all actions from the interrupted session
-2. **Read `progress_docs/plans/full.md`** — see all phases, studies, deferred items, and pending work
-3. **Read `progress_docs/README.md`** — check type catalog for conventions
-4. Resume from the last incomplete action in `current.md`
+### Anti-Patterns
 
-### During Work (MANDATORY)
-1. **Log every significant action** to `progress_docs/current.md` using the table format:
-   ```
-   | Time | Action | Files | Result |
-   ```
-2. **Determine activity type** from README.md type catalog (`phase`, `study`, `eval`, `setup`, `migration`)
-3. **If no matching type exists**, create one:
-   - Define the `type` name
-   - Create plan file with `{type}-{descriptor}.md` naming
-   - Add to README.md type catalog
-   - Add section in `plans/full.md`
-
-### When Completing a Task or Activity
-1. **Update frontmatter** in the plan file (`status: complete`, add `completed` date)
-2. **Update aggregated status** in `progress_docs/plans/full.md`
-3. **Archive** `current.md` content into both `logs/full.md` and the type-specific log file
-4. **Reset** `current.md` for the next activity
-
-### When the User Defers Work
-1. Mark the phase/task as `status: deferred` in YAML frontmatter
-2. Add `deferred_reason` and `revisit_when` fields
-3. Add to the **Deferred** section in `progress_docs/plans/full.md`
-4. Log in `current.md`: `"Deferred Phase XX per user instruction"`
-
-### File Conventions
-| Convention | Rule |
-|------------|------|
-| **Folder** | `progress_docs/` — single entry point |
-| **Naming** | Phases: `NN-short-name.md`. Non-phases: `{type}-{descriptor}.md`. All snake_case. |
-| **Plan format** | Markdown + YAML frontmatter (metadata) + Markdown tables (tasks) |
-| **Log format** | Markdown tables — append-only, chronological |
-| **Completion marker** | YAML `status: complete` — NEVER rename files |
-| **Deferral marker** | YAML `status: deferred` + `deferred_reason` + `revisit_when` |
-| **Aggregation** | `plans/full.md` has Deferred + Pending sections pulled from all files |
-
-### Legacy Files
-- `plans/pending_items.md` — superseded by `progress_docs/plans/full.md`
-- `HANDOVER*.md`, `PHASE*.md` at root — content archived into `progress_docs/logs/`
-
-
+- `.py` files at root → belongs in `src/`, `tests/`, or `scripts/`
+- `.md` files at root (except `AGENTS.md`, `README.md`) → belongs in `docs/`
+- Duplicate directories (`logs/` + `fin_logs/`, `output/` + `outputs/`)
+- Full cloned repos at root → belongs in `useful_resources/useful_repos/`
+- ML artifacts at root (`catboost_info/`, `AutogluonModels/`) → belongs in `outputs/`

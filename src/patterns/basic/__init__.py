@@ -18,10 +18,10 @@ from .floor_pivot import FloorPivotBreakout
 from .two_bar_reversal import TwoBarReversal
 
 __all__ = [
-    'MarketStructureLow',
-    'MatchingLows',
-    'NR7ID',
-    'NBarDecline',
-    'FloorPivotBreakout',
-    'TwoBarReversal',
+    "MarketStructureLow",
+    "MatchingLows",
+    "NR7ID",
+    "NBarDecline",
+    "FloorPivotBreakout",
+    "TwoBarReversal",
 ]

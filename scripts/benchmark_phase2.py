@@ -67,7 +67,9 @@ def generate_test_data(n: int, seed: int = 42) -> pd.DataFrame:
     return df
 
 
-def benchmark_pivot_detection(df: pd.DataFrame, iterations: int = 100) -> Dict[str, Optional[float]]:
+def benchmark_pivot_detection(
+    df: pd.DataFrame, iterations: int = 100
+) -> Dict[str, Optional[float]]:
     """
     Benchmark swing high/low detection.
 
@@ -260,7 +262,9 @@ def benchmark_indicators(df: pd.DataFrame, iterations: int = 100) -> Dict[str, O
     return results
 
 
-def benchmark_pattern_detection(df: pd.DataFrame, iterations: int = 10) -> Dict[str, Optional[float]]:
+def benchmark_pattern_detection(
+    df: pd.DataFrame, iterations: int = 10
+) -> Dict[str, Optional[float]]:
     """
     Benchmark pattern detection.
 

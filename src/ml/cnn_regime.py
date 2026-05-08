@@ -23,7 +23,7 @@ Usage:
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Tuple
 
 import numpy as np
 import pandas as pd
@@ -58,8 +58,10 @@ class EarlyStopping:
         if self.best_score is None:
             self.best_score = score
             import copy
-            import torch
-            self.best_weights = copy.deepcopy({k: v.cpu().clone() for k, v in model.state_dict().items()})
+
+            self.best_weights = copy.deepcopy(
+                {k: v.cpu().clone() for k, v in model.state_dict().items()}
+            )
             return False
 
         is_better = (
@@ -71,8 +73,10 @@ class EarlyStopping:
         if is_better:
             self.best_score = score
             import copy
-            import torch
-            self.best_weights = copy.deepcopy({k: v.cpu().clone() for k, v in model.state_dict().items()})
+
+            self.best_weights = copy.deepcopy(
+                {k: v.cpu().clone() for k, v in model.state_dict().items()}
+            )
             self.counter = 0
         else:
             self.counter += 1
@@ -109,6 +113,7 @@ class Regime1DCNN:
         try:
             import torch
             import torch.nn as nn
+
             torch.nn = nn
         except ImportError:
             raise ImportError("PyTorch is required. Run: uv sync")
@@ -151,6 +156,7 @@ class Regime1DCNN:
 
     def _get_device(self) -> Any:
         import torch
+
         if torch.cuda.is_available():
             return torch.device("cuda")
         return torch.device("cpu")
@@ -405,9 +411,7 @@ class CNNRegimeDetector:
             ohlcv[col] = (ohlcv[col] - ohlcv[col].mean()) / (ohlcv[col].std() + 1e-10)
 
         data = ohlcv.values.astype(np.float32)
-        sequences = np.lib.stride_tricks.sliding_window_view(
-            data, self.sequence_length, axis=0
-        )
+        sequences = np.lib.stride_tricks.sliding_window_view(data, self.sequence_length, axis=0)
         return np.transpose(sequences, (0, 2, 1))
 
     def _encode_labels(self, labels: pd.Series) -> np.ndarray:
@@ -473,7 +477,9 @@ class CNNRegimeDetector:
             X_val = self._build_sequences(val_df)
             y_encoded_val = self._encode_labels(val_labels)
             n_val = len(X_val)
-            y_val_labels = y_encoded_val[self.sequence_length - 1 : self.sequence_length - 1 + n_val]
+            y_val_labels = y_encoded_val[
+                self.sequence_length - 1 : self.sequence_length - 1 + n_val
+            ]
             mask_val = y_val_labels >= 0
             X_val = X_val[mask_val]
             y_val = y_val_labels[mask_val]
@@ -564,13 +570,15 @@ class CNNRegimeDetector:
         rows = []
         for cls_name in sorted(set(y_true)):
             if cls_name in report:
-                rows.append({
-                    "regime": cls_name,
-                    "precision": report[cls_name]["precision"],
-                    "recall": report[cls_name]["recall"],
-                    "f1": report[cls_name]["f1-score"],
-                    "support": report[cls_name]["support"],
-                })
+                rows.append(
+                    {
+                        "regime": cls_name,
+                        "precision": report[cls_name]["precision"],
+                        "recall": report[cls_name]["recall"],
+                        "f1": report[cls_name]["f1-score"],
+                        "support": report[cls_name]["support"],
+                    }
+                )
 
         return pd.DataFrame(rows)
 
@@ -590,10 +598,14 @@ class CNNRegimeDetector:
         Returns:
             DataFrame comparing both models per regime class.
         """
-        from sklearn.metrics import classification_report, accuracy_score
+        from sklearn.metrics import accuracy_score
 
         cnn_preds = self.predict(df)
-        idx = cnn_preds.dropna().index.intersection(true_labels.dropna().index).intersection(tree_preds.dropna().index)
+        idx = (
+            cnn_preds.dropna()
+            .index.intersection(true_labels.dropna().index)
+            .intersection(tree_preds.dropna().index)
+        )
 
         y_true = true_labels.loc[idx]
         y_cnn = cnn_preds.loc[idx]
@@ -602,7 +614,9 @@ class CNNRegimeDetector:
         cnn_acc = accuracy_score(y_true, y_cnn)
         tree_acc = accuracy_score(y_true, y_tree)
 
-        return pd.DataFrame([
-            {"model": "CNN", "accuracy": cnn_acc},
-            {"model": "Tree-Based", "accuracy": tree_acc},
-        ])
+        return pd.DataFrame(
+            [
+                {"model": "CNN", "accuracy": cnn_acc},
+                {"model": "Tree-Based", "accuracy": tree_acc},
+            ]
+        )

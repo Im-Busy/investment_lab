@@ -81,29 +81,36 @@ class GPUBacktestResult:
     def to_trades_dataframe(self) -> pd.DataFrame:
         if not self.trades:
             return pd.DataFrame()
-        return pd.DataFrame([{
-            "entry_time": t.entry_time,
-            "exit_time": t.exit_time,
-            "direction": "Long" if t.direction > 0 else "Short",
-            "entry_price": t.entry_price,
-            "exit_price": t.exit_price,
-            "size": t.size,
-            "pnl": t.pnl,
-            "pnl_pct": t.pnl_pct,
-            "exit_reason": t.exit_reason,
-            "pattern_count": t.pattern_count,
-            "confidence": t.confidence,
-            "event_weighted": t.event_weighted,
-            "confluence_boost": t.confluence_boost,
-        } for t in self.trades])
+        return pd.DataFrame(
+            [
+                {
+                    "entry_time": t.entry_time,
+                    "exit_time": t.exit_time,
+                    "direction": "Long" if t.direction > 0 else "Short",
+                    "entry_price": t.entry_price,
+                    "exit_price": t.exit_price,
+                    "size": t.size,
+                    "pnl": t.pnl,
+                    "pnl_pct": t.pnl_pct,
+                    "exit_reason": t.exit_reason,
+                    "pattern_count": t.pattern_count,
+                    "confidence": t.confidence,
+                    "event_weighted": t.event_weighted,
+                    "confluence_boost": t.confluence_boost,
+                }
+                for t in self.trades
+            ]
+        )
 
     def to_equity_dataframe(self) -> pd.DataFrame:
         if self.equity_curve is None or self.equity_dates is None:
             return pd.DataFrame()
-        return pd.DataFrame({
-            "timestamp": self.equity_dates,
-            "equity": self.equity_curve,
-        })
+        return pd.DataFrame(
+            {
+                "timestamp": self.equity_dates,
+                "equity": self.equity_curve,
+            }
+        )
 
 
 class GPUEquitySimulator:
@@ -232,24 +239,31 @@ class GPUEquitySimulator:
                         should_exit = True
 
                 if should_exit:
-                    pnl = (exit_price - pos["entry_price"]) * pos["size"] * pos["direction"] * (1.0 - 2.0 * self.commission_pct)
+                    pnl = (
+                        (exit_price - pos["entry_price"])
+                        * pos["size"]
+                        * pos["direction"]
+                        * (1.0 - 2.0 * self.commission_pct)
+                    )
                     equity += pnl
-                    trades.append(GPUTrade(
-                        bar_index=i,
-                        entry_time=pos["entry_time"],
-                        exit_time=current_date,
-                        direction=pos["direction"],
-                        entry_price=pos["entry_price"],
-                        exit_price=exit_price,
-                        size=pos["size"],
-                        pnl=pnl,
-                        pnl_pct=pnl / pos["notional"],
-                        exit_reason=exit_reason,
-                        pattern_count=pos["pattern_count"],
-                        confidence=pos["confidence"],
-                        event_weighted=pos["event_weighted"],
-                        confluence_boost=pos["confluence_boost"],
-                    ))
+                    trades.append(
+                        GPUTrade(
+                            bar_index=i,
+                            entry_time=pos["entry_time"],
+                            exit_time=current_date,
+                            direction=pos["direction"],
+                            entry_price=pos["entry_price"],
+                            exit_price=exit_price,
+                            size=pos["size"],
+                            pnl=pnl,
+                            pnl_pct=pnl / pos["notional"],
+                            exit_reason=exit_reason,
+                            pattern_count=pos["pattern_count"],
+                            confidence=pos["confidence"],
+                            event_weighted=pos["event_weighted"],
+                            confluence_boost=pos["confluence_boost"],
+                        )
+                    )
                     open_positions.remove(pos)
 
             # Check for new signal entry
@@ -272,44 +286,53 @@ class GPUEquitySimulator:
                     tp2_val = None if tp2_np[i] <= 0 else float(tp2_np[i])
                     tp3_val = None if tp3_np[i] <= 0 else float(tp3_np[i])
 
-                    open_positions.append({
-                        "entry_time": dates[i],
-                        "direction": int(direction_np[i]),
-                        "entry_price": entry_price,
-                        "stop_loss": stop_price,
-                        "tp1": float(tp1_np[i]),
-                        "tp2": tp2_val,
-                        "tp3": tp3_val,
-                        "size": size,
-                        "notional": notional,
-                        "confidence": float(confidence_np[i]),
-                        "pattern_count": int(count_np[i]),
-                        "event_weighted": float(event_np[i]),
-                        "confluence_boost": float(boost_np[i]),
-                    })
+                    open_positions.append(
+                        {
+                            "entry_time": dates[i],
+                            "direction": int(direction_np[i]),
+                            "entry_price": entry_price,
+                            "stop_loss": stop_price,
+                            "tp1": float(tp1_np[i]),
+                            "tp2": tp2_val,
+                            "tp3": tp3_val,
+                            "size": size,
+                            "notional": notional,
+                            "confidence": float(confidence_np[i]),
+                            "pattern_count": int(count_np[i]),
+                            "event_weighted": float(event_np[i]),
+                            "confluence_boost": float(boost_np[i]),
+                        }
+                    )
 
         # Close any remaining open positions at last bar
         last_close = float(close_arr[-1])
         for pos in open_positions:
             exit_price = last_close * (1.0 - np.sign(pos["direction"]) * self.slippage_pct)
-            pnl = (exit_price - pos["entry_price"]) * pos["size"] * pos["direction"] * (1.0 - self.commission_pct)
+            pnl = (
+                (exit_price - pos["entry_price"])
+                * pos["size"]
+                * pos["direction"]
+                * (1.0 - self.commission_pct)
+            )
             equity += pnl
-            trades.append(GPUTrade(
-                bar_index=n_bars - 1,
-                entry_time=pos["entry_time"],
-                exit_time=dates[-1],
-                direction=pos["direction"],
-                entry_price=pos["entry_price"],
-                exit_price=exit_price,
-                size=pos["size"],
-                pnl=pnl,
-                pnl_pct=pnl / pos["notional"],
-                exit_reason="End of Backtest",
-                pattern_count=pos["pattern_count"],
-                confidence=pos["confidence"],
-                event_weighted=pos["event_weighted"],
-                confluence_boost=pos["confluence_boost"],
-            ))
+            trades.append(
+                GPUTrade(
+                    bar_index=n_bars - 1,
+                    entry_time=pos["entry_time"],
+                    exit_time=dates[-1],
+                    direction=pos["direction"],
+                    entry_price=pos["entry_price"],
+                    exit_price=exit_price,
+                    size=pos["size"],
+                    pnl=pnl,
+                    pnl_pct=pnl / pos["notional"],
+                    exit_reason="End of Backtest",
+                    pattern_count=pos["pattern_count"],
+                    confidence=pos["confidence"],
+                    event_weighted=pos["event_weighted"],
+                    confluence_boost=pos["confluence_boost"],
+                )
+            )
 
         return trades, equity_curve
 
@@ -424,17 +447,24 @@ class GPUBacktestEngine:
         n_bars = len(equity_curve)
 
         # Convert to DataFrame format expected by PerformanceMetrics
-        trades_df = pd.DataFrame([{
-            "pnl": t.pnl,
-            "pnl_pct": t.pnl_pct,
-            "direction": "Long" if t.direction > 0 else "Short",
-            "exit_reason": t.exit_reason,
-        } for t in trades])
+        trades_df = pd.DataFrame(
+            [
+                {
+                    "pnl": t.pnl,
+                    "pnl_pct": t.pnl_pct,
+                    "direction": "Long" if t.direction > 0 else "Short",
+                    "exit_reason": t.exit_reason,
+                }
+                for t in trades
+            ]
+        )
 
-        equity_df = pd.DataFrame({
-            "timestamp": dates,
-            "equity": equity_curve,
-        })
+        equity_df = pd.DataFrame(
+            {
+                "timestamp": dates,
+                "equity": equity_curve,
+            }
+        )
 
         try:
             metrics = PerformanceMetrics.calculate(
@@ -462,7 +492,8 @@ class GPUBacktestEngine:
             sharpe = float(np.mean(rets) / (np.std(rets) + 1e-9) * np.sqrt(252))
             sortino = float(
                 np.mean(rets) / (np.std(rets[rets < 0]) + 1e-9) * np.sqrt(252)
-                if len(rets[rets < 0]) > 0 else 0.0
+                if len(rets[rets < 0]) > 0
+                else 0.0
             )
         else:
             total_return = 0.0

@@ -17,13 +17,13 @@ from .event_weighting import (
 )
 
 __all__ = [
-    'SignalGenerator',
-    'PositionManager',
-    'EventWeightedAggregator',
-    'EventWeightedSignal',
-    'EventType',
-    'EventTypeInfo',
-    'PatternEventMapping',
-    'EVENT_TYPE_WEIGHTS',
-    'DEFAULT_PATTERN_EVENT_MAPPING',
+    "SignalGenerator",
+    "PositionManager",
+    "EventWeightedAggregator",
+    "EventWeightedSignal",
+    "EventType",
+    "EventTypeInfo",
+    "PatternEventMapping",
+    "EVENT_TYPE_WEIGHTS",
+    "DEFAULT_PATTERN_EVENT_MAPPING",
 ]

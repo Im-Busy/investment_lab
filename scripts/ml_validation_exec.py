@@ -7,7 +7,6 @@ that can be executed via `uv run scripts/ml_validation_exec.py`.
 
 from __future__ import annotations
 
-import os
 import sys
 import warnings
 from pathlib import Path
@@ -16,7 +15,7 @@ import matplotlib
 import numpy as np
 import pandas as pd
 import yfinance as yf
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.metrics import accuracy_score, classification_report
 
 # Use Agg backend for headless saving figures
 matplotlib.use("Agg")
@@ -247,7 +246,7 @@ def generate_trade_signals(
     print(
         f"Profitable trades: {trades_df['is_profitable'].sum()}/{num_trades} ({trades_df['is_profitable'].mean():.1%})"
     )
-    print(f"\nTrade P&L summary:")
+    print("\nTrade P&L summary:")
     print(trades_df["pnl"].describe())
 
     signal_feat_cols = ["entry_price", "exit_price", "size", "return_pct", "duration"]

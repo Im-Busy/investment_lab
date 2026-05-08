@@ -94,6 +94,15 @@ class OutputConfig:
 class PatternSelectionConfig:
     """Pattern selection framework configuration with defaults."""
 
+    # File paths
+    data_path: str = ""
+    output_dir: str = "reports/pattern_selection"
+
+    # Backtest configuration
+    initial_equity: float = 1_000_000
+    commission: float = 0.001
+    min_confluence_count: int = 2
+
     # Phase 1 thresholds (Noise Filtering)
     min_trades: int = 30
     min_sharpe: float = 0.5
@@ -109,9 +118,27 @@ class PatternSelectionConfig:
     noise_threshold: float = -0.05
     primary_signal_threshold: float = 0.1
 
+    # Output configuration
+    cache_results: bool = True
+
     # Quick test mode
     quick_test: bool = False
     quick_test_patterns: int = 5
+
+    def validate(self) -> List[str]:
+        """Validate configuration and return list of errors."""
+        errors: List[str] = []
+        if self.min_trades < 1:
+            errors.append("min_trades must be >= 1")
+        if self.min_sharpe < 0:
+            errors.append("min_sharpe must be >= 0")
+        if self.min_profit_factor <= 0:
+            errors.append("min_profit_factor must be > 0")
+        if not 0 <= self.min_win_rate <= 1:
+            errors.append("min_win_rate must be between 0 and 1")
+        if not 0 <= self.max_drawdown <= 1:
+            errors.append("max_drawdown must be between 0 and 1")
+        return errors
 
 
 @dataclass
@@ -726,7 +753,7 @@ def setup_plot_style(style: str = "seaborn-v0_8-darkgrid") -> None:
     """
     try:
         plt.style.use(style)
-    except:
+    except (ValueError, OSError):
         plt.style.use("seaborn-v0_8-whitegrid")
 
     sns.set_palette("husl")

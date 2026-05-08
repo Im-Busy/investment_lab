@@ -93,13 +93,17 @@ class TurnoverPenalty:
         excess = turnover - self.config.max_allowed_turnover_pct
         max_excess = self.config.max_allowed_turnover_pct
 
+        # Guard against zero max_allowed_turnover_pct
+        if max_excess <= 0:
+            return 1.0 if excess > 0 else 0.0
+
         if self.config.penalty_curve == "linear":
             return min(excess / max_excess, 1.0)
         elif self.config.penalty_curve == "exponential":
             normalized_excess = excess / max_excess
             return min(normalized_excess**2, 1.0)
         elif self.config.penalty_curve == "step":
-            return 1.0 if excess > max_excess else 0.0
+            return 1.0 if excess > 0 else 0.0
         else:
             return 0.0
 

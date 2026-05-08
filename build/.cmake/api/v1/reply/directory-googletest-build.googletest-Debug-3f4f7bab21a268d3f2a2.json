@@ -1,17 +1,17 @@
 {
-	"backtraceGraph" : 
+	"backtraceGraph" :
 	{
-		"commands" : 
+		"commands" :
 		[
 			"install",
 			"install_project"
 		],
-		"files" : 
+		"files" :
 		[
 			"C:/Dev/projects/investment_trying/build/googletest-src/googletest/CMakeLists.txt",
 			"C:/Dev/projects/investment_trying/build/googletest-src/googletest/cmake/internal_utils.cmake"
 		],
-		"nodes" : 
+		"nodes" :
 		[
 			{
 				"file" : 0
@@ -60,14 +60,14 @@
 			}
 		]
 	},
-	"installers" : 
+	"installers" :
 	[
 		{
 			"backtrace" : 1,
 			"component" : "Unspecified",
 			"destination" : "lib/cmake/GTest",
 			"exportName" : "GTestTargets",
-			"exportTargets" : 
+			"exportTargets" :
 			[
 				{
 					"id" : "gtest::@32fe1c6cd3a65a2fab56",
@@ -86,7 +86,7 @@
 					"index" : 3
 				}
 			],
-			"paths" : 
+			"paths" :
 			[
 				"googletest-build/googletest/CMakeFiles/Export/0c08b8e77dd885bfe55a19a9659d9fc1/GTestTargets.cmake"
 			],
@@ -96,7 +96,7 @@
 			"backtrace" : 2,
 			"component" : "Unspecified",
 			"destination" : "lib/cmake/GTest",
-			"paths" : 
+			"paths" :
 			[
 				"C:/Dev/projects/investment_trying/build/googletest-build/googletest/generated/GTestConfigVersion.cmake",
 				"C:/Dev/projects/investment_trying/build/googletest-build/googletest/generated/GTestConfig.cmake"
@@ -107,7 +107,7 @@
 			"backtrace" : 4,
 			"component" : "Unspecified",
 			"destination" : "include",
-			"paths" : 
+			"paths" :
 			[
 				{
 					"from" : "C:/Dev/projects/investment_trying/build/googletest-src/googletest/include",
@@ -120,7 +120,7 @@
 			"backtrace" : 5,
 			"component" : "Unspecified",
 			"destination" : "lib",
-			"paths" : 
+			"paths" :
 			[
 				"lib/libgtestd.a"
 			],
@@ -132,7 +132,7 @@
 			"backtrace" : 5,
 			"component" : "Unspecified",
 			"destination" : "lib",
-			"paths" : 
+			"paths" :
 			[
 				"lib/libgtest_maind.a"
 			],
@@ -144,7 +144,7 @@
 			"backtrace" : 6,
 			"component" : "Unspecified",
 			"destination" : "lib/pkgconfig",
-			"paths" : 
+			"paths" :
 			[
 				"C:/Dev/projects/investment_trying/build/googletest-build/googletest/generated/gtest.pc"
 			],
@@ -154,14 +154,14 @@
 			"backtrace" : 7,
 			"component" : "Unspecified",
 			"destination" : "lib/pkgconfig",
-			"paths" : 
+			"paths" :
 			[
 				"C:/Dev/projects/investment_trying/build/googletest-build/googletest/generated/gtest_main.pc"
 			],
 			"type" : "file"
 		}
 	],
-	"paths" : 
+	"paths" :
 	{
 		"build" : "googletest-build/googletest",
 		"source" : "C:/Dev/projects/investment_trying/build/googletest-src/googletest"

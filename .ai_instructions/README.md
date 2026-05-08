@@ -18,10 +18,10 @@ When you complete tasks that involve running commands, scripts, or workflows:
 3. **Documentation Format**
    ```
    ## Feature/Task Name
-   
+
    # Description
    actual-command-here
-   
+
    # Multi-step workflows
    command1 && command2
    ```

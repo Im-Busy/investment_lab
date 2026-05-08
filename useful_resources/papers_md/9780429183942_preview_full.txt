@@ -3801,5 +3801,3 @@ Evidence for logarithmic dependence of market impact on size and participation r
 [331] G. Zhou. Measuring investor sentiment. Annual Review of Financial Economics, 10:239–259, 2018.
 [332] Y. Zhu and G. Zhou. Technical analysis: An asset allocation perspective on the
 use of moving averages. Journal of Financial Economics, 92:519–544, 2009.
-
-

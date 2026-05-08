@@ -7,7 +7,7 @@ Run with: uv run pytest tests/test_influencer_framework.py -v
 import pytest
 import pandas as pd
 import numpy as np
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from src.strategies.multi_timeframe_bias import (
     MultiTimeframeBiasDetector,
@@ -18,13 +18,11 @@ from src.strategies.multi_timeframe_bias import (
 from src.strategies.volume_confirmation import (
     VolumeConfirmation,
     VolumeConfig,
-    VolumeSignalType,
 )
 from src.strategies.vwap_sma_confluence import (
     VWAPConfluenceAnalyzer,
     VWAPConfig,
     VWAPPosition,
-    SMAPosition,
 )
 from src.strategies.influencer_confluence import (
     InfluencerConfluenceScorer,
@@ -33,9 +31,6 @@ from src.strategies.influencer_confluence import (
 )
 from src.strategies.strategy_registry import (
     StrategyRegistry,
-    StrategyType,
-    SignalQuality,
-    PluginConfig,
     SMCReversalPlugin,
     InfluencerMTFPlugin,
 )
@@ -287,7 +282,6 @@ class TestStrategyRegistry:
 
     def test_plugin_registration(self):
         """Test plugin registration."""
-        from src.strategies.strategy_registry import SMCReversalPlugin, PluginConfig
 
         registry = StrategyRegistry()
 
@@ -304,7 +298,6 @@ class TestStrategyRegistry:
 
     def test_plugin_weight_adjustment(self):
         """Test plugin weight adjustment."""
-        from src.strategies.strategy_registry import SMCReversalPlugin
 
         registry = StrategyRegistry()
         plugin = SMCReversalPlugin()
@@ -316,7 +309,6 @@ class TestStrategyRegistry:
 
     def test_enable_disable_plugin(self):
         """Test enable/disable plugin."""
-        from src.strategies.strategy_registry import SMCReversalPlugin
 
         registry = StrategyRegistry()
         plugin = SMCReversalPlugin()
@@ -336,7 +328,6 @@ class TestIntegration:
 
     def test_full_workflow(self):
         """Test complete influencer + SMC workflow."""
-        from src.strategies.strategy_registry import SMCReversalPlugin, InfluencerMTFPlugin
 
         # Initialize registry
         registry = StrategyRegistry()

@@ -66,7 +66,9 @@ class TwoBarReversal(BasePattern):
             confirmation_filter: Minimum breakout percentage for confirmation
         """
         super().__init__(
-            name="Two-Bar Reversal", pattern_type=PatternType.REVERSAL, min_bars_required=trend_bars + 2
+            name="Two-Bar Reversal",
+            pattern_type=PatternType.REVERSAL,
+            min_bars_required=trend_bars + 2,
         )
         self.trend_bars = trend_bars
         self.min_range_multiplier = min_range_multiplier
@@ -87,10 +89,10 @@ class TwoBarReversal(BasePattern):
         close = float(arrays["close"][i])
         high = float(arrays["high"][i])
         low = float(arrays["low"][i])
-        
+
         body = abs(close - open_price)
         is_bullish = close > open_price
-        
+
         return open_price, close, body, is_bullish
 
     def _is_downtrend(self, arrays: dict, end_bar: int, n_bars: int) -> bool:
@@ -103,7 +105,7 @@ class TwoBarReversal(BasePattern):
 
         # Check if majority of closes are declining
         declining = sum(1 for i in range(1, len(closes)) if closes[i] < closes[i - 1])
-        
+
         # Also check overall direction
         overall_decline = closes[0] > closes[-1]
 
@@ -119,7 +121,7 @@ class TwoBarReversal(BasePattern):
 
         # Check if majority of closes are rising
         rising = sum(1 for i in range(1, len(closes)) if closes[i] > closes[i - 1])
-        
+
         # Also check overall direction
         overall_rise = closes[0] < closes[-1]
 
@@ -172,13 +174,15 @@ class TwoBarReversal(BasePattern):
         if self._is_downtrend(arrays, bar1_idx, self.trend_bars):
             # Bar 1: Long bearish candle, closes at or near low
             bar1_close_position = (bar1_close - bar1_low) / bar1_range if bar1_range > 0 else 0
-            
+
             # Bar 2: Long candle, closes in upper 50% of range
             bar2_close_position = (bar2_close - bar2_low) / bar2_range if bar2_range > 0 else 0
 
-            if (not bar1_bullish and bar1_close_position <= self.close_threshold and
-                bar2_close_position >= 0.5):
-                
+            if (
+                not bar1_bullish
+                and bar1_close_position <= self.close_threshold
+                and bar2_close_position >= 0.5
+            ):
                 # Check for breakout above bar 2 high
                 current_close = float(arrays["close"][i])
                 if current_close > bar2_high * (1 + self.confirmation_filter):
@@ -200,13 +204,15 @@ class TwoBarReversal(BasePattern):
         if self._is_uptrend(arrays, bar1_idx, self.trend_bars):
             # Bar 1: Long bullish candle, closes at or near high
             bar1_close_position = (bar1_high - bar1_close) / bar1_range if bar1_range > 0 else 0
-            
+
             # Bar 2: Long candle, closes in lower 50% of range
             bar2_close_position = (bar2_high - bar2_close) / bar2_range if bar2_range > 0 else 0
 
-            if (bar1_bullish and bar1_close_position <= self.close_threshold and
-                bar2_close_position >= 0.5):
-                
+            if (
+                bar1_bullish
+                and bar1_close_position <= self.close_threshold
+                and bar2_close_position >= 0.5
+            ):
                 # Check for breakdown below bar 2 low
                 current_close = float(arrays["close"][i])
                 if current_close < bar2_low * (1 - self.confirmation_filter):
@@ -225,6 +231,91 @@ class TwoBarReversal(BasePattern):
                     }
 
         return None
+
+    def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Vectorized detection of Two-Bar Reversal signals across the entire DataFrame.
+
+        Args:
+            df: DataFrame with 'Open', 'High', 'Low', 'Close' columns
+
+        Returns:
+            np.ndarray of np.int8: 0=no signal, 1=LONG, -1=SHORT
+        """
+        n = len(df)
+        result = np.zeros(n, dtype=np.int8)
+        if n < self.trend_bars + 3:
+            return result
+
+        arrays = self._extract_arrays(df)
+        high_a = arrays["high"]
+        low_a = arrays["low"]
+        open_a = arrays["open"]
+        close_a = arrays["close"]
+
+        range_a = high_a - low_a
+        is_bullish_a = close_a > open_a
+
+        for i in range(self.trend_bars + 2, n):
+            bar1_idx = i - 1
+            bar2_idx = i
+
+            bar1_range = range_a[bar1_idx]
+            bar2_range = range_a[bar2_idx]
+
+            if bar1_range == 0 or bar2_range == 0:
+                continue
+
+            preceding_ranges = range_a[bar1_idx - 3 : bar1_idx]
+            avg_range = np.mean(preceding_ranges) if len(preceding_ranges) > 0 else bar1_range
+
+            if bar1_range < avg_range * self.min_range_multiplier:
+                continue
+            if bar2_range < avg_range * self.min_range_multiplier:
+                continue
+
+            bar1_close = close_a[bar1_idx]
+            bar1_low = low_a[bar1_idx]
+            bar1_high = high_a[bar1_idx]
+            bar2_close = close_a[bar2_idx]
+            bar2_low = low_a[bar2_idx]
+            bar2_high = high_a[bar2_idx]
+
+            closes_dt = close_a[bar1_idx - self.trend_bars : bar1_idx]
+            if len(closes_dt) < 2:
+                continue
+            declining = np.sum(np.diff(closes_dt) < 0)
+            is_dt = declining >= self.trend_bars * 0.6 and closes_dt[0] > closes_dt[-1]
+
+            is_ut = False
+            if not is_dt:
+                rising = np.sum(np.diff(closes_dt) > 0)
+                is_ut = rising >= self.trend_bars * 0.6 and closes_dt[0] < closes_dt[-1]
+
+            if is_dt:
+                bar1_close_pos = (bar1_close - bar1_low) / bar1_range
+                bar2_close_pos = (bar2_close - bar2_low) / bar2_range
+
+                if (
+                    not is_bullish_a[bar1_idx]
+                    and bar1_close_pos <= self.close_threshold
+                    and bar2_close_pos >= 0.5
+                ):
+                    if close_a[i] > bar2_high * (1.0 + self.confirmation_filter):
+                        result[i] = 1
+            elif is_ut:
+                bar1_close_pos = (bar1_high - bar1_close) / bar1_range
+                bar2_close_pos = (bar2_high - bar2_close) / bar2_range
+
+                if (
+                    is_bullish_a[bar1_idx]
+                    and bar1_close_pos <= self.close_threshold
+                    and bar2_close_pos >= 0.5
+                ):
+                    if close_a[i] < bar2_low * (1.0 - self.confirmation_filter):
+                        result[i] = -1
+
+        return result
 
     def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
         """

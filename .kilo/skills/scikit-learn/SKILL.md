@@ -516,4 +516,3 @@ model = MiniBatchKMeans(n_clusters=8, batch_size=100)
 - User Guide: https://scikit-learn.org/stable/user_guide.html
 - API Reference: https://scikit-learn.org/stable/api/index.html
 - Examples Gallery: https://scikit-learn.org/stable/auto_examples/index.html
-

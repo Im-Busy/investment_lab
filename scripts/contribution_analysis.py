@@ -95,28 +95,32 @@ def run_contribution_analysis():
         if isinstance(raw_trades, pd.DataFrame):
             # It's a DataFrame
             for idx, row in raw_trades.iterrows():
-                trades_data.append({
-                    'entry_time': row.get('EntryTime', row.get('entry_time', None)),
-                    'exit_time': row.get('ExitTime', row.get('exit_time', None)),
-                    'entry_price': row.get('EntryPrice', row.get('entry_price', None)),
-                    'exit_price': row.get('ExitPrice', row.get('exit_price', None)),
-                    'size': row.get('Size', row.get('size', 0)),
-                    'pnl': row.get('PL', row.get('pl', row.get('PnL', 0))),
-                    'pnl_pct': row.get('PLPct', row.get('pl_pct', row.get('PnL%', 0))),
-                })
+                trades_data.append(
+                    {
+                        "entry_time": row.get("EntryTime", row.get("entry_time", None)),
+                        "exit_time": row.get("ExitTime", row.get("exit_time", None)),
+                        "entry_price": row.get("EntryPrice", row.get("entry_price", None)),
+                        "exit_price": row.get("ExitPrice", row.get("exit_price", None)),
+                        "size": row.get("Size", row.get("size", 0)),
+                        "pnl": row.get("PL", row.get("pl", row.get("PnL", 0))),
+                        "pnl_pct": row.get("PLPct", row.get("pl_pct", row.get("PnL%", 0))),
+                    }
+                )
         elif isinstance(raw_trades, list):
             for i, t in enumerate(raw_trades):
                 if isinstance(t, str):
                     continue
-                trades_data.append({
-                    'entry_time': getattr(t, 'entry_time', None),
-                    'exit_time': getattr(t, 'exit_time', None),
-                    'entry_price': getattr(t, 'entry_price', None),
-                    'exit_price': getattr(t, 'exit_price', None),
-                    'size': getattr(t, 'size', 0),
-                    'pnl': getattr(t, 'pl', 0),
-                    'pnl_pct': getattr(t, 'pl_pct', 0),
-                })
+                trades_data.append(
+                    {
+                        "entry_time": getattr(t, "entry_time", None),
+                        "exit_time": getattr(t, "exit_time", None),
+                        "entry_price": getattr(t, "entry_price", None),
+                        "exit_price": getattr(t, "exit_price", None),
+                        "size": getattr(t, "size", 0),
+                        "pnl": getattr(t, "pl", 0),
+                        "pnl_pct": getattr(t, "pl_pct", 0),
+                    }
+                )
 
         trades_df = pd.DataFrame(trades_data)
         print(f"Trades collected: {len(trades_df)}")
@@ -127,7 +131,7 @@ def run_contribution_analysis():
         # Access the strategy instance to get signal log
         strategy = stats._strategy
 
-        if hasattr(strategy, '_signal_event_log') and strategy._signal_event_log is not None:
+        if hasattr(strategy, "_signal_event_log") and strategy._signal_event_log is not None:
             signal_log = strategy._signal_event_log
             print(f"\nSignal events logged: {len(signal_log.events)}")
 
@@ -146,41 +150,47 @@ def run_contribution_analysis():
                     print("\n" + "=" * 70)
                     print("PATTERN CONTRIBUTION LEADERBOARD")
                     print("=" * 70)
-                    print(f"\n{'Pattern':<25} {'Trades':>8} {'Wins':>8} {'Win%':>8} {'Pnl':>12} {'Pnl%':>10}")
+                    print(
+                        f"\n{'Pattern':<25} {'Trades':>8} {'Wins':>8} {'Win%':>8} {'Pnl':>12} {'Pnl%':>10}"
+                    )
                     print("-" * 70)
 
                     # Sort by PnL descending
-                    pattern_stats_sorted = pattern_stats.sort_values('total_pnl', ascending=False)
+                    pattern_stats_sorted = pattern_stats.sort_values("total_pnl", ascending=False)
 
                     for _, row in pattern_stats_sorted.iterrows():
-                        pattern = row.get('pattern_name', row.name)
-                        trades_count = row.get('trade_count', 0)
-                        wins = row.get('wins', 0)
-                        win_rate = row.get('win_rate', 0) * 100 if row.get('win_rate', 0) else 0
-                        pnl = row.get('total_pnl', 0)
-                        pnl_pct = row.get('avg_pnl_pct', 0) * 100 if row.get('avg_pnl_pct', 0) else 0
+                        pattern = row.get("pattern_name", row.name)
+                        trades_count = row.get("trade_count", 0)
+                        wins = row.get("wins", 0)
+                        win_rate = row.get("win_rate", 0) * 100 if row.get("win_rate", 0) else 0
+                        pnl = row.get("total_pnl", 0)
+                        pnl_pct = (
+                            row.get("avg_pnl_pct", 0) * 100 if row.get("avg_pnl_pct", 0) else 0
+                        )
 
                         marker = "+" if pnl > 0 else "-"
-                        print(f"{marker} {pattern:<24} {trades_count:>8} {wins:>8} {win_rate:>7.1f}% {pnl:>12.2f} {pnl_pct:>9.2f}%")
+                        print(
+                            f"{marker} {pattern:<24} {trades_count:>8} {wins:>8} {win_rate:>7.1f}% {pnl:>12.2f} {pnl_pct:>9.2f}%"
+                        )
 
                     print("\n" + "=" * 70)
                     print("WINNERS (Positive PnL)")
                     print("=" * 70)
-                    winners = pattern_stats_sorted[pattern_stats_sorted['total_pnl'] > 0]
+                    winners = pattern_stats_sorted[pattern_stats_sorted["total_pnl"] > 0]
                     for _, row in winners.head(10).iterrows():
-                        pattern = row.get('pattern_name', row.name)
-                        pnl = row.get('total_pnl', 0)
-                        trades = row.get('trade_count', 0)
+                        pattern = row.get("pattern_name", row.name)
+                        pnl = row.get("total_pnl", 0)
+                        trades = row.get("trade_count", 0)
                         print(f"  ✅ {pattern}: ${pnl:.2f} ({trades} trades)")
 
                     print("\n" + "=" * 70)
                     print("LOSERS (Negative PnL)")
                     print("=" * 70)
-                    losers = pattern_stats_sorted[pattern_stats_sorted['total_pnl'] < 0]
+                    losers = pattern_stats_sorted[pattern_stats_sorted["total_pnl"] < 0]
                     for _, row in losers.head(10).iterrows():
-                        pattern = row.get('pattern_name', row.name)
-                        pnl = row.get('total_pnl', 0)
-                        trades = row.get('trade_count', 0)
+                        pattern = row.get("pattern_name", row.name)
+                        pnl = row.get("total_pnl", 0)
+                        trades = row.get("trade_count", 0)
                         print(f"  ❌ {pattern}: ${pnl:.2f} ({trades} trades)")
 
                 else:
@@ -193,6 +203,7 @@ def run_contribution_analysis():
     except Exception as e:
         print(f"Error: {e}")
         import traceback
+
         traceback.print_exc()
 
 

@@ -1,7 +1,7 @@
 # Feature Requests: Integration from Repositories
 
-**Date:** 2026-04-20  
-**Based On:** je-suis-tm/quant-trading Analysis  
+**Date:** 2026-04-20
+**Based On:** je-suis-tm/quant-trading Analysis
 **Priority:** Implementation Order
 
 ---
@@ -9,7 +9,7 @@
 ## Phase 1: Time-of-Day Breakout Strategies (2-3 hours)
 
 ### FR-001: London Breakout Strategy
-**Source:** `London Breakout backtest.py` from je-suis-tm  
+**Source:** `London Breakout backtest.py` from je-suis-tm
 **Description:** Use Tokyo trading hour (2:00 EST) to predict London open (3:00 EST), trade first 30 min of London session with risk management
 
 **Implementation Steps:**
@@ -43,7 +43,7 @@
 ---
 
 ### FR-002: Dual Thrust Strategy
-**Source:** `Dual Thrust backtest.py` from je-suis-tm  
+**Source:** `Dual Thrust backtest.py` from je-suis-tm
 **Description:** Opening range breakout strategy, uses Tokyo open to set upper/lower thresholds, trades at London open with range-based dynamic thresholds
 
 **Implementation Steps:**
@@ -80,7 +80,7 @@
 ## Phase 2: Pattern Recognition Enhancement (4-6 hours)
 
 ### FR-003: Bollinger Bands Geometric Pattern Recognition
-**Source:** `Bollinger Bands Pattern Recognition backtest.py` from je-suis-tm  
+**Source:** `Bollinger Bands Pattern Recognition backtest.py` from je-suis-tm
 **Description:** Add Bottom-W pattern recognition with 5-node structure (l,k,j,m,i) using geometric conditions and bandwidth contraction exit
 
 **Implementation Steps:**
@@ -117,7 +117,7 @@
 ---
 
 ### FR-004: Awesome Oscillator with Saucer Patterns
-**Source:** `Awesome Oscillator backtest.py` from je-suis-tm  
+**Source:** `Awesome Oscillator backtest.py` from je-suis-tm
 **Description:** Implement Awesome Oscillator using (High+Low)/2 midpoint, SMA(5) vs SMA(34), plus saucer pattern detection for early signals
 
 **Implementation Steps:**
@@ -151,7 +151,7 @@
 ---
 
 ### FR-005: Heikin-Ashi Marubozu Patterns
-**Source:** `Heikin-Ashi backtest.py` from je-suis-tm  
+**Source:** `Heikin-Ashi backtest.py` from je-suis-tm
 **Description:** Add Marubozu-style reversal signals to existing Heikin-Ashi transformation, improve candlestick-based trend following
 
 **Implementation Steps:**
@@ -191,8 +191,8 @@
 ## Phase 3: Advanced Risk Metrics (1-2 hours)
 
 ### FR-006: Omega Ratio
-**Source:** `Heikin-Ashi backtest.py` from je-suis-tm  
-**Description:**  
+**Source:** `Heikin-Ashi backtest.py` from je-suis-tm
+**Description:**
 Variation of Sharpe ratio using threshold instead of risk-free return, integrates over returns above/below threshold using Student's t-distribution
 
 **Implementation Steps:**
@@ -225,8 +225,8 @@ Variation of Sharpe ratio using threshold instead of risk-free return, integrate
 ---
 
 ### FR-007: Sortino Ratio
-**Source:** `Heikin-Ashi backtest.py` from je-suis-tm  
-**Description:**  
+**Source:** `Heikin-Ashi backtest.py` from je-suis-tm
+**Description:**
 Sharpe variation using negative returns std instead of all returns, measures impact of downside risk
 
 **Implementation Steps:**
@@ -257,8 +257,8 @@ Sharpe variation using negative returns std instead of all returns, measures imp
 ---
 
 ### FR-008: Calmar Ratio
-**Source:** `Heikin-Ashi backtest.py` from je-suis-tm  
-**Description:**  
+**Source:** `Heikin-Ashi backtest.py` from je-suis-tm
+**Description:**
 Sharpe variation using max drawdown instead of std, measures return after worst-case adjustment
 
 **Implementation Steps:**
@@ -292,7 +292,7 @@ Sharpe variation using max drawdown instead of std, measures return after worst-
 ## Phase 4: Code Modernization (2-3 hours)
 
 ### FR-009: Fix Hardcoded Paths
-**Source:** Multiple strategies from je-suis-tm  
+**Source:** Multiple strategies from je-suis-tm
 **Description:** Replace `os.chdir('d:/')` and hardcoded paths with configurable parameters or environment variables
 
 **Implementation Steps:**
@@ -313,7 +313,7 @@ Sharpe variation using max drawdown instead of std, measures return after worst-
 ---
 
 ### FR-010: Update Pandas Syntax
-**Source:** Multiple strategies from je-suis-tm  
+**Source:** Multiple strategies from je-suis-tm
 **Description:** Update deprecated pandas methods (e.g., `inplace=True`, `reset_index()`) to modern pandas syntax
 
 **Implementation Steps:**
@@ -394,6 +394,6 @@ After each feature implementation:
 
 ---
 
-**Created:** 2026-04-20  
-**Status:** Ready for Implementation  
+**Created:** 2026-04-20
+**Status:** Ready for Implementation
 **Next Review:** Machine-Learning-for-Algorithmic-Trading-Second-Edition analysis

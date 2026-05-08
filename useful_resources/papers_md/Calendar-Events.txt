@@ -1,14 +1,14 @@
 Page 1: Received June 29, 2021, accepted July 27, 2021, date of publication August 3, 2021, date of current version August 23, 2021.
 Page 1: Digital Object Identifier 10.1109/ACCESS.2021.3102495
-Page 1: 
+Page 1:
 Page 1: Building a Calendar of Events Database by
 Page 1: Analyzing Financial Spikes
 Page 1: PRAKASH K. AITHAL , (Member, IEEE), U. DINESH ACHARYA , M. GEETHA , (Member, IEEE),
 Page 1: AND PARTHIV MENON
 Page 1: Department of Computer Science and Engineering, Manipal Institute of Technology, Manipal Academy of Higher Education, Manipal 576104, India
-Page 1: 
+Page 1:
 Page 1: Corresponding author: M. Geetha (geetha.maiya@ manipal.edu)
-Page 1: 
+Page 1:
 Page 1: ABSTRACT An event is a piece of news that triggers a change in stock prices. Here, an event study is
 Page 1: undertaken to capture the effect of abnormal returns due to an event. The event can affect the stock market in
 Page 1: the long term or short term. Event research is relevant to both the efficient market hypothesis and behavioral
@@ -23,7 +23,7 @@ Page 1: values for a particular day were plotted. An event enhanced some stock r
 Page 1: other stocks. We found a variation range of -400 to 200 for different company stocks for the selected period.
 Page 1: INDEX TERMS Event database, social media data, sentiment analysis, data analytics, event studies.
 Page 1: I. INTRODUCTION
-Page 1: 
+Page 1:
 Page 1: Data Science involves extracting information from raw data,
 Page 1: converting information into knowledge and knowledge into
 Page 1: an actionable plan, which has broad applications for fields
@@ -44,9 +44,9 @@ Page 1: have either positive or adverse effects. Dividends always
 Page 1: The associate editor coordinating the review of this manuscript and
 Page 1: approving it for publication was Francesco Benedetto
 Page 1: 114192
-Page 1: 
+Page 1:
 Page 1: .
-Page 1: 
+Page 1:
 Page 1: decrease the value of a stock. Events have either short-term
 Page 1: consequences or affect stocks over the long run. Events that
 Page 1: affect the stock market for less than a week are considered
@@ -67,14 +67,14 @@ Page 1: prices. If the correlation between news and the stock difference is grea
 Page 1: studies assume the semistrong form of market efficiency.
 Page 1: The semistrong form of market efficiency applies two
 Page 1: assumptions [1].
-Page 1: 
+Page 1:
 Page 1: This work is licensed under a Creative Commons Attribution 4.0 License. For more information, see https://creativecommons.org/licenses/by/4.0/
-Page 1: 
+Page 1:
 Page 1: VOLUME 9, 2021
-Page 1: 
-Page 1: 
+Page 1:
+Page 1:
 Page 2: P. K. Aithal et al.: Building Calendar of Events Database by Analyzing Financial Spikes
-Page 2: 
+Page 2:
 Page 2: All publicly available information is reflected in stock
 Page 2: prices
 Page 2: ΓÇó Stock prices vary when new information arrives
@@ -82,9 +82,9 @@ Page 2: The latter assumption is utilized to predict the future value of
 Page 2: a stock in advance. An event changes a stock price, and an
 Page 2: event study can then be utilized to analyze future cashflows.
 Page 2: ΓÇó
-Page 2: 
+Page 2:
 Page 2: A. BAYESIAN MODEL AVERAGING
-Page 2: 
+Page 2:
 Page 2: An analysis is conducted by first selecting the best model
 Page 2: based on a particular criterion and then learning about
 Page 2: the parameters of the chosen model. Any uncertainties of
@@ -99,13 +99,13 @@ Page 2: 4) BMA continuously adjusts model weights.
 Page 2: 5) BMA uses a set of models, which is preferable to using
 Page 2: a single model.
 Page 2: B. BAYESIAN STRUCTURAL TIME SERIES
-Page 2: 
+Page 2:
 Page 2: The Bayesian Structural Time Series (BSTS) is a tool used
 Page 2: to identify the causal relationship. It utilizes GPU if present
 Page 2: else runs on CPU. It requires pre-period and post-period as
 Page 2: arguments along with the data.
 Page 2: C. TIME SERIES COMPONENTS
-Page 2: 
+Page 2:
 Page 2: It is helpful to decompose the time series into systematic
 Page 2: and nonsystematic components. Systematic components can
 Page 2: be modeled as either consistent or recurring. Nonsystematic
@@ -123,14 +123,14 @@ Page 2: The rest of the paper is organized as follows. Section 2
 Page 2: reviews the related literature, section 3 elaborates on the
 Page 2: methodology used, and section 4 presents the results. Conclusions and avenues for future research are given in section 5.
 Page 2: II. LITERATURE SURVEY
-Page 2: 
+Page 2:
 Page 2: Event studies determine excess returns attributable to a corporate event. Events can range from an earnings release by a
 Page 2: company or budget announcement to a new product launch,
 Page 2: announcement from a competing company, regular financial statement or announcement made by a regulatory body.
 Page 2: VOLUME 9, 2021
-Page 2: 
+Page 2:
 Page 2: FIGURE 1. Building and analysis of calendar events database.
-Page 2: 
+Page 2:
 Page 2: Researchers look forward in time and predict the expected
 Page 2: value a firm will derive from a corporate action announced
 Page 2: to the public. This forward-looking focus of event studies
@@ -161,12 +161,12 @@ Page 2: study evaluation is done based on the methodology utilized
 Page 2: and can involve a regression with a t-test or the use of a capital
 Page 2: asset pricing model (CAPM) with a t-test [7].
 Page 2: 114193
-Page 2: 
-Page 2: 
+Page 2:
+Page 2:
 Page 3: P. K. Aithal et al.: Building Calendar of Events Database by Analyzing Financial Spikes
-Page 3: 
+Page 3:
 Page 3: FIGURE 2. News item collection.
-Page 3: 
+Page 3:
 Page 3: An election is a major event that significantly influences
 Page 3: the stock market. A set of stocks are affected by an election.
 Page 3: Elections have an effect for approximately five months before
@@ -191,7 +191,7 @@ Page 3: apply in some cases and fail in others. Both have explanatory
 Page 3: power and must be explored. According to event studies,
 Page 3: stocks will not alter prices unless and until a piece of news
 Page 3: 114194
-Page 3: 
+Page 3:
 Page 3: arrives [12]. Events do not have structure and cannot be stored
 Page 3: in relational databases. Therefore, Not Only Structured Query
 Page 3: Language (NoSQL) databases are utilized to store information on such events. NoSQL databases require no downtime
@@ -210,14 +210,14 @@ Page 3: almost crashed the Nevada company, after which the company had to call a
 Page 3: studies are critical. The simplest measures used include the
 Page 3: number of times a stock name is mentioned, the frequency
 Page 3: of certain keywords, and the sentiment of news about a
-Page 3: 
+Page 3:
 Page 3: VOLUME 9, 2021
-Page 3: 
-Page 3: 
+Page 3:
+Page 3:
 Page 4: P. K. Aithal et al.: Building Calendar of Events Database by Analyzing Financial Spikes
-Page 4: 
+Page 4:
 Page 4: FIGURE 3. Stock collection.
-Page 4: 
+Page 4:
 Page 4: given company [15]. There are two types of events, namely,
 Page 4: simple events and complex events. A simple event occurs
 Page 4: instantaneously and independent of other events. A complex
@@ -229,7 +229,7 @@ Page 4: technology [17].
 Page 4: The efficient market hypothesis states that market prices
 Page 4: reflect current news and that as new news arrives, prices
 Page 4: VOLUME 9, 2021
-Page 4: 
+Page 4:
 Page 4: change. Efficient market theory considers investors to be
 Page 4: unemotional. Behavioral finance, on the other hand, treats
 Page 4: investors as an emotional entity and assumes news events
@@ -241,12 +241,12 @@ Page 4: be removed. The sentiment of a sentence and frequency
 Page 4: of words measure the quantum of the jump of stock
 Page 4: prices [19].
 Page 4: 114195
-Page 4: 
-Page 4: 
+Page 4:
+Page 4:
 Page 5: P. K. Aithal et al.: Building Calendar of Events Database by Analyzing Financial Spikes
-Page 5: 
+Page 5:
 Page 5: FIGURE 4. Keywords and their impact on investor sentiment for mean polarity.
-Page 5: 
+Page 5:
 Page 5: Sentiment analysis is widely used in the field of finance.
 Page 5: The method is also known as opinion mining. Sentiment analysis is broadly classified into emotion recognition and tone
 Page 5: analysis or polarity analysis. Opinion mining can be classified
@@ -264,7 +264,7 @@ Page 5: studies [22].
 Page 5: A historical analysis of 145100 news articles has shown a
 Page 5: significant relationship between tone and companiesΓÇÖ performance. However, a single instance of news does not have an
 Page 5: 114196
-Page 5: 
+Page 5:
 Page 5: impact on stock movement. If a company calls a conference
 Page 5: call and the tone is positive, the stock of that company will
 Page 5: move multifold in a positive direction, resulting in an abnormal positive return [23]. The global financial crisis resulted in
@@ -283,12 +283,12 @@ Page 5: corporate social responsibility with the help of a dictionary.
 Page 5: The authors showed that when a firm is not responsible and
 Page 5: this results in a negative event, its stock price will fall drastically. Event and firm performance are directly proportional.
 Page 5: VOLUME 9, 2021
-Page 5: 
-Page 5: 
+Page 5:
+Page 5:
 Page 6: P. K. Aithal et al.: Building Calendar of Events Database by Analyzing Financial Spikes
-Page 6: 
+Page 6:
 Page 6: FIGURE 5. Keywords and their impact on investor sentiment for mean subjectivity.
-Page 6: 
+Page 6:
 Page 6: Narrative economics has developed into a field of its own.
 Page 6: A narrative event influences a stock, and numerous examples
 Page 6: of this phenomenon prove this fact [27]. The pandemic has
@@ -307,7 +307,7 @@ Page 6: Big data technologies can store qualitative data on events
 Page 6: rather than quantitative data along. The field of finance has
 Page 6: concentrated on the use of quantitative data for analyses.
 Page 6: VOLUME 9, 2021
-Page 6: 
+Page 6:
 Page 6: With the emergence of big data technologies, the storage and
 Page 6: processing of qualitative data have become more accessible.
 Page 6: The focus of the researcher has thus switched from the use of
@@ -324,38 +324,38 @@ Page 6: value. There are a variety of ways to conduct an event study.
 Page 6: An event study must determine the period of research and
 Page 6: adopt a regression equation.
 Page 6: III. METHODOLOGY
-Page 6: 
+Page 6:
 Page 6: Our methodology is presented in subsections III-A and III-B,
 Page 6: respectively, titled Tools and Process.
 Page 6: 114197
-Page 6: 
-Page 6: 
+Page 6:
+Page 6:
 Page 7: P. K. Aithal et al.: Building Calendar of Events Database by Analyzing Financial Spikes
-Page 7: 
+Page 7:
 Page 7: FIGURE 6. Mean polarity in a day.
-Page 7: 
+Page 7:
 Page 7: A. TOOLS
-Page 7: 
+Page 7:
 Page 7: The economictimes.com and the moneycontrol.com are chosen for news article collection as these are the prominent
 Page 7: financial websites in India. A thorough review of the two
 Page 7: websites used, namely, moneycontrol.com and economictimes.com, revealed which routes gave relevant data. Then,
 Page 7: the type of database and database schema were selected.
 Page 7: 114198
-Page 7: 
+Page 7:
 Page 7: We selected Python as our language of choice for data collection and its related mathematical analysis and we selected
 Page 7: MongoDB as are database. MongoDB is a scalable and fast
 Page 7: NoSQL database and is known for its efficient querying
 Page 7: capabilities. Initially, PyMongo, a native Python driver for
 Page 7: MongoDB, was used to query the database. Subsequently,
 Page 7: the code was modified to use mongoengineΓÇöa Python library
-Page 7: 
+Page 7:
 Page 7: VOLUME 9, 2021
-Page 7: 
-Page 7: 
+Page 7:
+Page 7:
 Page 8: P. K. Aithal et al.: Building Calendar of Events Database by Analyzing Financial Spikes
-Page 8: 
+Page 8:
 Page 8: FIGURE 7. Nifty 50 variation in a day.
-Page 8: 
+Page 8:
 Page 8: that acts as an object document mapper for MongoDB. It then
 Page 8: was easier to specify schemas and manipulate data obtained
 Page 8: from the database in the form of objects with each field of a
@@ -368,7 +368,7 @@ Page 8: other data frames to efficiently structure the pre-existing data.
 Page 8: TextBlob, a Python library built from the Natural Language Tool Kit (NLTK), provides user-friendly interfaces
 Page 8: for performing natural language processing (NLP) tasks
 Page 8: VOLUME 9, 2021
-Page 8: 
+Page 8:
 Page 8: such as sentiment analyses of text. The NLTK was also
 Page 8: used later in the project to process text and extract relevant
 Page 8: information.
@@ -376,19 +376,19 @@ Page 8: Git (and GitHub) was used for version control of the project
 Page 8: files and folders. To make the code portable, environmental
 Page 8: variables, along with the dotenv module, were used to dynamically load variables during execution.
 Page 8: B. PROCESS
-Page 8: 
+Page 8:
 Page 8: Events were collected from moneycontrol.com and economictimes.com. The data are stored in the MongoDB
 Page 8: database. Two collections are stored in the databaseΓÇödetailed
 Page 8: stock values and events from the websites. The data fields of
 Page 8: these two collections are as shown below.
 Page 8: 114199
-Page 8: 
-Page 8: 
+Page 8:
+Page 8:
 Page 9: P. K. Aithal et al.: Building Calendar of Events Database by Analyzing Financial Spikes
-Page 9: 
+Page 9:
 Page 9: FIGURE 9. Correlation between stock returns and subjectivity.
 Page 9: FIGURE 8. Correlation between stock returns and polarity.
-Page 9: 
+Page 9:
 Page 9: NewsItem(News,
 Page 9: Date,
 Page 9: Time,
@@ -407,9 +407,9 @@ Page 9: from -1 to 1. If TP represents the total number of positive
 Page 9: words and TN represents the total number of negative words,
 Page 9: polarity is defined as follows (1).
 Page 9: Polarity = (TP ΓêÆ TN )/(TP + TN )
-Page 9: 
+Page 9:
 Page 9: (1)
-Page 9: 
+Page 9:
 Page 9: Subjectivity is a type of probability that determines how
 Page 9: objective a sentence is. Subjectivity, as it is a probability
 Page 9: value, varies from 0 to 1. Further details on computing subjectivity can be found in [33].
@@ -428,7 +428,7 @@ Page 9: these prices was computed. Data regarding companies
 Page 9: and their symbols were obtained from NSE. These data
 Page 9: were then used to dynamically obtain the stock values
 Page 9: 114200
-Page 9: 
+Page 9:
 Page 9: for every required instance from the Yahoo Finance
 Page 9: website.
 Page 9: 3) The correlation between the difference in opening and
@@ -474,32 +474,32 @@ Page 9: 3) Subjectivity
 Page 9: 4) Return and Polarity
 Page 9: 5) Return and Subjectivity
 Page 9: VOLUME 9, 2021
-Page 9: 
-Page 9: 
+Page 9:
+Page 9:
 Page 10: P. K. Aithal et al.: Building Calendar of Events Database by Analyzing Financial Spikes
-Page 10: 
+Page 10:
 Page 10: FIGURE 10. Time components of return.
-Page 10: 
+Page 10:
 Page 10: 6) Polarity and Subjectivity
 Page 10: 7) Return, Polarity, and Subjectivity
 Page 10: BMA finds the likelihood of each combination and the posterior probability of each parameter. A decision is made
 Page 10: based on the posterior probability of the variable. The overall
 Page 10: architecture is depicted in Fig. 1.
 Page 10: VOLUME 9, 2021
-Page 10: 
+Page 10:
 Page 10: IV. RESULTS
-Page 10: 
+Page 10:
 Page 10: To minimize the noise for collecting the news article, one
 Page 10: has to scrape the HTML. The empty and paid articles are
 Page 10: discarded while collecting the news articles. Events were collected in the MongoDB database as two collections, namely,
 Page 10: news items and stocks. News articles were collected during
 Page 10: 114201
-Page 10: 
-Page 10: 
+Page 10:
+Page 10:
 Page 11: P. K. Aithal et al.: Building Calendar of Events Database by Analyzing Financial Spikes
-Page 11: 
+Page 11:
 Page 11: FIGURE 11. Time components of polarity.
-Page 11: 
+Page 11:
 Page 11: Indian budgeting time, and the articles have a positive tone.
 Page 11: The sampled database collections of news items and stocks
 Page 11: are described in Fig.2 and Fig.3 respectively. We collected
@@ -517,7 +517,7 @@ Page 11: in Figures 1 and 2 show that the article keywords have a
 Page 11: positive tone, and words such as ΓÇÿΓÇÿhighΓÇÿΓÇÿ are more popular
 Page 11: than word such as ΓÇÿΓÇÿlossΓÇÿΓÇÿ during the period. The word ΓÇÿΓÇÿlossΓÇÿΓÇÿ
 Page 11: 114202
-Page 11: 
+Page 11:
 Page 11: is not used on February 1st, 2021, IndiaΓÇÖs budget day. The
 Page 11: word ΓÇÿΓÇÿhighΓÇÿΓÇÿ is often used in the news articles.
 Page 11: The mean polarity within a day is shown in Fig. 6 During
@@ -534,12 +534,12 @@ Page 11: differently. From Figures 8 and 9, the return is not approximately zero
 Page 11: ranging from -400 to 200 due to the event. Certain companies
 Page 11: react to specific events.
 Page 11: VOLUME 9, 2021
-Page 11: 
-Page 11: 
+Page 11:
+Page 11:
 Page 12: P. K. Aithal et al.: Building Calendar of Events Database by Analyzing Financial Spikes
-Page 12: 
+Page 12:
 Page 12: FIGURE 12. Time components of subjectivity.
-Page 12: 
+Page 12:
 Page 12: The time components of return, polarity, and subjectivity
 Page 12: are given in Fig. 10 to Fig. 12, respectively. The figures show
 Page 12: that the seasonality component is not present in the data, and
@@ -560,10 +560,10 @@ Page 12: words.
 Page 12: Returns = 0.003 + 0.009 Γêù Polarity
 Page 12: Returns = 0.0002 + 0.007 Γêù Subjectivity
 Page 12: VOLUME 9, 2021
-Page 12: 
+Page 12:
 Page 12: (4)
 Page 12: (5)
-Page 12: 
+Page 12:
 Page 12: Returns = 0.001 ΓêÆ 0.122 Γêù Polarity
 Page 12: ΓêÆ0.025 Γêù (Polarity)2
 Page 12: ΓêÆ11.81 Γêù (Polarity)3
@@ -574,11 +574,11 @@ Page 12: ΓêÆ60.48 Γêù (Subjectivity)2
 Page 12: +138.82 Γêù (Subjectivity)3
 Page 12: ΓêÆ152.97 Γêù (Subjectivity)4
 Page 12: +64.47 Γêù (Subjectivity)5
-Page 12: 
+Page 12:
 Page 12: (6)
-Page 12: 
+Page 12:
 Page 12: (7)
-Page 12: 
+Page 12:
 Page 12: The BMA results are tabulated in tables 1 and 2 and show
 Page 12: that polarity and subjectivity improve the modelΓÇÖs performance. Polarity outperforms subjectivity. It is better to consider polarity and subjectivity as model parameters. We also
 Page 12: find that certain parameters influence the model, but they are
@@ -588,36 +588,36 @@ Page 12: as well as a slightly positive correlation between polarity and
 Page 12: returns. Additionally, we find a slightly positive correlation
 Page 12: between subjectivity and returns.
 Page 12: 114203
-Page 12: 
-Page 12: 
+Page 12:
+Page 12:
 Page 13: P. K. Aithal et al.: Building Calendar of Events Database by Analyzing Financial Spikes
-Page 13: 
+Page 13:
 Page 13: FIGURE 13. Causal impact.
-Page 13: 
+Page 13:
 Page 13: TABLE 1. Variables and their likelihood values.
-Page 13: 
+Page 13:
 Page 13: TABLE 2. Variables and their posterior probability values.
-Page 13: 
+Page 13:
 Page 13: The polarity and subjectivity are given to the BSTS
 Page 13: model as independent variables, and return is provided as
-Page 13: 
+Page 13:
 Page 13: a dependent variable. The pre and post-period are set equal
 Page 13: in the model. The result obtained with the BSTS model is
 Page 13: depicted in Fig. 13 The result obtained is statistically significant as the posterior tail-area probability is 0.04 at 95% causal
 Page 13: impact level.
-Page 13: 
+Page 13:
 Page 13: 114204
-Page 13: 
+Page 13:
 Page 13: VOLUME 9, 2021
-Page 13: 
-Page 13: 
+Page 13:
+Page 13:
 Page 14: P. K. Aithal et al.: Building Calendar of Events Database by Analyzing Financial Spikes
-Page 14: 
+Page 14:
 Page 14: TABLE 3. Keywords and their frequencies of use during budget week
 Page 14: Feb. 1 to Feb. 7, 2021.
-Page 14: 
+Page 14:
 Page 14: V. CONCLUSION AND FUTURE WORK
-Page 14: 
+Page 14:
 Page 14: Two prominent financial websites, namely, moneycontrol.com and economictimes.com, were scraped to build a calendar of events database. The Python language was utilized
 Page 14: to scrape the websites. Time components were decomposed
 Page 14: from data, and we found the only trend is present in the
@@ -651,7 +651,7 @@ Page 14: [4] J. S. Ang and S. Zhang, ΓÇÿΓÇÿEvaluating long-horizon event s
 Page 14: and J. C. Lee, Eds. New York, NY, USA: Springer, 2015, pp. 383ΓÇô411, doi:
 Page 14: 10.1007/978-1-4614-7750-1_14.
 Page 14: VOLUME 9, 2021
-Page 14: 
+Page 14:
 Page 14: [5] C. Castro-Iragorri, ΓÇÿΓÇÿDoes the market model provide a good counterfactual for event studies in finance?ΓÇÖΓÇÖ Financial Markets Portfolio Manage.,
 Page 14: vol. 33, no. 1, pp. 71ΓÇô91, Mar. 2019.
 Page 14: [6] L. Raynaud. (2017). Evaluating Industrial Policies Using Event-Studies:
@@ -720,10 +720,10 @@ Page 14: [28] V. Y. Fan, D. T. Jamison, and L. H. Summers, ΓÇÿΓÇÿPandemic 
 Page 14: are the expected losses?ΓÇÖΓÇÖ Bull. World Health Org., vol. 96, no. 2, p. 129,
 Page 14: 2018.
 Page 14: 114205
-Page 14: 
-Page 14: 
+Page 14:
+Page 14:
 Page 15: P. K. Aithal et al.: Building Calendar of Events Database by Analyzing Financial Spikes
-Page 15: 
+Page 15:
 Page 15: [29] A. Goodman-Bacon, ΓÇÿΓÇÿDifference-in-differences with variation in treatment timing,ΓÇÖΓÇÖ J. Econometrics, 2021. [Online]. Available: https://www.
 Page 15: sciencedirect.com/science/article/pii/S0304407621001445, doi: 10.1016/
 Page 15: j.jeconom.2021.03.014.
@@ -738,7 +738,7 @@ Page 15: 21633, 2015, pp. 1ΓÇô75.
 Page 15: [33] A. Kamal, ΓÇÿΓÇÿSubjectivity classification using machine learning techniques
 Page 15: for mining feature-opinion pairs from web opinion sources,ΓÇÖΓÇÖ 2013,
 Page 15: arXiv:1312.6962. [Online]. Available: http://arxiv.org/abs/1312.6962
-Page 15: 
+Page 15:
 Page 15: M. GEETHA (Member, IEEE) received the Ph.D.
 Page 15: degree from NITK, Surathkal, in 2010. She is currently a Professor with the Department of Computer Science and Engineering, Manipal Institute
 Page 15: of Technology, Manipal Academy of Higher Education, Manipal, India. She has presented several
@@ -746,7 +746,7 @@ Page 15: papers at national and international conferences,
 Page 15: and her work has been published in several
 Page 15: international journals. Her current research interests include data mining and text mining in the
 Page 15: healthcare and financial sectors.
-Page 15: 
+Page 15:
 Page 15: PRAKASH K. AITHAL (Member, IEEE) is currently pursuing the Ph.D. degree with Manipal
 Page 15: Academy of Higher Education, Manipal, India.
 Page 15: He is currently an Assistant Professor with the
@@ -755,7 +755,7 @@ Page 15: Academy of Higher Education. He has presented
 Page 15: several papers at national and international conferences, and his work has been published in several
 Page 15: international journals. His current research interest
 Page 15: includes data analytics in the financial domain.
-Page 15: 
+Page 15:
 Page 15: U. DINESH ACHARYA received the Ph.D. degree
 Page 15: from Manipal Academy of Higher Education,
 Page 15: Manipal, India, in 2008. He is currently a Professor with the Department of Computer Science
@@ -764,15 +764,15 @@ Page 15: Manipal Academy of Higher Education. He has
 Page 15: presented several papers at national and international conferences, and his work has been published in several international journals. His current
 Page 15: research interests include data analytics in the
 Page 15: healthcare, agriculture, and financial sectors.
-Page 15: 
+Page 15:
 Page 15: 114206
-Page 15: 
+Page 15:
 Page 15: PARTHIV MENON is currently pursuing the
 Page 15: B.Tech. degree with the Department of Computer
 Page 15: Science and Engineering, Manipal Institute of
 Page 15: Technology, Manipal Academy of Higher Education, Manipal, India. His research interest includes
 Page 15: data analytics.
-Page 15: 
+Page 15:
 Page 15: VOLUME 9, 2021
-Page 15: 
-Page 15: 
+Page 15:
+Page 15:

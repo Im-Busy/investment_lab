@@ -1,7 +1,7 @@
 # TimesFM Forecast Report: Global Temperature Anomaly (2025)
 
-**Model:** TimesFM 1.0 (200M) PyTorch  
-**Generated:** 2026-02-21  
+**Model:** TimesFM 1.0 (200M) PyTorch
+**Generated:** 2026-02-21
 **Source:** NOAA GISTEMP Global Land-Ocean Temperature Index
 
 ---

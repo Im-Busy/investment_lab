@@ -4,7 +4,6 @@ MACD Histogram Strategy for backtesting.py
 Trades MACD histogram direction changes and zero-line crosses.
 """
 
-import numpy as np
 from backtesting import Strategy
 
 

@@ -16,9 +16,9 @@ from .three_hills import ThreeHillsMountain
 from .parabolic_arc import ParabolicArc
 
 __all__ = [
-    'CupAndHandle',
-    'HeadAndShoulders',
-    'SpikeAndLedge',
-    'ThreeHillsMountain',
-    'ParabolicArc',
+    "CupAndHandle",
+    "HeadAndShoulders",
+    "SpikeAndLedge",
+    "ThreeHillsMountain",
+    "ParabolicArc",
 ]

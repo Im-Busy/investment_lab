@@ -22,14 +22,13 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-import numpy as np
 import pandas as pd
 import yfinance as yf
 
 from src.ml.experiment_logger import ExperimentLogger
 from src.ml.feature_selector import SFISelector
 from src.ml.features import FeatureEngineer
-from src.ml.metrics import filter_features_by_ic, ic_summary
+from src.ml.metrics import ic_summary
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)-8s | %(message)s")
 logger = logging.getLogger(__name__)
@@ -108,7 +107,9 @@ def run_ic_analysis(
         ic_df = ic_summary(X_clean, y)
         ic_df["ticker"] = ticker
         all_ic_summaries.append(ic_df)
-        logger.info(f"  {ticker}: {len(ic_df)} features with mean |IC|={ic_df['abs_ic'].mean():.4f}")
+        logger.info(
+            f"  {ticker}: {len(ic_df)} features with mean |IC|={ic_df['abs_ic'].mean():.4f}"
+        )
 
     if not all_ic_summaries:
         raise ValueError("No tickers produced valid features")
@@ -142,9 +143,7 @@ def aggregate_ic_across_tickers(ic_by_ticker: pd.DataFrame) -> pd.DataFrame:
     )
 
     agg["consensus_score"] = (
-        agg["mean_abs_rank_ic"] * 0.5
-        + agg["mean_abs_ic"] * 0.3
-        + agg["significant_pct"] * 0.2
+        agg["mean_abs_rank_ic"] * 0.5 + agg["mean_abs_ic"] * 0.3 + agg["significant_pct"] * 0.2
     )
 
     return agg.sort_values("consensus_score", ascending=False).reset_index(drop=True)
@@ -273,7 +272,9 @@ def run_pipeline(
         except Exception as e:
             logger.warning(f"  SFI failed: {e}, falling back to IC filter")
             selected_features = ic_passed[:40]
-            sfi_details = pd.DataFrame({"feature": selected_features, "method": "ic_filter_fallback"})
+            sfi_details = pd.DataFrame(
+                {"feature": selected_features, "method": "ic_filter_fallback"}
+            )
 
     # Step 5: Save results
     logger.info("\n[5/5] Saving results")
@@ -281,8 +282,10 @@ def run_pipeline(
     selected_df = pd.DataFrame({"feature": selected_features})
     selected_df.to_csv(OUTPUT_DIR / "selected_features.csv", index=False)
 
-    top_by_ic = agg_ic.head(20)[["feature", "mean_abs_rank_ic", "mean_abs_ic", "consensus_score", "n_tickers"]]
-    logger.info(f"\nTop 20 features by IC:")
+    top_by_ic = agg_ic.head(20)[
+        ["feature", "mean_abs_rank_ic", "mean_abs_ic", "consensus_score", "n_tickers"]
+    ]
+    logger.info("\nTop 20 features by IC:")
     for _, row in top_by_ic.iterrows():
         marker = " [SELECTED]" if row["feature"] in selected_features else ""
         logger.info(

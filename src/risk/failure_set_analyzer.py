@@ -27,9 +27,8 @@ import sys
 from dataclasses import asdict, dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
-import numpy as np
 import pandas as pd
 from scipy import stats
 
@@ -150,7 +149,11 @@ class FailureSetAnalyzer:
             - 1
         )
 
-        perf_value = recent_performance.iloc[-1] if hasattr(recent_performance, 'iloc') else recent_performance
+        perf_value = (
+            recent_performance.iloc[-1]
+            if hasattr(recent_performance, "iloc")
+            else recent_performance
+        )
         passed = perf_value >= self.config.time_reversal_threshold
 
         return FailureTestResult(
@@ -237,7 +240,9 @@ class FailureSetAnalyzer:
             passed=passed,
             metric_value=float(skewness),
             threshold=self.config.fat_tail_min_skew,
-            failure_reason="" if passed else f"Negative skew ({skewness:.2f}), excess kurtosis ({kurtosis:.2f})",
+            failure_reason=""
+            if passed
+            else f"Negative skew ({skewness:.2f}), excess kurtosis ({kurtosis:.2f})",
         )
 
     def volatility_spike_test(
@@ -303,9 +308,7 @@ class FailureSetAnalyzer:
             test_results.append(self.time_reversal_test(returns))
 
         if self.config.enable_counter_trend:
-            test_results.append(
-                self.counter_trend_test(returns, benchmark_returns)
-            )
+            test_results.append(self.counter_trend_test(returns, benchmark_returns))
 
         if self.config.enable_fat_tail:
             test_results.append(self.fat_tail_test(returns))
@@ -461,12 +464,12 @@ def analyze_strategies(
 
     print("\n=== FAILURE-SET ANALYSIS ===\n")
     print(f"Strategies analyzed: {len(results)}")
-    print(f"  PASS: {pass_count} ({pass_count/len(results)*100:.1f}%)")
-    print(f"  WARNING: {warning_count} ({warning_count/len(results)*100:.1f}%)")
-    print(f"  FAIL: {fail_count} ({fail_count/len(results)*100:.1f}%)")
+    print(f"  PASS: {pass_count} ({pass_count / len(results) * 100:.1f}%)")
+    print(f"  WARNING: {warning_count} ({warning_count / len(results) * 100:.1f}%)")
+    print(f"  FAIL: {fail_count} ({fail_count / len(results) * 100:.1f}%)")
 
     if fail_count > 0:
-        print(f"\nFailed strategies:")
+        print("\nFailed strategies:")
         failed = results_df[results_df["overall_status"] == "FAIL"]
         for _, row in failed.iterrows():
             print(f"  {row['symbol']}: {', '.join(row['failure_tests'])}")
@@ -492,9 +495,7 @@ def analyze_strategies(
 
 def main():
     """Main entry point."""
-    parser = argparse.ArgumentParser(
-        description="Failure-Set Analyzer (R9)"
-    )
+    parser = argparse.ArgumentParser(description="Failure-Set Analyzer (R9)")
     parser.add_argument(
         "--data-dir",
         type=str,

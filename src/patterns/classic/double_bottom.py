@@ -79,6 +79,76 @@ class DoubleBottom(BasePattern):
         self.stop_offset = stop_offset
         self.volume_filter = volume_filter
 
+    def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Vectorized Double Bottom detection across all bars.
+
+        Returns np.int8 array: 0=no signal, 1=long, -1=short.
+        """
+        n = len(df)
+        signals = np.zeros(n, dtype=np.int8)
+        close = df["Close"].to_numpy(dtype=np.float64)
+
+        swing_highs = find_swing_highs(df, self.lookback)
+        swing_lows = find_swing_lows(df, self.lookback)
+
+        sh_arr = swing_highs.to_numpy(dtype=np.float64)
+        sl_arr = swing_lows.to_numpy(dtype=np.float64)
+        n_swing_highs = pd.notna(swing_highs).to_numpy()
+        n_swing_lows = pd.notna(swing_lows).to_numpy()
+
+        for i in range(max(self.lookback, self.min_pattern_bars), n):
+            lookback = min(self.max_pattern_bars * 2, i)
+
+            troughs: list = []
+            peaks: list = []
+            for j in range(i - lookback, i + 1):
+                if j < 0:
+                    continue
+                if n_swing_lows[j]:
+                    troughs.append((j, float(sl_arr[j])))
+                if n_swing_highs[j]:
+                    peaks.append((j, float(sh_arr[j])))
+
+            if len(troughs) < 2 or len(peaks) < 1:
+                continue
+
+            troughs_sorted = sorted(troughs, key=lambda x: x[0])
+
+            pattern_found = False
+            neckline_price = 0.0
+
+            for it in range(len(troughs_sorted) - 1):
+                t1 = troughs_sorted[it]
+                for jt in range(it + 1, len(troughs_sorted)):
+                    t2 = troughs_sorted[jt]
+                    trough_diff = abs(t1[1] - t2[1]) / min(t1[1], t2[1])
+                    if trough_diff > self.trough_tolerance:
+                        continue
+                    duration = t2[0] - t1[0]
+                    if duration < self.min_pattern_bars or duration > self.max_pattern_bars:
+                        continue
+                    neckline_peaks = [(pi, pp) for pi, pp in peaks if t1[0] < pi < t2[0]]
+                    if not neckline_peaks:
+                        continue
+                    nl = max(neckline_peaks, key=lambda x: x[1])
+                    depth = nl[1] - min(t1[1], t2[1])
+                    if depth <= 0:
+                        continue
+                    neckline_price = nl[1]
+                    pattern_found = True
+                    break
+                if pattern_found:
+                    break
+
+            if not pattern_found:
+                continue
+
+            if float(close[i]) > neckline_price:
+                signals[i] = 1
+
+        return signals
+
     def _find_troughs_and_peaks(
         self, df: pd.DataFrame, i: int
     ) -> Tuple[List[Tuple[int, float]], List[Tuple[int, float]]]:

@@ -1,5 +1,5 @@
 {
-	"artifacts" : 
+	"artifacts" :
 	[
 		{
 			"path" : "OrderBookMain.exe"
@@ -9,18 +9,18 @@
 		}
 	],
 	"backtrace" : 1,
-	"backtraceGraph" : 
+	"backtraceGraph" :
 	{
-		"commands" : 
+		"commands" :
 		[
 			"add_executable",
 			"include_directories"
 		],
-		"files" : 
+		"files" :
 		[
 			"CMakeLists.txt"
 		],
-		"nodes" : 
+		"nodes" :
 		[
 			{
 				"file" : 0
@@ -39,16 +39,16 @@
 			}
 		]
 	},
-	"compileGroups" : 
+	"compileGroups" :
 	[
 		{
-			"compileCommandFragments" : 
+			"compileCommandFragments" :
 			[
 				{
 					"fragment" : "-g -std=gnu++17"
 				}
 			],
-			"includes" : 
+			"includes" :
 			[
 				{
 					"backtrace" : 2,
@@ -56,15 +56,15 @@
 				}
 			],
 			"language" : "CXX",
-			"languageStandard" : 
+			"languageStandard" :
 			{
-				"backtraces" : 
+				"backtraces" :
 				[
 					1
 				],
 				"standard" : "17"
 			},
-			"sourceIndexes" : 
+			"sourceIndexes" :
 			[
 				0,
 				1
@@ -72,9 +72,9 @@
 		}
 	],
 	"id" : "OrderBookMain::@6890427a1f51a3e7e1df",
-	"link" : 
+	"link" :
 	{
-		"commandFragments" : 
+		"commandFragments" :
 		[
 			{
 				"fragment" : "-g",
@@ -93,23 +93,23 @@
 	},
 	"name" : "OrderBookMain",
 	"nameOnDisk" : "OrderBookMain.exe",
-	"paths" : 
+	"paths" :
 	{
 		"build" : ".",
 		"source" : "."
 	},
-	"sourceGroups" : 
+	"sourceGroups" :
 	[
 		{
 			"name" : "Source Files",
-			"sourceIndexes" : 
+			"sourceIndexes" :
 			[
 				0,
 				1
 			]
 		}
 	],
-	"sources" : 
+	"sources" :
 	[
 		{
 			"backtrace" : 1,

@@ -70,8 +70,6 @@ class TestPatternCorrelation:
 
     def _make_result(self, name: str, direction: SignalDirection) -> PatternResult:
         """Create a mock PatternResult."""
-        from dataclasses import dataclass
-        from datetime import datetime
 
         signal = TradeSignal(
             pattern_name=name,

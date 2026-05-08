@@ -8,18 +8,13 @@ Backtest 23 Untested Patterns - Parallel Fast Version
 
 import sys
 import json
-import os
 import time
 import math
 import warnings
 
 warnings.filterwarnings("ignore")
 from pathlib import Path
-from typing import Dict, List, Optional
-from concurrent.futures import ProcessPoolExecutor, as_completed
-import multiprocessing
 
-import numpy as np
 import pandas as pd
 
 project_root = Path(__file__).parent.parent
@@ -254,7 +249,7 @@ def main():
                 f.write(f"  - {p}\n")
         else:
             f.write("  NONE\n")
-        f.write(f"\nSee `results.json`\n")
+        f.write("\nSee `results.json`\n")
 
     print(f"\nSaved: {jf}")
     print(f"\n{'=' * 105}\nFINAL: {len(passed)} passed")

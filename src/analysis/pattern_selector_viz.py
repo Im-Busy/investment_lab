@@ -695,13 +695,21 @@ def generate_selection_report(
     lines.append("## Executive Summary\n")
     lines.append("| Metric | Value |")
     lines.append("|--------|-------|")
-    lines.append(f"| Total Patterns Tested | {summary['total_patterns_tested']} |")
-    lines.append(f"| Passed Phase 1 Filter | {summary['passed_phase1_filter']} |")
-    lines.append(f"| Excluded (Phase 1) | {summary['excluded_phase1']} |")
-    lines.append(f"| Redundant Pairs Found | {summary['redundant_pairs_found']} |")
-    lines.append(f"| After Redundancy Removal | {summary['after_redundancy_removal']} |")
-    lines.append(f"| **Final Selected Patterns** | **{summary['final_selected_patterns']}** |")
-    lines.append(f"| Execution Time | {summary['execution_time_seconds']:.1f}s |")
+    lines.append(
+        f"| Total Patterns Tested | {summary.get('total_patterns_tested', summary.get('total_patterns', 'N/A'))} |"
+    )
+    lines.append(
+        f"| Passed Phase 1 Filter | {summary.get('passed_phase1_filter', summary.get('patterns', 'N/A'))} |"
+    )
+    lines.append(f"| Excluded (Phase 1) | {summary.get('excluded_phase1', 0)} |")
+    lines.append(
+        f"| Redundant Pairs Found | {summary.get('redundant_pairs_found', len(result.redundant_patterns))} |"
+    )
+    lines.append(f"| After Redundancy Removal | {summary.get('after_redundancy_removal', 'N/A')} |")
+    lines.append(
+        f"| **Final Selected Patterns** | **{summary.get('final_selected_patterns', len(result.final_selection))}** |"
+    )
+    lines.append(f"| Execution Time | {summary.get('execution_time_seconds', 0)}s |")
     lines.append("")
 
     # Phase Timings
@@ -717,14 +725,15 @@ def generate_selection_report(
     lines.append("## Phase 1: Isolated Performance Baseline\n")
     lines.append("### Thresholds Applied\n")
     config = result.config
-    lines.append("| Metric | Threshold |")
-    lines.append("|--------|-----------|")
-    lines.append(f"| Minimum Trades | {config.min_trades} |")
-    lines.append(f"| Minimum Sharpe Ratio | {config.min_sharpe} |")
-    lines.append(f"| Minimum Profit Factor | {config.min_profit_factor} |")
-    lines.append(f"| Minimum Win Rate | {config.min_win_rate:.0%} |")
-    lines.append(f"| Maximum Drawdown | {config.max_drawdown:.0%} |")
-    lines.append("")
+    if config is not None:
+        lines.append("| Metric | Threshold |")
+        lines.append("|--------|-----------|")
+        lines.append(f"| Minimum Trades | {getattr(config, 'min_trades', 'N/A')} |")
+        lines.append(f"| Minimum Sharpe Ratio | {getattr(config, 'min_sharpe', 'N/A')} |")
+        lines.append(f"| Minimum Profit Factor | {getattr(config, 'min_profit_factor', 'N/A')} |")
+        lines.append(f"| Minimum Win Rate | {getattr(config, 'min_win_rate', 0)} |")
+        lines.append(f"| Maximum Drawdown | {getattr(config, 'max_drawdown', 0)} |")
+        lines.append("")
 
     # Solo Results Table
     lines.append("### Solo Backtest Results\n")
@@ -768,11 +777,23 @@ def generate_selection_report(
     lines.append("|------|---------|---------------|--------------|------|------|")
 
     for c in result.ablation_contributions:
-        keep_icon = "[KEEP]" if c.keep else "[REMOVE]"
-        role_name = c.role.value if isinstance(c.role, PatternRole) else c.role
+        keep_val = c.keep if hasattr(c, "keep") else c.get("keep", False)
+        keep_icon = "[KEEP]" if keep_val else "[REMOVE]"
+        role_val = c.role if hasattr(c, "role") else c.get("role", "Unknown")
+        if isinstance(role_val, PatternRole):
+            role_name = role_val.value
+        else:
+            role_name = str(role_val)
+        rank = (
+            c.contribution_rank
+            if hasattr(c, "contribution_rank")
+            else c.get("contribution_rank", 0)
+        )
+        name = c.pattern_name if hasattr(c, "pattern_name") else c.get("pattern_name", "Unknown")
+        delta_s = c.delta_sharpe if hasattr(c, "delta_sharpe") else c.get("delta_sharpe", 0)
+        delta_r = c.delta_return if hasattr(c, "delta_return") else c.get("delta_return", 0)
         lines.append(
-            f"| {c.contribution_rank} | {c.pattern_name} | {c.delta_sharpe:.4f} | "
-            f"{c.delta_return:.2%} | {role_name} | {keep_icon} |"
+            f"| {rank} | {name} | {delta_s:.4f} | {delta_r:.2%} | {role_name} | {keep_icon} |"
         )
     lines.append("")
 
@@ -811,26 +832,53 @@ def generate_selection_report(
     lines.append("## Recommendations\n")
 
     # Noise generators to remove
-    noise = [c for c in result.ablation_contributions if c.role == PatternRole.NOISE_GENERATOR]
+    noise = []
+    for c in result.ablation_contributions:
+        role = c.role if hasattr(c, "role") else c.get("role", "")
+        if isinstance(role, PatternRole):
+            role = role.value
+        if role == "Noise Generator" or role == PatternRole.NOISE_GENERATOR.value:
+            noise.append(c)
     if noise:
         lines.append("### Patterns to Remove\n")
         for c in noise:
-            lines.append(f"- **{c.pattern_name}** — Delta Sharpe: {c.delta_sharpe:.4f}")
+            name = (
+                c.pattern_name if hasattr(c, "pattern_name") else c.get("pattern_name", "Unknown")
+            )
+            delta = c.delta_sharpe if hasattr(c, "delta_sharpe") else c.get("delta_sharpe", 0)
+            lines.append(f"- **{name}** — Delta Sharpe: {delta:.4f}")
         lines.append("")
 
     # Primary signals to prioritize
-    primary = [c for c in result.ablation_contributions if c.role == PatternRole.PRIMARY_SIGNAL]
+    primary = []
+    for c in result.ablation_contributions:
+        role = c.role if hasattr(c, "role") else c.get("role", "")
+        if isinstance(role, PatternRole):
+            role = role.value
+        if role == "Primary Signal" or role == PatternRole.PRIMARY_SIGNAL.value:
+            primary.append(c)
     if primary:
         lines.append("### Primary Signals (High Priority)\n")
         for c in primary:
-            lines.append(f"- **{c.pattern_name}** — Delta Sharpe: {c.delta_sharpe:.4f}")
+            name = (
+                c.pattern_name if hasattr(c, "pattern_name") else c.get("pattern_name", "Unknown")
+            )
+            delta = c.delta_sharpe if hasattr(c, "delta_sharpe") else c.get("delta_sharpe", 0)
+            lines.append(f"- **{name}** — Delta Sharpe: {delta:.4f}")
         lines.append("")
 
     # Configuration
     lines.append("## Configuration Used\n")
-    lines.append("```json")
-    lines.append(json.dumps(config.to_dict(), indent=2))
-    lines.append("```\n")
+    if config is not None:
+        lines.append("```json")
+        try:
+            if hasattr(config, "to_dict"):
+                lines.append(json.dumps(config.to_dict(), indent=2))
+            else:
+                lines.append(json.dumps({"config_type": type(config).__name__}, indent=2))
+        except Exception:
+            lines.append('{ "error": "Could not serialize config" }')
+        lines.append("```\n")
 
     # Write report
     report_path = os.path.join(output_dir, "selection_report.md")
@@ -868,13 +916,17 @@ def generate_all_visualizations(
     print(f"{'=' * 60}")
 
     # Correlation heat map
-    if result.correlation_matrix is not None and not result.correlation_matrix.empty:
+    correlation_matrix = getattr(result, "correlation_matrix", None)
+    correlation_threshold = (
+        getattr(getattr(result, "config", None), "correlation_threshold", 0.7) or 0.7
+    )
+    if correlation_matrix is not None and not correlation_matrix.empty:
         heatmap_path = os.path.join(output_dir, "correlation_heatmap.png")
         outputs["correlation_heatmap"] = (
             plot_correlation_heatmap(
-                result.correlation_matrix,
+                correlation_matrix,
                 heatmap_path,
-                threshold=result.config.correlation_threshold,
+                threshold=correlation_threshold,
             )
             or ""
         )
@@ -891,11 +943,12 @@ def generate_all_visualizations(
         )
 
     # Solo performance summary
-    if result.solo_results:
+    solo_results = getattr(result, "solo_results", None)
+    if solo_results:
         solo_path = os.path.join(output_dir, "solo_performance.png")
         outputs["solo_performance"] = (
             plot_solo_performance_summary(
-                result.solo_results,
+                solo_results,
                 solo_path,
             )
             or ""
@@ -910,10 +963,10 @@ def generate_all_visualizations(
     outputs["role_distribution"] = plot_role_distribution(result, role_path) or ""
 
     # Equity curves comparison
-    if generate_equity_curves and result.solo_results:
+    if generate_equity_curves and solo_results:
         equity_path = os.path.join(output_dir, "equity_curves_comparison.png")
         outputs["equity_curves_comparison"] = (
-            plot_equity_curves_comparison(result.solo_results, equity_path) or ""
+            plot_equity_curves_comparison(solo_results, equity_path) or ""
         )
 
     # Markdown report

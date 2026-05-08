@@ -361,7 +361,7 @@ class PerformanceMetrics:
 
                     holding = (exit - entry).total_seconds() / 3600  # hours
                     holding_periods.append(holding)
-                except:
+                except (ValueError, TypeError, pd.errors.OutOfBoundsDatetime):
                     pass
 
         if holding_periods:
@@ -405,7 +405,7 @@ class PerformanceMetrics:
 
                     month_key = dt.strftime("%Y-%m")
                     monthly_pnl[month_key] = monthly_pnl.get(month_key, 0) + pnl
-                except:
+                except (ValueError, TypeError, AttributeError):
                     pass
 
         if not monthly_pnl:
@@ -460,7 +460,9 @@ class PerformanceMetrics:
         rows = []
         for pattern, stats in pattern_stats.items():
             win_rate = float(stats["wins"]) / float(stats["trades"]) if stats["trades"] > 0 else 0.0
-            avg_pnl = float(stats["total_pnl"]) / float(stats["trades"]) if stats["trades"] > 0 else 0.0
+            avg_pnl = (
+                float(stats["total_pnl"]) / float(stats["trades"]) if stats["trades"] > 0 else 0.0
+            )
 
             pnl_list: list = stats.get("pnl_list", [])  # type: ignore[assignment]
             wins = [p for p in pnl_list if p > 0]

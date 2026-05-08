@@ -1,5 +1,5 @@
 {
-	"inputs" : 
+	"inputs" :
 	[
 		{
 			"path" : "CMakeLists.txt"
@@ -299,12 +299,12 @@
 		}
 	],
 	"kind" : "cmakeFiles",
-	"paths" : 
+	"paths" :
 	{
 		"build" : "C:/Dev/projects/investment_trying/build",
 		"source" : "C:/Dev/projects/investment_trying/useful_resources/useful_repos/Orderbook"
 	},
-	"version" : 
+	"version" :
 	{
 		"major" : 1,
 		"minor" : 1

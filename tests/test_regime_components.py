@@ -6,10 +6,9 @@ Tests for new components:
 
 import numpy as np
 import pandas as pd
-import pytest
 
 from src.indicators.regime_detector import RegimeDetector, RegimeDetectorConfig, RegimeState
-from src.strategies.adaptive_router import AdaptiveRouter, StrategyCategory, STRATEGY_REGIME_MAP
+from src.strategies.adaptive_router import AdaptiveRouter, STRATEGY_REGIME_MAP
 
 
 class FakeDataFrame(pd.DataFrame):

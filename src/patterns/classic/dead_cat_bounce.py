@@ -25,6 +25,7 @@ Take Profit Rules:
 
 from typing import Dict, Optional
 
+import numpy as np
 import pandas as pd
 
 from ...indicators.fibonacci import fibonacci_retracement
@@ -198,6 +199,79 @@ class DeadCatBounce(BasePattern):
             "fib_618": fib_levels[0.618],
             "decline_range": decline_range,
         }
+
+    def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Vectorized detection of Dead Cat Bounce patterns across the entire DataFrame.
+
+        Returns:
+            np.ndarray of np.int8: 0=no signal, -1=SHORT
+        """
+        n = len(df)
+        result = np.zeros(n, dtype=np.int8)
+        if n < self.max_bars_after_event + 5:
+            return result
+
+        close_a = df["Close"].to_numpy()
+        high_a = df["High"].to_numpy()
+        low_a = df["Low"].to_numpy()
+
+        decl_pct = self.event_decline_pct
+        min_bounce = self.min_bounce_pct
+        max_bounce = self.max_bounce_pct
+        max_after = self.max_bars_after_event
+
+        for i in range(max_after + 1, n):
+            lookback_start = max(1, i - max_after)
+            event = None
+
+            for event_idx in range(lookback_start, i):
+                prev_close = close_a[event_idx - 1]
+                event_close = close_a[event_idx]
+                if prev_close == 0:
+                    continue
+                decline = (prev_close - event_close) / prev_close
+                if decline >= decl_pct:
+                    event = {
+                        "idx": event_idx,
+                        "high": high_a[event_idx],
+                        "low": low_a[event_idx],
+                        "close": event_close,
+                        "prev_close": prev_close,
+                        "decline_pct": decline,
+                        "range": high_a[event_idx] - low_a[event_idx],
+                    }
+                    break
+
+            if event is None:
+                continue
+
+            event_idx = event["idx"]
+            event_low = event["low"]
+            decl_start = event["prev_close"]
+            decl_end = event_low
+            decl_range = decl_start - decl_end
+            if decl_range == 0:
+                continue
+
+            # Find highest point after event (the bounce)
+            bounce_high = float(np.max(high_a[event_idx + 1 : i + 1]))
+            bounce_high_idx = int(np.argmax(high_a[event_idx + 1 : i + 1])) + event_idx + 1
+            retrace = (bounce_high - decl_end) / decl_range
+
+            if retrace < min_bounce or retrace > max_bounce:
+                continue
+
+            # Check for reversal from bounce
+            cur_close = close_a[i]
+            if cur_close >= bounce_high:
+                continue
+            if i > 0 and cur_close >= close_a[i - 1]:
+                continue
+
+            result[i] = -1
+
+        return result
 
     def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
         """

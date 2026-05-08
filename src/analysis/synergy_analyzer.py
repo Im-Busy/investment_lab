@@ -8,7 +8,10 @@ to identify complementary pairs and conflicting pairs.
 import json
 import os
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from contextlib import redirect_stdout
 from dataclasses import asdict, dataclass
+from io import StringIO
 from itertools import combinations
 from typing import Any, Callable, Dict, List, Optional, Tuple, Type
 
@@ -51,6 +54,10 @@ class SynergyAnalyzer:
         commission: float = 0.001,
         base_params: Optional[Dict[str, Any]] = None,
         output_dir: str = "reports/synergy",
+        max_workers: int = 1,
+        verbose: bool = False,
+        quick_test: bool = False,
+        quick_test_patterns: int = 5,
     ):
         """
         Args:
@@ -60,6 +67,10 @@ class SynergyAnalyzer:
             commission: Commission rate
             base_params: Base strategy parameters
             output_dir: Directory to cache results
+            max_workers: Max parallel threads for backtest execution
+            verbose: Print per-backtest details
+            quick_test: If True, only test top N patterns
+            quick_test_patterns: Number of patterns to test in quick_test mode
         """
         self.data = data
         self.strategy_class = strategy_class
@@ -67,6 +78,10 @@ class SynergyAnalyzer:
         self.commission = commission
         self.base_params = base_params or {}
         self.output_dir = output_dir
+        self.max_workers = max_workers
+        self.verbose = verbose
+        self.quick_test = quick_test
+        self.quick_test_patterns = quick_test_patterns
 
         # Ensure output directory exists
         os.makedirs(output_dir, exist_ok=True)
@@ -77,6 +92,9 @@ class SynergyAnalyzer:
 
         # Get all pattern names
         self.all_patterns = self._get_all_pattern_names()
+
+        if quick_test:
+            self.all_patterns = self.all_patterns[:quick_test_patterns]
 
     def _get_all_pattern_names(self) -> List[str]:
         """
@@ -127,6 +145,7 @@ class SynergyAnalyzer:
             cash=self.cash,
             commission=self.commission,
             exclusive_orders=True,
+            verbose=self.verbose,
         )
 
         results = runner.run(strategy_class=self.strategy_class, **params)
@@ -255,40 +274,60 @@ class SynergyAnalyzer:
         Returns:
             DataFrame with synergy scores for all pairs
         """
+        # Auto-cache: skip if results already exist on disk
+        if self.load_results():
+            return self.get_synergy_matrix()
+
         # Determine which patterns to analyze
         patterns_to_analyze = self.all_patterns
         if top_n is not None:
-            # Would need ablation results to determine top N
-            # For now, just use first N patterns
             patterns_to_analyze = self.all_patterns[:top_n]
 
-        # Run solo backtests for all patterns
+        # Run solo backtests in parallel
         print("Running solo backtests...")
-        for pattern in patterns_to_analyze:
-            if pattern not in self.solo_results:
-                self.run_solo(pattern)
 
-        # Run pair backtests
+        def _run_solo(pattern: str) -> Tuple[str, Optional[Dict[str, Any]]]:
+            if pattern in self.solo_results:
+                return (pattern, self.solo_results[pattern])
+            try:
+                with redirect_stdout(StringIO()):
+                    result = self.run_solo(pattern)
+                return (pattern, result)
+            except Exception as e:
+                print(f"  [SKIP] Solo for {pattern} failed: {e}")
+                return (pattern, None)
+
+        with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+            futures = [executor.submit(_run_solo, p) for p in patterns_to_analyze]
+            for future in as_completed(futures):
+                name, result = future.result()
+                if result is not None:
+                    self.solo_results[name] = result
+
+        # Run pair backtests in parallel
         pairs = list(combinations(patterns_to_analyze, 2))
         total_pairs = len(pairs)
 
         print(f"\nRunning {total_pairs} pair backtests...")
         self.synergy_results = []
 
-        for i, (pattern_a, pattern_b) in enumerate(pairs):
-            if progress_callback:
-                progress_callback(i + 1, total_pairs)
+        def _run_pair(pa: str, pb: str) -> SynergyResult:
+            with redirect_stdout(StringIO()):
+                pair_result = self.run_pair(pa, pb)
+            solo_a = self.solo_results.get(pa, {})
+            solo_b = self.solo_results.get(pb, {})
+            return self._compute_synergy(pa, pb, solo_a, solo_b, pair_result)
 
-            # Run pair backtest
-            pair_result = self.run_pair(pattern_a, pattern_b)
-
-            # Get solo results
-            solo_a = self.solo_results.get(pattern_a, {})
-            solo_b = self.solo_results.get(pattern_b, {})
-
-            # Compute synergy
-            synergy = self._compute_synergy(pattern_a, pattern_b, solo_a, solo_b, pair_result)
-            self.synergy_results.append(synergy)
+        with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+            futures = {executor.submit(_run_pair, pa, pb): (pa, pb) for pa, pb in pairs}
+            for i, future in enumerate(as_completed(futures)):
+                if progress_callback:
+                    progress_callback(i + 1, total_pairs)
+                try:
+                    self.synergy_results.append(future.result())
+                except Exception as e:
+                    pa, pb = futures[future]
+                    print(f"  [SKIP] Pair {pa} x {pb} failed: {e}")
 
         # Convert to DataFrame
         df = self.get_synergy_matrix()

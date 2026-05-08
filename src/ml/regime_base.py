@@ -12,7 +12,6 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
-import numpy as np
 import pandas as pd
 
 
@@ -127,7 +126,7 @@ class RegimeDetectorBase(ABC):
             raise ValueError("Input data cannot be empty")
 
         if require_fitted and not self.is_fitted:
-            raise ValueError(f"Detector not fitted. Call fit() first.")
+            raise ValueError("Detector not fitted. Call fit() first.")
 
     def _get_label_distribution(self, labels: pd.Series) -> tuple[Dict[str, int], Dict[str, float]]:
         """

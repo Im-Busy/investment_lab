@@ -17,19 +17,19 @@ events:
       - "CMakeLists.txt:4 (project)"
     message: |
       Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
-      Compiler: C:/msys64/ucrt64/bin/gcc.exe 
-      Build flags: 
-      Id flags:  
-      
+      Compiler: C:/msys64/ucrt64/bin/gcc.exe
+      Build flags:
+      Id flags:
+
       The output was:
       0
-      
-      
+
+
       Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.exe"
-      
+
       The C compiler identification is GNU, found in:
         C:/Dev/projects/investment_trying/build/CMakeFiles/3.31.6-msvc6/CompilerIdC/a.exe
-      
+
   -
     kind: "message-v1"
     backtrace:
@@ -39,19 +39,19 @@ events:
       - "CMakeLists.txt:4 (project)"
     message: |
       Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
-      Compiler: C:/msys64/ucrt64/bin/g++.exe 
-      Build flags: 
-      Id flags:  
-      
+      Compiler: C:/msys64/ucrt64/bin/g++.exe
+      Build flags:
+      Id flags:
+
       The output was:
       0
-      
-      
+
+
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.exe"
-      
+
       The CXX compiler identification is GNU, found in:
         C:/Dev/projects/investment_trying/build/CMakeFiles/3.31.6-msvc6/CompilerIdCXX/a.exe
-      
+
   -
     kind: "try_compile-v1"
     backtrace:
@@ -72,7 +72,7 @@ events:
       cached: true
       stdout: |
         Change Dir: 'C:/Dev/projects/investment_trying/build/CMakeFiles/CMakeScratch/TryCompile-7jrebr'
-        
+
         Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe" -E env VERBOSE=1 C:/msys64/ucrt64/bin/mingw32-make.exe -f Makefile cmTC_f35d1/fast
         C:/msys64/ucrt64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_f35d1.dir\\build.make CMakeFiles/cmTC_f35d1.dir/build
         mingw32-make[1]: Entering directory 'C:/Dev/projects/investment_trying/build/CMakeFiles/CMakeScratch/TryCompile-7jrebr'
@@ -84,12 +84,12 @@ events:
         Configured with: ../gcc-15.2.0/configure --prefix=/ucrt64 --with-local-prefix=/ucrt64/local --with-native-system-header-dir=/ucrt64/include --libexecdir=/ucrt64/lib --enable-bootstrap --enable-checking=release --with-arch=nocona --with-tune=generic --enable-mingw-wildcard --enable-languages=c,lto,c++,fortran,ada,objc,obj-c++,jit --enable-shared --enable-static --enable-libatomic --enable-threads=posix --enable-graphite --enable-fully-dynamic-string --enable-libstdcxx-backtrace=yes --enable-libstdcxx-filesystem-ts --enable-libstdcxx-time --disable-libstdcxx-pch --enable-lto --enable-libgomp --disable-libssp --disable-multilib --disable-rpath --disable-win32-registry --disable-nls --disable-werror --disable-symvers --with-libiconv --with-system-zlib --with-gmp=/ucrt64 --with-mpfr=/ucrt64 --with-mpc=/ucrt64 --with-isl=/ucrt64 --with-pkgversion='Rev8, Built by MSYS2 project' --with-bugurl=https://github.com/msys2/MINGW-packages/issues --with-gnu-as --with-gnu-ld --with-libstdcxx-zoneinfo=yes --disable-libstdcxx-debug --enable-plugin --with-boot-ldflags=-static-libstdc++ --with-stage1-ldflags=-static-libstdc++
         Thread model: posix
         Supported LTO compression algorithms: zlib zstd
-        gcc version 15.2.0 (Rev8, Built by MSYS2 project) 
+        gcc version 15.2.0 (Rev8, Built by MSYS2 project)
         COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_f35d1.dir\\CMakeCCompilerABI.c.obj' '-c' '-mtune=generic' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_f35d1.dir\\'
          C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/cc1.exe -quiet -v -iprefix C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/ -D_REENTRANT C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\share\\cmake-3.31\\Modules\\CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles\\cmTC_f35d1.dir\\ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=generic -march=nocona -version -o C:\\Users\\Joey Chiu\\AppData\\Local\\Temp\\cct2cSRC.s
         GNU C23 (Rev8, Built by MSYS2 project) version 15.2.0 (x86_64-w64-mingw32)
         	compiled by GNU C version 15.2.0, GMP version 6.3.0, MPFR version 4.2.2, MPC version 1.3.1, isl version isl-0.27-GMP
-        
+
         GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
         ignoring nonexistent directory "C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/include"
         ignoring duplicate directory "C:/msys64/ucrt64/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/15.2.0/include"
@@ -123,7 +123,7 @@ events:
         Configured with: ../gcc-15.2.0/configure --prefix=/ucrt64 --with-local-prefix=/ucrt64/local --with-native-system-header-dir=/ucrt64/include --libexecdir=/ucrt64/lib --enable-bootstrap --enable-checking=release --with-arch=nocona --with-tune=generic --enable-mingw-wildcard --enable-languages=c,lto,c++,fortran,ada,objc,obj-c++,jit --enable-shared --enable-static --enable-libatomic --enable-threads=posix --enable-graphite --enable-fully-dynamic-string --enable-libstdcxx-backtrace=yes --enable-libstdcxx-filesystem-ts --enable-libstdcxx-time --disable-libstdcxx-pch --enable-lto --enable-libgomp --disable-libssp --disable-multilib --disable-rpath --disable-win32-registry --disable-nls --disable-werror --disable-symvers --with-libiconv --with-system-zlib --with-gmp=/ucrt64 --with-mpfr=/ucrt64 --with-mpc=/ucrt64 --with-isl=/ucrt64 --with-pkgversion='Rev8, Built by MSYS2 project' --with-bugurl=https://github.com/msys2/MINGW-packages/issues --with-gnu-as --with-gnu-ld --with-libstdcxx-zoneinfo=yes --disable-libstdcxx-debug --enable-plugin --with-boot-ldflags=-static-libstdc++ --with-stage1-ldflags=-static-libstdc++
         Thread model: posix
         Supported LTO compression algorithms: zlib zstd
-        gcc version 15.2.0 (Rev8, Built by MSYS2 project) 
+        gcc version 15.2.0 (Rev8, Built by MSYS2 project)
         COMPILER_PATH=C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/;C:/msys64/ucrt64/bin/../lib/gcc/;C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/
         LIBRARY_PATH=C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/;C:/msys64/ucrt64/bin/../lib/gcc/;C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/lib/../lib/;C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../lib/;C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/lib/;C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../
         COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_f35d1.exe' '-mtune=generic' '-march=nocona' '-dumpdir' 'cmTC_f35d1.'
@@ -133,7 +133,7 @@ events:
         GNU ld (GNU Binutils) 2.45
         COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_f35d1.exe' '-mtune=generic' '-march=nocona' '-dumpdir' 'cmTC_f35d1.'
         mingw32-make[1]: Leaving directory 'C:/Dev/projects/investment_trying/build/CMakeFiles/CMakeScratch/TryCompile-7jrebr'
-        
+
       exitCode: 0
   -
     kind: "message-v1"
@@ -153,8 +153,8 @@ events:
         collapse include dir [C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../include] ==> [C:/msys64/ucrt64/include]
         collapse include dir [C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/include-fixed] ==> [C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include-fixed]
         implicit include dirs: [C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include;C:/msys64/ucrt64/include;C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include-fixed]
-      
-      
+
+
   -
     kind: "message-v1"
     backtrace:
@@ -322,8 +322,8 @@ events:
         implicit objs: [C:/msys64/ucrt64/lib/crt2.o;C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/crtbegin.o;C:/msys64/ucrt64/lib/default-manifest.o;C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/crtend.o]
         implicit dirs: [C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0;C:/msys64/ucrt64/lib/gcc;C:/msys64/ucrt64/x86_64-w64-mingw32/lib;C:/msys64/ucrt64/lib]
         implicit fwks: []
-      
-      
+
+
   -
     kind: "message-v1"
     backtrace:
@@ -355,7 +355,7 @@ events:
       cached: true
       stdout: |
         Change Dir: 'C:/Dev/projects/investment_trying/build/CMakeFiles/CMakeScratch/TryCompile-5u2uky'
-        
+
         Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe" -E env VERBOSE=1 C:/msys64/ucrt64/bin/mingw32-make.exe -f Makefile cmTC_60b21/fast
         C:/msys64/ucrt64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_60b21.dir\\build.make CMakeFiles/cmTC_60b21.dir/build
         mingw32-make[1]: Entering directory 'C:/Dev/projects/investment_trying/build/CMakeFiles/CMakeScratch/TryCompile-5u2uky'
@@ -367,12 +367,12 @@ events:
         Configured with: ../gcc-15.2.0/configure --prefix=/ucrt64 --with-local-prefix=/ucrt64/local --with-native-system-header-dir=/ucrt64/include --libexecdir=/ucrt64/lib --enable-bootstrap --enable-checking=release --with-arch=nocona --with-tune=generic --enable-mingw-wildcard --enable-languages=c,lto,c++,fortran,ada,objc,obj-c++,jit --enable-shared --enable-static --enable-libatomic --enable-threads=posix --enable-graphite --enable-fully-dynamic-string --enable-libstdcxx-backtrace=yes --enable-libstdcxx-filesystem-ts --enable-libstdcxx-time --disable-libstdcxx-pch --enable-lto --enable-libgomp --disable-libssp --disable-multilib --disable-rpath --disable-win32-registry --disable-nls --disable-werror --disable-symvers --with-libiconv --with-system-zlib --with-gmp=/ucrt64 --with-mpfr=/ucrt64 --with-mpc=/ucrt64 --with-isl=/ucrt64 --with-pkgversion='Rev8, Built by MSYS2 project' --with-bugurl=https://github.com/msys2/MINGW-packages/issues --with-gnu-as --with-gnu-ld --with-libstdcxx-zoneinfo=yes --disable-libstdcxx-debug --enable-plugin --with-boot-ldflags=-static-libstdc++ --with-stage1-ldflags=-static-libstdc++
         Thread model: posix
         Supported LTO compression algorithms: zlib zstd
-        gcc version 15.2.0 (Rev8, Built by MSYS2 project) 
+        gcc version 15.2.0 (Rev8, Built by MSYS2 project)
         COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_60b21.dir\\CMakeCXXCompilerABI.cpp.obj' '-c' '-shared-libgcc' '-mtune=generic' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_60b21.dir\\'
          C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/cc1plus.exe -quiet -v -iprefix C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/ -D_REENTRANT C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\share\\cmake-3.31\\Modules\\CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles\\cmTC_60b21.dir\\ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=nocona -version -o C:\\Users\\Joey Chiu\\AppData\\Local\\Temp\\ccflq0yv.s
         GNU C++17 (Rev8, Built by MSYS2 project) version 15.2.0 (x86_64-w64-mingw32)
         	compiled by GNU C version 15.2.0, GMP version 6.3.0, MPFR version 4.2.2, MPC version 1.3.1, isl version isl-0.27-GMP
-        
+
         GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
         ignoring nonexistent directory "C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/include"
         ignoring duplicate directory "C:/msys64/ucrt64/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../include/c++/15.2.0"
@@ -412,7 +412,7 @@ events:
         Configured with: ../gcc-15.2.0/configure --prefix=/ucrt64 --with-local-prefix=/ucrt64/local --with-native-system-header-dir=/ucrt64/include --libexecdir=/ucrt64/lib --enable-bootstrap --enable-checking=release --with-arch=nocona --with-tune=generic --enable-mingw-wildcard --enable-languages=c,lto,c++,fortran,ada,objc,obj-c++,jit --enable-shared --enable-static --enable-libatomic --enable-threads=posix --enable-graphite --enable-fully-dynamic-string --enable-libstdcxx-backtrace=yes --enable-libstdcxx-filesystem-ts --enable-libstdcxx-time --disable-libstdcxx-pch --enable-lto --enable-libgomp --disable-libssp --disable-multilib --disable-rpath --disable-win32-registry --disable-nls --disable-werror --disable-symvers --with-libiconv --with-system-zlib --with-gmp=/ucrt64 --with-mpfr=/ucrt64 --with-mpc=/ucrt64 --with-isl=/ucrt64 --with-pkgversion='Rev8, Built by MSYS2 project' --with-bugurl=https://github.com/msys2/MINGW-packages/issues --with-gnu-as --with-gnu-ld --with-libstdcxx-zoneinfo=yes --disable-libstdcxx-debug --enable-plugin --with-boot-ldflags=-static-libstdc++ --with-stage1-ldflags=-static-libstdc++
         Thread model: posix
         Supported LTO compression algorithms: zlib zstd
-        gcc version 15.2.0 (Rev8, Built by MSYS2 project) 
+        gcc version 15.2.0 (Rev8, Built by MSYS2 project)
         COMPILER_PATH=C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/;C:/msys64/ucrt64/bin/../lib/gcc/;C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/
         LIBRARY_PATH=C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/;C:/msys64/ucrt64/bin/../lib/gcc/;C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/lib/../lib/;C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../lib/;C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/lib/;C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../
         COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_60b21.exe' '-shared-libgcc' '-mtune=generic' '-march=nocona' '-dumpdir' 'cmTC_60b21.'
@@ -422,7 +422,7 @@ events:
         GNU ld (GNU Binutils) 2.45
         COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_60b21.exe' '-shared-libgcc' '-mtune=generic' '-march=nocona' '-dumpdir' 'cmTC_60b21.'
         mingw32-make[1]: Leaving directory 'C:/Dev/projects/investment_trying/build/CMakeFiles/CMakeScratch/TryCompile-5u2uky'
-        
+
       exitCode: 0
   -
     kind: "message-v1"
@@ -448,8 +448,8 @@ events:
         collapse include dir [C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../include] ==> [C:/msys64/ucrt64/include]
         collapse include dir [C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/include-fixed] ==> [C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include-fixed]
         implicit include dirs: [C:/msys64/ucrt64/include/c++/15.2.0;C:/msys64/ucrt64/include/c++/15.2.0/x86_64-w64-mingw32;C:/msys64/ucrt64/include/c++/15.2.0/backward;C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include;C:/msys64/ucrt64/include;C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include-fixed]
-      
-      
+
+
   -
     kind: "message-v1"
     backtrace:
@@ -622,8 +622,8 @@ events:
         implicit objs: [C:/msys64/ucrt64/lib/crt2.o;C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/crtbegin.o;C:/msys64/ucrt64/lib/default-manifest.o;C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/crtend.o]
         implicit dirs: [C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0;C:/msys64/ucrt64/lib/gcc;C:/msys64/ucrt64/x86_64-w64-mingw32/lib;C:/msys64/ucrt64/lib]
         implicit fwks: []
-      
-      
+
+
   -
     kind: "message-v1"
     backtrace:

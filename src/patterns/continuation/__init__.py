@@ -10,6 +10,6 @@ from .flag import Flag
 from .pennant import Pennant
 
 __all__ = [
-    'Flag',
-    'Pennant',
+    "Flag",
+    "Pennant",
 ]

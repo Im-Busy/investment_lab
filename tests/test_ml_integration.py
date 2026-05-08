@@ -11,7 +11,6 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
-import pytest
 
 from src.ml.features import FeatureEngineer
 from src.ml.pipeline import MLPipeline
@@ -19,7 +18,7 @@ from src.ml.regime_model import MLRegimeState, RegimeClassifier
 from src.ml.signal_scorer import SignalScorer
 
 
-def _make_synthetic_ohlcv(n: int = 500, seed: int = 42) -> pd.DataFrame:
+def _make_synthetic_ohlcv(n: int = 1500, seed: int = 42) -> pd.DataFrame:
     np.random.seed(seed)
     price = 100 + np.cumsum(np.random.randn(n) * 0.5)
     return pd.DataFrame(
@@ -73,7 +72,6 @@ def _make_synthetic_signal_data(n: int = 200, seed: int = 42) -> tuple:
 
 def _make_pattern_results(n: int, seed: int = 42) -> list:
     from src.patterns.base import (
-        BasePattern,
         PatternResult,
         PatternType,
         SignalDirection,
@@ -108,9 +106,9 @@ class TestMLIntegration:
     """Integration tests for ML pipeline."""
 
     def test_pipeline_trains_and_predicts(self):
-        df = _make_synthetic_ohlcv(n=500)
+        df = _make_synthetic_ohlcv(n=1500)
         regime_labels = _make_regime_labels(len(df), df.index)
-        sig_features, sig_labels = _make_synthetic_signal_data(n=500)
+        sig_features, sig_labels = _make_synthetic_signal_data(n=1500)
 
         pipeline = MLPipeline(
             regime_model_type="random_forest",
@@ -137,7 +135,7 @@ class TestMLIntegration:
         assert "ml_score" in scored.columns
 
     def test_walk_forward_validation_runs(self):
-        df = _make_synthetic_ohlcv(n=800)
+        df = _make_synthetic_ohlcv(n=1500)
         regime_labels = _make_regime_labels(len(df), df.index)
 
         pipeline = MLPipeline(
@@ -155,12 +153,18 @@ class TestMLIntegration:
         assert len(wf["regime"]["train_score"]) > 0
 
     def test_regime_classifier_predicts_valid_states(self):
-        df = _make_synthetic_ohlcv(n=500)
+        df = _make_synthetic_ohlcv(n=1500)
         labels = _make_regime_labels(len(df), df.index)
 
         engineer = FeatureEngineer()
         features = engineer.generate_features(df)
-        numeric = features.select_dtypes(include=[np.number]).ffill().bfill().dropna()
+        numeric = (
+            features.select_dtypes(include=[np.number])
+            .dropna(axis=1, how="all")
+            .ffill()
+            .bfill()
+            .dropna()
+        )
         y = labels.reindex(numeric.index).dropna()
         X = numeric.reindex(y.index)
 
@@ -172,7 +176,7 @@ class TestMLIntegration:
         assert all(p in valid_states for p in preds)
 
     def test_signal_scorer_walk_forward(self):
-        X, y = _make_synthetic_signal_data(n=800)
+        X, y = _make_synthetic_signal_data(n=1500)
 
         scorer = SignalScorer(model_type="random_forest", n_estimators=5)
         wf = scorer.walk_forward_validation(X, y, train_size=300, step_size=100)
@@ -182,9 +186,9 @@ class TestMLIntegration:
         assert all(0 <= a <= 1 for a in wf["train_accuracy"])
 
     def test_run_pipeline_integration(self):
-        df = _make_synthetic_ohlcv(n=1000)
+        df = _make_synthetic_ohlcv(n=1500)
         regime_labels = _make_regime_labels(len(df), df.index)
-        sig_features, sig_labels = _make_synthetic_signal_data(n=1000)
+        sig_features, sig_labels = _make_synthetic_signal_data(n=1500)
 
         pipeline = MLPipeline(
             regime_model_type="random_forest",

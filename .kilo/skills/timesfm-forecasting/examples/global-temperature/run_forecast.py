@@ -43,9 +43,7 @@ print("\n🤖 Loading TimesFM 1.0 (200M) PyTorch...")
 import timesfm
 
 hparams = timesfm.TimesFmHparams(horizon_len=12)
-checkpoint = timesfm.TimesFmCheckpoint(
-    huggingface_repo_id="google/timesfm-1.0-200m-pytorch"
-)
+checkpoint = timesfm.TimesFmCheckpoint(huggingface_repo_id="google/timesfm-1.0-200m-pytorch")
 model = timesfm.TimesFm(hparams=hparams, checkpoint=checkpoint)
 
 # Forecast
@@ -71,9 +69,7 @@ quantile_labels = ["10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%"
 
 # Create forecast dates (2025 monthly)
 last_date = df["date"].max()
-forecast_dates = pd.date_range(
-    start=last_date + pd.DateOffset(months=1), periods=12, freq="MS"
-)
+forecast_dates = pd.date_range(start=last_date + pd.DateOffset(months=1), periods=12, freq="MS")
 
 # Build output DataFrame
 output_df = pd.DataFrame(
@@ -111,17 +107,13 @@ output_json = {
         "horizon": 12,
         "dates": forecast_dates.strftime("%Y-%m").tolist(),
         "point": point.tolist(),
-        "quantiles": {
-            label: quantiles[:, i].tolist() for i, label in enumerate(quantile_labels)
-        },
+        "quantiles": {label: quantiles[:, i].tolist() for i, label in enumerate(quantile_labels)},
     },
     "summary": {
         "forecast_mean_c": round(float(point.mean()), 3),
         "forecast_max_c": round(float(point.max()), 3),
         "forecast_min_c": round(float(point.min()), 3),
-        "vs_last_year_mean": round(
-            float(point.mean() - df["anomaly_c"].iloc[-12:].mean()), 3
-        ),
+        "vs_last_year_mean": round(float(point.mean() - df["anomaly_c"].iloc[-12:].mean()), 3),
     },
 }
 
@@ -135,7 +127,7 @@ print("=" * 60)
 print(
     f"\n📅 Forecast period: {forecast_dates[0].strftime('%Y-%m')} to {forecast_dates[-1].strftime('%Y-%m')}"
 )
-print(f"\n🌡️  Temperature Anomaly Forecast (°C above 1951-1980 baseline):")
+print("\n🌡️  Temperature Anomaly Forecast (°C above 1951-1980 baseline):")
 print(f"\n   {'Month':<10} {'Point':>8} {'80% CI':>15} {'90% CI':>15}")
 print(f"   {'-' * 10} {'-' * 8} {'-' * 15} {'-' * 15}")
 for i, (date, pt, q10, q90, q05, q95) in enumerate(
@@ -148,11 +140,9 @@ for i, (date, pt, q10, q90, q05, q95) in enumerate(
         quantiles[:, 8],  # 90%
     )
 ):
-    print(
-        f"   {date:<10} {pt:>8.3f} [{q10:>6.3f}, {q90:>6.3f}] [{q05:>6.3f}, {q95:>6.3f}]"
-    )
+    print(f"   {date:<10} {pt:>8.3f} [{q10:>6.3f}, {q90:>6.3f}] [{q05:>6.3f}, {q95:>6.3f}]")
 
-print(f"\n📊 Summary Statistics:")
+print("\n📊 Summary Statistics:")
 print(f"   Mean forecast:  {point.mean():.3f}°C")
 print(
     f"   Max forecast:   {point.max():.3f}°C (Month: {forecast_dates[point.argmax()].strftime('%Y-%m')})"
@@ -162,6 +152,6 @@ print(
 )
 print(f"   vs 2024 mean:   {point.mean() - df['anomaly_c'].iloc[-12:].mean():+.3f}°C")
 
-print(f"\n✅ Output saved to:")
+print("\n✅ Output saved to:")
 print(f"   {output_dir / 'forecast_output.csv'}")
 print(f"   {output_dir / 'forecast_output.json'}")

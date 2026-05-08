@@ -492,6 +492,22 @@ def create_synergy_network(synergy_results: pd.DataFrame) -> Figure:
         ax.text(0.5, 0.5, "No data available", ha="center", va="center", transform=ax.transAxes)
         return fig
 
+    # Flatten matrix format to pair-format if needed
+    if "synergy_score" not in synergy_results.columns:
+        patterns_list = synergy_results.index.tolist()
+        flat_rows = []
+        for i, pa in enumerate(patterns_list):
+            for j, pb in enumerate(patterns_list):
+                if i < j:
+                    flat_rows.append(
+                        {
+                            "pattern_a": pa,
+                            "pattern_b": pb,
+                            "synergy_score": synergy_results.iloc[i, j],
+                        }
+                    )
+        synergy_results = pd.DataFrame(flat_rows)
+
     # Create graph
     G = nx.Graph()
 

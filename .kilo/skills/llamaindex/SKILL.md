@@ -565,5 +565,3 @@ while True:
 - **Discord**: https://discord.gg/dGcwcsnxhU
 - **Version**: 0.14.7+
 - **License**: MIT
-
-

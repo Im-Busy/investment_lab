@@ -25,7 +25,7 @@ import sys
 from dataclasses import asdict, dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, Optional, Tuple
 
 import numpy as np
 import pandas as pd
@@ -177,9 +177,7 @@ class VolatilityRegressor:
         regime = self.classify_regime(volatility, regime_thresholds)
 
         # Get multiplier for this regime
-        multiplier = self.config.regime_multipliers.get(
-            regime.value, 1.0
-        )
+        multiplier = self.config.regime_multipliers.get(regime.value, 1.0)
 
         # Apply scaling
         adaptive = base_threshold * multiplier
@@ -209,10 +207,9 @@ class VolatilityRegressor:
             ThresholdResult with analysis
         """
         # Calculate volatility
-        returns = prices["close"].pct_change()
-        volatility = (
-            returns.rolling(self.config.volatility_window).std() * np.sqrt(252)
-        )
+        close_col = "Close" if "Close" in prices.columns else "close"
+        returns = prices[close_col].pct_change()
+        volatility = returns.rolling(self.config.volatility_window).std() * np.sqrt(252)
 
         current_vol = volatility.iloc[-1]
         historical_vol = volatility.dropna()
@@ -221,9 +218,7 @@ class VolatilityRegressor:
         regime_thresholds = self.calculate_regime_thresholds(historical_vol)
 
         # Get adaptive threshold
-        adaptive, regime, factor = self.get_adaptive_threshold(
-            current_vol, regime_thresholds
-        )
+        adaptive, regime, factor = self.get_adaptive_threshold(current_vol, regime_thresholds)
 
         # Check if signal triggered (if pattern signals provided)
         signal_triggered = False
@@ -365,12 +360,12 @@ def analyze_portfolio_volatility(
 
     print("\n=== VOLATILITY-ADAPTIVE THRESHOLD ANALYSIS ===\n")
     print(f"Symbols analyzed: {len(results)}")
-    print(f"\nRegime distribution:")
+    print("\nRegime distribution:")
     for regime, count in regime_counts.items():
         pct = count / len(results) * 100
         print(f"  {regime}: {count} ({pct:.1f}%)")
 
-    print(f"\nThreshold statistics:")
+    print("\nThreshold statistics:")
     print(f"  Baseline: {results_df['baseline_threshold'].mean():.2f}")
     print(f"  Adaptive mean: {mean_threshold:.2f}")
     print(f"  Mean adjustment: {mean_adjustment:.2f}x")
@@ -395,9 +390,7 @@ def analyze_portfolio_volatility(
 
 def main():
     """Main entry point."""
-    parser = argparse.ArgumentParser(
-        description="Volatility-Adaptive Thresholds (R21)"
-    )
+    parser = argparse.ArgumentParser(description="Volatility-Adaptive Thresholds (R21)")
     parser.add_argument(
         "--data-dir",
         type=str,

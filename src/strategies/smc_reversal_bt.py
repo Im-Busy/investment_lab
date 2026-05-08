@@ -30,7 +30,6 @@ from __future__ import annotations
 from enum import Enum, auto
 
 import numpy as np
-import pandas as pd
 from backtesting import Strategy
 
 

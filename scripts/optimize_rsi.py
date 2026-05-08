@@ -9,7 +9,6 @@ research and finding stable parameter ranges per asset class.
 import sys
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 
 project_root = Path(__file__).parent.parent
@@ -184,7 +183,7 @@ if __name__ == "__main__":
         results = optimize_rsi(symbol=args.symbol)
         if len(results) > 0:
             stable = find_stable_parameters(results)
-            print(f"\nTop 10 RSI configurations:")
+            print("\nTop 10 RSI configurations:")
             print(results.head(10).to_string(index=False))
-            print(f"\nStable parameters (within 10% of best):")
+            print("\nStable parameters (within 10% of best):")
             print(stable.to_string(index=False))

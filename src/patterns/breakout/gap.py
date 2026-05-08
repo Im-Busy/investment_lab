@@ -29,7 +29,7 @@ Take Profit Rules:
 Warning: Gaps that fully "fill" (price returns through gap) invalidate signal
 """
 
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, Optional
 
 import numpy as np
 import pandas as pd
@@ -64,9 +64,7 @@ class GapPattern(BasePattern):
             stop_offset: Price offset for stop loss
             confirmation_filter: Minimum breakout percentage for confirmation
         """
-        super().__init__(
-            name="Gap Pattern", pattern_type=PatternType.BREAKOUT, min_bars_required=3
-        )
+        super().__init__(name="Gap Pattern", pattern_type=PatternType.BREAKOUT, min_bars_required=3)
         self.min_gap_pct = min_gap_pct
         self.max_lookback = max_lookback
         self.pivot_bars = pivot_bars
@@ -107,7 +105,7 @@ class GapPattern(BasePattern):
                 return {
                     "type": "gap_up",
                     "gap_start": prior_high,  # Bottom of gap
-                    "gap_end": current_open,   # Top of gap
+                    "gap_end": current_open,  # Top of gap
                     "gap_size": gap_size,
                     "gap_pct": gap_pct,
                     "gap_bar": i,
@@ -126,7 +124,7 @@ class GapPattern(BasePattern):
                 return {
                     "type": "gap_down",
                     "gap_start": current_open,  # Bottom of gap
-                    "gap_end": prior_low,       # Top of gap
+                    "gap_end": prior_low,  # Top of gap
                     "gap_size": gap_size,
                     "gap_pct": gap_pct,
                     "gap_bar": i,
@@ -239,9 +237,7 @@ class GapPattern(BasePattern):
 
         return None
 
-    def _find_pattern(
-        self, arrays: dict, i: int
-    ) -> Optional[Dict]:
+    def _find_pattern(self, arrays: dict, i: int) -> Optional[Dict]:
         """
         Find Gap pattern with pivot confirmation.
 
@@ -276,6 +272,101 @@ class GapPattern(BasePattern):
             }
 
         return None
+
+    def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Vectorized detection of Gap patterns across the entire DataFrame.
+
+        Returns:
+            np.ndarray of np.int8: 0=no signal, 1=LONG (gap up), -1=SHORT (gap down)
+        """
+        n = len(df)
+        result = np.zeros(n, dtype=np.int8)
+        if n < 11:
+            return result
+
+        open_a = df["Open"].to_numpy()
+        high_a = df["High"].to_numpy()
+        low_a = df["Low"].to_numpy()
+        close_a = df["Close"].to_numpy()
+
+        min_gap = self.min_gap_pct
+        lookback = min(self.max_lookback, n - 1)
+        pivot_bars = self.pivot_bars
+        confirm = self.confirmation_filter
+
+        for i in range(10, n):
+            gap_start_idx = max(1, i - lookback)
+
+            for gap_bar in range(gap_start_idx, i):
+                current_open = open_a[gap_bar]
+                prior_high = high_a[gap_bar - 1]
+                prior_low = low_a[gap_bar - 1]
+                prior_close = close_a[gap_bar - 1]
+                gap_type = None
+                gap_start = 0.0
+                gap_end = 0.0
+                gap_high = 0.0
+                gap_low = 0.0
+
+                if current_open > prior_high:
+                    gap_size = current_open - prior_high
+                    if prior_close > 0 and (gap_size / prior_close) >= min_gap:
+                        gap_type = "gap_up"
+                        gap_start = prior_high
+                        gap_end = current_open
+                        gap_high = high_a[gap_bar]
+                        gap_low = low_a[gap_bar]
+                elif current_open < prior_low:
+                    gap_size = prior_low - current_open
+                    if prior_close > 0 and (gap_size / prior_close) >= min_gap:
+                        gap_type = "gap_down"
+                        gap_start = current_open
+                        gap_end = prior_low
+                        gap_high = high_a[gap_bar]
+                        gap_low = low_a[gap_bar]
+
+                if gap_type is None:
+                    continue
+
+                # Scan ahead for pivot confirmation
+                start_bar = gap_bar + 1
+                end_bar = min(i, gap_bar + pivot_bars + 1)
+                if end_bar <= start_bar:
+                    continue
+
+                if gap_type == "gap_up":
+                    pivot_low = None
+                    gap_filled = False
+                    for bar_idx in range(start_bar, end_bar + 1):
+                        if bar_idx >= n:
+                            break
+                        bar_low = low_a[bar_idx]
+                        if bar_low <= gap_start:
+                            gap_filled = True
+                            break
+                        if pivot_low is None or bar_low < pivot_low:
+                            pivot_low = bar_low
+                    if not gap_filled and pivot_low is not None:
+                        if close_a[i] > gap_high * (1.0 + confirm):
+                            result[i] = 1
+                else:  # gap_down
+                    pivot_high = None
+                    gap_filled = False
+                    for bar_idx in range(start_bar, end_bar + 1):
+                        if bar_idx >= n:
+                            break
+                        bar_high = high_a[bar_idx]
+                        if bar_high >= gap_end:
+                            gap_filled = True
+                            break
+                        if pivot_high is None or bar_high > pivot_high:
+                            pivot_high = bar_high
+                    if not gap_filled and pivot_high is not None:
+                        if close_a[i] < gap_low * (1.0 - confirm):
+                            result[i] = -1
+
+        return result
 
     def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
         """

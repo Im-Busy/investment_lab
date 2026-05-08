@@ -10,9 +10,4 @@ from .charts import ChartGenerator
 from .pattern_markers import PatternMarkerGenerator
 from .report import ReportGenerator
 
-__all__ = [
-    'TearsheetGenerator',
-    'ChartGenerator',
-    'PatternMarkerGenerator',
-    'ReportGenerator'
-]
+__all__ = ["TearsheetGenerator", "ChartGenerator", "PatternMarkerGenerator", "ReportGenerator"]

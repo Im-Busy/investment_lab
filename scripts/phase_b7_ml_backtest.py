@@ -15,7 +15,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -30,7 +30,7 @@ if str(project_root) not in sys.path:
 
 from backtesting import Backtest, Strategy
 
-from src.indicators.regime_detector import RegimeDetector, RegimeState
+from src.indicators.regime_detector import RegimeDetector
 from src.ml.features import FeatureEngineer
 from src.ml.pipeline import MLPipeline
 from src.strategies.adaptive_router import AdaptiveRouter
@@ -329,7 +329,7 @@ def print_comparison_table(
             elif diff < 0:
                 print(f"v{abs(diff):.2f}{suffix} (worse)", end="")
             else:
-                print(f"= (same)", end="")
+                print("= (same)", end="")
         print()
 
     print("=" * 100)

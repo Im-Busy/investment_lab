@@ -1,8 +1,8 @@
 # Handover: Research-to-Implementation Logic Map
 
-**Created:** 2026-04-25  
-**Session Context:** Paper analysis confirmed working (DeepSeek V4 Flash via OpenRouter). User requested a "logic map" to track research insights, implementations, and idea generation.  
-**Estimated Effort:** 1-2 hours  
+**Created:** 2026-04-25
+**Session Context:** Paper analysis confirmed working (DeepSeek V4 Flash via OpenRouter). User requested a "logic map" to track research insights, implementations, and idea generation.
+**Estimated Effort:** 1-2 hours
 
 ---
 
@@ -108,7 +108,7 @@ Each hypothesis includes:
 ## H1: Event-Type Weighting Improves Signal Quality
 - **Statement:** Weighting signals by event-type (vs. equal weight) improves Sharpe by ≥15%
 - **Source:** P6 (Event-Based Trading: IE Tools) — "Event-type signals outperform aggregated sentiment"
-- **Experiment:** 
+- **Experiment:**
   1. Tag all signals with event-type taxonomy
   2. Backtest equal-weight vs. event-type-weight aggregation
   3. Compare Sharpe, win rate, max drawdown
@@ -127,7 +127,7 @@ Each hypothesis includes:
 ## H3: Failure-Set Analyzers Prevent Cascade Losses
 - **Statement:** Pre-trade failure-set validation (time-reversal, counter-trend, fat-tail) reduces max drawdown by ≥20%
 - **Source:** P4 (Against Universal Trading) — "Every strategy has a mapped failure set"
-- **Experiment:** 
+- **Experiment:**
   1. Build failure-set analyzers for top 5 strategies
   2. Backtest with/without validation
   3. Measure MDD, tail loss, recovery time
@@ -159,7 +159,7 @@ Each hypothesis includes:
   2. Structured markdown with YAML frontmatter
   3. Notion/Airtable database
 - **Decision:** Option 2 — Markdown files with consistent templates
-- **Rationale:** 
+- **Rationale:**
   - Git-versionable (unlike Notion)
   - No infrastructure overhead (unlike vector DB)
   - Editable in any text editor
@@ -175,7 +175,7 @@ Each hypothesis includes:
   2. Numba JIT CPU optimization
   3. Multiprocessing with Ray
 - **Decision:** Option 2 — Numba JIT
-- **Rationale:** 
+- **Rationale:**
   - 50-100x speedup achieved (sufficient)
   - No GPU dependency (Windows-compatible)
   - Easier debugging than CUDA
@@ -201,7 +201,7 @@ Each hypothesis includes:
 - **Question:** What's the right mathematical framework for event-type signal weighting?
 - **Context:** P6 shows event-type signals outperform aggregated sentiment, but no formula given
 - **Related Insights:** I6.1, I6.2, R6
-- **Research Needed:** 
+- **Research Needed:**
   - Review NLP event extraction literature (VIP platform, BERT-based)
   - Prototype Bayesian event-type weighting
   - Backtest vs. equal-weight baseline

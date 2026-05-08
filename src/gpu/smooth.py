@@ -50,7 +50,7 @@ def _exponential_kernel(
         truncation: Kernel length
     """
     indices = torch.arange(truncation, device=device, dtype=dtype)
-    kernel = decay ** indices
+    kernel = decay**indices
     return weight * kernel
 
 
@@ -240,7 +240,7 @@ def atr_parallel(
     tr = torch.maximum(torch.maximum(tr1, tr2), tr3)
 
     atr_vals = wilder_smooth_parallel(tr, period, seed=tr[:period].mean())
-    atr_vals[:period - 1] = float("nan")
+    atr_vals[: period - 1] = float("nan")
     return atr_vals
 
 
@@ -283,11 +283,13 @@ def adx_parallel(
     dn_move = l_prev - low
 
     plus_dm = torch.where(
-        (up_move > dn_move) & (up_move > 0), up_move,
+        (up_move > dn_move) & (up_move > 0),
+        up_move,
         torch.tensor(0.0, device=close.device),
     )
     minus_dm = torch.where(
-        (dn_move > up_move) & (dn_move > 0), dn_move,
+        (dn_move > up_move) & (dn_move > 0),
+        dn_move,
         torch.tensor(0.0, device=close.device),
     )
 
@@ -310,9 +312,9 @@ def adx_parallel(
 
     dx = 100.0 * torch.abs(plus_di - minus_di) / (plus_di + minus_di + 1e-9)
 
-    adx_vals = wilder_smooth_parallel(dx, period, seed=dx[period:2 * period].mean())
+    adx_vals = wilder_smooth_parallel(dx, period, seed=dx[period : 2 * period].mean())
 
-    adx_vals[:2 * period - 1] = float("nan")
+    adx_vals[: 2 * period - 1] = float("nan")
     plus_di[:period] = float("nan")
     minus_di[:period] = float("nan")
 

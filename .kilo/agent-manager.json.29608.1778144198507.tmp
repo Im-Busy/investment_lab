@@ -1,0 +1,25 @@
+{
+  "worktrees": {
+    "wt-1778144198507-3": {
+      "branch": "fine-alligator",
+      "path": "c:\\Dev\\projects\\investment_trying\\.kilo\\worktrees\\fine-alligator",
+      "parentBranch": "main",
+      "createdAt": "2026-05-07T08:56:38.507Z",
+      "remote": "origin"
+    }
+  },
+  "sessions": {
+    "ses_1feaebf72ffekOWFcIeUYKqXhU": {
+      "worktreeId": null,
+      "createdAt": "2026-05-07T07:22:51.048Z"
+    }
+  },
+  "tabOrder": {
+    "local": [
+      "pending:1"
+    ]
+  },
+  "worktreeOrder": [
+    "wt-1778144198507-3"
+  ]
+}

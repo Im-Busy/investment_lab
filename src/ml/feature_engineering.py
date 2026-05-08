@@ -14,10 +14,9 @@ Feature Categories:
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
+from typing import List, Optional
 import numpy as np
 import pandas as pd
-from pathlib import Path
 
 
 @dataclass
@@ -64,12 +63,19 @@ class FeatureExtractor:
         """
         self.config = config or FeatureConfig()
 
-    def extract_all_features(self, df: pd.DataFrame) -> pd.DataFrame:
+    def extract_all_features(
+        self,
+        df: pd.DataFrame,
+        include_forward_returns: bool = False,
+    ) -> pd.DataFrame:
         """
         Extract all feature categories from OHLCV data.
 
         Args:
             df: OHLCV DataFrame with columns: Open, High, Low, Close, Volume
+            include_forward_returns: If True, include forward return columns
+                for label generation. Default False to prevent data leakage
+                (forward returns are labels, not features).
 
         Returns:
             DataFrame with all features
@@ -82,7 +88,9 @@ class FeatureExtractor:
         features = self._add_volume_features(features, df)
         features = self._add_pattern_shape_features(features, df)
         features = self._add_regime_features(features, df)
-        features = self._add_forward_returns(features, df)
+
+        if include_forward_returns:
+            features = self._add_forward_returns(features, df)
 
         features = features.dropna(axis=1, how="all")
 
@@ -338,6 +346,26 @@ class FeatureExtractor:
             features["vol_regime_state"] = 1.0
 
         return features
+
+    def extract_labels(
+        self,
+        df: pd.DataFrame,
+        horizons: list[int] | None = None,
+    ) -> pd.DataFrame:
+        """
+        Extract forward-return labels for supervised learning.
+
+        Args:
+            df: OHLCV DataFrame with Close column.
+            horizons: List of forward horizons (default [1, 3, 5, 10, 20]).
+
+        Returns:
+            DataFrame with forward_return_N and forward_binary_N columns.
+        """
+        if horizons is None:
+            horizons = [1, 3, 5, 10, 20]
+        labels = pd.DataFrame(index=df.index)
+        return self._add_forward_returns(labels, df)
 
     def _add_forward_returns(self, features: pd.DataFrame, df: pd.DataFrame) -> pd.DataFrame:
         """Add forward returns for label generation."""

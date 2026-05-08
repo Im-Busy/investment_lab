@@ -10,15 +10,12 @@ Usage:
 
 import pandas as pd
 
-from src.data_ingestion.fetch_data import fetch_data
 from src.strategies.strategy_registry import (
     ConfluenceAggregatorPlugin,
     InfluencerMTFPlugin,
     PluginConfig,
-    SignalQuality,
     SMCReversalPlugin,
     StrategyRegistry,
-    StrategyType,
 )
 
 
@@ -82,7 +79,7 @@ def example_basic_usage():
         print(f"  Stop: {summary['stop_loss']}")
         print(f"  Target: {summary['take_profit']}")
         print(f"  Confluence: {summary['confluence_score']} ({summary['level']})")
-        print(f"  Factors:")
+        print("  Factors:")
         for factor, status in summary["factors"].items():
             print(f"    - {factor}: {status}")
 
@@ -246,20 +243,20 @@ class CustomBacktestStrategy(Strategy):
         ('influencer_weight', 1.0),
         ('min_confluence', 0.6),
     )
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.registry = StrategyRegistry()
         self.registry.register(SMCReversalPlugin())
         self.registry.register(InfluencerMTFPlugin())
-    
+
     def next(self):
         # Get signals from registry
         signals = self.registry.evaluate(self.data.df)
-        
+
         # Filter by quality
         high_quality = [s for s in signals if s.confidence >= 0.7]
-        
+
         # Execute trades
         for signal in high_quality:
             if signal.direction == 'long' and not self.position:

@@ -7,7 +7,7 @@ and filter by performance thresholds (Sharpe > 0.5, PF > 1.2).
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Dict, List, Optional
 
 import numpy as np
@@ -46,7 +46,9 @@ class StatisticalSignificanceFilter:
         self.min_sharpe = min_sharpe
         self.min_profit_factor = min_profit_factor
 
-    def test_pattern_significance(self, pattern_returns: np.ndarray, pattern_name: str = "") -> SignificanceResult:
+    def test_pattern_significance(
+        self, pattern_returns: np.ndarray, pattern_name: str = ""
+    ) -> SignificanceResult:
         """One-sample t-test on pattern returns vs zero mean.
 
         Args:
@@ -108,7 +110,9 @@ class StatisticalSignificanceFilter:
             List of pattern names passing both thresholds.
         """
         threshold_sharpe = min_sharpe if min_sharpe is not None else self.min_sharpe
-        threshold_pf = min_profit_factor if min_profit_factor is not None else self.min_profit_factor
+        threshold_pf = (
+            min_profit_factor if min_profit_factor is not None else self.min_profit_factor
+        )
 
         passed = []
         for name, metrics in patterns_perf.items():

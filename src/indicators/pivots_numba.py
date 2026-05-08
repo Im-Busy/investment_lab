@@ -15,6 +15,7 @@ import numpy as np
 
 try:
     import numba  # type: ignore[import-untyped]
+
     jit = numba.jit
     prange = numba.prange
 

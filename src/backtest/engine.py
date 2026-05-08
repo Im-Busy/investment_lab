@@ -5,7 +5,7 @@ Runs historical backtests on pattern detection strategies.
 """
 
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional, TypedDict
+from typing import Any, Callable, Dict, List, Optional
 
 import pandas as pd
 
@@ -17,7 +17,7 @@ from ..risk.turnover_penalty import TurnoverPenalty, TurnoverPenaltyConfig
 from ..risk.circuit_breakers import CircuitBreaker, CircuitBreakerConfig
 from ..risk.position_probability import PositionRiskModel, PositionRiskConfig, RegimeState
 from ..risk.dynamic_rebalancing import DynamicRebalancer, DynamicRebalanceConfig
-from ..indicators.regime_detector import RegimeDetector, RegimeState as RuleRegimeState
+from ..indicators.regime_detector import RegimeDetector
 from .friction_scoring import FrictionScorer, FrictionConfig
 
 
@@ -140,6 +140,11 @@ class BacktestEngine:
         self.patterns = patterns
         self.config = config or BacktestConfig()
 
+        # R4: Build pattern name lookup for regime gating
+        self._pattern_lookup: Dict[str, BasePattern] = {}
+        for p in self.patterns:
+            self._pattern_lookup[p.name] = p
+
         # Initialize signal generator
         self.signal_generator = SignalGenerator(
             patterns=patterns,
@@ -256,7 +261,14 @@ class BacktestEngine:
             df = df[df.index <= end_date]
 
         # Reset position manager and risk components
-        self.position_manager = PositionManager(initial_equity=self.config.initial_equity)
+        self.position_manager = PositionManager(
+            initial_equity=self.config.initial_equity,
+            position_sizer=self.position_manager.position_sizer,
+            max_open_positions=self.config.max_open_positions,
+            use_take_profit_1=self.config.use_take_profit_1,
+            use_take_profit_2=self.config.use_take_profit_2,
+            use_take_profit_3=self.config.use_take_profit_3,
+        )
 
         if self.circuit_breaker:
             self.circuit_breaker.reset()
@@ -313,25 +325,28 @@ class BacktestEngine:
             should_rebalance = True
             rebalance_reason = "Always rebalance"
             if self.dynamic_rebalancer:
-                signal_strength = 0.0
-                if self.position_manager.open_positions:
-                    avg_confidence = 0.0
-                    for pos in self.position_manager.get_open_positions():
-                        avg_confidence += getattr(pos, "confidence", 0.5)
-                    signal_strength = avg_confidence / len(self.position_manager.open_positions)
-
                 should_rebalance, rebalance_reason, _ = self.dynamic_rebalancer.should_rebalance(
-                    current_day=i, signal_decay_rate=signal_strength
+                    current_day=i, signal_decay_rate=None
                 )
 
-                # Update signal history for decay tracking
+                # Update signal history for decay tracking after rebalance check
                 if should_rebalance:
+                    signal_strength = 0.0
+                    if self.position_manager.open_positions:
+                        avg_confidence = 0.0
+                        for pos in self.position_manager.get_open_positions():
+                            avg_confidence += getattr(pos, "confidence", 0.5)
+                        signal_strength = avg_confidence / len(self.position_manager.open_positions)
                     self.dynamic_rebalancer.update_signal_history(signal_strength)
 
             # Generate signals only if trading allowed
             signals = []
             if trading_allowed and should_rebalance:
                 signals = self.signal_generator.generate_signals(df, i)
+
+                # R4: Apply regime gating — filter incompatible patterns and adjust confidence
+                if self.config.enable_regime_detection and signals:
+                    signals = self._apply_regime_gating(signals, current_regime)
 
                 # R2: Apply position probability and risk-adjusted sizing
                 if self.position_risk_model and signals:
@@ -473,6 +488,57 @@ class BacktestEngine:
 
         return equity
 
+    def _apply_regime_gating(
+        self, signals: List[AggregatedSignal], current_regime: RegimeState
+    ) -> List[AggregatedSignal]:
+        """
+        R4: Filter signals based on pattern regime compatibility.
+
+        Each contributing pattern is checked against the current market regime.
+        Signals from incompatible patterns are removed. Confidence is adjusted
+        by regime preference score for compatible signals.
+
+        Args:
+            signals: List of signals to filter
+            current_regime: Current market regime
+
+        Returns:
+            Filtered list of regime-compatible signals
+        """
+        compatible_signals: List[AggregatedSignal] = []
+
+        for signal in signals:
+            if not signal.patterns:
+                compatible_signals.append(signal)
+                continue
+
+            all_compatible = True
+            regime_preferences: List[float] = []
+
+            for pattern_name in signal.patterns:
+                pattern = self._pattern_lookup.get(pattern_name)
+                if pattern is None:
+                    continue
+                if not pattern.is_regime_compatible(current_regime):
+                    all_compatible = False
+                    break
+                regime_preferences.append(pattern.get_regime_preference(current_regime))
+
+            if not all_compatible:
+                continue
+
+            if regime_preferences:
+                avg_preference = sum(regime_preferences) / len(regime_preferences)
+                # Adjust confidence: scale toward preference (0.5-1.5 range)
+                regime_multiplier = 0.5 + 0.5 * avg_preference
+                signal.confidence *= regime_multiplier
+                signal.metadata["regime_gated"] = True
+                signal.metadata["regime_preference"] = avg_preference
+
+            compatible_signals.append(signal)
+
+        return compatible_signals
+
     def _apply_position_probability(
         self, signals: List[AggregatedSignal], current_regime: RegimeState
     ) -> List[AggregatedSignal]:
@@ -579,18 +645,24 @@ class BacktestEngine:
         n_days = len(self.result.equity_curve) if self.result.equity_curve is not None else 1
 
         total_trade_value = sum(
-            abs(p.pnl or 0) + p.entry_price * p.size
+            p.entry_price
+            * p.size
+            * 2  # round-trip: entry + exit (approximate before exit price known)
             for p in trades_df.values()
             if p.status == PositionStatus.CLOSED
         )
 
         cost_per_trade_bps = (
-            self.config.friction_spread_bps + self.config.friction_slippage_bps + self.config.commission_pct * 100
+            self.config.friction_spread_bps
+            + self.config.friction_slippage_bps
+            + self.config.commission_pct * 100
         )
         total_friction_cost = total_trade_value * (cost_per_trade_bps / 10000.0)
 
         avg_aum = self.config.initial_equity
-        turnover_ratio = (total_trade_value / avg_aum) * (252 / max(n_days, 1)) if avg_aum > 0 else 0.0
+        turnover_ratio = (
+            (total_trade_value / avg_aum) * (252 / max(n_days, 1)) if avg_aum > 0 else 0.0
+        )
         friction_drag = turnover_ratio * (cost_per_trade_bps / 10000.0)
 
         gross_return = self.result.metrics.get("total_return_pct", 0) if self.result.metrics else 0

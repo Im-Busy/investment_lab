@@ -66,7 +66,9 @@ class DescendingTriangle(BasePattern):
             confirmation_filter: Minimum breakout percentage for confirmation
         """
         super().__init__(
-            name="Descending Triangle", pattern_type=PatternType.CONTINUATION, min_bars_required=min_pattern_bars
+            name="Descending Triangle",
+            pattern_type=PatternType.CONTINUATION,
+            min_bars_required=min_pattern_bars,
         )
         self.lookback = lookback
         self.support_tolerance = support_tolerance
@@ -77,6 +79,75 @@ class DescendingTriangle(BasePattern):
         self.entry_offset = entry_offset
         self.stop_offset = stop_offset
         self.confirmation_filter = confirmation_filter
+
+    def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Vectorized Descending Triangle detection across all bars.
+
+        Returns np.int8 array: 0=no signal, 1=long, -1=short.
+        """
+        n = len(df)
+        signals = np.zeros(n, dtype=np.int8)
+        close = df["Close"].to_numpy(dtype=np.float64)
+
+        swing_highs = find_swing_highs(df, self.lookback)
+        swing_lows = find_swing_lows(df, self.lookback)
+
+        sh_arr = swing_highs.to_numpy(dtype=np.float64)
+        sl_arr = swing_lows.to_numpy(dtype=np.float64)
+        n_swing_highs = pd.notna(swing_highs).to_numpy()
+        n_swing_lows = pd.notna(swing_lows).to_numpy()
+
+        for i in range(max(self.lookback, self.min_pattern_bars), n):
+            lookback = min(self.max_pattern_bars * 2, i)
+
+            peaks: list = []
+            troughs: list = []
+            for j in range(i - lookback, i + 1):
+                if j < 0:
+                    continue
+                if n_swing_highs[j]:
+                    peaks.append((j, float(sh_arr[j])))
+                if n_swing_lows[j]:
+                    troughs.append((j, float(sl_arr[j])))
+
+            if len(troughs) < self.min_touches or len(peaks) < self.min_touches:
+                continue
+
+            support_result = self._find_horizontal_support(troughs)
+            if support_result is None:
+                continue
+            support_troughs, support_level = support_result
+
+            resistance_result = self._find_falling_resistance(peaks, self.max_slope)
+            if resistance_result is None:
+                continue
+            resistance_peaks, resistance_slope = resistance_result
+
+            all_indices = [p[0] for p in resistance_peaks] + [t[0] for t in support_troughs]
+            p_start = min(all_indices)
+            p_end = max(all_indices)
+            if p_end - p_start < self.min_pattern_bars or p_end - p_start > self.max_pattern_bars:
+                continue
+
+            highest_peak = max(p[1] for p in resistance_peaks)
+            if highest_peak <= support_level:
+                continue
+
+            curr_close = float(close[i])
+
+            downside = curr_close < support_level * (1.0 - self.confirmation_filter)
+            res_start_idx = resistance_peaks[0][0]
+            res_start_price = resistance_peaks[0][1]
+            res_at_curr = res_start_price + resistance_slope * (i - res_start_idx)
+            upside = curr_close > res_at_curr * (1.0 + self.confirmation_filter)
+
+            if downside:
+                signals[i] = -1
+            elif upside:
+                signals[i] = 1
+
+        return signals
 
     def _find_pivots(
         self, df: pd.DataFrame, i: int
@@ -240,7 +311,9 @@ class DescendingTriangle(BasePattern):
         # Calculate resistance line value at current bar
         resistance_start_idx = resistance_peaks[0][0]
         resistance_start_price = resistance_peaks[0][1]
-        resistance_at_current = resistance_start_price + resistance_slope * (i - resistance_start_idx)
+        resistance_at_current = resistance_start_price + resistance_slope * (
+            i - resistance_start_idx
+        )
         upside_breakout = current_close > resistance_at_current * (1 + self.confirmation_filter)
 
         if downside_breakout:

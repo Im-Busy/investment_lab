@@ -28,20 +28,19 @@ Take Profit Rules:
 
 import pandas as pd
 import numpy as np
-from typing import Optional, List, Tuple, Dict
+from typing import Optional, Dict
 from ..base import BasePattern, PatternType, SignalDirection, TradeSignal, PatternResult
 from ...indicators.pivots import find_swing_highs, find_swing_lows
-from ...indicators.fibonacci import is_fib_ratio_match
 
 
 class ThreeHillsMountain(BasePattern):
     """
     Three Hills and Mountain Pattern Detector
-    
+
     A complex pattern consisting of three successively lower highs (hills)
     followed by a potential mountain formation.
     """
-    
+
     def __init__(
         self,
         lookback: int = 5,
@@ -50,11 +49,11 @@ class ThreeHillsMountain(BasePattern):
         min_pattern_bars: int = 30,
         max_pattern_bars: int = 150,
         entry_offset: float = 0.01,
-        stop_offset: float = 0.01
+        stop_offset: float = 0.01,
     ):
         """
         Initialize Three Hills and Mountain pattern detector.
-        
+
         Args:
             lookback: Lookback period for pivot detection
             retrace_min: Minimum hill retracement (default 0.50)
@@ -67,7 +66,7 @@ class ThreeHillsMountain(BasePattern):
         super().__init__(
             name="Three Hills and Mountain",
             pattern_type=PatternType.REVERSAL,
-            min_bars_required=min_pattern_bars
+            min_bars_required=min_pattern_bars,
         )
         self.lookback = lookback
         self.retrace_min = retrace_min
@@ -76,31 +75,127 @@ class ThreeHillsMountain(BasePattern):
         self.max_pattern_bars = max_pattern_bars
         self.entry_offset = entry_offset
         self.stop_offset = stop_offset
-    
-    def _find_hills(
-        self,
-        df: pd.DataFrame,
-        i: int
-    ) -> Optional[Dict]:
+
+    def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Vectorized Three Hills and Mountain detection across all bars.
+
+        Returns np.int8 array: 0=no signal, 1=long, -1=short.
+        """
+        n = len(df)
+        signals = np.zeros(n, dtype=np.int8)
+        close = df["Close"].to_numpy(dtype=np.float64)
+
+        swing_highs = find_swing_highs(df, self.lookback)
+        swing_lows = find_swing_lows(df, self.lookback)
+
+        sh_arr = swing_highs.to_numpy(dtype=np.float64)
+        sl_arr = swing_lows.to_numpy(dtype=np.float64)
+        n_sh = pd.notna(swing_highs).to_numpy()
+        n_sl = pd.notna(swing_lows).to_numpy()
+
+        min_bars = max(self.lookback, self.min_pattern_bars)
+
+        for i in range(min_bars, n):
+            lookback = min(self.max_pattern_bars, i)
+
+            peaks: list = []
+            troughs: list = []
+            for j in range(i - lookback, i + 1):
+                if j < 0:
+                    continue
+                if n_sh[j]:
+                    peaks.append((j, float(sh_arr[j])))
+                if n_sl[j]:
+                    troughs.append((j, float(sl_arr[j])))
+
+            if len(peaks) < 3 or len(troughs) < 3:
+                continue
+
+            peaks_s = sorted(peaks, key=lambda x: x[0])
+            troughs_s = sorted(troughs, key=lambda x: x[0])
+
+            pattern_found = False
+            trendline_val = 0.0
+
+            for p1i in range(len(peaks_s) - 2):
+                h1 = peaks_s[p1i]
+                for p2i in range(p1i + 1, len(peaks_s) - 1):
+                    h2 = peaks_s[p2i]
+                    if h2[1] >= h1[1]:
+                        continue
+                    t1 = None
+                    for t in troughs_s:
+                        if h1[0] < t[0] < h2[0]:
+                            if t1 is None or t[1] < t1[1]:
+                                t1 = t
+                    if t1 is None:
+                        continue
+                    h1_height = h1[1] - t1[1]
+                    if h1_height <= 0:
+                        continue
+                    ret1 = (h1[1] - h2[1]) / h1_height
+                    if not (self.retrace_min <= ret1 <= self.retrace_max):
+                        continue
+                    for p3i in range(p2i + 1, len(peaks_s)):
+                        h3 = peaks_s[p3i]
+                        if h3[1] >= h2[1]:
+                            continue
+                        t2 = None
+                        for t in troughs_s:
+                            if h2[0] < t[0] < h3[0]:
+                                if t2 is None or t[1] < t2[1]:
+                                    t2 = t
+                        if t2 is None:
+                            continue
+                        h2_height = h2[1] - t2[1]
+                        if h2_height <= 0:
+                            continue
+                        ret2 = (h2[1] - h3[1]) / h2_height
+                        if not (self.retrace_min <= ret2 <= self.retrace_max):
+                            continue
+                        t3 = None
+                        for t in troughs_s:
+                            if t[0] > h3[0]:
+                                if t3 is None or t[1] < t3[1]:
+                                    t3 = t
+                        if t3 is None:
+                            t3 = t2
+                        slope = (t2[1] - t1[1]) / (t2[0] - t1[0]) if t2[0] != t1[0] else 0.0
+                        intercept = t1[1] - slope * t1[0]
+                        trendline_val = slope * i + intercept
+                        pattern_found = True
+                        break
+                    if pattern_found:
+                        break
+                if pattern_found:
+                    break
+
+            if pattern_found and float(close[i]) < trendline_val:
+                signals[i] = -1
+
+        return signals
+
+    def _find_hills(self, df: pd.DataFrame, i: int) -> Optional[Dict]:
         """
         Find three hills formation.
-        
+
         Args:
             df: DataFrame with OHLC data
             i: Current bar index
-            
+
         Returns:
             Dictionary with hill details or None
         """
         swing_highs = find_swing_highs(df, self.lookback)
         swing_lows = find_swing_lows(df, self.lookback)
-        
+
         # Collect peaks and troughs
         peaks = []
         troughs = []
-        
+
         lookback = min(self.max_pattern_bars, i)
-        
+
         for j in range(i - lookback, i + 1):
             if j < 0:
                 continue
@@ -108,86 +203,86 @@ class ThreeHillsMountain(BasePattern):
                 peaks.append((j, self._safe_float(swing_highs.iloc[j])))
             if pd.notna(swing_lows.iloc[j]):
                 troughs.append((j, self._safe_float(swing_lows.iloc[j])))
-        
+
         if len(peaks) < 3 or len(troughs) < 3:
             return None
-        
+
         # Sort by index
         peaks = sorted(peaks, key=lambda x: x[0])
         troughs = sorted(troughs, key=lambda x: x[0])
-        
+
         # Find three successively lower highs (hills)
         for p1 in range(len(peaks) - 2):
             hill1 = peaks[p1]
-            
+
             for p2 in range(p1 + 1, len(peaks) - 1):
                 hill2 = peaks[p2]
-                
+
                 # Hill2 must be lower than Hill1
                 if hill2[1] >= hill1[1]:
                     continue
-                
+
                 # Find trough between Hill1 and Hill2
                 trough1 = None
                 for t in troughs:
                     if hill1[0] < t[0] < hill2[0]:
                         if trough1 is None or t[1] < trough1[1]:
                             trough1 = t
-                
+
                 if trough1 is None:
                     continue
-                
+
                 # Check first retracement
                 hill1_height = hill1[1] - trough1[1]
                 hill2_height = hill2[1] - trough1[1]
-                
+
                 if hill1_height <= 0:
                     continue
-                
+
                 retrace1 = (hill1[1] - hill2[1]) / hill1_height
-                
+
                 if not (self.retrace_min <= retrace1 <= self.retrace_max):
                     continue
-                
+
                 for p3 in range(p2 + 1, len(peaks)):
                     hill3 = peaks[p3]
-                    
+
                     # Hill3 must be lower than Hill2
                     if hill3[1] >= hill2[1]:
                         continue
-                    
+
                     # Find trough between Hill2 and Hill3
                     trough2 = None
                     for t in troughs:
                         if hill2[0] < t[0] < hill3[0]:
                             if trough2 is None or t[1] < trough2[1]:
                                 trough2 = t
-                    
+
                     if trough2 is None:
                         continue
-                    
+
                     # Check second retracement
                     hill2_height = hill2[1] - trough2[1]
-                    
+
                     if hill2_height <= 0:
                         continue
-                    
+
                     retrace2 = (hill2[1] - hill3[1]) / hill2_height
-                    
+
                     if not (self.retrace_min <= retrace2 <= self.retrace_max):
                         continue
-                    
+
                     # Find trough after Hill3
                     trough3 = None
                     for t in troughs:
                         if t[0] > hill3[0]:
                             if trough3 is None or t[1] < trough3[1]:
                                 trough3 = t
-                    
+
                     # Calculate trendline (connecting troughs)
                     if trough3 is None:
                         trough3 = trough2  # Use trough2 as fallback
-                    
+
                     # Calculate trendline slope
                     if len([trough1, trough2, trough3]) >= 2:
                         t1, t2 = trough1, trough2
@@ -195,148 +290,136 @@ class ThreeHillsMountain(BasePattern):
                         intercept = t1[1] - (slope * t1[0])
                     else:
                         continue
-                    
+
                     return {
-                        'hill1': hill1,
-                        'hill2': hill2,
-                        'hill3': hill3,
-                        'trough1': trough1,
-                        'trough2': trough2,
-                        'trough3': trough3,
-                        'retrace1': retrace1,
-                        'retrace2': retrace2,
-                        'trendline_slope': slope,
-                        'trendline_intercept': intercept,
-                        'ab_range': hill1[1] - min(trough1[1], trough2[1], trough3[1])
+                        "hill1": hill1,
+                        "hill2": hill2,
+                        "hill3": hill3,
+                        "trough1": trough1,
+                        "trough2": trough2,
+                        "trough3": trough3,
+                        "retrace1": retrace1,
+                        "retrace2": retrace2,
+                        "trendline_slope": slope,
+                        "trendline_intercept": intercept,
+                        "ab_range": hill1[1] - min(trough1[1], trough2[1], trough3[1]),
                     }
-        
+
         return None
-    
+
     def _get_trendline_value(self, slope: float, intercept: float, idx: int) -> float:
         """Calculate trendline value at given index."""
         return (slope * idx) + intercept
-    
+
     def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
         """
         Detect Three Hills and Mountain pattern at bar index i.
-        
+
         Args:
             df: DataFrame with OHLCV data
             i: Current bar index
-            
+
         Returns:
             PatternResult with detection status and signal
         """
         if not self._validate_data(df, i):
             return PatternResult(
-                detected=False,
-                pattern_name=self.name,
-                pattern_type=self.pattern_type
+                detected=False, pattern_name=self.name, pattern_type=self.pattern_type
             )
-        
+
         # Find hills
         hills = self._find_hills(df, i)
-        
+
         if hills is None:
             return PatternResult(
-                detected=False,
-                pattern_name=self.name,
-                pattern_type=self.pattern_type
+                detected=False, pattern_name=self.name, pattern_type=self.pattern_type
             )
-        
+
         # Check pattern duration
-        pattern_duration = hills['hill3'][0] - hills['hill1'][0]
+        pattern_duration = hills["hill3"][0] - hills["hill1"][0]
         if pattern_duration < self.min_pattern_bars:
             return PatternResult(
-                detected=False,
-                pattern_name=self.name,
-                pattern_type=self.pattern_type
+                detected=False, pattern_name=self.name, pattern_type=self.pattern_type
             )
-        
+
         # Calculate trendline value at current bar
         trendline_value = self._get_trendline_value(
-            hills['trendline_slope'],
-            hills['trendline_intercept'],
-            i
+            hills["trendline_slope"], hills["trendline_intercept"], i
         )
-        
-        current_close = self._safe_float(df.iloc[i]['Close'])
-        current_low = self._safe_float(df.iloc[i]['Low'])
-        
+
+        current_close = self._safe_float(df.iloc[i]["Close"])
+        current_low = self._safe_float(df.iloc[i]["Low"])
+
         # Check for trendline breakdown (short signal)
         breakdown = current_close < trendline_value
-        
+
         if not breakdown:
             return PatternResult(
                 detected=False,
                 pattern_name=self.name,
                 pattern_type=self.pattern_type,
                 pivot_points={
-                    'hills_detected': True,
-                    'awaiting_breakdown': True,
-                    'trendline_value': trendline_value,
-                    'hills': hills
-                }
+                    "hills_detected": True,
+                    "awaiting_breakdown": True,
+                    "trendline_value": trendline_value,
+                    "hills": hills,
+                },
             )
-        
+
         # Generate signal
         signal = self._generate_signal(df, i, hills, trendline_value)
-        
+
         return PatternResult(
             detected=True,
             pattern_name=self.name,
             pattern_type=self.pattern_type,
             signal=signal,
             pivot_points={
-                'hill1_idx': hills['hill1'][0],
-                'hill1': hills['hill1'][1],
-                'hill2_idx': hills['hill2'][0],
-                'hill2': hills['hill2'][1],
-                'hill3_idx': hills['hill3'][0],
-                'hill3': hills['hill3'][1],
-                'trendline_value': trendline_value,
-                'ab_range': hills['ab_range']
+                "hill1_idx": hills["hill1"][0],
+                "hill1": hills["hill1"][1],
+                "hill2_idx": hills["hill2"][0],
+                "hill2": hills["hill2"][1],
+                "hill3_idx": hills["hill3"][0],
+                "hill3": hills["hill3"][1],
+                "trendline_value": trendline_value,
+                "ab_range": hills["ab_range"],
             },
             bars_since_detection=0,
-            start_index=hills['hill1'][0],
-            end_index=i
+            start_index=hills["hill1"][0],
+            end_index=i,
         )
-    
+
     def generate_signal(self, df: pd.DataFrame, i: int) -> Optional[TradeSignal]:
         """Generate trade signal."""
         result = self.detect(df, i)
         return result.signal if result.detected else None
-    
+
     def _generate_signal(
-        self,
-        df: pd.DataFrame,
-        i: int,
-        hills: Dict,
-        trendline_value: float
+        self, df: pd.DataFrame, i: int, hills: Dict, trendline_value: float
     ) -> Optional[TradeSignal]:
         """Generate trade signal for Three Hills breakdown."""
-        
-        current_low = self._safe_float(df.iloc[i]['Low'])
-        hill3_high = hills['hill3'][1]
-        ab_range = hills['ab_range']
-        
+
+        current_low = self._safe_float(df.iloc[i]["Low"])
+        hill3_high = hills["hill3"][1]
+        ab_range = hills["ab_range"]
+
         # Short entry below breakdown bar
         entry_price = current_low - self.entry_offset
-        
+
         # Stop above Hill3
         stop_loss = hill3_high + self.stop_offset
-        
+
         # Target based on AB range
         take_profit_1 = entry_price - (ab_range * 0.62)
         take_profit_2 = entry_price - ab_range
-        
+
         # Confidence
         confidence = 0.55
-        
+
         # Check retracement quality
-        if 0.55 <= hills['retrace1'] <= 0.618 and 0.55 <= hills['retrace2'] <= 0.618:
+        if 0.55 <= hills["retrace1"] <= 0.618 and 0.55 <= hills["retrace2"] <= 0.618:
             confidence += 0.1
-        
+
         return TradeSignal(
             pattern_name=self.name,
             direction=SignalDirection.SHORT,
@@ -346,50 +429,44 @@ class ThreeHillsMountain(BasePattern):
             take_profit_2=take_profit_2,
             take_profit_3=None,
             confidence=min(confidence, 1.0),
-            timestamp=df.iloc[i].name if hasattr(df.iloc[i], 'name') else None,
+            timestamp=df.iloc[i].name if hasattr(df.iloc[i], "name") else None,
             metadata={
-                'retrace1': hills['retrace1'],
-                'retrace2': hills['retrace2'],
-                'ab_range': ab_range,
-                'trendline_value': trendline_value,
-                'entry_type': 'sell_stop'
-            }
+                "retrace1": hills["retrace1"],
+                "retrace2": hills["retrace2"],
+                "ab_range": ab_range,
+                "trendline_value": trendline_value,
+                "entry_type": "sell_stop",
+            },
         )
 
 
 class ThreeDrives(BasePattern):
     """
     Three Drives Pattern Detector
-    
+
     Similar to Three Hills but focuses on three drives to a top/bottom
     with Fibonacci relationships.
     """
-    
+
     def __init__(
         self,
         lookback: int = 5,
         fib_tolerance: float = 0.05,
         entry_offset: float = 0.01,
-        stop_offset: float = 0.01
+        stop_offset: float = 0.01,
     ):
         super().__init__(
-            name="Three Drives",
-            pattern_type=PatternType.REVERSAL,
-            min_bars_required=30
+            name="Three Drives", pattern_type=PatternType.REVERSAL, min_bars_required=30
         )
         self.lookback = lookback
         self.fib_tolerance = fib_tolerance
         self.entry_offset = entry_offset
         self.stop_offset = stop_offset
-    
+
     def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
         """Detect Three Drives pattern - simplified implementation."""
         # Similar to Three Hills but with stricter Fib relationships
-        return PatternResult(
-            detected=False,
-            pattern_name=self.name,
-            pattern_type=self.pattern_type
-        )
-    
+        return PatternResult(detected=False, pattern_name=self.name, pattern_type=self.pattern_type)
+
     def generate_signal(self, df: pd.DataFrame, i: int) -> Optional[TradeSignal]:
         return None

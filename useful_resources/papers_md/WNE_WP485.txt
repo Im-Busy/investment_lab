@@ -1,26 +1,26 @@
 Page 1: Working Papers
 Page 1: No. 22/2025 (485)
-Page 1: 
+Page 1:
 Page 1: A SURVEY OF STATISTICAL ARBITRAGE
 Page 1: PAIR TRADING WITH MACHINE LEARNING,
 Page 1: DEEP LEARNING, AND REINFORCEMENT
 Page 1: LEARNING METHODS
 Page 1: Y UFEI S UN
-Page 1: 
+Page 1:
 Page 1: Warsaw 2025
 Page 1: ISSN 2957-0506
-Page 1: 
-Page 1: 
+Page 1:
+Page 1:
 Page 2: WORKING PAPERS 22/2025 (485)
-Page 2: 
+Page 2:
 Page 2: A survey of statistical arbitrage pair trading with machine learning, deep learning,
 Page 2: and reinforcement learning methods
 Page 2: Yufei Sun1*
 Page 2: 1
-Page 2: 
+Page 2:
 Page 2: Faculty of Economic Sciences, University of Warsaw
 Page 2: *Corresponding authors: y.sun2@uw.edu.pl
-Page 2: 
+Page 2:
 Page 2: Abstract: Pair trading remains a cornerstone strategy in quantitative finance, having consistently
 Page 2: attracted scholarly attention from both economists and computer scientists. Over recent decades,
 Page 2: research has expanded beyond traditional linear frameworksΓÇösuch as regression- and
@@ -44,16 +44,16 @@ Page 2: microstructure analysis.
 Page 2: Keywords: Pair Trading, Machine Learning, Deep Learning, Reinforcement Learning, Deep
 Page 2: Reinforcement Learning, Artificial Intelligence, Quantitative Trading
 Page 2: JEL codes: C4, C45, C55, C65, G11
-Page 2: 
+Page 2:
 Page 2: Working Papers contain preliminary research results. Please consider this when citing the paper. Please contact the
 Page 2: authors to give comments or to obtain revised version. Any mistakes and the views expressed herein are solely those of
 Page 2: the authors
-Page 2: 
-Page 2: 
+Page 2:
+Page 2:
 Page 3: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 3: 
+Page 3:
 Page 3: 1
-Page 3: 
+Page 3:
 Page 3: 1. Introduction
 Page 3: Stock market forecasting concerns the prediction of future values of company shares or other
 Page 3: financial assets traded on exchanges. While accurate forecasts can generate substantial financial
@@ -84,12 +84,12 @@ Page 3: media activity, and technical indicatorsΓÇöcan improve predictive per
 Page 3: multifaceted drivers of market behavior.
 Page 3: Figure 1 illustrates the major domains of stock trading where AI techniques are increasingly
 Page 3: applied. Quantitative trading employs mathematical and statistical models to exploit market
-Page 3: 
-Page 3: 
+Page 3:
+Page 3:
 Page 4: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 4: 
+Page 4:
 Page 4: 2
-Page 4: 
+Page 4:
 Page 4: inefficiencies. Algorithmic trading automates order execution according to predefined rules such
 Page 4: as price or timing. High-Frequency Trading (HFT), a specialized subset of algorithmic trading,
 Page 4: uses advanced algorithms to execute large volumes of trades within milliseconds. Automated
@@ -98,7 +98,7 @@ Page 4: Although these trading paradigms predate AI, recent developments have in
 Page 4: AI methods to enhance pattern recognition, predictive modeling, and execution efficiency.
 Page 4: Figure 1. Utilization of Artificial Intelligence Technologies in Quantitative Finance and Equity
 Page 4: Markets Trading.
-Page 4: 
+Page 4:
 Page 4: Figure 2 highlights major algorithmic trading strategies, ranging from trend-following and
 Page 4: momentum trading to mean reversion, moving average crossovers, breakout strategies, and
 Page 4: statistical arbitrage. These approaches reflect different assumptions about market behavior: some
@@ -109,16 +109,16 @@ Page 4: applications, employing tools such as cointegration and regression analy
 Page 4: relative value opportunities.
 Page 4: While these strategies predate modern artificial intelligence, recent advances in machine
 Page 4: learning and deep learning have enhanced their performance by enabling more sophisticated
-Page 4: 
-Page 4: 
+Page 4:
+Page 4:
 Page 5: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 5: 
+Page 5:
 Page 5: 3
-Page 5: 
+Page 5:
 Page 5: feature extraction, adaptive parameter tuning, and improved execution. In this sense, AI does not
 Page 5: redefine these strategies but augments their predictive power and adaptability.
 Page 5: Figure 2. Diverse Approaches to AI-Enhanced Algorithmic Trading Strategies.
-Page 5: 
+Page 5:
 Page 5: Among statistical arbitrage approaches, pairs trading has emerged as one of the most widely
 Page 5: studied and implemented strategies. The basic idea is to identify pairs of assets whose prices have
 Page 5: historically moved together and to exploit temporary deviations in their relative valuation. When
@@ -134,12 +134,12 @@ Page 5: dynamics and the latter clustering securities into candidate pairs. DL a
 Page 5: recurrent neural networks (RNNs) and long short-term memory (LSTM) networks, are well-suited
 Page 5: for modeling temporal dependencies and nonlinear spread behavior, while more recent approaches
 Page 5: explore convolutional and transformer-based models. RL offers a different paradigm, focusing on
-Page 5: 
-Page 5: 
+Page 5:
+Page 5:
 Page 6: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 6: 
+Page 6:
 Page 6: 4
-Page 6: 
+Page 6:
 Page 6: sequential decision-making through interaction with the market environment. RL agents
 Page 6: dynamically adjust trading policies by optimizing cumulative rewards, allowing adaptive
 Page 6: refinement of entry and exit rules under evolving market conditions.
@@ -170,12 +170,12 @@ Page 6: sources that can be leveraged for further investigation.
 Page 6: The structure of the remainder of this document is organized as follows: Section 2 elaborates
 Page 6: on the research works that inform this study. Section 3 provides a concise introduction to the scope
 Page 6: of this survey. Section 4 discusses the methodologies for data processing and feature extraction.
-Page 6: 
-Page 6: 
+Page 6:
+Page 6:
 Page 7: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 7: 
+Page 7:
 Page 7: 5
-Page 7: 
+Page 7:
 Page 7: In Section 5, we offer a detailed examination of the various forecasting techniques, enriched with
 Page 7: relevant context. Section 6 focuses on the metrics used to assess prediction accuracy.
 Page 7: The framework for implementation and the availability of data are discussed in Section 7.
@@ -204,12 +204,12 @@ Page 7: Unsupervised learning methods uncover latent patterns and structural rel
 Page 7: without relying on labeled outcomes. In financial markets, these techniques are particularly useful
 Page 7: for detecting correlations and dependencies that arise naturally across assets, making them well
 Page 7: suited for identifying candidate pairs in statistical arbitrage strategies.
-Page 7: 
-Page 7: 
+Page 7:
+Page 7:
 Page 8: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 8: 
+Page 8:
 Page 8: 6
-Page 8: 
+Page 8:
 Page 8: The selection of studies reviewed here follows three main criteria: (i) a direct focus on the
 Page 8: application of unsupervised learning to financial trading, with particular emphasis on pairs trading
 Page 8: or statistical arbitrage; (ii) empirical validation using real-world market data to ensure practical
@@ -240,12 +240,12 @@ Page 8: pairs trading remains profitable and market-neutral, with spreads exhibi
 Page 8: adverse environments. Results are, however, sensitive to clustering hyperparameters (≡¥£Ç, minPts)
 Page 8: and feature scaling; robustness is typically assessed through rolling windows, regime-specific
 Page 8: subsamples, and multiple-testing adjustments such as the false discovery rate.
-Page 8: 
-Page 8: 
+Page 8:
+Page 8:
 Page 9: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 9: 
+Page 9:
 Page 9: 7
-Page 9: 
+Page 9:
 Page 9: Han et al. (2023) move beyond pair selection based solely on return co-movements or
 Page 9: cointegration by integrating firm-specific characteristics with price dynamics. Applied to U.S.
 Page 9: equities (1980ΓÇô2020), their framework identifies pairs with stronger co-movement propensity and
@@ -275,12 +275,12 @@ Page 9: events) and addressing class imbalance in financial datasetsΓÇöwhich 
 Page 9: methodological design.
 Page 9: This subsection reviews key studies that apply supervised learning techniques to enhance
 Page 9: pairs trading strategies. Madhavaram (2013) introduces an innovative framework that integrates
-Page 9: 
-Page 9: 
+Page 9:
+Page 9:
 Page 10: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 10: 
+Page 10:
 Page 10: 8
-Page 10: 
+Page 10:
 Page 10: dynamic PCA with Support Vector Machines (SVM) for financial market analysis. Applied to the
 Page 10: Financial Select Sector SPDR Fund (XLF), PCA is employed to extract systematic risk factors,
 Page 10: while SVM models classify and validate potential trading signals. The findings suggest that
@@ -310,12 +310,12 @@ Page 10: including SVM, Random Forest (RF), and Adaptive Neuro-Fuzzy Inference S
 Page 10: for forecasting the price ratio of stock pairs. Drawing on nine selected input features, their results
 Page 10: show that these models effectively capture price dynamics, thereby illustrating the ability of ML
 Page 10: techniques to refine trading decisions and improve financial forecasting accuracy.
-Page 10: 
-Page 10: 
+Page 10:
+Page 10:
 Page 11: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 11: 
+Page 11:
 Page 11: 9
-Page 11: 
+Page 11:
 Page 11: Sutherland et al. (2018) apply a range of ML modelsΓÇöincluding logistic regression (LR),
 Page 11: RF, deep neural networks (DNN), and gradient-boosted trees (GBT)ΓÇöto statistical arbitrage on
 Page 11: the KOSPI 200 index. Their comparative analysis reveals that all models outperform
@@ -344,12 +344,12 @@ Page 11: This review next turns to DL methodsΓÇöa specialized subset of ML th
 Page 11: capture complex, nonlinear patterns in large-scale datasets. In the context of pair trading, DL has
 Page 11: emerged as a transformative tool, offering refined insights into market dynamics and enabling the
 Page 11: development of more adaptive and sophisticated trading algorithms.
-Page 11: 
-Page 11: 
+Page 11:
+Page 11:
 Page 12: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 12: 
+Page 12:
 Page 12: 10
-Page 12: 
+Page 12:
 Page 12: For clarity, DRL is not treated here as an isolated topic but rather as the intersection of DL
 Page 12: and RL. RL refers to a class of ML methods in which an agent interacts with an environment and
 Page 12: learns optimal actions through trial and error, guided by rewards and penalties to maximize
@@ -379,12 +379,12 @@ Page 12: adaptation to non-stationarity in financial data, thereby enhancing bot
 Page 12: predictive power of pairs trading. Through empirical application, the study illustrates the modelΓÇÖs
 Page 12: capacity to capture complex relationships between financial assets, offering a more nuanced and
 Page 12: effective tool for navigating dynamic markets.
-Page 12: 
-Page 12: 
+Page 12:
+Page 12:
 Page 13: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 13: 
+Page 13:
 Page 13: 11
-Page 13: 
+Page 13:
 Page 13: The paper by Brim (2019) employs DQN to improve pairs trading strategies, testing on 38
 Page 13: cointegrated stock pairs. Leveraging RL to exploit mean reversion in stock spreads, the study
 Page 13: demonstrates that DQNs consistently generate positive returns. By training on 2014ΓÇô2017 data and
@@ -415,12 +415,12 @@ Page 13: market movements based on currency exchange rates.
 Page 13: Du (2022) delves into mean-variance portfolio optimization leveraging DL forecasts for
 Page 13: stocks exhibiting cointegration, showcasing a novel approach in financial market analysis. This
 Page 13: research pioneers the integration of advanced DL models to enhance forecast accuracy and
-Page 13: 
-Page 13: 
+Page 13:
+Page 13:
 Page 14: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 14: 
+Page 14:
 Page 14: 12
-Page 14: 
+Page 14:
 Page 14: subsequently inform portfolio allocation decisions. By focusing on cointegrated stocks, the study
 Page 14: not only adheres to the classical portfolio theory but also embraces modern computational
 Page 14: techniques, marking a significant stride in the application of AI in finance. The methodology's
@@ -449,12 +449,12 @@ Page 14: the study demonstrates substantial improvements in performance compared
 Page 14: methods. Incorporating both cointegration and RL, the research provides a novel perspective on
 Page 14: maximizing profits and managing risks in pairs trading, with empirical validation using S&P 500
 Page 14: constituent stocks.
-Page 14: 
-Page 14: 
+Page 14:
+Page 14:
 Page 15: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 15: 
+Page 15:
 Page 15: 13
-Page 15: 
+Page 15:
 Page 15: Brim (2020) applies Double Deep Q-Networks (DDQNs) to pairs trading, leveraging
 Page 15: the mean-reversion property of stock prices for profit generation. Training the DDQN model on
 Page 15: historical stock-pair data, the study shows its capacity to predict profitable trading signals,
@@ -484,12 +484,12 @@ Page 15: Testing (SAPT), designed to enhance pairs trading strategies by integra
 Page 15: detection. The first phase employs a hybrid model to identify structural breaks, while the second
 Page 15: phase optimizes the trading strategy, accounting for transaction costs and market-closing risks.
 Page 15: Empirical tests in the Taiwan stock market show that SAPT significantly outperforms existing
-Page 15: 
-Page 15: 
+Page 15:
+Page 15:
 Page 16: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 16: 
+Page 16:
 Page 16: 14
-Page 16: 
+Page 16:
 Page 16: strategies, highlighting the value of incorporating structural shifts into trading models for improved
 Page 16: profitability and risk control.
 Page 16: Xu and Luo (2023) develop an enhanced pairs trading strategy using a two-level RL
@@ -517,12 +517,12 @@ Page 16: Trading with Reinforcement Learning,ΓÇ¥ ΓÇ£Pair Trading with Deep
 Page 16: Trading with Machine Learning,ΓÇ¥ ΓÇ£Pair Trading with Supervised Learning,ΓÇ¥ and ΓÇ£Pair Trading
 Page 16: with Unsupervised Learning.ΓÇ¥ Articles not directly contributing to the thematic scope were
 Page 16: excluded from the final sample.
-Page 16: 
-Page 16: 
+Page 16:
+Page 16:
 Page 17: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 17: 
+Page 17:
 Page 17: 15
-Page 17: 
+Page 17:
 Page 17: In total, 68 peer-reviewed studies published between 2012 and 2023 were selected for indepth analysis. Table 1 reports the yearly distribution of these publications, together with their
 Page 17: corresponding reference indices.
 Page 17: Table 1. Counts of publication frequencies in the studies over the years analyzed, from 2012 to
@@ -540,7 +540,7 @@ Page 17: 2015
 Page 17: 2014
 Page 17: 2013
 Page 17: 2012
-Page 17: 
+Page 17:
 Page 17: Count
 Page 17: 12
 Page 17: 18
@@ -554,7 +554,7 @@ Page 17: 1
 Page 17: 1
 Page 17: 2
 Page 17: 1
-Page 17: 
+Page 17:
 Page 17: Article
 Page 17: [1-12]
 Page 17: [13-30]
@@ -568,7 +568,7 @@ Page 17: [64]
 Page 17: [65]
 Page 17: [66-67]
 Page 17: [68]
-Page 17: 
+Page 17:
 Page 17: Table 2 describes of the Integration of Artificial Intelligence in Pair Trading: This table
 Page 17: encapsulates the various elements involved in the application of AI to stock market operations,
 Page 17: including the Categories of Stock Market Data, Types of ML Applications, Empirical and
@@ -585,12 +585,12 @@ Page 17: Regression, respectively, both of which are powerful in finding the opt
 Page 17: different classes. NB is short for Naive Bayes, a probabilistic classifier that assumes independence
 Page 17: between predictors. EN means Elastic Net, a regularized regression method that combines both L1
 Page 17: and L2 penalties. GDA stands for Gaussian Discriminant Analysis (GDA), a generative model for
-Page 17: 
-Page 17: 
+Page 17:
+Page 17:
 Page 18: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 18: 
+Page 18:
 Page 18: 16
-Page 18: 
+Page 18:
 Page 18: classification, while ELM is a fast-learning algorithm for single-hidden layer feedforward neural
 Page 18: networks.
 Page 18: In Deep Learning, NN is the abbreviation for Neural Network, a basic structure of
@@ -620,35 +620,35 @@ Page 18: employed. Approximately 20% of the studies utilized RL exclusively, ano
 Page 18: 10% of the papers implemented hybrid methods, with the remainder distributed across
 Page 18: miscellaneous approaches. This distribution indicates an emerging interest in integrating multiple
 Page 18: AI paradigms for enhanced performance.
-Page 18: 
-Page 18: 
+Page 18:
+Page 18:
 Page 19: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 19: 
+Page 19:
 Page 19: 17
-Page 19: 
+Page 19:
 Page 19: Table 2. The Categories of Stock Market Data, Types of ML Applications, Empirical and
 Page 19: Prediction Models, Model Performance Evaluation Metrics, and Measures for Evaluating Portfolio
 Page 19: Outcomes.
 Page 19: Types of Data
-Page 19: 
+Page 19:
 Page 19: Tasks
-Page 19: 
+Page 19:
 Page 19: Models1
-Page 19: 
+Page 19:
 Page 19: Model Performance
 Page 19: Evaluation Metrics
-Page 19: 
+Page 19:
 Page 19: Portfolio
 Page 19: Performance
 Page 19: Evaluation Metrics
-Page 19: 
+Page 19:
 Page 19: Company Stocks
-Page 19: 
+Page 19:
 Page 19: Empirically
 Page 19: investigate the
 Page 19: pairs trading
 Page 19: performance
-Page 19: 
+Page 19:
 Page 19: Machine
 Page 19: Learning (RF,
 Page 19: AdaBoost, DT,
@@ -656,63 +656,63 @@ Page 19: Boosting, LM,
 Page 19: LR, SVM, SVR,
 Page 19: NB, EN, GDA,
 Page 19: ELM)
-Page 19: 
+Page 19:
 Page 19: MAE
-Page 19: 
+Page 19:
 Page 19: Cumulative Return
-Page 19: 
+Page 19:
 Page 19: MAPE
-Page 19: 
+Page 19:
 Page 19: Daily Return
-Page 19: 
+Page 19:
 Page 19: MSE
-Page 19: 
+Page 19:
 Page 19: Monthly Return
-Page 19: 
+Page 19:
 Page 19: RMSE
-Page 19: 
+Page 19:
 Page 19: Average Daily Return
-Page 19: 
+Page 19:
 Page 19: Confusion Matrix
-Page 19: 
+Page 19:
 Page 19: Maximum Drawdown
-Page 19: 
+Page 19:
 Page 19: Accuracy
-Page 19: 
+Page 19:
 Page 19: Skewness
-Page 19: 
+Page 19:
 Page 19: Precision
-Page 19: 
+Page 19:
 Page 19: Kurtosis
-Page 19: 
+Page 19:
 Page 19: Recall
-Page 19: 
+Page 19:
 Page 19: Sharpe Ratio
-Page 19: 
+Page 19:
 Page 19: F-Score
-Page 19: 
+Page 19:
 Page 19: Treynor ratio
-Page 19: 
+Page 19:
 Page 19: Model Loss
-Page 19: 
+Page 19:
 Page 19: Profit-loss ratio
-Page 19: 
+Page 19:
 Page 19: AUC
-Page 19: 
+Page 19:
 Page 19: Annual Volatility
-Page 19: 
+Page 19:
 Page 19: ROC Curve
-Page 19: 
+Page 19:
 Page 19: Standard Deviation
-Page 19: 
+Page 19:
 Page 19: Stock Index
 Page 19: Stock Index Futures
 Page 19: Commodities
 Page 19: Cryptocurrencies
 Page 19: Currencies
-Page 19: 
+Page 19:
 Page 19: Price prediction
-Page 19: 
+Page 19:
 Page 19: Deep Learning
 Page 19: (NN, DNN,
 Page 19: RNN, LSTM,
@@ -721,9 +721,9 @@ Page 19: Reinforcement
 Page 19: Learning (DQN,
 Page 19: DDQN, PPO,
 Page 19: HDRL, DPG)
-Page 19: 
+Page 19:
 Page 19: Reward
-Page 19: 
+Page 19:
 Page 19: The reviewed studies span multiple regions and markets, offering a global perspective on
 Page 19: pairs trading strategies. For the United States, indices such as the S&P 500, Russell 2000, NYSE
 Page 19: Composite, and AMEX Composite were frequently analyzed. Asian markets were represented
@@ -731,81 +731,81 @@ Page 19: through the Taiwan TAIEX, KOSPI 200, CSI 300, PSX, and SSE indices, whi
 Page 19: were evaluated using indices such as the FTSE 100. Table 3 provides a detailed overview of
 Page 19: the indices and their respective countries.
 Page 19: Table 3. presenting a compilation of key stock indices and markets evaluated in this study
-Page 19: 
+Page 19:
 Page 19: 1
-Page 19: 
+Page 19:
 Page 19: Index
 Page 19: S&P 500
-Page 19: 
+Page 19:
 Page 19: Country
 Page 19: U.S.
-Page 19: 
+Page 19:
 Page 19: S&P 400
-Page 19: 
+Page 19:
 Page 19: U.S.
-Page 19: 
+Page 19:
 Page 19: S&P 100
-Page 19: 
+Page 19:
 Page 19: U.S.
-Page 19: 
+Page 19:
 Page 19: Russell 2000
-Page 19: 
+Page 19:
 Page 19: U.S.
-Page 19: 
+Page 19:
 Page 19: A detailed introduction of the method will be provided in Chapter 5.
-Page 19: 
-Page 19: 
+Page 19:
+Page 19:
 Page 20: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 20: 
+Page 20:
 Page 20: 18
-Page 20: 
+Page 20:
 Page 20: Index
 Page 20: New York Stock Exchange (NYSE)
-Page 20: 
+Page 20:
 Page 20: Country
 Page 20: U.S.
-Page 20: 
+Page 20:
 Page 20: American Stock Exchange (AMEX)
-Page 20: 
+Page 20:
 Page 20: U.S.
-Page 20: 
+Page 20:
 Page 20: CSI 300
-Page 20: 
+Page 20:
 Page 20: China
-Page 20: 
+Page 20:
 Page 20: CSI 300 index futures (IF)
-Page 20: 
+Page 20:
 Page 20: China
-Page 20: 
+Page 20:
 Page 20: CSI 300 exchange traded fund (ETF)
-Page 20: 
+Page 20:
 Page 20: China
-Page 20: 
+Page 20:
 Page 20: Shanghai Stock Exchange (SSE)
-Page 20: 
+Page 20:
 Page 20: China
-Page 20: 
+Page 20:
 Page 20: Taiwan Stock Exchange Capitalization Weighted Stock
 Page 20: Index (TAIEX)
-Page 20: 
+Page 20:
 Page 20: Taiwan
-Page 20: 
+Page 20:
 Page 20: FTSE 100
-Page 20: 
+Page 20:
 Page 20: UK
-Page 20: 
+Page 20:
 Page 20: Pakistan Stock Exchange (PSX)
-Page 20: 
+Page 20:
 Page 20: Pakistan
-Page 20: 
+Page 20:
 Page 20: KOSPI 200
-Page 20: 
+Page 20:
 Page 20: South Korea
-Page 20: 
+Page 20:
 Page 20: 1027 NSE (National Stock Exchange of India)
-Page 20: 
+Page 20:
 Page 20: India
-Page 20: 
+Page 20:
 Page 20: 4. Data Processing and Analysis
 Page 20: Most of the studies included in our review relied on daily historical stock datasets, typically
 Page 20: comprising the Opening, High, Low, and Closing prices together with trading VolumeΓÇö
@@ -823,12 +823,12 @@ Page 20: evaluation.
 Page 20: An illustration of such data is shown below using Tesla Inc. as an example, consistent with
 Page 20: practices observed in the reviewed literature [1, 2, 5ΓÇô8, 11ΓÇô13, 15ΓÇô23, 25ΓÇô33, 35ΓÇô44, 46, 49, 50,
 Page 20: 52, 53, 56, 58ΓÇô62, 65ΓÇô68]. Table 4 displays a typical sample of daily OHLCV data for Tesla.
-Page 20: 
-Page 20: 
+Page 20:
+Page 20:
 Page 21: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 21: 
+Page 21:
 Page 21: 19
-Page 21: 
+Page 21:
 Page 21: Table 4. An example of Tesla Inc.ΓÇÖs daily historical data.
 Page 21: Date
 Page 21: 4/4/2023
@@ -841,7 +841,7 @@ Page 21: 4/13/2023
 Page 21: 4/14/2023
 Page 21: 4/17/2023
 Page 21: ΓÇªΓÇª
-Page 21: 
+Page 21:
 Page 21: Open
 Page 21: 197.320007
 Page 21: 190.520004
@@ -853,7 +853,7 @@ Page 21: 182.960007
 Page 21: 183.949997
 Page 21: 186.320007
 Page 21: ΓÇªΓÇª
-Page 21: 
+Page 21:
 Page 21: High
 Page 21: 198.740005
 Page 21: 190.679993
@@ -865,7 +865,7 @@ Page 21: 186.500000
 Page 21: 186.279999
 Page 21: 189.690002
 Page 21: ΓÇªΓÇª
-Page 21: 
+Page 21:
 Page 21: Low
 Page 21: 190.320007
 Page 21: 183.759995
@@ -877,7 +877,7 @@ Page 21: 180.940002
 Page 21: 182.009995
 Page 21: 182.690002
 Page 21: ΓÇªΓÇª
-Page 21: 
+Page 21:
 Page 21: Close
 Page 21: 192.580002
 Page 21: 185.520004
@@ -889,7 +889,7 @@ Page 21: 185.899994
 Page 21: 185.000000
 Page 21: 187.039993
 Page 21: ΓÇªΓÇª
-Page 21: 
+Page 21:
 Page 21: Adj Close
 Page 21: 192.580002
 Page 21: 185.520004
@@ -901,7 +901,7 @@ Page 21: 185.899994
 Page 21: 185.000000
 Page 21: 187.039993
 Page 21: ΓÇªΓÇª
-Page 21: 
+Page 21:
 Page 21: Volume
 Page 21: 126463800
 Page 21: 133882500
@@ -913,7 +913,7 @@ Page 21: 112933000
 Page 21: 96438700
 Page 21: 116662200
 Page 21: ΓÇªΓÇª
-Page 21: 
+Page 21:
 Page 21: In our dataset analysis, 51 out of the 68 reviewed studies (approximately 75%) utilized daily
 Page 21: frequency data as the primary input for modeling and testing. This dominance reflects a strong
 Page 21: methodological preference in the academic community, driven by the balance between temporal
@@ -932,12 +932,12 @@ Page 21: fixed intervals (e.g., 1-minute or 5-minute bars), tick data provides a
 Page 21: This high-resolution dataset is particularly valuable for HFT strategies, which rely on
 Page 21: executing a large number of trades within milliseconds or seconds. Researchers and practitioners
 Page 21: use tick data to construct fine-grained models of market behavior, enabling the detection of shortterm price patterns and microstructure dynamics with high precision. Moreover, tick data supports
-Page 21: 
-Page 21: 
+Page 21:
+Page 21:
 Page 22: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 22: 
+Page 22:
 Page 22: 20
-Page 22: 
+Page 22:
 Page 22: detailed examinations of order flow, liquidity provision, and price discovery mechanisms, offering
 Page 22: crucial insights into intraday market conditions.
 Page 22: Despite these advantages, the use of tick data poses significant challenges in terms of storage,
@@ -953,260 +953,260 @@ Page 22: algorithms in fast-paced environments is considerable.
 Page 22: Table 5. A sample of historical tick-level data from the Gold Futures AU2106 contract.
 Page 22: Contract
 Page 22: ID
-Page 22: 
+Page 22:
 Page 22: Trade Date
-Page 22: 
+Page 22:
 Page 22: Previous
 Page 22: Settle
-Page 22: 
+Page 22:
 Page 22: Timestamp
-Page 22: 
+Page 22:
 Page 22: Volume
-Page 22: 
+Page 22:
 Page 22: Price
-Page 22: 
+Page 22:
 Page 22: Bid
 Page 22: Price
-Page 22: 
+Page 22:
 Page 22: Ask
 Page 22: Price
-Page 22: 
+Page 22:
 Page 22: Last
 Page 22: Settle
-Page 22: 
+Page 22:
 Page 22: Turnover
-Page 22: 
+Page 22:
 Page 22: au2106
-Page 22: 
+Page 22:
 Page 22: 20200610
-Page 22: 
+Page 22:
 Page 22: 20200609
-Page 22: 
+Page 22:
 Page 22: 21:00:00
-Page 22: 
+Page 22:
 Page 22: 500
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391880
-Page 22: 
+Page 22:
 Page 22: au2106
-Page 22: 
+Page 22:
 Page 22: 20200610
-Page 22: 
+Page 22:
 Page 22: 20200609
-Page 22: 
+Page 22:
 Page 22: 21:00:01
-Page 22: 
+Page 22:
 Page 22: 0
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391880
-Page 22: 
+Page 22:
 Page 22: au2106
-Page 22: 
+Page 22:
 Page 22: 20200610
-Page 22: 
+Page 22:
 Page 22: 20200609
-Page 22: 
+Page 22:
 Page 22: 21:00:01
-Page 22: 
+Page 22:
 Page 22: 500
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391880
-Page 22: 
+Page 22:
 Page 22: au2106
-Page 22: 
+Page 22:
 Page 22: 20200610
-Page 22: 
+Page 22:
 Page 22: 20200609
-Page 22: 
+Page 22:
 Page 22: 21:00:02
-Page 22: 
+Page 22:
 Page 22: 0
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391880
-Page 22: 
+Page 22:
 Page 22: au2106
-Page 22: 
+Page 22:
 Page 22: 20200610
-Page 22: 
+Page 22:
 Page 22: 20200609
-Page 22: 
+Page 22:
 Page 22: 21:00:02
-Page 22: 
+Page 22:
 Page 22: 500
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391880
-Page 22: 
+Page 22:
 Page 22: au2106
-Page 22: 
+Page 22:
 Page 22: 20200610
-Page 22: 
+Page 22:
 Page 22: 20200609
-Page 22: 
+Page 22:
 Page 22: 21:00:03
-Page 22: 
+Page 22:
 Page 22: 0
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391880
-Page 22: 
+Page 22:
 Page 22: au2106
-Page 22: 
+Page 22:
 Page 22: 20200610
-Page 22: 
+Page 22:
 Page 22: 20200609
-Page 22: 
+Page 22:
 Page 22: 21:00:03
-Page 22: 
+Page 22:
 Page 22: 500
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391880
-Page 22: 
+Page 22:
 Page 22: au2106
-Page 22: 
+Page 22:
 Page 22: 20200610
-Page 22: 
+Page 22:
 Page 22: 20200609
-Page 22: 
+Page 22:
 Page 22: 21:00:04
-Page 22: 
+Page 22:
 Page 22: 0
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391880
-Page 22: 
+Page 22:
 Page 22: au2106
-Page 22: 
+Page 22:
 Page 22: 20200610
-Page 22: 
+Page 22:
 Page 22: 20200609
-Page 22: 
+Page 22:
 Page 22: 21:00:04
-Page 22: 
+Page 22:
 Page 22: 500
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391880
-Page 22: 
+Page 22:
 Page 22: au2106
-Page 22: 
+Page 22:
 Page 22: 20200610
-Page 22: 
+Page 22:
 Page 22: 20200609
-Page 22: 
+Page 22:
 Page 22: 21:00:05
-Page 22: 
+Page 22:
 Page 22: 0
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391.88
-Page 22: 
+Page 22:
 Page 22: 391880
-Page 22: 
+Page 22:
 Page 22: ΓÇªΓÇª
-Page 22: 
+Page 22:
 Page 22: ΓÇªΓÇª
-Page 22: 
+Page 22:
 Page 22: ΓÇªΓÇª
-Page 22: 
+Page 22:
 Page 22: ΓÇªΓÇª
-Page 22: 
+Page 22:
 Page 22: ΓÇªΓÇª
-Page 22: 
+Page 22:
 Page 22: ΓÇªΓÇª
-Page 22: 
+Page 22:
 Page 22: ΓÇªΓÇª
-Page 22: 
+Page 22:
 Page 22: ΓÇªΓÇª
-Page 22: 
+Page 22:
 Page 22: ΓÇªΓÇª
-Page 22: 
+Page 22:
 Page 22: ΓÇªΓÇª
-Page 22: 
+Page 22:
 Page 22: 4.3 Historical Price Data with One-Minute Interval
 Page 22: One-minute historical data represents a practical compromise between the ultra-high
 Page 22: granularity of tick-level data and the broader perspective of hourly or daily intervals. Each record
 Page 22: captures the OHLC prices and trading volume for a specific minute, thereby offering a more
 Page 22: detailed view of market activity than daily data while avoiding the overwhelming scale of tick data.
-Page 22: 
-Page 22: 
+Page 22:
+Page 22:
 Page 23: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 23: 
+Page 23:
 Page 23: 21
-Page 23: 
+Page 23:
 Page 23: This resolution is particularly well-suited for medium-frequency trading strategies, as it
 Page 23: enables analysts and traders to track short-term price dynamics and assess evolving market
 Page 23: conditions with enhanced clarity. At the minute level, researchers can investigate phenomena such
@@ -1232,7 +1232,7 @@ Page 23: 2024-04-04 09:37:00
 Page 23: 2024-04-04 09:38:00
 Page 23: 2024-04-04 09:39:00
 Page 23: ΓÇªΓÇª
-Page 23: 
+Page 23:
 Page 23: Open
 Page 23: 170.0000
 Page 23: 170.0000
@@ -1245,7 +1245,7 @@ Page 23: 168.4600
 Page 23: 168.5464
 Page 23: 168.4324
 Page 23: ΓÇªΓÇª
-Page 23: 
+Page 23:
 Page 23: High
 Page 23: 170.7400
 Page 23: 170.0301
@@ -1258,7 +1258,7 @@ Page 23: 168.8000
 Page 23: 168.7000
 Page 23: 168.8500
 Page 23: ΓÇªΓÇª
-Page 23: 
+Page 23:
 Page 23: Low
 Page 23: 169.8000
 Page 23: 169.3100
@@ -1271,7 +1271,7 @@ Page 23: 168.3400
 Page 23: 168.3201
 Page 23: 168.3927
 Page 23: ΓÇªΓÇª
-Page 23: 
+Page 23:
 Page 23: Close
 Page 23: 170.0303
 Page 23: 169.4850
@@ -1284,7 +1284,7 @@ Page 23: 168.5400
 Page 23: 168.4117
 Page 23: 168.7199
 Page 23: ΓÇªΓÇª
-Page 23: 
+Page 23:
 Page 23: Adj Close
 Page 23: 170.0303
 Page 23: 169.4850
@@ -1297,7 +1297,7 @@ Page 23: 168.5400
 Page 23: 168.4117
 Page 23: 168.7199
 Page 23: ΓÇªΓÇª
-Page 23: 
+Page 23:
 Page 23: Volume
 Page 23: 2425141
 Page 23: 637577
@@ -1310,17 +1310,17 @@ Page 23: 441173
 Page 23: 308755
 Page 23: 384769
 Page 23: ΓÇªΓÇª
-Page 23: 
+Page 23:
 Page 23: 4.4 Historical Price Data with Five-Minute Interval
 Page 23: Five-minute historical data provides an intermediate level of temporal granularity by
 Page 23: aggregating OHLC prices and trading volume within five-minute windows. This format offers
 Page 23: a condensed yet informative perspective on intraday market behavior, striking a balance between
-Page 23: 
-Page 23: 
+Page 23:
+Page 23:
 Page 24: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 24: 
+Page 24:
 Page 24: 22
-Page 24: 
+Page 24:
 Page 24: the noise sensitivity of one-minute or tick-level data and the broader abstraction of hourly or daily
 Page 24: intervals.
 Page 24: Such data is particularly valuable for identifying short- to medium-term trends, including
@@ -1346,7 +1346,7 @@ Page 24: 2024-04-04 10:05:00
 Page 24: 2024-04-04 10:10:00
 Page 24: 2024-04-04 10:15:00
 Page 24: ΓÇªΓÇª
-Page 24: 
+Page 24:
 Page 24: Open
 Page 24: 170.0000
 Page 24: 168.5800
@@ -1359,7 +1359,7 @@ Page 24: 168.7600
 Page 24: 169.6600
 Page 24: 170.0274
 Page 24: ΓÇªΓÇª
-Page 24: 
+Page 24:
 Page 24: High
 Page 24: 170.7400
 Page 24: 168.8500
@@ -1372,7 +1372,7 @@ Page 24: 169.7500
 Page 24: 170.1400
 Page 24: 170.1200
 Page 24: ΓÇªΓÇª
-Page 24: 
+Page 24:
 Page 24: Low
 Page 24: 168.5200
 Page 24: 168.2500
@@ -1385,7 +1385,7 @@ Page 24: 168.7200
 Page 24: 169.4300
 Page 24: 169.7200
 Page 24: ΓÇªΓÇª
-Page 24: 
+Page 24:
 Page 24: Close
 Page 24: 168.5600
 Page 24: 168.7199
@@ -1398,7 +1398,7 @@ Page 24: 169.6550
 Page 24: 170.0437
 Page 24: 169.8956
 Page 24: ΓÇªΓÇª
-Page 24: 
+Page 24:
 Page 24: Adj Close
 Page 24: 168.5600
 Page 24: 168.7199
@@ -1411,7 +1411,7 @@ Page 24: 169.6550
 Page 24: 170.0437
 Page 24: 169.8956
 Page 24: ΓÇªΓÇª
-Page 24: 
+Page 24:
 Page 24: Volume
 Page 24: 4561139
 Page 24: 2070081
@@ -1424,18 +1424,18 @@ Page 24: 1288829
 Page 24: 1449532
 Page 24: 978258
 Page 24: ΓÇªΓÇª
-Page 24: 
+Page 24:
 Page 24: 4.5 Historical Price Data with Hourly Interval
 Page 24: Hourly historical data provides a macro-intraday perspective by capturing aggregated price
 Page 24: movements and trading volumes within each trading hour. This frequency represents
 Page 24: a compromise between the microstructure-oriented granularity of tick or minute-level data and
 Page 24: the broader abstraction of daily summaries.
-Page 24: 
-Page 24: 
+Page 24:
+Page 24:
 Page 25: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 25: 
+Page 25:
 Page 25: 23
-Page 25: 
+Page 25:
 Page 25: Each observation in an hourly dataset typically contains the OHLC, together with the trading
 Page 25: volume for that hour. Such temporal aggregation is particularly relevant for identifying intraday
 Page 25: price dynamicsΓÇösuch as momentum shifts, breakout formations, and volatility spikesΓÇöwhile
@@ -1455,178 +1455,178 @@ Page 25: value for strategies that demand a broader yet still responsive perspec
 Page 25: including pairs trading frameworks where signal stability and reduced noise are essential.
 Page 25: Table 8. An example of Tesla Inc.ΓÇÖs hourly historical data.
 Page 25: Datetime
-Page 25: 
+Page 25:
 Page 25: Open
-Page 25: 
+Page 25:
 Page 25: High
-Page 25: 
+Page 25:
 Page 25: Low
-Page 25: 
+Page 25:
 Page 25: Close
-Page 25: 
+Page 25:
 Page 25: Adj Close
-Page 25: 
+Page 25:
 Page 25: Volume
-Page 25: 
+Page 25:
 Page 25: 2024-04-01 09:30:00
-Page 25: 
+Page 25:
 Page 25: 176.1600
-Page 25: 
+Page 25:
 Page 25: 176.3900
-Page 25: 
+Page 25:
 Page 25: 171.6000
-Page 25: 
+Page 25:
 Page 25: 171.7280
-Page 25: 
+Page 25:
 Page 25: 171.7280
-Page 25: 
+Page 25:
 Page 25: 23947033
-Page 25: 
+Page 25:
 Page 25: 2024-04-01 10:30:00
-Page 25: 
+Page 25:
 Page 25: 171.7400
-Page 25: 
+Page 25:
 Page 25: 172.1899
-Page 25: 
+Page 25:
 Page 25: 170.2100
-Page 25: 
+Page 25:
 Page 25: 172.1050
-Page 25: 
+Page 25:
 Page 25: 172.1050
-Page 25: 
+Page 25:
 Page 25: 15778216
-Page 25: 
+Page 25:
 Page 25: 2024-04-01 11:30:00
-Page 25: 
+Page 25:
 Page 25: 172.0900
-Page 25: 
+Page 25:
 Page 25: 172.4300
-Page 25: 
+Page 25:
 Page 25: 170.8900
-Page 25: 
+Page 25:
 Page 25: 172.2800
-Page 25: 
+Page 25:
 Page 25: 172.2800
-Page 25: 
+Page 25:
 Page 25: 8095873
-Page 25: 
+Page 25:
 Page 25: 2024-04-01 12:30:00
-Page 25: 
+Page 25:
 Page 25: 172.2882
-Page 25: 
+Page 25:
 Page 25: 173.2771
-Page 25: 
+Page 25:
 Page 25: 171.7400
-Page 25: 
+Page 25:
 Page 25: 171.8900
-Page 25: 
+Page 25:
 Page 25: 171.8900
-Page 25: 
+Page 25:
 Page 25: 7020081
-Page 25: 
+Page 25:
 Page 25: 2024-04-01 13:30:00
-Page 25: 
+Page 25:
 Page 25: 171.8600
-Page 25: 
+Page 25:
 Page 25: 173.1050
-Page 25: 
+Page 25:
 Page 25: 171.7500
-Page 25: 
+Page 25:
 Page 25: 172.9400
-Page 25: 
+Page 25:
 Page 25: 172.9400
-Page 25: 
+Page 25:
 Page 25: 5705376
-Page 25: 
+Page 25:
 Page 25: 2024-04-01 14:30:00
-Page 25: 
+Page 25:
 Page 25: 172.9200
-Page 25: 
+Page 25:
 Page 25: 174.0868
-Page 25: 
+Page 25:
 Page 25: 172.5901
-Page 25: 
+Page 25:
 Page 25: 173.9550
-Page 25: 
+Page 25:
 Page 25: 173.9550
-Page 25: 
+Page 25:
 Page 25: 7463119
-Page 25: 
+Page 25:
 Page 25: 2024-04-01 15:30:00
-Page 25: 
+Page 25:
 Page 25: 173.9500
-Page 25: 
+Page 25:
 Page 25: 175.2900
-Page 25: 
+Page 25:
 Page 25: 173.1901
-Page 25: 
+Page 25:
 Page 25: 175.1200
-Page 25: 
+Page 25:
 Page 25: 175.1200
-Page 25: 
+Page 25:
 Page 25: 8080117
-Page 25: 
+Page 25:
 Page 25: 2024-04-02 09:30:00
-Page 25: 
+Page 25:
 Page 25: 164.6890
-Page 25: 
+Page 25:
 Page 25: 167.1900
-Page 25: 
+Page 25:
 Page 25: 163.4300
-Page 25: 
+Page 25:
 Page 25: 165.5701
-Page 25: 
+Page 25:
 Page 25: 165.5701
-Page 25: 
+Page 25:
 Page 25: 45944518
-Page 25: 
+Page 25:
 Page 25: 2024-04-02 10:30:00
-Page 25: 
+Page 25:
 Page 25: 165.5800
-Page 25: 
+Page 25:
 Page 25: 165.8707
-Page 25: 
+Page 25:
 Page 25: 163.9000
-Page 25: 
+Page 25:
 Page 25: 165.6700
-Page 25: 
+Page 25:
 Page 25: 165.6700
-Page 25: 
+Page 25:
 Page 25: 18110912
-Page 25: 
+Page 25:
 Page 25: 2024-04-02 11:30:00
-Page 25: 
+Page 25:
 Page 25: 165.6700
-Page 25: 
+Page 25:
 Page 25: 166.6500
-Page 25: 
+Page 25:
 Page 25: 165.1129
-Page 25: 
+Page 25:
 Page 25: 166.2600
-Page 25: 
+Page 25:
 Page 25: 166.2600
-Page 25: 
+Page 25:
 Page 25: 11561980
-Page 25: 
+Page 25:
 Page 25: ΓÇªΓÇª
-Page 25: 
+Page 25:
 Page 25: ΓÇªΓÇª
-Page 25: 
+Page 25:
 Page 25: ΓÇªΓÇª
-Page 25: 
+Page 25:
 Page 25: ΓÇªΓÇª
-Page 25: 
+Page 25:
 Page 25: ΓÇªΓÇª
-Page 25: 
+Page 25:
 Page 25: ΓÇªΓÇª
-Page 25: 
+Page 25:
 Page 25: ΓÇªΓÇª
-Page 25: 
-Page 25: 
+Page 25:
+Page 25:
 Page 26: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 26: 
+Page 26:
 Page 26: 24
-Page 26: 
+Page 26:
 Page 26: 4.6 Historical Price Data with Monthly Interval
 Page 26: Monthly historical data provide a broad, long-term perspective on market performance by
 Page 26: aggregating trading activity over one-month intervals. Each record typically includes the opening
@@ -1657,12 +1657,12 @@ Page 26: In Section 4, we examined various types of historical stock price data 
 Page 26: temporal resolutionsΓÇöfrom daily to monthlyΓÇöeach providing distinct analytical advantages for
 Page 26: understanding market behavior. Daily data, which include OHLCV, are the most widely adopted
 Page 26: due to their accessibility and ability to capture comprehensive market activity within a trading
-Page 26: 
-Page 26: 
+Page 26:
+Page 26:
 Page 27: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 27: 
+Page 27:
 Page 27: 25
-Page 27: 
+Page 27:
 Page 27: session. Tick-level data, on the other hand, record every market transaction, offering highresolution insights into market microstructure and liquidity. However, their use is constrained by
 Page 27: computational demands and limited accessibility due to licensing costs.
 Page 27: Table 9. An example of Tesla corporation's monthly historical data.
@@ -1678,7 +1678,7 @@ Page 27: 2023-12-01 00:00:00
 Page 27: 2024-01-01 00:00:00
 Page 27: 2024-02-01 00:00:00
 Page 27: ΓÇªΓÇª
-Page 27: 
+Page 27:
 Page 27: Open
 Page 27: 163.1700
 Page 27: 202.5900
@@ -1691,7 +1691,7 @@ Page 27: 233.1400
 Page 27: 250.0800
 Page 27: 188.5000
 Page 27: ΓÇªΓÇª
-Page 27: 
+Page 27:
 Page 27: High
 Page 27: 204.4800
 Page 27: 276.9900
@@ -1704,7 +1704,7 @@ Page 27: 265.1300
 Page 27: 251.2500
 Page 27: 205.6000
 Page 27: ΓÇªΓÇª
-Page 27: 
+Page 27:
 Page 27: Low
 Page 27: 158.8300
 Page 27: 199.3700
@@ -1717,7 +1717,7 @@ Page 27: 228.2000
 Page 27: 180.0600
 Page 27: 175.0100
 Page 27: ΓÇªΓÇª
-Page 27: 
+Page 27:
 Page 27: Close
 Page 27: 203.9300
 Page 27: 261.7700
@@ -1730,7 +1730,7 @@ Page 27: 248.4800
 Page 27: 187.2900
 Page 27: 201.8800
 Page 27: ΓÇªΓÇª
-Page 27: 
+Page 27:
 Page 27: Adj Close
 Page 27: 203.9300
 Page 27: 261.7700
@@ -1743,7 +1743,7 @@ Page 27: 248.4800
 Page 27: 187.2900
 Page 27: 201.8800
 Page 27: ΓÇªΓÇª
-Page 27: 
+Page 27:
 Page 27: Volume
 Page 27: 2681994800
 Page 27: 3440477900
@@ -1756,7 +1756,7 @@ Page 27: 2294598400
 Page 27: 2343784600
 Page 27: 2019907700
 Page 27: ΓÇªΓÇª
-Page 27: 
+Page 27:
 Page 27: Intermediate-frequency data, such as one-minute, five-minute, and hourly intervals, provide
 Page 27: a practical compromise between granularity and manageability. These datasets enable analysts to
 Page 27: detect intraday trends and short-term volatility, making them well-suited for medium-frequency
@@ -1774,12 +1774,12 @@ Page 27: Comparing TeslaΓÇÖs price data across these intervals also reveals n
 Page 27: statistical characteristicsΓÇösuch as mean, variance, and volatility. Higher-frequency data typically
 Page 27: exhibit greater variance and noise due to rapid market reactions, whereas lower-frequency data
 Page 27: reduce short-term fluctuations, making long-term patterns more visible. Recognizing these
-Page 27: 
-Page 27: 
+Page 27:
+Page 27:
 Page 28: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 28: 
+Page 28:
 Page 28: 26
-Page 28: 
+Page 28:
 Page 28: differences is crucial for aligning the data frequency with the design and objective of a trading
 Page 28: strategy. In the specific context of pairs trading, this alignment is particularly critical: highfrequency data may uncover transient arbitrage opportunities but at the cost of higher noise and
 Page 28: transaction costs, while lower-frequency data highlight more stable long-term mean-reverting
@@ -1800,12 +1800,12 @@ Page 28: emerges at the intersection of DL and RL, combining representational po
 Page 28: learning mechanisms.
 Page 28: Figure 3. Relationship between AI, ML, DL, RL, and DRL. Machine learning, deep learning,
 Page 28: and reinforcement learning all fall under the umbrella of artificial intelligence.
-Page 28: 
-Page 28: 
+Page 28:
+Page 28:
 Page 29: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 29: 
+Page 29:
 Page 29: 27
-Page 29: 
+Page 29:
 Page 29: AI methods are now widely applied in quantitative trading, where financial data are modeled
 Page 29: through mathematical, statistical, and algorithmic techniques. Among these strategies, pairs
 Page 29: trading has proven particularly well-suited to AI applications. Pairs trading involves identifying
@@ -1836,12 +1836,12 @@ Page 29: Reinforcement learning introduces a fundamentally different paradigm, m
 Page 29: suitable for sequential decision-making in dynamic and uncertain markets. In the context of pairs
 Page 29: trading, RL agents interact with a simulated or real trading environment, receiving rewards based
 Page 29: on the profitability of their actions. Through this trial-and-error process, the agent progressively
-Page 29: 
-Page 29: 
+Page 29:
+Page 29:
 Page 30: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 30: 
+Page 30:
 Page 30: 28
-Page 30: 
+Page 30:
 Page 30: refines its trading policy, determining optimal entry and exit points in real time. RLΓÇÖs adaptability
 Page 30: is a key advantage: agents can update strategies incrementally as new data arrive, reducing the need
 Page 30: for complete retraining when market conditions evolve. Furthermore, RL frameworks facilitate
@@ -1867,7 +1867,7 @@ Page 30: [54]
 Page 30: [55]
 Page 30: [59]
 Page 30: [60]
-Page 30: 
+Page 30:
 Page 30: Supervised Learning Models
 Page 30: SVM
 Page 30: SVR
@@ -1879,7 +1879,7 @@ Page 30: RF
 Page 30: LR, RF
 Page 30: GBDT
 Page 30: SVM, RF, ANFIS
-Page 30: 
+Page 30:
 Page 30: SVM and SVR are among the most widely adopted supervised models in the reviewed
 Page 30: studies. Their popularity stems from robustness in high-dimensional settings and the ability to
 Page 30: handle outliers effectively. While SVM is primarily designed for classification tasks, SVR extends
@@ -1887,12 +1887,12 @@ Page 30: the framework to regression problems, enabling the prediction of contin
 Page 30: Tree-based ensemble methods constitute another major category. RF constructs multiple
 Page 30: decision trees and aggregates their predictions, reducing variance and mitigating overfitting.
 Page 30: Gradient Boosting Decision Trees (GBDT), along with advanced variants such as XGBoost and
-Page 30: 
-Page 30: 
+Page 30:
+Page 30:
 Page 31: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 31: 
+Page 31:
 Page 31: 29
-Page 31: 
+Page 31:
 Page 31: LightGBM (LGBM), follow an iterative approach where each tree corrects the residual errors of
 Page 31: its predecessors. Compared to RF, boosting methods aim to reduce bias and generally achieve
 Page 31: higher predictive accuracy. XGBoost and LGBM further improve scalability and computational
@@ -1921,7 +1921,7 @@ Page 31: [9]
 Page 31: [18]
 Page 31: [68]
 Page 31: [25, 39]
-Page 31: 
+Page 31:
 Page 31: Unsupervised Learning Models
 Page 31: DBSCAN
 Page 31: PCA, DBSCAN
@@ -1929,15 +1929,15 @@ Page 31: K-Means, DBSCAN, AHC
 Page 31: OPTICS Clustering Algorithm (OPTICS)
 Page 31: EM Algorithm (EM)
 Page 31: LGBM, RF, SVR
-Page 31: 
+Page 31:
 Page 31: Unsupervised learning models are widely applied in pairs trading to uncover latent structures
 Page 31: in unlabeled data, making them particularly valuable for exploratory analysis and pair selection.
-Page 31: 
-Page 31: 
+Page 31:
+Page 31:
 Page 32: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 32: 
+Page 32:
 Page 32: 30
-Page 32: 
+Page 32:
 Page 32: The reviewed studies predominantly employ clustering algorithms and dimensionality reduction
 Page 32: techniques.
 Page 32: Among the clustering approaches, density-based methods such as DBSCAN are frequently
@@ -1967,12 +1967,12 @@ Page 32: Interestingly, some studies also report the use of models such as LGBM,
 Page 32: this context. Although these are conventionally classified as supervised methods, their inclusion
 Page 32: likely reflects applications within semi-supervised or hybrid frameworks, where clustering results
 Page 32: are integrated with supervised prediction tasks.
-Page 32: 
-Page 32: 
+Page 32:
+Page 32:
 Page 33: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 33: 
+Page 33:
 Page 33: 31
-Page 33: 
+Page 33:
 Page 33: Overall, unsupervised learning methods provide powerful tools for detecting hidden
 Page 33: relationships in financial markets. Density-based models like DBSCAN and OPTICS excel
 Page 33: at handling irregular structures and noisy environments, whereas K-Means and AHC offer more
@@ -1994,7 +1994,7 @@ Page 33: [46]
 Page 33: [50]
 Page 33: [56]
 Page 33: [57]
-Page 33: 
+Page 33:
 Page 33: Deep Learning Models
 Page 33: LSTM
 Page 33: Neural Network
@@ -2007,7 +2007,7 @@ Page 33: LSTM, CNN, Multilayer perceptron (MLP)
 Page 33: DNN
 Page 33: BNN, DP-BNN, DDP-BNN
 Page 33: Filterbank CNN
-Page 33: 
+Page 33:
 Page 33: The DL models employed in the reviewed studies encompass a wide range of architectures,
 Page 33: each addressing specific challenges inherent in financial time series analysis. RNNs and their
 Page 33: advanced variants, particularly LSTM networks, dominate the literature due to their capacity to
@@ -2020,12 +2020,12 @@ Page 33: Feedforward-based models, including DNNs, MLPs, and other standard neur
 Page 33: structures, are applied to capture nonlinear mappings in asset price data. CNNs have also been
 Page 33: adapted from computer vision to financial contexts, where variants such as Filterbank CNNs are
 Page 33: used to extract local temporal patterns and repetitive structures from market signals.
-Page 33: 
-Page 33: 
+Page 33:
+Page 33:
 Page 34: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 34: 
+Page 34:
 Page 34: 32
-Page 34: 
+Page 34:
 Page 34: Beyond conventional neural networks, several innovative models have emerged.
 Page 34: KalmanBOT integrates Kalman filtering into a neural framework, allowing dynamic state
 Page 34: estimation and adaptation to evolving market conditions. SNNs incorporate controlled randomness
@@ -2053,7 +2053,7 @@ Page 34: [34]
 Page 34: [35]
 Page 34: [42]
 Page 34: [63]
-Page 34: 
+Page 34:
 Page 34: Reinforcement Learning Models
 Page 34: DQN
 Page 34: DRL, CA-DRL
@@ -2068,16 +2068,16 @@ Page 34: RL-0, RL-0.02, RL-0.05, RL-0.1
 Page 34: Deep Reinforcement Learning (DRL)
 Page 34: DQN, Double Deep Q-Network (DDQN)
 Page 34: RL
-Page 34: 
+Page 34:
 Page 34: The RL approaches applied in the reviewed literature span a diverse set of frameworks,
 Page 34: reflecting the complexity of financial decision-making environments. Value-based methods such
 Page 34: as the DQN employ neural networks to approximate Q-values, enabling agents to learn optimal
-Page 34: 
-Page 34: 
+Page 34:
+Page 34:
 Page 35: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 35: 
+Page 35:
 Page 35: 33
-Page 35: 
+Page 35:
 Page 35: policies through iterative exploration and exploitation. Its extension, DDQN, addresses
 Page 35: the overestimation bias inherent in standard DQN, yielding more stable and accurate convergence.
 Page 35: Beyond these foundations, DRL integrates neural architectures with RL to handle highdimensional market data. Domain-specific variants such as CA-DRL embed econometric
@@ -2107,12 +2107,12 @@ Page 35: The hybrid models summarized in Table 14 reflect a growing consensus in
 Page 35: no single approach is sufficient to capture the multifaceted dynamics of financial markets. These
 Page 35: designs can be broadly categorized into three groups. First, feature-combination approaches
 Page 35: employ dimensionality reduction techniques (e.g., PCA, CAE) and clustering algorithms
-Page 35: 
-Page 35: 
+Page 35:
+Page 35:
 Page 36: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 36: 
+Page 36:
 Page 36: 34
-Page 36: 
+Page 36:
 Page 36: (e.g., DBSCAN) as preprocessing steps, before passing the transformed data into reinforcement
 Page 36: learning models such as PPO. This improves the signal-to-noise ratio and enhances the stability of
 Page 36: policy learning. Second, model-fusion frameworks integrate conventional ML methods (e.g., LR,
@@ -2135,7 +2135,7 @@ Page 36: [44]
 Page 36: [51]
 Page 36: [52]
 Page 36: [61]
-Page 36: 
+Page 36:
 Page 36: Combined Models
 Page 36: PCA, Convolutional AutoEncoders (CAE), DBSCAN, PPO
 Page 36: LR, XGBoost, CNN, LSTM
@@ -2149,7 +2149,7 @@ Page 36: LSTM, CNN, Deterministic Policy Gradient (DPG)
 Page 36: ANN, XGBoost
 Page 36: LR, Gaussian Discriminant Analysis (GDA), SVM, NN
 Page 36: DNN, GBDT, RF
-Page 36: 
+Page 36:
 Page 36: These hybrid approaches go beyond mere technical integration: they embody an attempt to
 Page 36: reconcile diverse temporal, structural, and behavioral aspects of market data within a unified
 Page 36: framework. Particularly noteworthy is the increasing incorporation of reinforcement learning into
@@ -2161,12 +2161,12 @@ Page 36: baselines, raising concerns about overfitting and limited generalizabil
 Page 36: benefit from formalizing hybrid architectures within principled frameworks such as meta-learning
 Page 36: or modular reinforcement learning, while simultaneously prioritizing model interpretability,
 Page 36: robustness, and real-world deployability.
-Page 36: 
-Page 36: 
+Page 36:
+Page 36:
 Page 37: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 37: 
+Page 37:
 Page 37: 35
-Page 37: 
+Page 37:
 Page 37: 5.1 Machine Learning
 Page 37: ML refers to the process of training algorithms to learn patterns from data and make
 Page 37: predictions or decisions without explicit rule-based programming. Within ML, algorithms are
@@ -2194,12 +2194,12 @@ Page 37: The subsequent discussion provides a closer examination of how these mo
 Page 37: support vector machines, are employed in pairs trading. Attention is given to their predictive
 Page 37: capacity, their effectiveness in generating trading signals, and their role in supporting statistical
 Page 37: arbitrage strategies.
-Page 37: 
-Page 37: 
+Page 37:
+Page 37:
 Page 38: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 38: 
+Page 38:
 Page 38: 36
-Page 38: 
+Page 38:
 Page 38: 5.1.1.1 Introduction to Support Vector Machine
 Page 38: SVM is a widely used and versatile supervised learning algorithm that can be applied to both
 Page 38: classification and regression tasks, although it is predominantly utilized for classification.
@@ -2226,50 +2226,50 @@ Page 38: a more robust model. This flexibility is particularly relevant in finan
 Page 38: and outliers are common in market data.
 Page 38: The optimal separating hyperplane in a linear SVM is:
 Page 38: ≡¥æñ≡¥æçx + b = 0
-Page 38: 
+Page 38:
 Page 38: (5.1)
-Page 38: 
+Page 38:
 Page 38: where ≡¥æñ is the normal vector (determining the orientation of the hyperplane), x denotes a data
 Page 38: point in feature space, and b is the bias term shifting the hyperplane along ≡¥æñ.
-Page 38: 
-Page 38: 
+Page 38:
+Page 38:
 Page 39: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 39: 
+Page 39:
 Page 39: 37
-Page 39: 
+Page 39:
 Page 39: Training a linear SVM chooses ≡¥æñ and b to maximize the margin, i.e., the minimum distance
 Page 39: from the hyperplane to the nearest data points (the support vectors). For linearly separable data
 Page 39: (hard margin), this is equivalent to the convex program,
 Page 39: 1
-Page 39: 
+Page 39:
 Page 39: min ||≡¥æñ||2 ≡¥æá. ≡¥æí. ≡¥æª≡¥æû (≡¥æñ ≡¥æç x≡¥æû + b) ΓëÑ 1, i = 1, ΓÇª , n
 Page 39: ≡¥æñ,≡¥æÅ 2
-Page 39: 
+Page 39:
 Page 39: (5.2)
-Page 39: 
+Page 39:
 Page 39: with labels ≡¥æª≡¥æû Γêê {ΓêÆ1, +1}.
 Page 39: In practice, real data are rarely perfectly separable. The soft-margin formulation introduces
 Page 39: slack variables ≡¥£ë≡¥æû ΓëÑ 0 and the regularization parameter ≡¥É╢ > 0 (which you discussed earlier) to
 Page 39: balance margin size and training errors:
 Page 39: 1
-Page 39: 
+Page 39:
 Page 39: ≡¥æç
 Page 39: min ||≡¥æñ||2 + ≡¥É╢ Γêæ≡¥æ¢
 Page 39: ≡¥æû=1 ≡¥£ë≡¥æû ≡¥æá. ≡¥æí. ≡¥æª≡¥æû (≡¥æñ x≡¥æû + b) ΓëÑ 1 ΓêÆ ≡¥£ë≡¥æû , ≡¥£ë≡¥æû > 0
-Page 39: 
+Page 39:
 Page 39: ≡¥æñ,≡¥æÅ,≡¥£ë 2
-Page 39: 
+Page 39:
 Page 39: (5.3)
-Page 39: 
+Page 39:
 Page 39: Larger ≡¥É╢ penalizes violations more strongly (lower bias, higher variance); smaller ≡¥É╢ allows
 Page 39: a wider margin at the cost of more training errors (higher bias, lower variance).
 Page 39: For nonlinearly separable data, SVM employs the kernel trick, replacing inner products by
 Page 39: a kernel ≡¥É╛(≡¥æÑ≡¥æû , ≡¥æÑ) = ≡¥£Ö(≡¥æÑ≡¥æû )≡¥æç ≡¥£Ö(≡¥æÑ) without explicitly computing the mapping ≡¥£Ö(Γïà). The decision
 Page 39: function is
 Page 39: ≡¥æô(≡¥æÑ) = ≡¥æá≡¥æö≡¥æ¢(Γêæ≡¥æ¢≡¥æû=1 ≡¥¢╝≡¥æû ≡¥æª≡¥æû ≡¥É╛(≡¥æÑ≡¥æû , ≡¥æÑ) + ≡¥æÅ)
-Page 39: 
+Page 39:
 Page 39: (5.4)
-Page 39: 
+Page 39:
 Page 39: where ≡¥¢╝≡¥æû are the Lagrange multipliers from the dual optimization; only support vectors have ≡¥¢╝≡¥æû >
 Page 39: 0 (by KKT conditions). Common choices of ≡¥É╛ include the polynomial and RBF kernels
 Page 39: (the sigmoid kernel is also used in some applications).
@@ -2277,14 +2277,14 @@ Page 39: 5.1.1.2 Support Vector Machine in Pair Trading
 Page 39: Speaking to the steps of implementing SVM in pair trading, as shown in Figure 4 from article
 Page 39: [47], the model architecture consists of five modules: data acquisition, analytics, hedging based on
 Page 39: the ML method, pairs trading, and trading performance evaluation.
-Page 39: 
-Page 39: 
+Page 39:
+Page 39:
 Page 40: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 40: 
+Page 40:
 Page 40: 38
-Page 40: 
+Page 40:
 Page 40: Figure 4. Systematic pair trading model architecture using SVM for futures in article [47].
-Page 40: 
+Page 40:
 Page 40: The specific steps for applying SVM to pairs trading are also outlined in article [30], where
 Page 40: model performance under different parameter settings is presented in Table 15.
 Page 40: Table 15. Model performance with different parameters in article [30].
@@ -2294,28 +2294,28 @@ Page 40: 002807.SZ-601288.SH
 Page 40: 000025.SZ-000715.SZ
 Page 40: 600029.SH-600115.SH
 Page 40: 002696.SZ-600975.SH
-Page 40: 
+Page 40:
 Page 40: Accuracy
 Page 40: 64%
 Page 40: 57%
 Page 40: 56%
 Page 40: 58%
 Page 40: 66%
-Page 40: 
+Page 40:
 Page 40: AUC of ROC
 Page 40: 0.63
 Page 40: 0.57
 Page 40: 0.57
 Page 40: 0.59
 Page 40: 0.67
-Page 40: 
+Page 40:
 Page 40: Parameters
 Page 40: kernel=poly, C=0.1, degree=3, coef0=2
 Page 40: kernel=poly, C=1, degree=3, coef0=0.5
 Page 40: kernel=rbf, C=0.1, gamma=0.01, coef0=0
 Page 40: kernel=poly, C=4, degree=3, coef0=5
 Page 40: Kernel=poly, C=2, degree=2, coef0=2
-Page 40: 
+Page 40:
 Page 40: Data Acquisition and Preprocessing
 Page 40: The implementation of an SVM-based pairs trading strategy begins with data acquisition and
 Page 40: preprocessing. Historical daily price data for selected stock pairs are retrieved from the Chinese
@@ -2327,12 +2327,12 @@ Page 40: a uniform range, typically between 0 and 1.
 Page 40: Feature Engineering and Selection
 Page 40: Following preprocessing, feature engineering and selection are conducted. For each stock
 Page 40: pair, absolute and relative price spreads are calculated to quantify divergence between the two
-Page 40: 
-Page 40: 
+Page 40:
+Page 40:
 Page 41: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 41: 
+Page 41:
 Page 41: 39
-Page 41: 
+Page 41:
 Page 41: assets. Volatility measures, such as rolling standard deviations of the spread, are also computed to
 Page 41: capture dynamic changes in co-movement. Additionally, technical indicatorsΓÇöincluding moving
 Page 41: averages, RSI, and MACDΓÇöare constructed to embed trend-following and momentum-based
@@ -2361,12 +2361,12 @@ Page 41: For live trading, the system continuously fetches and processes real-ti
 Page 41: predictions. Trade execution is automated through brokerage APIs, ensuring efficiency.
 Page 41: A dynamic risk management framework is also incorporated, applying stop-loss and take-profit
 Page 41: thresholds, along with volatility-adjusted position sizing, to limit potential losses.
-Page 41: 
-Page 41: 
+Page 41:
+Page 41:
 Page 42: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 42: 
+Page 42:
 Page 42: 40
-Page 42: 
+Page 42:
 Page 42: Ongoing Monitoring and Model Updating
 Page 42: Finally, the system integrates monitoring and maintenance mechanisms. Live trading
 Page 42: outcomes are tracked against historical benchmarks to detect deviations. The SVM is periodically
@@ -2395,12 +2395,12 @@ Page 42: strategies. DBSCAN contributes by identifying asset clusters with stron
 Page 42: while PCA facilitates noise reduction and the extraction of latent factors driving asset returns.
 Page 42: The following sections explore the integration of DBSCAN in pairs trading, critically evaluating
 Page 42: its effectiveness and distinct contributions to strategy refinement.
-Page 42: 
-Page 42: 
+Page 42:
+Page 42:
 Page 43: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 43: 
+Page 43:
 Page 43: 41
-Page 43: 
+Page 43:
 Page 43: 5.1.2.1 Introduction to Density-Based Spatial Clustering of Applications with Noise
 Page 43: Developed in 1996 by Ester et al. (1996), DBSCAN is a widely recognized clustering
 Page 43: algorithm that groups points according to the density of their neighborhoods. Unlike partitionbased methods such as k-means, DBSCAN distinguishes between dense regions and sparse regions,
@@ -2428,12 +2428,12 @@ Page 43: point is evaluated to determine whether it qualifies as a core point. S
 Page 43: is constructed by linking core points that lie within each otherΓÇÖs ╬╡-neighborhoods, thereby initiating
 Page 43: cluster formation. Finally, non-core points are assigned to clusters if they fall within the ╬╡-radius
 Page 43: of any core point; otherwise, they are labeled as noise. Through this iterative process, DBSCAN
-Page 43: 
-Page 43: 
+Page 43:
+Page 43:
 Page 44: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 44: 
+Page 44:
 Page 44: 42
-Page 44: 
+Page 44:
 Page 44: is able to discover clusters of arbitrary shapes and effectively separate noise without requiring the
 Page 44: number of clusters as an input.
 Page 44: 5.1.2.2 Density-Based Spatial Clustering of Applications with Noise in Pair Trading
@@ -2462,12 +2462,12 @@ Page 44: impact on the trading strategy.
 Page 44: Once the distance metric is established, DBSCAN is applied to the feature set to identify
 Page 44: clusters. A known challenge of this method is the imbalance in cluster sizes, where a dominant
 Page 44: high-density cluster often emerges, leaving the remaining stocks classified as outliers. This
-Page 44: 
-Page 44: 
+Page 44:
+Page 44:
 Page 45: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 45: 
+Page 45:
 Page 45: 43
-Page 45: 
+Page 45:
 Page 45: phenomenon reflects the concentration of similarities in the data but also underscores the need for
 Page 45: careful tuning of DBSCAN parameters. The number and structure of resulting clusters can
 Page 45: significantly influence the strategyΓÇÖs performance, making parameter calibration essential.
@@ -2483,323 +2483,323 @@ Page 45: strategy is summarized in Table 16.
 Page 45: Table 16. Annualized risk-return metrics with DBSCAN in article [9].
 Page 45: DBSCAN
 Page 45: Mean return
-Page 45: 
+Page 45:
 Page 45: Long
 Page 45: 0.291
-Page 45: 
+Page 45:
 Page 45: Short
 Page 45: 0.053
-Page 45: 
+Page 45:
 Page 45: Long-Short
 Page 45: 0.238
-Page 45: 
+Page 45:
 Page 45: Standard deviation
-Page 45: 
+Page 45:
 Page 45: 0.244
-Page 45: 
+Page 45:
 Page 45: 0.188
-Page 45: 
+Page 45:
 Page 45: 0.152
-Page 45: 
+Page 45:
 Page 45: Sharpe ratio
-Page 45: 
+Page 45:
 Page 45: 1.195
-Page 45: 
+Page 45:
 Page 45: 0.281
-Page 45: 
+Page 45:
 Page 45: 1.571
-Page 45: 
+Page 45:
 Page 45: t-statistic
-Page 45: 
+Page 45:
 Page 45: 2.296
-Page 45: 
+Page 45:
 Page 45: 2.215
-Page 45: 
+Page 45:
 Page 45: 2.875
-Page 45: 
+Page 45:
 Page 45: Downside deviation
-Page 45: 
+Page 45:
 Page 45: 0.171
-Page 45: 
+Page 45:
 Page 45: 0.162
-Page 45: 
+Page 45:
 Page 45: 0.066
-Page 45: 
+Page 45:
 Page 45: Sortino ratio
-Page 45: 
+Page 45:
 Page 45: 1.703
-Page 45: 
+Page 45:
 Page 45: 0.327
-Page 45: 
+Page 45:
 Page 45: 3.591
-Page 45: 
+Page 45:
 Page 45: Gross profit
-Page 45: 
+Page 45:
 Page 45: 17.544
-Page 45: 
+Page 45:
 Page 45: 9.051
-Page 45: 
+Page 45:
 Page 45: 12.733
-Page 45: 
+Page 45:
 Page 45: Gross loss
-Page 45: 
+Page 45:
 Page 45: -5.603
-Page 45: 
+Page 45:
 Page 45: -6.882
-Page 45: 
+Page 45:
 Page 45: -2.96
-Page 45: 
+Page 45:
 Page 45: Profit factor
-Page 45: 
+Page 45:
 Page 45: 3.131
-Page 45: 
+Page 45:
 Page 45: 1.315
-Page 45: 
+Page 45:
 Page 45: 4.302
-Page 45: 
+Page 45:
 Page 45: Profitable years
-Page 45: 
+Page 45:
 Page 45: 37
-Page 45: 
+Page 45:
 Page 45: 27
-Page 45: 
+Page 45:
 Page 45: 38
-Page 45: 
+Page 45:
 Page 45: Unprofitable years
-Page 45: 
+Page 45:
 Page 45: 4
-Page 45: 
+Page 45:
 Page 45: 14
-Page 45: 
+Page 45:
 Page 45: 3
-Page 45: 
+Page 45:
 Page 45: Maximum drawdown
-Page 45: 
+Page 45:
 Page 45: -0.477
-Page 45: 
+Page 45:
 Page 45: -0.624
-Page 45: 
+Page 45:
 Page 45: -0.129
-Page 45: 
+Page 45:
 Page 45: Calmar ratio
-Page 45: 
+Page 45:
 Page 45: 0.611
-Page 45: 
+Page 45:
 Page 45: 0.085
-Page 45: 
+Page 45:
 Page 45: 1.846
-Page 45: 
+Page 45:
 Page 45: Turnover
-Page 45: 
+Page 45:
 Page 45: 0.932
-Page 45: 
+Page 45:
 Page 45: 0.981
-Page 45: 
+Page 45:
 Page 45: 1.913
-Page 45: 
+Page 45:
 Page 45: Also, article [9] conducted robustness tests, in Table 17, to assess the sensitivity to clustering
 Page 45: parameters and to ensure results are not driven by data snooping.
-Page 45: 
-Page 45: 
+Page 45:
+Page 45:
 Page 46: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 46: 
+Page 46:
 Page 46: 44
-Page 46: 
+Page 46:
 Page 46: Table 17. Parameter sensitivity of the strategies, DBSCAN with different percentiles (╬▒) for
 Page 46: the outlier threshold in article [9].
 Page 46: ╬▒
-Page 46: 
+Page 46:
 Page 46: 0.1
-Page 46: 
+Page 46:
 Page 46: 0.2
-Page 46: 
+Page 46:
 Page 46: 0.3
-Page 46: 
+Page 46:
 Page 46: 0.4
-Page 46: 
+Page 46:
 Page 46: 0.5
-Page 46: 
+Page 46:
 Page 46: 0.6
-Page 46: 
+Page 46:
 Page 46: 0.7
-Page 46: 
+Page 46:
 Page 46: 0.8
-Page 46: 
+Page 46:
 Page 46: 0.9
-Page 46: 
+Page 46:
 Page 46: Mean return
-Page 46: 
+Page 46:
 Page 46: 0.256
-Page 46: 
+Page 46:
 Page 46: 0.2
-Page 46: 
+Page 46:
 Page 46: 0.173
-Page 46: 
+Page 46:
 Page 46: 0.154
-Page 46: 
+Page 46:
 Page 46: 0.148
-Page 46: 
+Page 46:
 Page 46: 0.148
-Page 46: 
+Page 46:
 Page 46: 0.138
-Page 46: 
+Page 46:
 Page 46: 0.134
-Page 46: 
+Page 46:
 Page 46: 0.129
-Page 46: 
+Page 46:
 Page 46: Sharpe ratio
-Page 46: 
+Page 46:
 Page 46: 2.039
-Page 46: 
+Page 46:
 Page 46: 1.763
-Page 46: 
+Page 46:
 Page 46: 1.526
-Page 46: 
+Page 46:
 Page 46: 1.328
-Page 46: 
+Page 46:
 Page 46: 1.19
-Page 46: 
+Page 46:
 Page 46: 1.142
-Page 46: 
+Page 46:
 Page 46: 1.036
-Page 46: 
+Page 46:
 Page 46: 0.954
-Page 46: 
+Page 46:
 Page 46: 0.867
-Page 46: 
+Page 46:
 Page 46: Maximum
 Page 46: drawdown
-Page 46: 
+Page 46:
 Page 46: -0.149
-Page 46: 
+Page 46:
 Page 46: -0.146
-Page 46: 
+Page 46:
 Page 46: -0.163
-Page 46: 
+Page 46:
 Page 46: -0.206
-Page 46: 
+Page 46:
 Page 46: -0.197
-Page 46: 
+Page 46:
 Page 46: -0.242
-Page 46: 
+Page 46:
 Page 46: -0.238
-Page 46: 
+Page 46:
 Page 46: -0.285
-Page 46: 
+Page 46:
 Page 46: -0.332
-Page 46: 
+Page 46:
 Page 46: Number of
 Page 46: clusters
-Page 46: 
+Page 46:
 Page 46: 2
-Page 46: 
+Page 46:
 Page 46: 2
-Page 46: 
+Page 46:
 Page 46: 2
-Page 46: 
+Page 46:
 Page 46: 2
-Page 46: 
+Page 46:
 Page 46: 2
-Page 46: 
+Page 46:
 Page 46: 2
-Page 46: 
+Page 46:
 Page 46: 2
-Page 46: 
+Page 46:
 Page 46: 2
-Page 46: 
+Page 46:
 Page 46: 1
-Page 46: 
+Page 46:
 Page 46: Number of
 Page 46: stocks in
 Page 46: clusters
-Page 46: 
+Page 46:
 Page 46: 376(12.
 Page 46: 05)
-Page 46: 
+Page 46:
 Page 46: 749(24.
 Page 46: 06)
-Page 46: 
+Page 46:
 Page 46: 1092(35
 Page 46: .02)
-Page 46: 
+Page 46:
 Page 46: 1418(45
 Page 46: .44)
-Page 46: 
+Page 46:
 Page 46: 1729(55
 Page 46: .41)
-Page 46: 
+Page 46:
 Page 46: 2034(65
 Page 46: .14)
-Page 46: 
+Page 46:
 Page 46: 2328(74
 Page 46: .56)
-Page 46: 
+Page 46:
 Page 46: 2609(83
 Page 46: .54)
-Page 46: 
+Page 46:
 Page 46: 2878(92
 Page 46: .2)
-Page 46: 
+Page 46:
 Page 46: Number of
 Page 46: outliers
-Page 46: 
+Page 46:
 Page 46: 2781(87
 Page 46: .95)
-Page 46: 
+Page 46:
 Page 46: 2408(75
 Page 46: .94)
-Page 46: 
+Page 46:
 Page 46: 2065(64
 Page 46: .98)
-Page 46: 
+Page 46:
 Page 46: 1739(54
 Page 46: .56)
-Page 46: 
+Page 46:
 Page 46: 1428(44
 Page 46: .59)
-Page 46: 
+Page 46:
 Page 46: 1123(34
 Page 46: .86)
-Page 46: 
+Page 46:
 Page 46: 829(25.
 Page 46: 44)
-Page 46: 
+Page 46:
 Page 46: 548(16.
 Page 46: 46)
-Page 46: 
+Page 46:
 Page 46: 279(7.8
 Page 46: )
-Page 46: 
+Page 46:
 Page 46: Number of
 Page 46: stocks traded
-Page 46: 
+Page 46:
 Page 46: 75(2.47
 Page 46: )
-Page 46: 
+Page 46:
 Page 46: 188(6.1
 Page 46: 7)
-Page 46: 
+Page 46:
 Page 46: 314(10.
 Page 46: 18)
-Page 46: 
+Page 46:
 Page 46: 450(14.
 Page 46: 52)
-Page 46: 
+Page 46:
 Page 46: 594(19.
 Page 46: 09)
-Page 46: 
+Page 46:
 Page 46: 743(23.
 Page 46: 82)
-Page 46: 
+Page 46:
 Page 46: 896(28.
 Page 46: 67)
-Page 46: 
+Page 46:
 Page 46: 1053(33
 Page 46: .67)
-Page 46: 
+Page 46:
 Page 46: 1217(38
 Page 46: .86)
-Page 46: 
+Page 46:
 Page 46: Practical Implementation Summarize
 Page 46: In practical implementation, the process begins with data preparation. This involves
 Page 46: collecting and preprocessing historical price data for a broad set of stocks, ensuring that the dataset
@@ -2817,12 +2817,12 @@ Page 46: Benefits of Using DBSCAN in Pair Trading
 Page 46: There are several notable advantages to applying DBSCAN in pair trading. One significant
 Page 46: advantage is efficiency. The algorithm reduces the dimensionality of the trading universe by
 Page 46: filtering out stocks that do not exhibit strong similarities, thereby focusing attention on the most
-Page 46: 
-Page 46: 
+Page 46:
+Page 46:
 Page 47: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 47: 
+Page 47:
 Page 47: 45
-Page 47: 
+Page 47:
 Page 47: promising pair candidates. Moreover, DBSCANΓÇÖs ability to detect and exclude outliers improves
 Page 47: the robustness of the strategy by eliminating stocks that might introduce excessive noise or
 Page 47: volatility. Another important strength lies in its adaptability: unlike many clustering methods,
@@ -2850,12 +2850,12 @@ Page 47: DL contributes to climate modeling and prediction, material inspection 
 Page 47: even been employed to master complex board games, frequently achieving or surpassing humanlevel performance.
 Page 47: In quantitative finance, and particularly in quantitative trading, DL has also gained
 Page 47: increasing attention. In the subsequent sections, I will examine in detail how DL is applied to pairs
-Page 47: 
-Page 47: 
+Page 47:
+Page 47:
 Page 48: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 48: 
+Page 48:
 Page 48: 46
-Page 48: 
+Page 48:
 Page 48: trading. The discussion expands upon the methodologies briefly referenced in the literature, with
 Page 48: a particular emphasis on the techniques summarized in Table 12 and 14.
 Page 48: The evidence from Table 12 and 14 clearly indicates that LSTM and CNN are the most
@@ -2881,17 +2881,17 @@ Page 48: which allow information to be stored and accessed over extended periods
 Page 48: consists of a cell, an input gate, a forget gate, and an output gate. These gates regulate the flow of
 Page 48: information into and out of the memory cell, controlling how the cell state evolves across time
 Page 48: steps.
-Page 48: 
-Page 48: 
+Page 48:
+Page 48:
 Page 49: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 49: 
+Page 49:
 Page 49: 47
-Page 49: 
+Page 49:
 Page 49: Figure 5. Schematic Representation of the LSTM Model.
-Page 49: 
+Page 49:
 Page 49: Source: Zhao, W. and Fan, L. (2024). Short-Term Load Forecasting Method for Industrial Buildings Based on
 Page 49: Signal Decomposition and Composite Prediction Model
-Page 49: 
+Page 49:
 Page 49: The cell state ≡¥É╢≡¥æí is the central component of the LSTM, functioning like a conveyor belt that
 Page 49: runs through the entire sequence of units. It allows information to be carried forward largely
 Page 49: unchanged, with selective modifications introduced by the gates. This enables the network to
@@ -2900,9 +2900,9 @@ Page 49: The forget gate ≡¥æô≡¥æí determines which parts of the previo
 Page 49: It takes as input the previous hidden state ΓäÄ≡¥æíΓêÆ1 and the current input ≡¥æÑ≡¥æí , passing them through
 Page 49: a sigmoid function:
 Page 49: ≡¥æô≡¥æí = ≡¥£Ä(≡¥æè≡¥æô Γïà [ΓäÄ≡¥æíΓêÆ1 , ≡¥æÑ≡¥æí ] + ≡¥æÅ≡¥æô )
-Page 49: 
+Page 49:
 Page 49: (5.5)
-Page 49: 
+Page 49:
 Page 49: where ≡¥£Ä denotes the sigmoid activation that outputs values between 0 and 1, ≡¥æè≡¥æô is the weight
 Page 49: matrix of the forget gate, ≡¥æÅ≡¥æô is the bias term, ΓäÄ≡¥æíΓêÆ1 is the hidden state from the previous time step,
 Page 49: and ≡¥æÑ≡¥æí is the current input vector. The resulting vector ≡¥æô≡¥æí is then applied element-wise to the
@@ -2911,16 +2911,16 @@ Page 49: The input gate ≡¥æû≡¥æí determines which values will be updat
 Page 49: a vector of new candidate values ≡¥É╢╠â≡¥æí that may be added to the cell state. These components jointly
 Page 49: contribute to updating the cell state:
 Page 49: ≡¥æû≡¥æí = ≡¥£Ä(≡¥æè≡¥æû Γïà [ΓäÄ≡¥æíΓêÆ1 , ≡¥æÑ≡¥æí ] + ≡¥æÅ≡¥æû )
-Page 49: 
+Page 49:
 Page 49: (5.6)
-Page 49: 
-Page 49: 
+Page 49:
+Page 49:
 Page 50: Sun, Y. / WORKING PAPERS 22/2025 (485)
 Page 50: ≡¥É╢╠â≡¥æí = ≡¥æí≡¥æÄ≡¥æ¢ΓäÄ(≡¥æè≡¥É╢ Γïà [ΓäÄ≡¥æíΓêÆ1 , ≡¥æÑ≡¥æí ] + ≡¥æÅ≡¥É╢ )
-Page 50: 
+Page 50:
 Page 50: 48
 Page 50: (5.7)
-Page 50: 
+Page 50:
 Page 50: Here, the input gate uses a sigmoid activation to determine which elements of ≡¥É╢╠â≡¥æí are
 Page 50: accepted. The candidate vector ≡¥É╢╠â≡¥æí , produced by the ≡¥æí≡¥æÄ≡¥æ¢ΓäÄ transformation, represents potential
 Page 50: updates to the cell state, thereby allowing flexible integration of new information through nonlinear transformations.
@@ -2928,9 +2928,9 @@ Page 50: The old cell state ≡¥É╢≡¥æíΓêÆ1 is then updated to the ne
 Page 50: output scales the old state (controlling what is retained), while the input gateΓÇÖs output scales
 Page 50: the candidate values (controlling what is updated):
 Page 50: ≡¥É╢≡¥æí = ≡¥æô≡¥æí ΓèÖ ≡¥É╢≡¥æíΓêÆ1 + ≡¥æû≡¥æí ΓèÖ ≡¥É╢╠â≡¥æí
-Page 50: 
+Page 50:
 Page 50: (5.8)
-Page 50: 
+Page 50:
 Page 50: This formulation combines the previous cell state ≡¥É╢≡¥æíΓêÆ1 , modulated by ≡¥æô≡¥æí , with the candidate
 Page 50: values ≡¥É╢╠â≡¥æí , modulated by ≡¥æû≡¥æí . Such selective updating enables LSTMs to propagate relevant
 Page 50: information across long sequences while mitigating the risks of gradient vanishing or explosion.
@@ -2940,13 +2940,13 @@ Page 50: portions of the current cell state contribute to the output. The cell s
 Page 50: a ≡¥æí≡¥æÄ≡¥æ¢ΓäÄ function, constraining values to the range [ΓêÆ1, 1], and multiplied element-wise by the
 Page 50: gateΓÇÖs output:
 Page 50: ≡¥æ£≡¥æí = ≡¥£Ä(≡¥æè≡¥æ£ Γïà [ΓäÄ≡¥æíΓêÆ1 , ≡¥æÑ≡¥æí ] + ≡¥æÅ≡¥æ£ )
-Page 50: 
+Page 50:
 Page 50: (5.9)
-Page 50: 
+Page 50:
 Page 50: ΓäÄ≡¥æí = ≡¥æ£≡¥æí ΓèÖ ≡¥æí≡¥æÄ≡¥æ¢ΓäÄ(≡¥É╢≡¥æí )
-Page 50: 
+Page 50:
 Page 50: (5.10)
-Page 50: 
+Page 50:
 Page 50: Here, the output gate ≡¥æ£≡¥æí filters the cell state ≡¥É╢≡¥æí to determine the information carried forward
 Page 50: to the next hidden state ΓäÄ≡¥æí , and potentially to the output layer of the network. By applying the ≡¥æí≡¥æÄ≡¥æ¢ΓäÄ
 Page 50: activation, this step ensures non-linear scaling and controlled representation of the state
@@ -2957,12 +2957,12 @@ Page 50: historical data, incorporating relevant new inputs, and discarding redu
 Page 50: information, LSTMs are able to maintain stable performance across sequences of varying lengths.
 Page 50: One of the key advantages of LSTMs is their ability to regulate gradient flow during
 Page 50: backpropagation. The gating mechanisms help mitigate the well-known issues of vanishing and
-Page 50: 
-Page 50: 
+Page 50:
+Page 50:
 Page 51: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 51: 
+Page 51:
 Page 51: 49
-Page 51: 
+Page 51:
 Page 51: exploding gradients by selectively controlling how much informationΓÇöand thus how much
 Page 51: gradientΓÇöis propagated through each time step. This selective control ensures that critical signals
 Page 51: are preserved during training while minimizing instability.
@@ -2990,12 +2990,12 @@ Page 51: index, which are updated annually to reflect changes in the index compo
 Page 51: including open, high, low, close, and volume, are gathered for the period from January 2000 to
 Page 51: June 2019. Data retrieval is typically performed via APIs like yfinance, and adjusted close prices
 Page 51: are used to account for dividends and stock splits.
-Page 51: 
-Page 51: 
+Page 51:
+Page 51:
 Page 52: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 52: 
+Page 52:
 Page 52: 50
-Page 52: 
+Page 52:
 Page 52: Data Preprocessing
 Page 52: In the preprocessing stage, the authors apply Z-score normalization, standardizing each
 Page 52: stockΓÇÖs price series using its mean and standard deviation. Cointegration tests are then conducted
@@ -3026,12 +3026,12 @@ Page 52: trigger a long position in the underperforming stock and a short positi
 Page 52: Strategy Implementation
 Page 52: The signals produced by the model are then used to construct a portfolio. Positions are
 Page 52: opened based on the modelΓÇÖs directional predictions, with appropriate risk and money management
-Page 52: 
-Page 52: 
+Page 52:
+Page 52:
 Page 53: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 53: 
+Page 53:
 Page 53: 51
-Page 53: 
+Page 53:
 Page 53: controls in place. These controls may include stop-loss orders, exposure limits, and position sizing
 Page 53: rules based on the modelΓÇÖs confidence scores.
 Page 53: Back-testing and Optimization
@@ -3060,12 +3060,12 @@ Page 53: rather than labeled data or direct guidance.
 Page 53: In contrast to supervised learning, RL does not require predefined inputΓÇôoutput pairs or
 Page 53: explicit feedback after each action. Instead, it focuses on maximizing cumulative rewards over
 Page 53: time by balancing two competing objectives: exploration (trying new actions to discover their
-Page 53: 
-Page 53: 
+Page 53:
+Page 53:
 Page 54: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 54: 
+Page 54:
 Page 54: 52
-Page 54: 
+Page 54:
 Page 54: potential) and exploitation (choosing known actions that yield high rewards). This balance makes
 Page 54: RL particularly suitable for complex environments where feedback may be delayed, indirect, or
 Page 54: noisy.
@@ -3077,60 +3077,60 @@ Page 54: without such prior information. This flexibility allows RL to be applie
 Page 54: observed environments where traditional approaches are infeasible.
 Page 54: Formally, an MDP is defined as:
 Page 54: ≡¥æÇ = (≡¥æå, ≡¥É┤, ≡¥æâ, ≡¥æà, ≡¥¢╛)
-Page 54: 
+Page 54:
 Page 54: (5.11)
-Page 54: 
+Page 54:
 Page 54: where ≡¥æå denotes the state space, ≡¥É┤ is the action space, ≡¥æâ is the transition probability of moving
 Page 54: from state ≡¥æá to ≡¥æáΓÇ▓ given action ≡¥æÄ, ≡¥æà(≡¥æá, ≡¥æÄ) is the reward function, and ≡¥¢╛ Γêê [0,1) is the discount
 Page 54: factor balancing immediate and future rewards.
 Page 54: In the context of pairs trading, this mapping can be specified as follows:
 Page 54: ΓÇó
-Page 54: 
+Page 54:
 Page 54: States (≡¥æå): feature vectors representing market conditions, such as normalized spreads
 Page 54: between stock pairs, historical moving averages, volatility, and trading volume.
-Page 54: 
+Page 54:
 Page 54: ΓÇó
-Page 54: 
+Page 54:
 Page 54: Actions (≡¥É┤): discrete trading decisions, including going long the spread, shorting
 Page 54: the spread, closing positions, or remaining inactive.
-Page 54: 
+Page 54:
 Page 54: ΓÇó
-Page 54: 
+Page 54:
 Page 54: Transition Dynamics (≡¥æâ): the stochastic evolution of market prices, typically unknown
 Page 54: and learned implicitly through experience.
-Page 54: 
+Page 54:
 Page 54: ΓÇó
-Page 54: 
+Page 54:
 Page 54: Rewards (≡¥æà): realized profits or losses, adjusted for transaction costs and risk penalties
 Page 54: such as volatility or drawdowns.
-Page 54: 
+Page 54:
 Page 54: ΓÇó
-Page 54: 
+Page 54:
 Page 54: Discount Factor (≡¥¢╛): represents the traderΓÇÖs preference for short-term versus long-term
 Page 54: profitability.
-Page 54: 
+Page 54:
 Page 54: A central concept in RL is the action-value function, or Q-function, which represents
 Page 54: the expected cumulative discounted reward when starting from a given state ≡¥æá, taking an action ≡¥æÄ,
 Page 54: and thereafter following policy ≡¥£ï:
 Page 54: ≡¥æí
 Page 54: ≡¥æä ≡¥£ï (≡¥æá, ≡¥æÄ) = ≡¥ö╝≡¥£ï [ΓêæΓê₧
 Page 54: ≡¥æí=0 ≡¥¢╛ ≡¥æà(≡¥æá≡¥æí , ≡¥æÄ≡¥æí )| ≡¥æá0 = ≡¥æá, ≡¥æÄ0 = ≡¥æÄ]
-Page 54: 
+Page 54:
 Page 54: (5.12)
-Page 54: 
-Page 54: 
+Page 54:
+Page 54:
 Page 55: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 55: 
+Page 55:
 Page 55: 53
-Page 55: 
+Page 55:
 Page 55: The optimal Q-function satisfies the Bellman optimality equation:
 Page 55: ≡¥æä Γêù (≡¥æá, ≡¥æÄ) = ≡¥ö╝ [≡¥æà(≡¥æá, ≡¥æÄ) + ≡¥¢╛ max
 Page 55: ≡¥æä Γêù (≡¥æá ΓÇ▓ , ≡¥æÄΓÇ▓ )| ≡¥æá, ≡¥æÄ]
 Page 55: ΓÇ▓
 Page 55: ≡¥æÄ
-Page 55: 
+Page 55:
 Page 55: (5.13)
-Page 55: 
+Page 55:
 Page 55: where ≡¥æá ΓÇ▓ denotes the next state after taking action ≡¥æÄ in state ≡¥æá. This recursive structure provides
 Page 55: the theoretical foundation for modern RL algorithms such as DQNs, which approximate ≡¥æä Γêù (≡¥æá, ≡¥æÄ)
 Page 55: using deep neural networks.
@@ -3157,12 +3157,12 @@ Page 55: long-term benefits. One of the most widely used algorithms in this cont
 Page 55: The framework of Q-learning is illustrated in Figure 6.
 Page 55: A key advantage of Q-learning is that it does not require prior knowledge of
 Page 55: the environmentΓÇÖs transition dynamicsΓÇöhence the term model-free. It can effectively handle
-Page 55: 
-Page 55: 
+Page 55:
+Page 55:
 Page 56: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 56: 
+Page 56:
 Page 56: 54
-Page 56: 
+Page 56:
 Page 56: environments with stochastic transitions and rewards, and, given sufficient exploration and
 Page 56: a partially random policy, it is guaranteed to converge to the optimal policy in any finite MDP.
 Page 56: At its core, Q-learning relies on the computation of a Q-function, which estimates the expected
@@ -3181,14 +3181,14 @@ Page 56: high-dimensional input dataΓÇösuch as images or long sequencesΓÇö
 Page 56: engineering. Figure 6 also depicts the structure of a typical Deep Q-learning setup, in which
 Page 56: the neural network processes state representations and outputs Q-values for all possible actions.
 Page 56: Figure 6. Schematic Representation of Q-learning and Deep Q-learning.
-Page 56: 
+Page 56:
 Page 56: Source: A Hands-On Introduction to Deep Q-Learning using OpenAI Gym in Python
-Page 56: 
-Page 56: 
+Page 56:
+Page 56:
 Page 57: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 57: 
+Page 57:
 Page 57: 55
-Page 57: 
+Page 57:
 Page 57: Therefore, Deep Q-learning, as an extension of traditional Q-learning integrated with DNNs,
 Page 57: has fundamentally transformed the way high-dimensional observation spaces are handled.
 Page 57: By leveraging the representational power of DNNs, this method enables the learning of optimal
@@ -3202,9 +3202,9 @@ Page 57: The objective is to maximize the sum of rewards, discounted over time, 
 Page 57: according to the Bellman equation:
 Page 57: ≡¥æä(≡¥æá, ≡¥æÄ) ΓåÉ ≡¥æä(≡¥æá, ≡¥æÄ) + ≡¥¢╝[≡¥æƒ + ≡¥¢╛≡¥ÆÄ≡¥Æé≡¥ÆÖ≡¥æä(≡¥æáΓÇ▓, ≡¥æÄΓÇ▓) ΓêÆ ≡¥æä(≡¥æá, ≡¥æÄ)]
 Page 57: ≡¥æÄΓÇ▓
-Page 57: 
+Page 57:
 Page 57: (5.14)
-Page 57: 
+Page 57:
 Page 57: Here, ≡¥¢╝ is the learning rate, ≡¥¢╛ is the discount factor, ≡¥æƒ is the reward, ≡¥æáΓÇ▓ is the next state, and
 Page 57: ≡¥æÄΓÇ▓ is a possible action in state ≡¥æáΓÇ▓.
 Page 57: Deep Neural Network as a Function Approximator
@@ -3222,12 +3222,12 @@ Page 57: Fixed Q-targets
 Page 57: A central challenge in training neural networks for RL is the moving-target problem, where
 Page 57: continuously changing targets can induce oscillations or divergence. Deep Q-learning addresses
 Page 57: this by introducing a separate target network to compute target Q-values. The target network shares
-Page 57: 
-Page 57: 
+Page 57:
+Page 57:
 Page 58: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 58: 
+Page 58:
 Page 58: 56
-Page 58: 
+Page 58:
 Page 58: the architecture of the Q-network but its parameters are updated only intermittently (e.g., every
 Page 58: few thousand steps), thereby providing a more stable target for Q-updates.
 Page 58: Loss Function and Optimization
@@ -3235,9 +3235,9 @@ Page 58: The loss function typically minimizes the mean squared temporal-differe
 Page 58: predicted Q-values and target Q-values:
 Page 58: ≡¥É┐(≡¥£â) = ≡¥É╕(≡¥æá,≡¥æÄ,≡¥æƒ,≡¥æáΓÇ▓ )Γê╝≡¥æƒ≡¥æÆ≡¥æ¥≡¥æÖ≡¥æÄ≡¥æª ≡¥æÅ≡¥æó≡¥æô≡¥æô≡¥æÆ≡¥æƒ [(≡¥æƒ + ≡¥¢╛≡¥ÆÄ≡¥Æé≡¥ÆÖ≡¥æä(≡¥æáΓÇ▓, ≡¥æÄΓÇ▓; ≡¥£â ΓêÆ ) ΓêÆ ≡¥æä(≡¥æá, ≡¥æÄ; ≡¥£â))2 ]
 Page 58: ≡¥æÄΓÇ▓
-Page 58: 
+Page 58:
 Page 58: (5.15)
-Page 58: 
+Page 58:
 Page 58: where ≡¥£â are the parameters of the Q-network and ≡¥£â ΓêÆ are the (periodically updated) parameters of
 Page 58: the target network. This loss is optimized with standard stochastic gradient methods, such as SGD
 Page 58: or Adam.
@@ -3258,12 +3258,12 @@ Page 58: To incorporate DQN into pairs trading, one must develop a sophisticated
 Page 58: leverages DRL to optimize sequential decision-making processes. This paper outlines
 Page 58: a comprehensive method for applying DQNs in pairs trading, including the setup of the trading
 Page 58: environment, the design of the network architecture, and the fine-tuning of the learning algorithms.
-Page 58: 
-Page 58: 
+Page 58:
+Page 58:
 Page 59: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 59: 
+Page 59:
 Page 59: 57
-Page 59: 
+Page 59:
 Page 59: Paper [53] outlines a structured approach for employing DQN networks to pinpoint and
 Page 59: leverage opportunities in pairs trading. The following are detailed procedures drawn from
 Page 59: the insights of the article.
@@ -3293,12 +3293,12 @@ Page 59: stock and shorting the outperforming oneΓÇöwhen the spread exceeds a
 Page 59: Conversely, when the spread falls below a lower threshold, the model takes a short position by
 Page 59: selling the underperforming stock and buying the outperforming one. If the spread lies within
 Page 59: the thresholds, indicating no strong trading signal, the DQN opts to hold and take no action.
-Page 59: 
-Page 59: 
+Page 59:
+Page 59:
 Page 60: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 60: 
+Page 60:
 Page 60: 58
-Page 60: 
+Page 60:
 Page 60: The reward function is designed to align with profitability. At each time step, the immediate
 Page 60: reward is defined as the profit or loss generated from the chosen action, directly reflecting
 Page 60: the trading outcome.
@@ -3319,7 +3319,7 @@ Page 60: The Q-values are updated using a mean squared error (MSE) loss, which c
 Page 60: Q-values with target values derived from the Bellman equation:
 Page 60: ≡¥æä≡¥æí≡¥æÄ≡¥æƒ≡¥æö≡¥æÆ≡¥æí = ≡¥æƒ + ≡¥¢╛≡¥ÆÄ≡¥Æé≡¥ÆÖ≡¥æä(≡¥æáΓÇ▓, ≡¥æÄΓÇ▓)
 Page 60: ≡¥æÄΓÇ▓
-Page 60: 
+Page 60:
 Page 60: where ≡¥¢╛ is the discount factor emphasizing the importance of future rewards. The network
 Page 60: parameters are optimized using the Adam optimizer, chosen for its adaptive learning rate and
 Page 60: efficiency in handling noisy financial data.
@@ -3328,12 +3328,12 @@ Page 60: After training, the DQN is evaluated on out-of-sample data, specificall
 Page 60: from 2018. The evaluation primarily focuses on cumulative returns and Sharpe ratios, which
 Page 60: measure profitability and risk-adjusted performance. Robustness is assessed by testing the model
 Page 60: under different market conditions to ensure consistent behavior.
-Page 60: 
-Page 60: 
+Page 60:
+Page 60:
 Page 61: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 61: 
+Page 61:
 Page 61: 59
-Page 61: 
+Page 61:
 Page 61: Based on the evaluation results, further optimization is achieved by fine-tuning
 Page 61: hyperparameters such as the learning rate, replay buffer size, and network architecture. Iterative
 Page 61: retraining ensures that the model adapts to new market dynamics.
@@ -3357,30 +3357,30 @@ Page 61: with actual values, thereby enabling the calculation of performance met
 Page 61: precision, recall, and specificity. For a binary classification problem, it consists of two rows and
 Page 61: two columns reporting the following cases:
 Page 61: ΓÇó
-Page 61: 
+Page 61:
 Page 61: True Positives (TP): instances where the model correctly predicts the positive class.
-Page 61: 
+Page 61:
 Page 61: ΓÇó
-Page 61: 
+Page 61:
 Page 61: True Negatives (TN): instances where the model correctly predicts the negative class.
-Page 61: 
+Page 61:
 Page 61: ΓÇó
-Page 61: 
+Page 61:
 Page 61: False Positives (FP): instances where the model incorrectly predicts the positive class
 Page 61: (Type I error).
-Page 61: 
+Page 61:
 Page 61: ΓÇó
-Page 61: 
+Page 61:
 Page 61: False Negatives (FN): instances where the model fails to predict the positive class
 Page 61: (Type II error).
-Page 61: 
-Page 61: 
+Page 61:
+Page 61:
 Page 62: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 62: 
+Page 62:
 Page 62: 60
-Page 62: 
+Page 62:
 Page 62: Figure 7. Confusion matrix.
-Page 62: 
+Page 62:
 Page 62: 6.1 Evaluation Metrics of Efficacy
 Page 62: In assessing the efficacy of models produced by machine learning algorithms, it is crucial to
 Page 62: apply appropriate evaluation metrics that provide insights into predictive accuracy and reliability.
@@ -3394,23 +3394,23 @@ Page 62: models to correctly classify outcomes. Error-based metrics are particul
 Page 62: prediction tasks such as forecasting spreads or returns, while classification-based metrics are more
 Page 62: appropriate when strategies are framed as binary decisions (e.g., convergence versus divergence
 Page 62: signals in pairs trading).
-Page 62: 
-Page 62: 
+Page 62:
+Page 62:
 Page 63: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 63: 
+Page 63:
 Page 63: 61
-Page 63: 
+Page 63:
 Page 63: Table 18. Evaluation metrics for assessing model efficacy in reviewed articles.
 Page 63: Evaluation Metrics
 Page 63: Mean Absolute
 Page 63: Error (MAE)
-Page 63: 
+Page 63:
 Page 63: Mean Squared Error
 Page 63: (MSE)
-Page 63: 
+Page 63:
 Page 63: Root Mean Squared
 Page 63: Error (RMSE)
-Page 63: 
+Page 63:
 Page 63: Description
 Page 63: Measures the average magnitude of the
 Page 63: errors in a set of predictions, without
@@ -3426,56 +3426,56 @@ Page 63: RMSE is the square root of the mean of
 Page 63: the squared errors. RMSE is particularly
 Page 63: useful when large errors are particularly
 Page 63: undesirable.
-Page 63: 
+Page 63:
 Page 63: Formula
 Page 63: ≡¥æü
-Page 63: 
+Page 63:
 Page 63: ≡¥æÇ≡¥É┤≡¥É╕ =
-Page 63: 
+Page 63:
 Page 63: 1
 Page 63: Γêæ |≡¥æî≡¥æû ΓêÆ ≡¥æî╠é≡¥æû |
 Page 63: ≡¥æü
-Page 63: 
+Page 63:
 Page 63: Article
 Page 63: [20, 45]
-Page 63: 
+Page 63:
 Page 63: ≡¥æû=1
-Page 63: 
+Page 63:
 Page 63: ≡¥æü
-Page 63: 
+Page 63:
 Page 63: ≡¥æÇ≡¥æå≡¥É╕ =
-Page 63: 
+Page 63:
 Page 63: 1
 Page 63: Γêæ(≡¥æî≡¥æû ΓêÆ ≡¥æî╠é≡¥æû )2
 Page 63: ≡¥æü
-Page 63: 
+Page 63:
 Page 63: [16, 20, 25,
 Page 63: 37, 45, 60]
-Page 63: 
+Page 63:
 Page 63: ≡¥æû=1
-Page 63: 
+Page 63:
 Page 63: ≡¥æü
-Page 63: 
+Page 63:
 Page 63: 1
 Page 63: ≡¥æà≡¥æÇ≡¥æå≡¥É╕ = ΓêÜ Γêæ(≡¥æî≡¥æû ΓêÆ ≡¥æî╠é≡¥æû )2
 Page 63: ≡¥æü
-Page 63: 
+Page 63:
 Page 63: [23, 28, 40,
 Page 63: 45,56, 65]
-Page 63: 
+Page 63:
 Page 63: ≡¥æû=1
-Page 63: 
+Page 63:
 Page 63: ≡¥æü
-Page 63: 
+Page 63:
 Page 63: Mean Absolute
 Page 63: Percentage Error
 Page 63: (MAPE)
-Page 63: 
+Page 63:
 Page 63: MAPE is a measure of prediction
 Page 63: accuracy of a forecasting method in
 Page 63: statistics. It usually expresses the
 Page 63: accuracy as a ratio.
-Page 63: 
+Page 63:
 Page 63: 100%
 Page 63: ≡¥æî≡¥æû ΓêÆ ≡¥æî╠é≡¥æû
 Page 63: ≡¥æÇ≡¥É┤≡¥æâ≡¥É╕ =
@@ -3483,31 +3483,31 @@ Page 63: Γêæ|
 Page 63: |
 Page 63: ≡¥æü
 Page 63: ≡¥æî≡¥æû
-Page 63: 
+Page 63:
 Page 63: [16, 28, 31,
 Page 63: 37, 40, 60]
-Page 63: 
+Page 63:
 Page 63: Accuracy
-Page 63: 
+Page 63:
 Page 63: Measures the overall effectiveness of
 Page 63: the model in predicting correct
 Page 63: outcomes.
-Page 63: 
+Page 63:
 Page 63: ≡¥É┤≡¥æÉ≡¥æÉ≡¥æó≡¥æƒ≡¥æÄ≡¥æÉ≡¥æª =
-Page 63: 
+Page 63:
 Page 63: [14, 24, 51,
 Page 63: 52, 64]
-Page 63: 
+Page 63:
 Page 63: Error rate
-Page 63: 
+Page 63:
 Page 63: Precision
-Page 63: 
+Page 63:
 Page 63: Recall
-Page 63: 
+Page 63:
 Page 63: F1-Score
-Page 63: 
+Page 63:
 Page 63: AUC
-Page 63: 
+Page 63:
 Page 63: It quantifies the frequency at which the
 Page 63: model accurately forecasts the outcome.
 Page 63: Evaluates the reliability of the model in
@@ -3523,47 +3523,47 @@ Page 63: AUC represents the area under the ROC
 Page 63: curve and ranges from 0 to 1. The
 Page 63: higher the AUC value, the better the
 Page 63: classification performance of the model.
-Page 63: 
+Page 63:
 Page 63: ≡¥æû=1
-Page 63: 
+Page 63:
 Page 63: ≡¥æç≡¥æâ + ≡¥æç≡¥æü
 Page 63: ≡¥æç≡¥æâ + ≡¥æç≡¥æü + ≡¥É╣≡¥æâ + ≡¥É╣≡¥æü
 Page 63: ≡¥É╕≡¥æƒ≡¥æƒ≡¥æ£≡¥æƒ ≡¥æƒ≡¥æÄ≡¥æí≡¥æÆ =
-Page 63: 
+Page 63:
 Page 63: [48]
-Page 63: 
+Page 63:
 Page 63: ≡¥É╣≡¥æâ + ≡¥É╣≡¥æü
 Page 63: ≡¥æç≡¥æâ + ≡¥æç≡¥æü + ≡¥É╣≡¥æâ + ≡¥É╣≡¥æü
 Page 63: ≡¥æç≡¥æâ
 Page 63: ≡¥æâ≡¥æƒ≡¥æÆ≡¥æÉ≡¥æû≡¥æá≡¥æû≡¥æ£≡¥æ¢ =
 Page 63: ≡¥æç≡¥æâ + ≡¥É╣≡¥æâ
-Page 63: 
+Page 63:
 Page 63: [14, 24, 52,
 Page 63: 64]
-Page 63: 
+Page 63:
 Page 63: ≡¥æà≡¥æÆ≡¥æÉ≡¥æÄ≡¥æÖ≡¥æÖ =
-Page 63: 
+Page 63:
 Page 63: ≡¥æç≡¥æâ
 Page 63: ≡¥æç≡¥æâ + ≡¥É╣≡¥æü
-Page 63: 
+Page 63:
 Page 63: ≡¥É╣1 ≡¥æå≡¥æÉ≡¥æ£≡¥æƒ≡¥æÆ =
 Page 63: 2├ù
-Page 63: 
+Page 63:
 Page 63: ≡¥æâ≡¥æƒ≡¥æÆ≡¥æÉ≡¥æû≡¥æá≡¥æû≡¥æ£≡¥æ¢ ├ù ≡¥æà≡¥æÆ≡¥æÉ≡¥æÄ≡¥æÖ≡¥æÖ
 Page 63: ≡¥æâ≡¥æƒ≡¥æÆ≡¥æÉ≡¥æû≡¥æá≡¥æû≡¥æ£≡¥æ¢ + ≡¥æà≡¥æÆ≡¥æÉ≡¥æÄ≡¥æÖ≡¥æÖ
 Page 63: N.A.
-Page 63: 
+Page 63:
 Page 63: [14, 24, 52,
 Page 63: 64]
 Page 63: [14, 24, 52,
 Page 63: 64]
 Page 63: [30, 64]
-Page 63: 
-Page 63: 
+Page 63:
+Page 63:
 Page 64: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 64: 
+Page 64:
 Page 64: 62
-Page 64: 
+Page 64:
 Page 64: 6.2 Performance of Evaluation Metrics
 Page 64: Evaluating the performance of an investment portfolio is a critical step in the investment
 Page 64: decision-making process. The primary dimensions of this evaluation are return and risk, which
@@ -3583,75 +3583,75 @@ Page 64: performance, balancing the dual objectives of maximizing returns while 
 Page 64: Table 19. Evaluation metrics for assessing model performance in reviewed articles.
 Page 64: Evaluation Metrics
 Page 64: Accumulated Return
-Page 64: 
+Page 64:
 Page 64: Description
 Page 64: Accumulated Return denotes the overall percentage
 Page 64: gain or declines in the value of an investment
 Page 64: throughout its duration. Ideally, the Accumulated
 Page 64: Return should be positive and maximized.
-Page 64: 
+Page 64:
 Page 64: Article
 Page 64: [3, 6, 7, 8, 10, 17, 18, 29, 39,
 Page 64: 42, 44, 53, 62, 65]
-Page 64: 
+Page 64:
 Page 64: Annual Return
-Page 64: 
+Page 64:
 Page 64: Annual return is the percentage change in the value
 Page 64: of an investment over a one-year period, reflecting
 Page 64: the compound rate of return earned or lost by the
 Page 64: investment annually.
-Page 64: 
+Page 64:
 Page 64: [2, 4, 5, 8, 12, 22, 25, 31, 32,
 Page 64: 33, 35, 39, 41, 46, 47, 55, 58,
 Page 64: 59, 63, 68]
-Page 64: 
+Page 64:
 Page 64: Sharpe ratio (SR)
-Page 64: 
+Page 64:
 Page 64: The Sharpe ratio is a measure used to evaluate the
 Page 64: risk-adjusted return of an investment by comparing
 Page 64: its excess return over the risk-free rate to the
 Page 64: standard deviation of those returns.
-Page 64: 
+Page 64:
 Page 64: [2, 3, 4, 5, 6, 8, 9, 10, 12, 13,
 Page 64: 14, 15, 18, 20, 21, 22, 26, 29,
 Page 64: 31, 33, 34, 38, 39, 40, 41, 43,
 Page 64: 44, 45, 47, 49, 50, 55, 58, 62,
 Page 64: 65, 66, 68]
-Page 64: 
-Page 64: 
+Page 64:
+Page 64:
 Page 65: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 65: 
+Page 65:
 Page 65: 63
-Page 65: 
+Page 65:
 Page 65: Evaluation Metrics
 Page 65: Maximum Drawdown
 Page 65: (MDD)
-Page 65: 
+Page 65:
 Page 65: Description
 Page 65: Maximum Drawdown is a risk measure that
 Page 65: indicates the largest single drop from peak to trough
 Page 65: in the value of a portfolio or an investment, before a
 Page 65: new peak is achieved.
-Page 65: 
+Page 65:
 Page 65: Article
 Page 65: [2, 3, 5, 6, 8, 9, 10, 12, 15, 18,
 Page 65: 20, 21, 22, 25, 26, 27, 29, 31,
 Page 65: 33, 35, 38, 39, 41, 43, 45, 47,
 Page 65: 58, 61, 64, 68]
-Page 65: 
+Page 65:
 Page 65: Standard Deviation
 Page 65: (Volatility)
-Page 65: 
+Page 65:
 Page 65: quantifies the variability or dispersion of a set of
 Page 65: data points from their mean, typically used to assess
 Page 65: the consistency of an investment's returns.
-Page 65: 
+Page 65:
 Page 65: [2, 4, 5, 8, 12, 33, 36, 38, 40,
 Page 65: 41, 55, 58, 61, 62, 63, 65, 66,
 Page 65: 68]
-Page 65: 
+Page 65:
 Page 65: Skewness
-Page 65: 
+Page 65:
 Page 65: Refers to the asymmetry in the distribution of returns
 Page 65: for an investment, indicating whether the returns are
 Page 65: biased towards higher or lower values than the
@@ -3662,24 +3662,24 @@ Page 65: Measures the "tailedness" of the return distribution
 Page 65: of an investment, indicating the likelihood of
 Page 65: extreme positive or negative returns compared to a
 Page 65: normal distribution.
-Page 65: 
+Page 65:
 Page 65: [4, 58, 61, 62]
-Page 65: 
+Page 65:
 Page 65: Measures the excess return of an investment relative
 Page 65: to the downward deviation, focusing specifically on
 Page 65: the volatility of negative asset returns, thus
 Page 65: providing a risk-adjusted measure of a portfolio's
 Page 65: performance under negative fluctuations.
-Page 65: 
+Page 65:
 Page 65: [9, 10, 20, 21, 26, 29, 41, 55,
 Page 65: 58, 63]
-Page 65: 
+Page 65:
 Page 65: Kurtosis
-Page 65: 
+Page 65:
 Page 65: Sortino ratio
-Page 65: 
+Page 65:
 Page 65: [4, 58, 61, 62]
-Page 65: 
+Page 65:
 Page 65: 7. Data Availability and Implementation
 Page 65: Access to reliable data sources is essential for conducting research on stock market
 Page 65: forecasting. The internet provides a wide range of freely accessible platforms that supply historical
@@ -3693,37 +3693,37 @@ Page 65: of which are sponsored by quantitative firms to stimulate the developme
 Page 65: GitHub serves as an important repository for open-source code and datasets, enabling
 Page 65: the replication and extension of previous studies. Region-specific sources, such as the National
 Page 65: Stock Exchange of India (NSE) website, provide high-quality local market data, while more
-Page 65: 
-Page 65: 
+Page 65:
+Page 65:
 Page 66: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 66: 
+Page 66:
 Page 66: 64
-Page 66: 
+Page 66:
 Page 66: general platforms like Wikipedia can supplement datasets with corporate or macroeconomic
 Page 66: information.
 Page 66: Representative
 Page 66: https://github.com/,
-Page 66: 
+Page 66:
 Page 66: links
-Page 66: 
+Page 66:
 Page 66: to
-Page 66: 
+Page 66:
 Page 66: such
-Page 66: 
+Page 66:
 Page 66: resources
-Page 66: 
+Page 66:
 Page 66: https://www.kaggle.com/,
-Page 66: 
+Page 66:
 Page 66: include:
-Page 66: 
+Page 66:
 Page 66: https://finance.yahoo.com,
-Page 66: 
+Page 66:
 Page 66: https://www.nseindia.com/,
-Page 66: 
+Page 66:
 Page 66: and
-Page 66: 
+Page 66:
 Page 66: https://www.wikipedia.org/ (accessed on 15 April 2024).
-Page 66: 
+Page 66:
 Page 66: 8. Empirical Result Analysis and Future Research Direction
 Page 66: 8.1 Empirical Result Analysis of Pair Trading
 Page 66: Algorithmic pairs trading has become a mainstream technique in quantitative finance,
@@ -3746,12 +3746,12 @@ Page 66: Beyond supervised ML models, reinforcement learning and optimization fr
 Page 66: also demonstrated promise. For example, combining the Entropy Optimization Criterion (EOC)
 Page 66: for pair selection with MADDPG for trading thresholds has yielded notable improvements in
 Page 66: the Chinese futures market. Simulations show that Dynamic Q-Network-based pair selection
-Page 66: 
-Page 66: 
+Page 66:
+Page 66:
 Page 67: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 67: 
+Page 67:
 Page 67: 65
-Page 67: 
+Page 67:
 Page 67: improved cumulative returns by 50% relative to static benchmarks, while the EOC method added
 Page 67: a further 23% improvement. Integrating MADDPG enhanced performance by an additional
 Page 67: 5ΓÇô15%, and combining both EOC and MADDPG resulted in a 29% improvement over static
@@ -3781,12 +3781,12 @@ Page 67: risk management by identifying irregular patterns, flash crashes, or ma
 Page 67: time. Another critical frontier is the development of adaptive models that adjust automatically to
 Page 67: shifting market regimes, incorporating signals related to volatility, liquidity, and investor
 Page 67: sentiment. Such dynamic models could enhance robustness across different market conditions,
-Page 67: 
-Page 67: 
+Page 67:
+Page 67:
 Page 68: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 68: 
+Page 68:
 Page 68: 66
-Page 68: 
+Page 68:
 Page 68: including crises. Reinforcement learning methods can also be extended by integrating
 Page 68: meta-learning approaches, enabling agents to generalize across trading environments and adapt to
 Page 68: non-stationary market dynamics more efficiently. Moreover, the emergence of quantum
@@ -3815,12 +3815,12 @@ Page 68: evidence of profitability, forward-testing in simulated or paper tradin
 Page 68: stress-testing under extreme scenarios, is critical for assessing robustness and practical viability.
 Page 68: Ensuring reproducibility and mitigating biasesΓÇösuch as survivorship bias or look-ahead biasΓÇö
 Page 68: remain ongoing challenges that require systematic attention.
-Page 68: 
-Page 68: 
+Page 68:
+Page 68:
 Page 69: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 69: 
+Page 69:
 Page 69: 67
-Page 69: 
+Page 69:
 Page 69: By pursuing these interconnected research directions, the field of algorithmic pairs trading
 Page 69: can evolve in both sophistication and applicability. Data-driven and methodological innovations
 Page 69: have the potential to significantly enhance predictive power, while cross-asset applications and
@@ -3849,12 +3849,12 @@ Page 69: implementation.
 Page 69: More recently, RL has introduced a dynamic framework for decision-making in pairs trading.
 Page 69: By learning iteratively from market feedback, RL algorithms are capable of adapting strategies in
 Page 69: response to shifting conditions, thereby offering a mechanism to balance profitability and risk in
-Page 69: 
-Page 69: 
+Page 69:
+Page 69:
 Page 70: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 70: 
+Page 70:
 Page 70: 68
-Page 70: 
+Page 70:
 Page 70: real time. However, issues of sample efficiency, stability of training, and robustness under extreme
 Page 70: market stress continue to constrain the widespread adoption of RL in live trading systems.
 Page 70: A particularly promising direction is the integration of DL and RL, creating hybrid models
@@ -3884,12 +3884,12 @@ Page 70: environments.
 Page 70: On the practical side, this study provides a structured overview of evaluation metrics,
 Page 70: implementation frameworks, and empirical outcomes. By synthesizing results across a broad set
 Page 70: of studies, we offer a set of reference benchmarks that can inform both academic research and
-Page 70: 
-Page 70: 
+Page 70:
+Page 70:
 Page 71: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 71: 
+Page 71:
 Page 71: 69
-Page 71: 
+Page 71:
 Page 71: practical applications. Importantly, the findings suggest that while ML- and RL-based strategies
 Page 71: show considerable promise in improving profitability and risk management, their effectiveness is
 Page 71: highly dependent on data quality, market regime, and implementation constraints.
@@ -3910,8 +3910,8 @@ Page 71: depend on striking a balance between innovation, robustness, interpreta
 Page 71: compliance. Addressing these challenges will ensure that algorithmic pairs trading continues to
 Page 71: evolve not only as a profitable strategy but also as a sustainable component of modern financial
 Page 71: markets.
-Page 71: 
-Page 71: 
+Page 71:
+Page 71:
 Page 72: Sun, Y. / WORKING PAPERS 22/2025 (485)
 Page 72: Abbreviations
 Page 72: ADR - Average Daily Return
@@ -3941,10 +3941,10 @@ Page 72: DRL - Deep Reinforcement Learning
 Page 72: DT - Decision Tree
 Page 72: ELM - Extreme Learning Machine
 Page 72: EM - Expectation Maximization
-Page 72: 
+Page 72:
 Page 72: 70
-Page 72: 
-Page 72: 
+Page 72:
+Page 72:
 Page 73: Sun, Y. / WORKING PAPERS 22/2025 (485)
 Page 73: EMH - Efficient Market Hypothesis
 Page 73: EN - Elastic Net
@@ -3974,10 +3974,10 @@ Page 73: NLP - Natural Language Processing
 Page 73: NRM - Negative Rewards Multiplier
 Page 73: NYSE - New York Stock Exchange
 Page 73: OU - Ornstein-Uhlenbeck
-Page 73: 
+Page 73:
 Page 73: 71
-Page 73: 
-Page 73: 
+Page 73:
+Page 73:
 Page 74: Sun, Y. / WORKING PAPERS 22/2025 (485)
 Page 74: OHLCV - Open, High, Low, Close and Volume
 Page 74: PCA - Principal Component Analysis
@@ -4002,78 +4002,78 @@ Page 74: TCN - Temporal Convolutional Network
 Page 74: TN - True Negatives
 Page 74: TP - True Positives
 Page 74: XGBoost - eXtreme Gradient Boosting
-Page 74: 
+Page 74:
 Page 74: 72
-Page 74: 
-Page 74: 
+Page 74:
+Page 74:
 Page 75: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 75: 
+Page 75:
 Page 75: 73
-Page 75: 
+Page 75:
 Page 75: References2
 Page 75: [1]
-Page 75: 
+Page 75:
 Page 75: Platania, F., Appio, F., Toscano Hernandez, C., El Ouadghiri, I., Peillex, J., 2023. A multiobjective pair trading strategy: integrating neural networks and cyclical insights for optimal
 Page 75: trading performance. Annals of Operations Research, pp. 1-20.
-Page 75: 
+Page 75:
 Page 75: [2]
-Page 75: 
+Page 75:
 Page 75: He, J., Liu, J., Fu, Y., Zhu, Y., Zhou, Z., Tong, Y., 2023. Applications of Copulas and
 Page 75: Machine Learning Algorithms on Pairs Trading.
-Page 75: 
+Page 75:
 Page 75: [3]
-Page 75: 
+Page 75:
 Page 75: Xu, Z., Luo, C., 2023. Improved pairs trading strategy using two-level reinforcement
 Page 75: learning framework. Engineering Applications of Artificial Intelligence, 126, p. 107148.
-Page 75: 
+Page 75:
 Page 75: [4]
-Page 75: 
+Page 75:
 Page 75: Hong, S., Hwang, S., 2023. In search of pairs using firm fundamentals: is pairs trading
 Page 75: profitable? The European Journal of Finance, 29(5), pp. 508-526.
-Page 75: 
+Page 75:
 Page 75: [5]
-Page 75: 
+Page 75:
 Page 75: Liu, J., Lu, L., Zong, X., Xie, B., 2023. Nonlinear relationships in soybean commodities
 Page 75: Pairs trading-test by deep reinforcement learning. Finance Research Letters, 58, p. 104477.
-Page 75: 
+Page 75:
 Page 75: [6]
-Page 75: 
+Page 75:
 Page 75: Liu, J., Lu, L., Zong, X., Luo, Z., 2023. Nonlinear Relationships in Stock News
 Page 75: Co-occurrence: A Pairs Trading Test on the Constituent Stocks of the CSI 300 Index Based
 Page 75: on Deep Reinforcement Learning Methods. Available at SSRN 4573596.
-Page 75: 
+Page 75:
 Page 75: [7]
-Page 75: 
+Page 75:
 Page 75: Gupta, V., Kumar, V., Yuvraj, Y., Kumar, M., 2023, April. Optimized pair trading strategy
 Page 75: using unsupervised machine learning, in: 2023 IEEE 8th International Conference for
 Page 75: Convergence in Technology (I2CT) (pp. 1-5). IEEE.
-Page 75: 
+Page 75:
 Page 75: [8]
-Page 75: 
+Page 75:
 Page 75: Roychoudhury, R., Bhagtani, R., Daftari, A., 2023. Pairs Trading Using Clustering and Deep
 Page 75: Reinforcement Learning. Available at SSRN 4504599.
-Page 75: 
+Page 75:
 Page 75: [9]
-Page 75: 
+Page 75:
 Page 75: Han, C., He, Z., Toh, A.J.W., 2023. Pairs trading via unsupervised learning. European
 Page 75: Journal of Operational Research, 307(2), pp. 929-947.
-Page 75: 
+Page 75:
 Page 75: [10] Chen, Y.F., Shih, W.Y., Lai, H.C., Chang, H.C., Huang, J.L., 2023, February. Pairs Trading
 Page 75: Strategy Optimization Using Proximal Policy Optimization Algorithms, in: 2023 IEEE
 Page 75: International Conference on Big Data and Smart Computing (BigComp) (pp. 40-47). IEEE.
 Page 75: [11] Afzal, M., Usman, M., Raheman, A., 2023. Comparative Study of Pair Trading Techniques
 Page 75: in PakistanΓÇÖs Financial and Non-Financial Sector. Reviews of Management Sciences, 5(1),
 Page 75: pp. 38-49.
-Page 75: 
+Page 75:
 Page 75: 2
-Page 75: 
+Page 75:
 Page 75: Since the order in which the papers are used in the article is chronological, they are not sorted alphabetically.
-Page 75: 
-Page 75: 
+Page 75:
+Page 75:
 Page 76: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 76: 
+Page 76:
 Page 76: 74
-Page 76: 
+Page 76:
 Page 76: [12] Han, W., Zhang, B., Xie, Q., Peng, M., Lai, Y., Huang, J., 2023, August. Select and trade:
 Page 76: Towards unified pair trading with hierarchical reinforcement learning, in: Proceedings of
 Page 76: the 29th ACM SIGKDD Conference on Knowledge Discovery and Data Mining (pp. 41234134).
@@ -4103,12 +4103,12 @@ Page 76: Available at SSRN 4117105.
 Page 76: [23] Zhang, Y., Shen, Q., Guo, J., Jia, Y., 2022, September. Portfolio Trading of Financial
 Page 76: Products Based on Machine Learning, in: 2022 International Conference on Machine
 Page 76: Learning and Cybernetics (ICMLC) (pp. 72-79). IEEE.
-Page 76: 
-Page 76: 
+Page 76:
+Page 76:
 Page 77: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 77: 
+Page 77:
 Page 77: 75
-Page 77: 
+Page 77:
 Page 77: [24] Su, C.H., Lai, H.C., Shih, W.Y., Wang, J.Z., Huang, J.L., 2022, January. Spread Movement
 Page 77: Prediction for Pairs Trading with High-Frequency Limit Order Data, in: 2022 IEEE
 Page 77: International Conference on Big Data and Smart Computing (BigComp) (pp. 64-71). IEEE.
@@ -4119,21 +4119,21 @@ Page 77: [26] Zhang, M., Tang, X., Zhao, S., Wang, W., Zhao, Y., 2022. Statistic
 Page 77: momentum using machine learning. Procedia Computer Science, 202, pp. 194-202.
 Page 77: [27] Kalariya, V., Parmar, P., Jay, P., Tanwar, S., Raboaca, M.S., Alqahtani, F., Tolba, A.,
 Page 77: Neagu, B.C.,
-Page 77: 
+Page 77:
 Page 77: 2022.
-Page 77: 
+Page 77:
 Page 77: Stochastic
-Page 77: 
+Page 77:
 Page 77: neural
-Page 77: 
+Page 77:
 Page 77: networks-based
-Page 77: 
+Page 77:
 Page 77: algorithmic
-Page 77: 
+Page 77:
 Page 77: trading
-Page 77: 
+Page 77:
 Page 77: for
-Page 77: 
+Page 77:
 Page 77: the cryptocurrency market. Mathematics, 10(9), p. 1456.
 Page 77: [28] Li, J., Wang, S., Zhu, Z., Liu, M., Zhang, C., Han, B., 2022, July. Stock Prediction Based on
 Page 77: Deep Learning and its Application in Pairs Trading, in: 2022 International Symposium on
@@ -4154,12 +4154,12 @@ Page 77: from Soybean Commodities. Available at SSRN 3831581.
 Page 77: [34] Wang, C., Sand├Ñs, P., Beling, P., 2021, May. Improving pairs trading strategies via
 Page 77: reinforcement learning, in: 2021 International Conference on Applied Artificial Intelligence
 Page 77: (ICAPAI) (pp. 1-7). IEEE.
-Page 77: 
-Page 77: 
+Page 77:
+Page 77:
 Page 78: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 78: 
+Page 78:
 Page 78: 76
-Page 78: 
+Page 78:
 Page 78: [35] Zong, X., 2021. Machine learning in stock indices trading and pairs trading (Doctoral
 Page 78: dissertation, University of Glasgow).
 Page 78: [36] Zhang, L., 2021, May. Pair trading with machine learning strategy in china stock market,
@@ -4191,12 +4191,12 @@ Page 78: [45] Sarmento, S.M., Horta, N., 2020. Enhancing a pairs trading strateg
 Page 78: machine learning. Expert Systems with Applications, 158, p. 113490.
 Page 78: [46] Ospino, J.F., Fernandez, L., Carchano, O., 2020. Improving pairs trading using neural
 Page 78: network techniques and fundamental ratios. Available at SSRN 3653071.
-Page 78: 
-Page 78: 
+Page 78:
+Page 78:
 Page 79: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 79: 
+Page 79:
 Page 79: 77
-Page 79: 
+Page 79:
 Page 79: [47] Baek, S., Glambosky, M., Oh, S.H., Lee, J., 2020. Machine learning and algorithmic pairs
 Page 79: trading in futures markets. Sustainability, 12(17), p. 6791.
 Page 79: [48] Huang, S.H., Shih, W.Y., Lu, J.Y., Chang, H.H., Chu, C.H., Wang, J.Z., Huang, J.L.,
@@ -4227,12 +4227,12 @@ Page 79: Conference on Agents (ICA) (pp. 113-116). IEEE.
 Page 79: [58] Sutherland, I., Jung, Y., Lee, G., 2018. Statistical arbitrage on the KOSPI 200:
 Page 79: An exploratory analysis of classification and prediction machine learning algorithms for day
 Page 79: trading. Journal of Economics and International Business Management, 6(1), pp. 10-19.
-Page 79: 
-Page 79: 
+Page 79:
+Page 79:
 Page 80: Sun, Y. / WORKING PAPERS 22/2025 (485)
-Page 80: 
+Page 80:
 Page 80: 78
-Page 80: 
+Page 80:
 Page 80: [59] Li, Y., Bu, H., Wu, J., 2017, June. A two-stage multi-view prediction method for investment
 Page 80: strategy, in: 2017 International Conference on Service Systems and Service Management
 Page 80: (pp. 1-6). IEEE.
@@ -4260,13 +4260,13 @@ Page 80: machine learning.
 Page 80: [68] Chen, Y., Ren, W., Lu, X., 2012. Machine Learning in Pairs Trading Strategies.
 Page 80: [69] Ester, M., Kriegel, H.P., Sander, J., Xu, X., 1996, August. A density-based algorithm for
 Page 80: discovering clusters in large spatial databases with noise. In kdd (Vol. 96, No. 34, pp. 226231).
-Page 80: 
-Page 80: 
+Page 80:
+Page 80:
 Page 81: UNIVERSITY OF WARSAW
 Page 81: FACULTY OF ECONOMIC SCIENCES
 Page 81: 44/50 D┼üUGA ST.
 Page 81: 00-241 WARSAW
 Page 81: WWW.WNE.UW.EDU.PL
 Page 81: ISSN 2957-0506
-Page 81: 
-Page 81: 
+Page 81:
+Page 81:

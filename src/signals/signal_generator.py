@@ -11,7 +11,7 @@ from typing import Any, Dict, List, Optional
 import pandas as pd
 
 from ..patterns.base import BasePattern, PatternResult, SignalDirection, TradeSignal
-from .event_weighting import EventWeightedAggregator, EventWeightedSignal, EventType
+from .event_weighting import EventWeightedAggregator
 
 
 @dataclass
@@ -104,7 +104,7 @@ class SignalGenerator:
         self.conflict_resolution = conflict_resolution
         self.use_event_weighting = use_event_weighting
         self.regime = regime
-        
+
         # R6: Event-type weighted signal aggregator
         self.event_aggregator = EventWeightedAggregator(
             use_volume_confirmation=use_volume_confirmation,
@@ -233,7 +233,7 @@ class SignalGenerator:
         # R6: Use event-weighted aggregation if enabled
         if self.use_event_weighting and len(results) > 1:
             return self._aggregate_signals_event_weighted(results, direction, df, i)
-        
+
         # Original equal-weight aggregation
         if self.combine_same_direction and len(results) > 1:
             # Combine signals (signal is guaranteed non-None by detect_all_patterns filter)
@@ -306,7 +306,7 @@ class SignalGenerator:
                 pattern_count=1,
                 metadata=signal.metadata,
             )
-    
+
     def _aggregate_signals_event_weighted(
         self, results: List[PatternResult], direction: SignalDirection, df: pd.DataFrame, i: int
     ) -> Optional[AggregatedSignal]:
@@ -326,10 +326,10 @@ class SignalGenerator:
         signals = [r.signal for r in results if r.signal is not None]
         if not signals:
             return None
-        
+
         # Extract volume data if available
-        volume_data = df["volume"].values if "volume" in df.columns else None
-        
+        volume_data = df["Volume"].values if "Volume" in df.columns else None
+
         try:
             # Use event-weighted aggregator
             event_signal = self.event_aggregator.aggregate(
@@ -339,9 +339,9 @@ class SignalGenerator:
                 volume_data=volume_data,
                 regime=self.regime,
             )
-            
+
             pattern_names = [r.pattern_name for r in results]
-            
+
             return AggregatedSignal(
                 timestamp=df.index[i],
                 direction=direction,

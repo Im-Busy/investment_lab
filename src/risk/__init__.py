@@ -11,14 +11,26 @@ from .purged_cv import PurgedTimeSeriesCV
 from .turnover_penalty import TurnoverPenalty, TurnoverPenaltyConfig
 from .position_probability import PositionRiskModel, PositionRiskConfig
 from .dynamic_rebalancing import DynamicRebalancer, DynamicRebalanceConfig
-from .diversity_score import DiversityScorer, DiversityAdjustedSizer, DiversityConfig, DiversityMethod, DiversityResult
+from .diversity_score import (
+    DiversityScorer,
+    DiversityAdjustedSizer,
+    DiversityConfig,
+    DiversityMethod,
+    DiversityResult,
+)
 from .crash_factor import CrashFactorModel, CrashFactorFilter, CrashFactorConfig, CrashFactorResult
-from .failure_set_analyzer import FailureSetAnalyzer, StrategyFailureMonitor, FailureTestConfig, FailureSetDiagnosis
+from .failure_set_analyzer import (
+    FailureSetAnalyzer,
+    StrategyFailureMonitor,
+    FailureTestConfig,
+    FailureSetDiagnosis,
+)
 from .circuit_breakers import (
     CircuitBreaker as PortfolioCircuitBreaker,
     CircuitBreakerConfig,
     CircuitBreakerState,
 )
+from .mc_var import MCVaR, VaRResult
 
 __all__ = [
     # Position Sizing
@@ -56,4 +68,7 @@ __all__ = [
     "PortfolioCircuitBreaker",
     "CircuitBreakerConfig",
     "CircuitBreakerState",
+    # Monte Carlo VaR / CVaR (T6)
+    "MCVaR",
+    "VaRResult",
 ]

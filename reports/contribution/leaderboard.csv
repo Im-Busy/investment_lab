@@ -1,0 +1,22 @@
+rank,pattern_name,trade_count,win_rate,avg_pnl,ablation_delta_sharpe,avg_synergy_score,composite_score
+1,Floor Pivot Breakout,59,0.0,0.0,0.0,0.0,0.2
+2,Double Bottom,32,0.0,0.0,0.0,,0.10689655172413792
+3,Triple Bottom,26,0.0,0.0,0.0,,0.08620689655172414
+4,Triple Top,18,0.0,0.0,0.0,,0.05862068965517241
+5,Head and Shoulders,17,0.0,0.0,0.0,,0.05517241379310345
+6,Double Top,15,0.0,0.0,0.0,,0.048275862068965524
+7,Matching Lows,13,0.0,0.0,0.0,0.0,0.041379310344827586
+8,Donchian Channel Breakout,13,0.0,0.0,0.0,,0.041379310344827586
+9,Rectangle,9,0.0,0.0,0.0,,0.027586206896551724
+10,Bollinger Bands (Bullish Reversal),7,0.0,0.0,,,0.020689655172413793
+11,Gap Pattern,7,0.0,0.0,0.0,,0.020689655172413793
+12,bullish_engulfing,6,0.0,0.0,,,0.01724137931034483
+13,bearish_engulfing,6,0.0,0.0,,,0.01724137931034483
+14,Harami,3,0.0,0.0,0.0,,0.006896551724137931
+15,Symmetric Triangle,3,0.0,0.0,0.0,0.0,0.006896551724137931
+16,Hammer,1,0.0,0.0,0.0,,0.0
+17,Doji,1,0.0,0.0,0.0,,0.0
+18,n-Bar Decline,1,0.0,0.0,0.0,0.0,0.0
+19,piercing_line,1,0.0,0.0,,,0.0
+20,Three Hills and Mountain,1,0.0,0.0,0.0,,0.0
+21,NR7ID,1,0.0,0.0,0.0,0.0,0.0

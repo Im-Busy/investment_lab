@@ -10,9 +10,7 @@ Solution: Position-level success/failure estimates for proper capital allocation
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, Optional
-
-import numpy as np
+from typing import Any, Dict, Optional
 
 
 class RegimeState(Enum):
@@ -139,6 +137,7 @@ class PositionRiskModel:
         failure_prob: Optional[float] = None,
         max_risk_pct: float = 0.02,
         kelly_criterion: bool = False,
+        **kwargs: Any,
     ) -> float:
         """
         Calculate risk-adjusted position size.
@@ -157,10 +156,15 @@ class PositionRiskModel:
 
         if kelly_criterion:
             win_rate = success_prob
-            avg_win = 1.0
-            avg_loss = -1.0
+            avg_win = kwargs.get("avg_win", 1.0)
+            avg_loss = kwargs.get("avg_loss", -1.0)
+
+            if abs(avg_loss) == 0 or win_rate == 0:
+                return 0.0
 
             b = avg_win / abs(avg_loss)
+            if b == 0:
+                return 0.0
             kelly_fraction = (b * win_rate - (1 - win_rate)) / b
 
             position_size = max(0.0, min(kelly_fraction, max_risk_pct))

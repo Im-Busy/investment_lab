@@ -22,26 +22,20 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Dict, List, Literal, Optional, Tuple
 
-import numpy as np
 import pandas as pd
 
-from ..indicators.fibonacci import fibonacci_retracement
-from ..patterns.base import BasePattern, PatternResult, SignalDirection
+from ..patterns.base import BasePattern
 from .multi_timeframe_bias import (
-    BiasState,
     MTFConfig,
     MultiTimeframeBiasDetector,
     MultiTimeframeSignal,
     TimeframeBias,
     TrendDirection,
 )
-from .volume_confirmation import VolumeConfirmation, VolumeConfig, VolumeSignal
+from .volume_confirmation import VolumeConfirmation, VolumeConfig
 from .vwap_sma_confluence import (
-    SMAPosition,
     VWAPConfig,
-    VWAPConfluence,
     VWAPConfluenceAnalyzer,
-    VWAPPosition,
 )
 
 

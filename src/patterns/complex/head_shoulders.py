@@ -26,6 +26,7 @@ Take Profit Rules:
 
 from typing import Dict, List, Optional, Tuple
 
+import numpy as np
 import pandas as pd
 
 from ...indicators.pivots import find_swing_highs, find_swing_lows
@@ -78,6 +79,95 @@ class HeadAndShoulders(BasePattern):
         self.entry_offset = entry_offset
         self.stop_offset = stop_offset
         self.volume_filter = volume_filter
+
+    def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Vectorized Head and Shoulders detection across all bars.
+
+        Returns np.int8 array: 0=no signal, 1=long, -1=short.
+        """
+        n = len(df)
+        signals = np.zeros(n, dtype=np.int8)
+        close = df["Close"].to_numpy(dtype=np.float64)
+
+        swing_highs = find_swing_highs(df, self.lookback)
+        swing_lows = find_swing_lows(df, self.lookback)
+
+        sh_arr = swing_highs.to_numpy(dtype=np.float64)
+        sl_arr = swing_lows.to_numpy(dtype=np.float64)
+        n_swing_highs = pd.notna(swing_highs).to_numpy()
+        n_swing_lows = pd.notna(swing_lows).to_numpy()
+
+        min_bars = max(self.lookback, self.min_pattern_bars)
+
+        for i in range(min_bars, n):
+            lookback = min(self.max_pattern_bars, i)
+
+            peaks: list = []
+            troughs: list = []
+            for j in range(i - lookback, i + 1):
+                if j < 0:
+                    continue
+                if n_swing_highs[j]:
+                    peaks.append((j, float(sh_arr[j])))
+                if n_swing_lows[j]:
+                    troughs.append((j, float(sl_arr[j])))
+
+            if len(peaks) < 3 or len(troughs) < 2:
+                continue
+
+            peaks_s = sorted(peaks, key=lambda x: x[0])
+
+            pattern_found = False
+            neckline_val = 0.0
+
+            for ip in range(len(peaks_s) - 2):
+                ls = peaks_s[ip]
+                for jp in range(ip + 1, len(peaks_s) - 1):
+                    head = peaks_s[jp]
+                    if head[1] <= ls[1]:
+                        continue
+                    for kp in range(jp + 1, len(peaks_s)):
+                        rs = peaks_s[kp]
+                        if head[1] <= rs[1]:
+                            continue
+                        shoulder_diff = abs(ls[1] - rs[1]) / head[1]
+                        if shoulder_diff > self.shoulder_tolerance:
+                            continue
+                        nl_troughs = [(ti, tp) for ti, tp in troughs if ls[0] < ti < rs[0]]
+                        if len(nl_troughs) < 2:
+                            continue
+                        nl_troughs_s = sorted(nl_troughs, key=lambda x: x[0])
+                        t1 = None
+                        t2 = None
+                        for t in nl_troughs_s:
+                            if ls[0] < t[0] < head[0]:
+                                if t1 is None or t[1] < t1[1]:
+                                    t1 = t
+                            elif head[0] < t[0] < rs[0]:
+                                if t2 is None or t[1] < t2[1]:
+                                    t2 = t
+                        if t1 is None or t2 is None:
+                            continue
+                        nl_slope = (t2[1] - t1[1]) / (t2[0] - t1[0]) if t2[0] != t1[0] else 0.0
+                        nl_intercept = t1[1] - nl_slope * t1[0]
+                        depth = head[1] - (nl_slope * rs[0] + nl_intercept)
+                        if depth <= 0:
+                            continue
+                        neckline_val = nl_slope * i + nl_intercept
+                        pattern_found = True
+                        break
+                    if pattern_found:
+                        break
+                if pattern_found:
+                    break
+
+            if pattern_found:
+                curr_close = float(close[i])
+                if curr_close < neckline_val:
+                    signals[i] = -1
+
+        return signals
 
     def _find_peaks_and_troughs(
         self, df: pd.DataFrame, i: int
@@ -425,6 +515,95 @@ class InverseHeadAndShoulders(BasePattern):
                 troughs.append((j, self._safe_float(swing_lows.iloc[j])))
 
         return peaks, troughs
+
+    def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Vectorized Inverse Head and Shoulders detection across all bars.
+
+        Returns np.int8 array: 0=no signal, 1=long, -1=short.
+        """
+        n = len(df)
+        signals = np.zeros(n, dtype=np.int8)
+        close = df["Close"].to_numpy(dtype=np.float64)
+
+        swing_highs = find_swing_highs(df, self.lookback)
+        swing_lows = find_swing_lows(df, self.lookback)
+
+        sh_arr = swing_highs.to_numpy(dtype=np.float64)
+        sl_arr = swing_lows.to_numpy(dtype=np.float64)
+        n_swing_highs = pd.notna(swing_highs).to_numpy()
+        n_swing_lows = pd.notna(swing_lows).to_numpy()
+
+        min_bars = max(self.lookback, self.min_pattern_bars)
+
+        for i in range(min_bars, n):
+            lookback = min(self.max_pattern_bars, i)
+
+            peaks: list = []
+            troughs: list = []
+            for j in range(i - lookback, i + 1):
+                if j < 0:
+                    continue
+                if n_swing_highs[j]:
+                    peaks.append((j, float(sh_arr[j])))
+                if n_swing_lows[j]:
+                    troughs.append((j, float(sl_arr[j])))
+
+            if len(troughs) < 3 or len(peaks) < 2:
+                continue
+
+            troughs_s = sorted(troughs, key=lambda x: x[0])
+
+            pattern_found = False
+            neckline_val = 0.0
+
+            for it in range(len(troughs_s) - 2):
+                ls = troughs_s[it]
+                for jt in range(it + 1, len(troughs_s) - 1):
+                    head = troughs_s[jt]
+                    if head[1] >= ls[1]:
+                        continue
+                    for kt in range(jt + 1, len(troughs_s)):
+                        rs = troughs_s[kt]
+                        if head[1] >= rs[1]:
+                            continue
+                        shoulder_diff = abs(ls[1] - rs[1]) / abs(head[1])
+                        if shoulder_diff > self.shoulder_tolerance:
+                            continue
+                        nl_peaks = [(pi, pp) for pi, pp in peaks if ls[0] < pi < rs[0]]
+                        if len(nl_peaks) < 2:
+                            continue
+                        nl_peaks_s = sorted(nl_peaks, key=lambda x: x[0])
+                        p1 = None
+                        p2 = None
+                        for p in nl_peaks_s:
+                            if ls[0] < p[0] < head[0]:
+                                if p1 is None or p[1] > p1[1]:
+                                    p1 = p
+                            elif head[0] < p[0] < rs[0]:
+                                if p2 is None or p[1] > p2[1]:
+                                    p2 = p
+                        if p1 is None or p2 is None:
+                            continue
+                        nl_slope = (p2[1] - p1[1]) / (p2[0] - p1[0]) if p2[0] != p1[0] else 0.0
+                        nl_intercept = p1[1] - nl_slope * p1[0]
+                        depth = (nl_slope * rs[0] + nl_intercept) - head[1]
+                        if depth <= 0:
+                            continue
+                        neckline_val = nl_slope * i + nl_intercept
+                        pattern_found = True
+                        break
+                    if pattern_found:
+                        break
+                if pattern_found:
+                    break
+
+            if pattern_found:
+                curr_close = float(close[i])
+                if curr_close > neckline_val:
+                    signals[i] = 1
+
+        return signals
 
     def _find_pattern(
         self, peaks: List[Tuple[int, float]], troughs: List[Tuple[int, float]]

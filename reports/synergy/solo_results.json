@@ -1,0 +1,112 @@
+{
+  "Market Structure Low": {
+    "total_trades": 0,
+    "win_rate": 0.0,
+    "total_return_pct": 0.0,
+    "sharpe_ratio": 0.0,
+    "sortino_ratio": 0.0,
+    "max_drawdown_pct": 0.0,
+    "profit_factor": 0.0,
+    "equity_final": 100000,
+    "duration_seconds": 0.4137909412384033
+  },
+  "Matching Lows": {
+    "total_trades": 0,
+    "win_rate": 0.0,
+    "total_return_pct": 0.0,
+    "sharpe_ratio": 0.0,
+    "sortino_ratio": 0.0,
+    "max_drawdown_pct": 0.0,
+    "profit_factor": 0.0,
+    "equity_final": 100000,
+    "duration_seconds": 0.30915188789367676
+  },
+  "NR7ID": {
+    "total_trades": 0,
+    "win_rate": 0.0,
+    "total_return_pct": 0.0,
+    "sharpe_ratio": 0.0,
+    "sortino_ratio": 0.0,
+    "max_drawdown_pct": 0.0,
+    "profit_factor": 0.0,
+    "equity_final": 100000,
+    "duration_seconds": 0.5925674438476562
+  },
+  "n-Bar Decline": {
+    "total_trades": 0,
+    "win_rate": 0.0,
+    "total_return_pct": 0.0,
+    "sharpe_ratio": 0.0,
+    "sortino_ratio": 0.0,
+    "max_drawdown_pct": 0.0,
+    "profit_factor": 0.0,
+    "equity_final": 100000,
+    "duration_seconds": 0.1842184066772461
+  },
+  "Floor Pivot Breakout": {
+    "total_trades": 0,
+    "win_rate": 0.0,
+    "total_return_pct": 0.0,
+    "sharpe_ratio": 0.0,
+    "sortino_ratio": 0.0,
+    "max_drawdown_pct": 0.0,
+    "profit_factor": 0.0,
+    "equity_final": 100000,
+    "duration_seconds": 0.48528528213500977
+  },
+  "Two-Bar Reversal": {
+    "total_trades": 0,
+    "win_rate": 0.0,
+    "total_return_pct": 0.0,
+    "sharpe_ratio": 0.0,
+    "sortino_ratio": 0.0,
+    "max_drawdown_pct": 0.0,
+    "profit_factor": 0.0,
+    "equity_final": 100000,
+    "duration_seconds": 0.15623998641967773
+  },
+  "Gartley Pattern": {
+    "total_trades": 0,
+    "win_rate": 0.0,
+    "total_return_pct": 0.0,
+    "sharpe_ratio": 0.0,
+    "sortino_ratio": 0.0,
+    "max_drawdown_pct": 0.0,
+    "profit_factor": 0.0,
+    "equity_final": 100000,
+    "duration_seconds": 0.11341023445129395
+  },
+  "ABC Pattern": {
+    "total_trades": 0,
+    "win_rate": 0.0,
+    "total_return_pct": 0.0,
+    "sharpe_ratio": 0.0,
+    "sortino_ratio": 0.0,
+    "max_drawdown_pct": 0.0,
+    "profit_factor": 0.0,
+    "equity_final": 100000,
+    "duration_seconds": 0.13771700859069824
+  },
+  "Symmetric Triangle": {
+    "total_trades": 0,
+    "win_rate": 0.0,
+    "total_return_pct": 0.0,
+    "sharpe_ratio": 0.0,
+    "sortino_ratio": 0.0,
+    "max_drawdown_pct": 0.0,
+    "profit_factor": 0.0,
+    "equity_final": 100000,
+    "duration_seconds": 5.090898036956787
+  },
+  "Bollinger Bands": {
+    "total_trades": 0,
+    "win_rate": 0.0,
+    "total_return_pct": 0.0,
+    "sharpe_ratio": 0.0,
+    "sortino_ratio": 0.0,
+    "max_drawdown_pct": 0.0,
+    "profit_factor": 0.0,
+    "equity_final": 100000,
+    "duration_seconds": 0.674506425857544
+  }
+}

@@ -9,7 +9,7 @@ import logging
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional
+from typing import List
 
 import pandas as pd
 from backtesting import Strategy
@@ -116,7 +116,7 @@ class MultiPatternStrategy(Strategy):
         self._init_indicators()
 
         # Store the full DataFrame for pattern detection
-        self._df = None
+        self._df = self._build_dataframe()
 
     def _init_patterns(self) -> List:
         """Initialize all pattern detectors."""
@@ -155,9 +155,8 @@ class MultiPatternStrategy(Strategy):
         # backtesting.py provides data as arrays, we need to convert
         pass
 
-    def _get_dataframe(self) -> pd.DataFrame:
-        """Convert backtesting.py data to DataFrame."""
-        # Create DataFrame from backtesting.py data
+    def _build_dataframe(self) -> pd.DataFrame:
+        """Build DataFrame from backtesting.py data once."""
         df = pd.DataFrame(
             {
                 "Open": self.data.Open,
@@ -170,6 +169,10 @@ class MultiPatternStrategy(Strategy):
         df.index = self.data.index
         return df
 
+    def _get_dataframe(self) -> pd.DataFrame:
+        """Get the pre-built DataFrame (preserved for backward compatibility)."""
+        return self._df
+
     def _get_atr(self, period: int = 14) -> float:
         """
         Calculate Average True Range for current bar.
@@ -180,7 +183,7 @@ class MultiPatternStrategy(Strategy):
         Returns:
             Current ATR value
         """
-        df = self._get_dataframe()
+        df = self._df
         if len(df) < period + 1:
             return df["Close"].iloc[-1] * 0.02  # Default 2% if not enough data
 
@@ -201,14 +204,15 @@ class MultiPatternStrategy(Strategy):
         if len(self.trades) >= self.max_open_positions:
             return
 
-        # Get current DataFrame
-        df = self._get_dataframe()
-        current_idx = len(df) - 1
+        current_idx = len(self._df) - 1
 
         # Skip if not enough bars
         min_bars = max(p.min_bars_required for p in self.patterns)
         if current_idx < min_bars:
             return
+
+        # Slice DataFrame to current bar only (prevents look-ahead bias)
+        df = self._df.iloc[: current_idx + 1]
 
         # Detect patterns at current bar
         signals = []
@@ -231,6 +235,7 @@ class MultiPatternStrategy(Strategy):
                     )
             except Exception:
                 # Skip pattern if detection fails
+                logging.debug("Pattern detection failed for %s", pattern.name, exc_info=True)
                 continue
 
         # Check if we have enough confluence
@@ -277,6 +282,7 @@ class MultiPatternStrategy(Strategy):
 
         except Exception:
             # Use simple average if confluence scoring fails
+            logging.debug("Confluence scoring failed, using simple average", exc_info=True)
             confluence = None
 
         # Calculate entry, stop, and targets
@@ -420,7 +426,7 @@ class MultiPatternStrategySimple(Strategy):
                     else:
                         short_count += 1
                         short_signals.append(result.signal)
-            except:
+            except Exception:
                 continue
 
         # Require at least min_confluence_count patterns to agree

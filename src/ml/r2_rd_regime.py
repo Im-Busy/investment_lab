@@ -30,13 +30,11 @@ Example:
 
 from __future__ import annotations
 
-from typing import Dict, List, Optional, Tuple
+from typing import Optional
 
 import numpy as np
 import pandas as pd
-from scipy import stats
 from sklearn.linear_model import LinearRegression
-from sklearn.preprocessing import StandardScaler
 
 from src.ml.regime_base import RegimeDetectorBase, RegimeSummary
 
@@ -108,9 +106,14 @@ class R2RDRegimeDetector(RegimeDetectorBase):
 
         # Compute returns if not present
         if "returns" not in data.columns:
-            if "close" in data.columns:
+            close_col = None
+            if "Close" in data.columns:
+                close_col = "Close"
+            elif "close" in data.columns:
+                close_col = "close"
+            if close_col:
                 data = data.copy()
-                data["returns"] = data["close"].pct_change()
+                data["returns"] = data[close_col].pct_change()
             elif data.shape[1] > 0:
                 data = data.copy()
                 data["returns"] = data.iloc[:, 0].pct_change()

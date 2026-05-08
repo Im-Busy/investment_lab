@@ -317,7 +317,37 @@ class DonchianChannelBreakout(BasePattern):
                     if bar_close < channels["prev_lower"]:
                         return True
 
-        return False
+    def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Vectorized detection of Donchian Channel breakout signals across the entire DataFrame.
+
+        Args:
+            df: DataFrame with 'Open', 'High', 'Low', 'Close' columns
+
+        Returns:
+            np.ndarray of np.int8: 0=no signal, 1=LONG, -1=SHORT
+        """
+        n = len(df)
+        result = np.zeros(n, dtype=np.int8)
+        cp = self.channel_period
+        if n < cp + 2:
+            return result
+
+        arrays = self._extract_arrays(df)
+        high_a = arrays["high"]
+        low_a = arrays["low"]
+        close_a = arrays["close"]
+
+        for i in range(cp, n):
+            prev_upper = np.max(high_a[i - cp : i])
+            prev_lower = np.min(low_a[i - cp : i])
+
+            if close_a[i] > prev_upper:
+                result[i] = 1
+            elif close_a[i] < prev_lower:
+                result[i] = -1
+
+        return result
 
     def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
         """
@@ -630,6 +660,36 @@ class DonchianTrendFilter(BasePattern):
             return "downtrend"
         else:
             return "sideways"
+
+    def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Vectorized Donchian trend filter across the entire DataFrame.
+
+        Returns np.ndarray of np.int8: 1=uptrend (position > 0.6), -1=downtrend (position < 0.4), 0=sideways.
+        """
+        n = len(df)
+        result = np.zeros(n, dtype=np.int8)
+        cp = self.channel_period
+        if n < cp + 1:
+            return result
+
+        high_a = df["High"].to_numpy()
+        low_a = df["Low"].to_numpy()
+        close_a = df["Close"].to_numpy()
+
+        for i in range(cp, n):
+            upper = np.max(high_a[i - cp : i + 1])
+            lower = np.min(low_a[i - cp : i + 1])
+            channel_range = upper - lower
+            if channel_range == 0:
+                continue
+            position = (close_a[i] - lower) / channel_range
+            if position > 0.6:
+                result[i] = 1
+            elif position < 0.4:
+                result[i] = -1
+
+        return result
 
     def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
         """Detect trend - not a pattern per se, returns trend info in pivot_points."""

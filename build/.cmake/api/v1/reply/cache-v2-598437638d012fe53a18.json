@@ -1,9 +1,9 @@
 {
-	"entries" : 
+	"entries" :
 	[
 		{
 			"name" : "BUILD_GMOCK",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -15,7 +15,7 @@
 		},
 		{
 			"name" : "CMAKE_ADDR2LINE",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -31,7 +31,7 @@
 		},
 		{
 			"name" : "CMAKE_AR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -47,7 +47,7 @@
 		},
 		{
 			"name" : "CMAKE_BUILD_TYPE",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -59,7 +59,7 @@
 		},
 		{
 			"name" : "CMAKE_CACHEFILE_DIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -71,7 +71,7 @@
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -83,7 +83,7 @@
 		},
 		{
 			"name" : "CMAKE_CACHE_MINOR_VERSION",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -95,7 +95,7 @@
 		},
 		{
 			"name" : "CMAKE_CACHE_PATCH_VERSION",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -107,7 +107,7 @@
 		},
 		{
 			"name" : "CMAKE_COLOR_MAKEFILE",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -123,7 +123,7 @@
 		},
 		{
 			"name" : "CMAKE_COMMAND",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -135,7 +135,7 @@
 		},
 		{
 			"name" : "CMAKE_CPACK_COMMAND",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -147,7 +147,7 @@
 		},
 		{
 			"name" : "CMAKE_CTEST_COMMAND",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -159,7 +159,7 @@
 		},
 		{
 			"name" : "CMAKE_CXX_COMPILER",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -175,7 +175,7 @@
 		},
 		{
 			"name" : "CMAKE_CXX_COMPILER_AR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -191,7 +191,7 @@
 		},
 		{
 			"name" : "CMAKE_CXX_COMPILER_RANLIB",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -207,7 +207,7 @@
 		},
 		{
 			"name" : "CMAKE_CXX_FLAGS",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -223,7 +223,7 @@
 		},
 		{
 			"name" : "CMAKE_CXX_FLAGS_DEBUG",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -239,7 +239,7 @@
 		},
 		{
 			"name" : "CMAKE_CXX_FLAGS_MINSIZEREL",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -255,7 +255,7 @@
 		},
 		{
 			"name" : "CMAKE_CXX_FLAGS_RELEASE",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -271,7 +271,7 @@
 		},
 		{
 			"name" : "CMAKE_CXX_FLAGS_RELWITHDEBINFO",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -287,7 +287,7 @@
 		},
 		{
 			"name" : "CMAKE_CXX_STANDARD_LIBRARIES",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -303,7 +303,7 @@
 		},
 		{
 			"name" : "CMAKE_C_COMPILER",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -319,7 +319,7 @@
 		},
 		{
 			"name" : "CMAKE_C_COMPILER_AR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -335,7 +335,7 @@
 		},
 		{
 			"name" : "CMAKE_C_COMPILER_RANLIB",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -351,7 +351,7 @@
 		},
 		{
 			"name" : "CMAKE_C_FLAGS",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -367,7 +367,7 @@
 		},
 		{
 			"name" : "CMAKE_C_FLAGS_DEBUG",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -383,7 +383,7 @@
 		},
 		{
 			"name" : "CMAKE_C_FLAGS_MINSIZEREL",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -399,7 +399,7 @@
 		},
 		{
 			"name" : "CMAKE_C_FLAGS_RELEASE",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -415,7 +415,7 @@
 		},
 		{
 			"name" : "CMAKE_C_FLAGS_RELWITHDEBINFO",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -431,7 +431,7 @@
 		},
 		{
 			"name" : "CMAKE_C_STANDARD_LIBRARIES",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -447,7 +447,7 @@
 		},
 		{
 			"name" : "CMAKE_DLLTOOL",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -463,7 +463,7 @@
 		},
 		{
 			"name" : "CMAKE_EXECUTABLE_FORMAT",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -475,7 +475,7 @@
 		},
 		{
 			"name" : "CMAKE_EXE_LINKER_FLAGS",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -491,7 +491,7 @@
 		},
 		{
 			"name" : "CMAKE_EXE_LINKER_FLAGS_DEBUG",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -507,7 +507,7 @@
 		},
 		{
 			"name" : "CMAKE_EXE_LINKER_FLAGS_MINSIZEREL",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -523,7 +523,7 @@
 		},
 		{
 			"name" : "CMAKE_EXE_LINKER_FLAGS_RELEASE",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -539,7 +539,7 @@
 		},
 		{
 			"name" : "CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -555,7 +555,7 @@
 		},
 		{
 			"name" : "CMAKE_EXPORT_COMPILE_COMMANDS",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -567,7 +567,7 @@
 		},
 		{
 			"name" : "CMAKE_EXTRA_GENERATOR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -579,7 +579,7 @@
 		},
 		{
 			"name" : "CMAKE_FIND_PACKAGE_REDIRECTS_DIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -591,7 +591,7 @@
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -603,7 +603,7 @@
 		},
 		{
 			"name" : "CMAKE_GENERATOR_INSTANCE",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -615,7 +615,7 @@
 		},
 		{
 			"name" : "CMAKE_GENERATOR_PLATFORM",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -627,7 +627,7 @@
 		},
 		{
 			"name" : "CMAKE_GENERATOR_TOOLSET",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -639,7 +639,7 @@
 		},
 		{
 			"name" : "CMAKE_GNUtoMS",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -651,7 +651,7 @@
 		},
 		{
 			"name" : "CMAKE_HOME_DIRECTORY",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -663,7 +663,7 @@
 		},
 		{
 			"name" : "CMAKE_INSTALL_BINDIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -679,7 +679,7 @@
 		},
 		{
 			"name" : "CMAKE_INSTALL_DATADIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -695,7 +695,7 @@
 		},
 		{
 			"name" : "CMAKE_INSTALL_DATAROOTDIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -711,7 +711,7 @@
 		},
 		{
 			"name" : "CMAKE_INSTALL_DOCDIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -727,7 +727,7 @@
 		},
 		{
 			"name" : "CMAKE_INSTALL_INCLUDEDIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -743,7 +743,7 @@
 		},
 		{
 			"name" : "CMAKE_INSTALL_INFODIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -759,7 +759,7 @@
 		},
 		{
 			"name" : "CMAKE_INSTALL_LIBDIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -775,7 +775,7 @@
 		},
 		{
 			"name" : "CMAKE_INSTALL_LIBEXECDIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -791,7 +791,7 @@
 		},
 		{
 			"name" : "CMAKE_INSTALL_LOCALEDIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -807,7 +807,7 @@
 		},
 		{
 			"name" : "CMAKE_INSTALL_LOCALSTATEDIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -823,7 +823,7 @@
 		},
 		{
 			"name" : "CMAKE_INSTALL_MANDIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -839,7 +839,7 @@
 		},
 		{
 			"name" : "CMAKE_INSTALL_OLDINCLUDEDIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -855,7 +855,7 @@
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -867,7 +867,7 @@
 		},
 		{
 			"name" : "CMAKE_INSTALL_RUNSTATEDIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -883,7 +883,7 @@
 		},
 		{
 			"name" : "CMAKE_INSTALL_SBINDIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -899,7 +899,7 @@
 		},
 		{
 			"name" : "CMAKE_INSTALL_SHAREDSTATEDIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -915,7 +915,7 @@
 		},
 		{
 			"name" : "CMAKE_INSTALL_SYSCONFDIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -931,7 +931,7 @@
 		},
 		{
 			"name" : "CMAKE_LINKER",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -947,7 +947,7 @@
 		},
 		{
 			"name" : "CMAKE_MAKE_PROGRAM",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -963,7 +963,7 @@
 		},
 		{
 			"name" : "CMAKE_MODULE_LINKER_FLAGS",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -979,7 +979,7 @@
 		},
 		{
 			"name" : "CMAKE_MODULE_LINKER_FLAGS_DEBUG",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -995,7 +995,7 @@
 		},
 		{
 			"name" : "CMAKE_MODULE_LINKER_FLAGS_MINSIZEREL",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1011,7 +1011,7 @@
 		},
 		{
 			"name" : "CMAKE_MODULE_LINKER_FLAGS_RELEASE",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1027,7 +1027,7 @@
 		},
 		{
 			"name" : "CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1043,7 +1043,7 @@
 		},
 		{
 			"name" : "CMAKE_NM",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1059,7 +1059,7 @@
 		},
 		{
 			"name" : "CMAKE_NUMBER_OF_MAKEFILES",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1071,7 +1071,7 @@
 		},
 		{
 			"name" : "CMAKE_OBJCOPY",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1087,7 +1087,7 @@
 		},
 		{
 			"name" : "CMAKE_OBJDUMP",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1103,7 +1103,7 @@
 		},
 		{
 			"name" : "CMAKE_PLATFORM_INFO_INITIALIZED",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1115,7 +1115,7 @@
 		},
 		{
 			"name" : "CMAKE_PROJECT_DESCRIPTION",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1127,7 +1127,7 @@
 		},
 		{
 			"name" : "CMAKE_PROJECT_HOMEPAGE_URL",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1139,7 +1139,7 @@
 		},
 		{
 			"name" : "CMAKE_PROJECT_NAME",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1151,7 +1151,7 @@
 		},
 		{
 			"name" : "CMAKE_PROJECT_VERSION",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1163,7 +1163,7 @@
 		},
 		{
 			"name" : "CMAKE_PROJECT_VERSION_MAJOR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1175,7 +1175,7 @@
 		},
 		{
 			"name" : "CMAKE_PROJECT_VERSION_MINOR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1187,7 +1187,7 @@
 		},
 		{
 			"name" : "CMAKE_PROJECT_VERSION_PATCH",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1199,7 +1199,7 @@
 		},
 		{
 			"name" : "CMAKE_PROJECT_VERSION_TWEAK",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1211,7 +1211,7 @@
 		},
 		{
 			"name" : "CMAKE_RANLIB",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1227,7 +1227,7 @@
 		},
 		{
 			"name" : "CMAKE_RC_COMPILER",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1243,7 +1243,7 @@
 		},
 		{
 			"name" : "CMAKE_RC_COMPILER_WORKS",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1255,7 +1255,7 @@
 		},
 		{
 			"name" : "CMAKE_RC_FLAGS",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1271,7 +1271,7 @@
 		},
 		{
 			"name" : "CMAKE_RC_FLAGS_DEBUG",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1287,7 +1287,7 @@
 		},
 		{
 			"name" : "CMAKE_RC_FLAGS_MINSIZEREL",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1303,7 +1303,7 @@
 		},
 		{
 			"name" : "CMAKE_RC_FLAGS_RELEASE",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1319,7 +1319,7 @@
 		},
 		{
 			"name" : "CMAKE_RC_FLAGS_RELWITHDEBINFO",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1335,7 +1335,7 @@
 		},
 		{
 			"name" : "CMAKE_READELF",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1351,7 +1351,7 @@
 		},
 		{
 			"name" : "CMAKE_ROOT",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1363,7 +1363,7 @@
 		},
 		{
 			"name" : "CMAKE_SHARED_LINKER_FLAGS",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1379,7 +1379,7 @@
 		},
 		{
 			"name" : "CMAKE_SHARED_LINKER_FLAGS_DEBUG",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1395,7 +1395,7 @@
 		},
 		{
 			"name" : "CMAKE_SHARED_LINKER_FLAGS_MINSIZEREL",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1411,7 +1411,7 @@
 		},
 		{
 			"name" : "CMAKE_SHARED_LINKER_FLAGS_RELEASE",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1427,7 +1427,7 @@
 		},
 		{
 			"name" : "CMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1443,7 +1443,7 @@
 		},
 		{
 			"name" : "CMAKE_SKIP_INSTALL_RPATH",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1459,7 +1459,7 @@
 		},
 		{
 			"name" : "CMAKE_SKIP_RPATH",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1475,7 +1475,7 @@
 		},
 		{
 			"name" : "CMAKE_STATIC_LINKER_FLAGS",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1491,7 +1491,7 @@
 		},
 		{
 			"name" : "CMAKE_STATIC_LINKER_FLAGS_DEBUG",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1507,7 +1507,7 @@
 		},
 		{
 			"name" : "CMAKE_STATIC_LINKER_FLAGS_MINSIZEREL",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1523,7 +1523,7 @@
 		},
 		{
 			"name" : "CMAKE_STATIC_LINKER_FLAGS_RELEASE",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1539,7 +1539,7 @@
 		},
 		{
 			"name" : "CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1555,7 +1555,7 @@
 		},
 		{
 			"name" : "CMAKE_STRIP",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1571,7 +1571,7 @@
 		},
 		{
 			"name" : "CMAKE_TAPI",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1587,7 +1587,7 @@
 		},
 		{
 			"name" : "CMAKE_VERBOSE_MAKEFILE",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1603,7 +1603,7 @@
 		},
 		{
 			"name" : "FIND_PACKAGE_MESSAGE_DETAILS_PythonInterp",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1615,7 +1615,7 @@
 		},
 		{
 			"name" : "INSTALL_GTEST",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1627,7 +1627,7 @@
 		},
 		{
 			"name" : "OrderBookProject_BINARY_DIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1639,7 +1639,7 @@
 		},
 		{
 			"name" : "OrderBookProject_IS_TOP_LEVEL",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1651,7 +1651,7 @@
 		},
 		{
 			"name" : "OrderBookProject_SOURCE_DIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1663,7 +1663,7 @@
 		},
 		{
 			"name" : "PYTHON_EXECUTABLE",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1679,7 +1679,7 @@
 		},
 		{
 			"name" : "_CMAKE_CXX_LINKER_PUSHPOP_STATE_SUPPORTED",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1691,7 +1691,7 @@
 		},
 		{
 			"name" : "_CMAKE_C_LINKER_PUSHPOP_STATE_SUPPORTED",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1703,7 +1703,7 @@
 		},
 		{
 			"name" : "_CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1715,7 +1715,7 @@
 		},
 		{
 			"name" : "_GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1727,7 +1727,7 @@
 		},
 		{
 			"name" : "generated_dir",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1739,7 +1739,7 @@
 		},
 		{
 			"name" : "gmock_BINARY_DIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1751,7 +1751,7 @@
 		},
 		{
 			"name" : "gmock_IS_TOP_LEVEL",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1763,7 +1763,7 @@
 		},
 		{
 			"name" : "gmock_LIB_DEPENDS",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1775,7 +1775,7 @@
 		},
 		{
 			"name" : "gmock_SOURCE_DIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1787,7 +1787,7 @@
 		},
 		{
 			"name" : "gmock_build_tests",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1803,7 +1803,7 @@
 		},
 		{
 			"name" : "gmock_main_LIB_DEPENDS",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1815,7 +1815,7 @@
 		},
 		{
 			"name" : "googletest-distribution_BINARY_DIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1827,7 +1827,7 @@
 		},
 		{
 			"name" : "googletest-distribution_IS_TOP_LEVEL",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1839,7 +1839,7 @@
 		},
 		{
 			"name" : "googletest-distribution_SOURCE_DIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1851,7 +1851,7 @@
 		},
 		{
 			"name" : "gtest_BINARY_DIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1863,7 +1863,7 @@
 		},
 		{
 			"name" : "gtest_IS_TOP_LEVEL",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1875,7 +1875,7 @@
 		},
 		{
 			"name" : "gtest_SOURCE_DIR",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1887,7 +1887,7 @@
 		},
 		{
 			"name" : "gtest_build_samples",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1903,7 +1903,7 @@
 		},
 		{
 			"name" : "gtest_build_tests",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1919,7 +1919,7 @@
 		},
 		{
 			"name" : "gtest_disable_pthreads",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1935,7 +1935,7 @@
 		},
 		{
 			"name" : "gtest_force_shared_crt",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1951,7 +1951,7 @@
 		},
 		{
 			"name" : "gtest_hide_internal_symbols",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "ADVANCED",
@@ -1967,7 +1967,7 @@
 		},
 		{
 			"name" : "gtest_main_LIB_DEPENDS",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1979,7 +1979,7 @@
 		},
 		{
 			"name" : "targets_export_name",
-			"properties" : 
+			"properties" :
 			[
 				{
 					"name" : "HELPSTRING",
@@ -1991,7 +1991,7 @@
 		}
 	],
 	"kind" : "cache",
-	"version" : 
+	"version" :
 	{
 		"major" : 2,
 		"minor" : 0

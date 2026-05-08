@@ -22,7 +22,7 @@ Usage:
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 import numpy as np
 import pandas as pd
@@ -166,7 +166,10 @@ class RiskFactorAutoencoder:
             lr=self.learning_rate,
         )
         scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-            optimizer, mode="min", factor=0.5, patience=5,
+            optimizer,
+            mode="min",
+            factor=0.5,
+            patience=5,
         )
         early_stopper = EarlyStopping(patience=patience, mode="min")
 
@@ -273,7 +276,11 @@ class RiskFactorAutoencoder:
         with torch.no_grad():
             all_data = torch.cat([train_t, val_t], dim=0)
             latent = self._encoder(all_data).cpu().numpy()
-            reconstructed = self._decoder(all_data.unsqueeze(0) if all_data.ndim == 1 else all_data).cpu().numpy()
+            reconstructed = (
+                self._decoder(all_data.unsqueeze(0) if all_data.ndim == 1 else all_data)
+                .cpu()
+                .numpy()
+            )
 
         total_var = np.var(all_data.cpu().numpy(), axis=0).sum()
         residual_var = np.var(all_data.cpu().numpy() - reconstructed, axis=0).sum()
@@ -391,12 +398,16 @@ class RiskFactorAutoencoder:
 
             # Original
             rf = RandomForestRegressor(
-                n_estimators=100, max_depth=3, random_state=42, n_jobs=-1,
+                n_estimators=100,
+                max_depth=3,
+                random_state=42,
+                n_jobs=-1,
             )
             rf.fit(X_orig_np[train_idx], y_orig_np[train_idx])
             pred = rf.predict(X_orig_np[test_idx])
             ic_df = compute_rank_ic(
-                pd.DataFrame({"pred": pred}), pd.Series(y_orig_np[test_idx]),
+                pd.DataFrame({"pred": pred}),
+                pd.Series(y_orig_np[test_idx]),
             )
             if not ic_df.empty:
                 orig_ic_vals.append(abs(ic_df["rank_ic"].iloc[0]))
@@ -410,7 +421,9 @@ class RiskFactorAutoencoder:
         # Simplified evaluation
         combined_idx = features_with_ae.dropna().index.intersection(forward_returns.dropna().index)
         if len(combined_idx) < 50:
-            return pd.DataFrame([{"metric": "rank_ic", "without_ae": 0, "with_ae": 0, "improvement_pct": 0}])
+            return pd.DataFrame(
+                [{"metric": "rank_ic", "without_ae": 0, "with_ae": 0, "improvement_pct": 0}]
+            )
 
         X_combined = features_with_ae.loc[combined_idx].fillna(0)
         y_combined = forward_returns.loc[combined_idx]
@@ -427,7 +440,8 @@ class RiskFactorAutoencoder:
             rf.fit(X_no_ae.iloc[:split], y_combined.iloc[:split])
             pred_no_ae = rf.predict(X_no_ae.iloc[split:])
             ic_df_no = compute_rank_ic(
-                pd.DataFrame({"pred": pred_no_ae}), pd.Series(y_combined.iloc[split:]),
+                pd.DataFrame({"pred": pred_no_ae}),
+                pd.Series(y_combined.iloc[split:]),
             )
             if not ic_df_no.empty:
                 ic_no_ae = abs(ic_df_no["rank_ic"].iloc[0])
@@ -435,19 +449,24 @@ class RiskFactorAutoencoder:
             rf.fit(X_combined.iloc[:split], y_combined.iloc[:split])
             pred_with_ae = rf.predict(X_combined.iloc[split:])
             ic_df_with = compute_rank_ic(
-                pd.DataFrame({"pred": pred_with_ae}), pd.Series(y_combined.iloc[split:]),
+                pd.DataFrame({"pred": pred_with_ae}),
+                pd.Series(y_combined.iloc[split:]),
             )
             if not ic_df_with.empty:
                 ic_with_ae = abs(ic_df_with["rank_ic"].iloc[0])
 
         improvement = ((ic_with_ae / ic_no_ae) - 1) * 100 if ic_no_ae > 0 else 0
 
-        return pd.DataFrame([{
-            "metric": "rank_ic (abs)",
-            "without_ae": round(ic_no_ae, 6),
-            "with_ae": round(ic_with_ae, 6),
-            "improvement_pct": round(improvement, 2),
-        }])
+        return pd.DataFrame(
+            [
+                {
+                    "metric": "rank_ic (abs)",
+                    "without_ae": round(ic_no_ae, 6),
+                    "with_ae": round(ic_with_ae, 6),
+                    "improvement_pct": round(improvement, 2),
+                }
+            ]
+        )
 
     def get_factor_loadings(
         self,

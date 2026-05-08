@@ -54,9 +54,7 @@ def load_model(batch_size: int = 32):
     torch.set_float32_matmul_precision("high")
 
     print("Loading TimesFM 2.5 from Hugging Face...")
-    model = timesfm.TimesFM_2p5_200M_torch.from_pretrained(
-        "google/timesfm-2.5-200m-pytorch"
-    )
+    model = timesfm.TimesFM_2p5_200M_torch.from_pretrained("google/timesfm-2.5-200m-pytorch")
 
     print(f"Compiling with per_core_batch_size={batch_size}...")
     model.compile(
@@ -158,9 +156,9 @@ def write_csv_output(
                 last_date = df[date_col].dropna().iloc[-1]
                 freq = pd.infer_freq(df[date_col].dropna())
                 if freq:
-                    future_dates = pd.date_range(
-                        last_date, periods=horizon + 1, freq=freq
-                    )[1:].tolist()
+                    future_dates = pd.date_range(last_date, periods=horizon + 1, freq=freq)[
+                        1:
+                    ].tolist()
             except Exception:
                 pass
 
@@ -192,13 +190,9 @@ def write_json_output(results: dict[str, dict], output_path: str) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Forecast time series from CSV using TimesFM."
-    )
+    parser = argparse.ArgumentParser(description="Forecast time series from CSV using TimesFM.")
     parser.add_argument("input", help="Path to input CSV file")
-    parser.add_argument(
-        "--horizon", type=int, required=True, help="Number of steps to forecast"
-    )
+    parser.add_argument("--horizon", type=int, required=True, help="Number of steps to forecast")
     parser.add_argument("--date-col", help="Name of the date/time column")
     parser.add_argument(
         "--value-cols",

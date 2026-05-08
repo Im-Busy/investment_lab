@@ -15,7 +15,7 @@ Usage:
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
 import numpy as np
@@ -192,6 +192,9 @@ class MLPipeline:
         if not self._is_fitted:
             raise ValueError("Pipeline not fitted. Call fit() first.")
 
+        if signal_features is None or self.signal_scorer.model is None:
+            return pd.DataFrame()
+
         return self.signal_scorer.score(signal_features)
 
     def get_regime_feature_importance(self, top_n: int = 15) -> pd.DataFrame:
@@ -204,6 +207,8 @@ class MLPipeline:
         """
         Get most important features for signal quality scoring.
         """
+        if self.signal_scorer.model is None:
+            return pd.DataFrame()
         return self.signal_scorer.get_top_features_by_importance(top_n)
 
     def walk_forward_validation(
@@ -259,9 +264,15 @@ class MLPipeline:
 
         regime_pred = self.predict_regime(df)
         regime_proba = self.get_regime_probabilities(df)
-        signal_scores = self.score_signals(signal_features)
+
+        if signal_features is not None and self.signal_scorer.model is not None:
+            signal_scores = self.score_signals(signal_features)
+            signal_importance = self.get_signal_feature_importance()
+        else:
+            signal_scores = pd.DataFrame()
+            signal_importance = pd.DataFrame()
+
         regime_importance = self.get_regime_feature_importance()
-        signal_importance = self.get_signal_feature_importance()
 
         regime_valid = regime_pred.notna()
         regime_accuracy = (regime_pred[regime_valid] == regime_labels[regime_valid]).mean()

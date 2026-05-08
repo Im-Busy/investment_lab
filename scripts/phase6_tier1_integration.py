@@ -15,7 +15,6 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.backtest.engine import BacktestEngine
 from src.risk.circuit_breakers import CircuitBreaker, CircuitBreakerConfig
 from src.risk.turnover_penalty import TurnoverPenalty, TurnoverPenaltyConfig
 from src.risk.position_probability import PositionRiskModel, PositionRiskConfig

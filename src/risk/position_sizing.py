@@ -157,7 +157,7 @@ class PositionSizer:
                 equity, entry_price, stop_price, risk_per_share, win_rate, avg_win_loss_ratio
             )
         elif self.method == "atr":
-            result = self._atr_based(equity, entry_price, atr, risk_per_share)
+            result = self._atr_based(equity, entry_price, atr, risk_per_share, direction=direction)
         elif self.method == "volatility_adjusted":
             result = self._volatility_adjusted(
                 equity, entry_price, stop_price, risk_per_share, volatility
@@ -254,7 +254,12 @@ class PositionSizer:
         )
 
     def _atr_based(
-        self, equity: float, entry_price: float, atr: Optional[float], risk_per_share: float
+        self,
+        equity: float,
+        entry_price: float,
+        atr: Optional[float],
+        risk_per_share: float,
+        direction: str = "long",
     ) -> PositionSizeResult:
         """Calculate position size based on ATR."""
         if atr is None:
@@ -264,11 +269,17 @@ class PositionSizer:
         risk_amount = equity * self.risk_per_trade
         size = risk_amount / risk_per_share if risk_per_share > 0 else 0
 
+        stop_price = (
+            entry_price - (atr * self.atr_multiplier)
+            if direction == "long"
+            else entry_price + (atr * self.atr_multiplier)
+        )
+
         return PositionSizeResult(
             size=size,
             risk_amount=risk_amount,
             risk_percent=self.risk_per_trade,
-            stop_price=entry_price - (atr * self.atr_multiplier),
+            stop_price=stop_price,
             method="atr",
             metadata={
                 "atr": atr,
@@ -351,12 +362,17 @@ class PositionSizer:
         self, result: PositionSizeResult, equity: float, entry_price: float
     ) -> PositionSizeResult:
         """Apply position size constraints."""
+        # Guard against zero or negative inputs
+        if entry_price <= 0 or equity <= 0:
+            return result
+
         # Maximum position size
         max_size = (equity * self.max_position_size) / entry_price
         if result.size > max_size:
             result.size = max_size
-            result.risk_amount = max_size * (entry_price - result.stop_price)
-            result.risk_percent = result.risk_amount / equity
+            result.risk_amount = max_size * abs(entry_price - result.stop_price)
+            if equity > 0:
+                result.risk_percent = result.risk_amount / equity
             result.metadata["constrained_by"] = "max_position_size"
 
         # Minimum position size
@@ -369,7 +385,9 @@ class PositionSizer:
         if result.risk_percent > self.max_risk_per_trade:
             result.risk_percent = self.max_risk_per_trade
             result.risk_amount = equity * self.max_risk_per_trade
-            result.size = result.risk_amount / (entry_price - result.stop_price)
+            stop_distance = abs(entry_price - result.stop_price)
+            if stop_distance > 0:
+                result.size = result.risk_amount / stop_distance
             result.metadata["constrained_by"] = "max_risk_per_trade"
 
         # Round size to reasonable precision
@@ -410,6 +428,7 @@ def calculate_stop_loss(
     method: str = "atr",
     multiplier: float = 2.0,
     fixed_percent: float = 0.05,
+    direction: str = "long",
 ) -> float:
     """
     Calculate stop loss price.
@@ -420,6 +439,7 @@ def calculate_stop_loss(
         method: Stop loss method ('atr', 'percent', 'support')
         multiplier: ATR multiplier (for atr method)
         fixed_percent: Fixed percentage (for percent method)
+        direction: Trade direction - 'long' or 'short'
 
     Returns:
         Stop loss price
@@ -427,13 +447,21 @@ def calculate_stop_loss(
     if method == "atr":
         if atr is None:
             atr = entry_price * 0.02  # Default 2% ATR
+        if direction == "short":
+            return entry_price + (atr * multiplier)
         return entry_price - (atr * multiplier)
     elif method == "percent":
+        if direction == "short":
+            return entry_price * (1 + fixed_percent)
         return entry_price * (1 - fixed_percent)
     elif method == "support":
         # Placeholder - actual support level should be passed
+        if direction == "short":
+            return entry_price * (1 + fixed_percent)
         return entry_price * (1 - fixed_percent)
     else:
+        if direction == "short":
+            return entry_price * (1 + fixed_percent)
         return entry_price * (1 - fixed_percent)
 
 

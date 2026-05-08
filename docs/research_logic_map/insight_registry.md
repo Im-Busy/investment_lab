@@ -1,7 +1,7 @@
 # Insight Registry
 
-**Last Updated:** 2026-04-25  
-**Total Insights:** 42  
+**Last Updated:** 2026-04-25
+**Total Insights:** 42
 **Papers Analyzed:** 13
 
 ---

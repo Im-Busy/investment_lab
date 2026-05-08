@@ -280,9 +280,11 @@ class ReportGenerator:
         base_name = title.lower().replace(" ", "_")
         tearsheet_path = self.output_dir / f"{base_name}_tearsheet.html"
 
-        return Path(self.tearsheet_gen.from_custom_engine(
-            equity_curve=equity_curve, title=title, output_path=str(tearsheet_path)
-        ))
+        return Path(
+            self.tearsheet_gen.from_custom_engine(
+                equity_curve=equity_curve, title=title, output_path=str(tearsheet_path)
+            )
+        )
 
     def _extract_results(self, results: Union[Dict[str, Any], Any]) -> tuple:
         """
@@ -386,15 +388,9 @@ class ReportGenerator:
 
                 trade_stats["winning_trades"] = len(winning)
                 trade_stats["losing_trades"] = len(losing)
-                trade_stats["win_rate"] = (
-                    len(winning) / len(trades_df) if len(trades_df) > 0 else 0
-                )
-                trade_stats["avg_win"] = (
-                    float(winning["pnl"].mean()) if len(winning) > 0 else 0
-                )
-                trade_stats["avg_loss"] = (
-                    float(losing["pnl"].mean()) if len(losing) > 0 else 0
-                )
+                trade_stats["win_rate"] = len(winning) / len(trades_df) if len(trades_df) > 0 else 0
+                trade_stats["avg_win"] = float(winning["pnl"].mean()) if len(winning) > 0 else 0
+                trade_stats["avg_loss"] = float(losing["pnl"].mean()) if len(losing) > 0 else 0
                 trade_stats["total_pnl"] = float(trades_df["pnl"].sum())
 
                 total_wins = winning["pnl"].sum() if len(winning) > 0 else 0

@@ -8,8 +8,8 @@ portfolio inclusion.
 
 import numpy as np
 import pandas as pd
-from typing import List, Dict, Optional, Tuple, Callable
-from dataclasses import dataclass, field
+from typing import List, Dict, Optional
+from dataclasses import dataclass
 from enum import Enum
 import logging
 

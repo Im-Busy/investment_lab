@@ -7,10 +7,9 @@ observing the impact on portfolio metrics.
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Optional
 
-import numpy as np
 import pandas as pd
 
 logger = logging.getLogger(__name__)
@@ -57,7 +56,9 @@ class ContributionAnalyzer:
             {pattern_name: AblationResult}
         """
         if self.metric_backtest_fn is None:
-            raise ValueError("metric_backtest_fn must be provided or base_metrics must be pre-computed")
+            raise ValueError(
+                "metric_backtest_fn must be provided or base_metrics must be pre-computed"
+            )
 
         if base_metrics is None:
             base_metrics = self.metric_backtest_fn(all_patterns)
@@ -72,9 +73,7 @@ class ContributionAnalyzer:
                 without_metrics = self.metric_backtest_fn(remaining)
 
             marginal = self.calculate_marginal_contribution(pattern, base_metrics, without_metrics)
-            is_redundant = all(
-                abs(v) < self.redundancy_threshold for v in marginal.values()
-            )
+            is_redundant = all(abs(v) < self.redundancy_threshold for v in marginal.values())
 
             results[pattern] = AblationResult(
                 pattern_name=pattern,
@@ -165,7 +164,11 @@ class ContributionAnalyzer:
         thresh = threshold if threshold is not None else self.redundancy_threshold
         redundant = []
         for name, result in ablation_results.items():
-            max_change = max(abs(v) for v in result.marginal_contribution.values()) if result.marginal_contribution else 0.0
+            max_change = (
+                max(abs(v) for v in result.marginal_contribution.values())
+                if result.marginal_contribution
+                else 0.0
+            )
             if max_change < thresh:
                 redundant.append(name)
         return redundant

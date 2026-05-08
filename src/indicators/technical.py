@@ -150,17 +150,17 @@ def atr(df: pd.DataFrame, period: int = 14) -> pd.Series:
 
     # FIXED: Fallback to pandas with RMA smoothing
     tr = true_range(df)
-    
+
     # First value is SMA of TR
     atr_values = [np.nan] * (period - 1)
     atr_values.append(tr.iloc[:period].mean())
-    
+
     # Apply RMA formula for subsequent values
     for i in range(period, len(tr)):
         rma_prev = atr_values[-1]
         rma_new = ((rma_prev * (period - 1)) + tr.iloc[i]) / period
         atr_values.append(rma_new)
-    
+
     return pd.Series(atr_values, index=df.index)
 
 

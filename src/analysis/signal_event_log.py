@@ -9,7 +9,7 @@ signals for all patterns across all bars. We just need to read it out. Zero addi
 """
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, DefaultDict
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 import pandas as pd

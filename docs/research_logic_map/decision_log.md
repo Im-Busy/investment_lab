@@ -1,6 +1,6 @@
 # Decision Log
 
-**Last Updated:** 2026-04-25  
+**Last Updated:** 2026-04-25
 **Total Decisions:** 8
 
 ---
@@ -26,7 +26,7 @@
   2. Structured markdown with YAML frontmatter
   3. Notion/Airtable database
 - **Decision:** Option 2 — Markdown files with consistent templates
-- **Rationale:** 
+- **Rationale:**
   - Git-versionable (unlike Notion)
   - No infrastructure overhead (unlike vector DB)
   - Editable in any text editor
@@ -45,7 +45,7 @@
   2. Numba JIT CPU optimization
   3. Multiprocessing with Ray
 - **Decision:** Option 2 — Numba JIT
-- **Rationale:** 
+- **Rationale:**
   - 50-100x speedup achieved (sufficient)
   - No GPU dependency (Windows-compatible)
   - Easier debugging than CUDA
@@ -63,7 +63,7 @@
   2. vectorbt (slower, vectorized, GPU-capable)
   3. Custom event-driven engine (full control, high maintenance)
 - **Decision:** Option 1 + Option 3 hybrid approach
-- **Rationale:** 
+- **Rationale:**
   - backtesting.py for rapid strategy iteration
   - Custom engine for SMC/ICT-specific logic (trade management, position scaling)
   - vectorbt kept as alternative for parameter sweeps
@@ -81,7 +81,7 @@
   2. Focus on top 10 most reliable patterns with rigorous validation
   3. Hybrid: 10 core + 20 experimental patterns
 - **Decision:** Option 1 — Implement full 34-pattern catalog
-- **Rationale:** 
+- **Rationale:**
   - Pattern confluence is core to system design
   - Research papers (P4, P6) show pattern diversity improves robustness
   - Can use statistical filtering later (Phase 10 analysis components)
@@ -99,7 +99,7 @@
   2. Model friction as first-class constraint (integrate into backtest engine)
   3. Ignore friction (assume it nets out)
 - **Decision:** Option 2 — First-class constraint
-- **Rationale:** 
+- **Rationale:**
   - P1 findings: friction destroyed 100% of alpha in Phase 1
   - P5, P8 confirm transaction costs are primary reason paper profits fail in practice
   - Realistic evaluation requires friction-aware backtesting
@@ -117,7 +117,7 @@
   2. Per-strategy regime declaration (each pattern declares its operating regime)
   3. No regime declaration (assume strategies work in all regimes)
 - **Decision:** Option 2 — Per-strategy regime declaration
-- **Rationale:** 
+- **Rationale:**
   - P4 proves no strategy is universally profitable
   - Adaptive router requires per-strategy regime tags
   - Enables automatic strategy filtering by detected regime
@@ -135,7 +135,7 @@
   2. Confluence scoring (aggregate multiple pattern signals)
   3. ML ensemble (train meta-model on pattern signals)
 - **Decision:** Option 2 — Confluence scoring with ML enhancement
-- **Rationale:** 
+- **Rationale:**
   - System differentiator is multi-pattern confluence
   - ML ensemble adds complexity without proven benefit (Phase 12 validation pending)
   - Confluence scoring is interpretable; ML ensemble is black-box
@@ -153,7 +153,7 @@
   2. Jivaro (JIT-compiled Python subset)
   3. Rust bindings for performance-critical paths
 - **Decision:** Option 1 — Python with Numba, defer Rust until needed
-- **Rationale:** 
+- **Rationale:**
   - Numba 50-100x speedup sufficient for current backtest needs
   - Rust integration adds build complexity
   - Jivaro ecosystem immature

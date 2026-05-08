@@ -1,8 +1,8 @@
 # Open Questions
 
-**Last Updated:** 2026-04-25  
-**Total Questions:** 8  
-**Unassigned:** 6  
+**Last Updated:** 2026-04-25
+**Total Questions:** 8
+**Unassigned:** 6
 **Target Resolution:** 2026-05-15 to 2026-12-31
 
 ---
@@ -24,7 +24,7 @@
 - **Question:** How do we weight signals by event-type when P6 shows event-type signals outperform aggregated sentiment, but provides no formula?
 - **Context:** P6 (Event-Based Trading: IE Tools) demonstrates event-type weighting superiority empirically, but no weighting formula given
 - **Related Insights:** I6.1, I6.2, I6.3, R6
-- **Research Needed:** 
+- **Research Needed:**
   - Review NLP event extraction literature (VIP platform, BERT-based classifiers)
   - Prototype Bayesian event-type weighting: `w(event) = P(return | event) / P(return)`
   - Backtest vs. equal-weight baseline on SPY 2020-2025

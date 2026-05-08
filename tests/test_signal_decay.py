@@ -5,7 +5,7 @@ Tests for signal decay functionality.
 
 import pytest
 
-from src.patterns.base import PatternResult, PatternType, SignalDirection, TradeSignal
+from src.patterns.base import SignalDirection
 from src.strategies.confluence import ConfluenceScore, ConfluenceScorer
 
 

@@ -1,0 +1,12 @@
+# Jupytext configuration: sync .ipynb ↔ .py:percent for readable git diffs
+# https://jupytext.readthedocs.io/
+
+# Default format for Jupyter notebooks
+default_jupytext_formats = "ipynb,py:percent"
+
+# Notebooks get paired with .py:percent files automatically on save
+formats = "ipynb,py:percent"
+
+# Don't include metadata in paired scripts (cleaner diffs)
+notebook_metadata_filter = "-all"
+cell_metadata_filter = "-all"

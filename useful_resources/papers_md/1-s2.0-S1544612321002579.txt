@@ -1,41 +1,41 @@
 Page 1: Finance Research Letters 45 (2022) 102185
-Page 1: 
+Page 1:
 Page 1: Contents lists available at ScienceDirect
-Page 1: 
+Page 1:
 Page 1: Finance Research Letters
 Page 1: journal homepage: www.elsevier.com/locate/frl
-Page 1: 
+Page 1:
 Page 1: Crash-based quantitative trading strategies: Perspective of
 Page 1: behavioral finance
 Page 1: Yan Fang a, Jie Yuan a, J. Jimmy Yang b, *, Shangjun Ying a, 1
 Page 1: a
-Page 1: 
+Page 1:
 Page 1: Shanghai University of International Business and Economics
 Page 1: Oregon State University, School of Accounting, Finance, and Information Systems, College of Business, 426 Austin Hall, Corvallis, OR,
 Page 1: 97331United States
-Page 1: 
+Page 1:
 Page 1: b
-Page 1: 
+Page 1:
 Page 1: A R T I C L E I N F O
-Page 1: 
+Page 1:
 Page 1: A B S T R A C T
-Page 1: 
+Page 1:
 Page 1: JEL codes:
 Page 1: G1
 Page 1: C22
-Page 1: 
+Page 1:
 Page 1: Inspired by the studies on stock market crashes, we use documented indicators from behavioral
 Page 1: finance to construct two quantitative trading strategies, i.e., Crash + Timing Strategy and Crash
 Page 1: + Momentum-Reversal Strategy. Empirical analyses show that both strategies are effective and
 Page 1: robust. Behavioral factors can be beneficial to investors when they are incorporated into their
 Page 1: trading strategies.
-Page 1: 
+Page 1:
 Page 1: Keywords:
 Page 1: Behavioral finance
 Page 1: Crash factor
 Page 1: Market timing
 Page 1: Momentum-reversal strategy
-Page 1: 
+Page 1:
 Page 1: 1. Introduction
 Page 1: With the development of the behavioral finance, many scholars seek to explain the causes of stock market crashes using behavioral
 Page 1: theories. For instance, Avery and Zemsky (1998) point out that herding can lead to mispricing of assets and price bubbles. Kim et al.
@@ -61,12 +61,12 @@ Page 1: https://doi.org/10.1016/j.frl.2021.102185
 Page 1: Received 10 June 2020; Received in revised form 11 April 2021; Accepted 26 May 2021
 Page 1: Available online 30 May 2021
 Page 1: 1544-6123/┬⌐ 2021 Elsevier Inc. All rights reserved.
-Page 1: 
-Page 1: 
+Page 1:
+Page 1:
 Page 2: Finance Research Letters 45 (2022) 102185
-Page 2: 
+Page 2:
 Page 2: Y. Fang et al.
-Page 2: 
+Page 2:
 Page 2: confirm the effectiveness and robustness of these market crash-based trading strategies.
 Page 2: 2. Construction of trading strategies
 Page 2: 2.1. Crash + timing strategy
@@ -111,7 +111,7 @@ Page 2: et al., 2014) as a threshold.
 Page 2: When adopting different methods to identify the best times to sell stocks, the stop-loss order is executed at 2.5% below the current
 Page 2: stock price (Han et al., 2016). Evaluating the effectiveness of a strategy is essential for an investment. We evaluate our strategies based
 Page 2: 2
-Page 2: 
+Page 2:
 Page 2: The crash factor is defined as the probability in the event of log returns lower than ΓêÆ 70% over the next 12 months.
 Page 2: We do not discuss profit taking from short selling herein due to multiple short-selling bans in the world stock markets.
 Page 2: 4
@@ -120,48 +120,48 @@ Page 2: market index, seeking the timeframe that outperforms the market index.
 Page 2: 5
 Page 2: This is how to avoid emotional investing and selling into corrections within the field of behavioral finance.
 Page 2: 3
-Page 2: 
+Page 2:
 Page 2: 2
-Page 2: 
-Page 2: 
+Page 2:
+Page 2:
 Page 3: Finance Research Letters 45 (2022) 102185
-Page 3: 
+Page 3:
 Page 3: Y. Fang et al.
-Page 3: 
+Page 3:
 Page 3: Table 1
 Page 3: Performance of CTS with different methods in 2018.
 Page 3: Annualized return
 Page 3: Win rate
-Page 3: 
+Page 3:
 Page 3: Method 1
-Page 3: 
+Page 3:
 Page 3: Method 2
-Page 3: 
+Page 3:
 Page 3: Method 3
-Page 3: 
+Page 3:
 Page 3: Method 4
-Page 3: 
+Page 3:
 Page 3: Market Index
-Page 3: 
+Page 3:
 Page 3: ΓêÆ 7.145%
 Page 3: 30.113%
-Page 3: 
+Page 3:
 Page 3: 3.296%
 Page 3: 56.000%
-Page 3: 
+Page 3:
 Page 3: 8.464%
 Page 3: 37.113%
-Page 3: 
+Page 3:
 Page 3: 5.515%
 Page 3: 45.455%
-Page 3: 
+Page 3:
 Page 3: ΓêÆ 10.017%
 Page 3: ΓÇö
-Page 3: 
+Page 3:
 Page 3: Note: The sell signal in Method 1 is 14-day RSI above 70. The sell signal in Method 2 is when the cumulative return is 3% above the purchase price.
 Page 3: The sell signals in Method 3 and Method 4 are the 5-day momentum value and the 5-day information discreteness that are equal to or above the
 Page 3: highest cumulative return over the last month, respectively.
-Page 3: 
+Page 3:
 Page 3: Fig. 1. Performance of CMRS from quintile 1 to 5 for 2018, and the benchmark refers to the cumulative return of the market index.
 Page 3: Table 2
 Page 3: This table reports the annualized return, Sharp ratio, maximum drawdown and win rate on quintile portfolios sorted on the comprehensive scoring
@@ -173,97 +173,97 @@ Page 3: Annualized return
 Page 3: Sharp ratio
 Page 3: Max. drawdown
 Page 3: Win rate
-Page 3: 
+Page 3:
 Page 3: Quintile 1
-Page 3: 
+Page 3:
 Page 3: Quintile 2
-Page 3: 
+Page 3:
 Page 3: Quintile 3
-Page 3: 
+Page 3:
 Page 3: Quintile 4
-Page 3: 
+Page 3:
 Page 3: Quintile 5
-Page 3: 
+Page 3:
 Page 3: CRSP
-Page 3: 
+Page 3:
 Page 3: ΓêÆ 71.570%
 Page 3: ΓêÆ 0.361775
 Page 3: ΓêÆ 74.372%
 Page 3: 13.878%
-Page 3: 
+Page 3:
 Page 3: ΓêÆ 36.926%
 Page 3: ΓêÆ 0.151652
 Page 3: ΓêÆ 45.374%
 Page 3: 17.809%
-Page 3: 
+Page 3:
 Page 3: 17.761%
 Page 3: 0.064567
 Page 3: ΓêÆ 21.431%
 Page 3: 26.712%
-Page 3: 
+Page 3:
 Page 3: 39.228%
 Page 3: 0.138178
 Page 3: ΓêÆ 14.036%
 Page 3: 31.133%
-Page 3: 
+Page 3:
 Page 3: 104.276%
 Page 3: 0.328911
 Page 3: ΓêÆ 9.426%
 Page 3: 40.288%
-Page 3: 
+Page 3:
 Page 3: ΓêÆ 6.012%
 Page 3: ΓêÆ 0.018106
 Page 3: ΓêÆ 20.960%
 Page 3: ΓÇö
-Page 3: 
+Page 3:
 Page 3: Quintile 1
-Page 3: 
+Page 3:
 Page 3: Quintile 2
-Page 3: 
+Page 3:
 Page 3: Quintile 3
-Page 3: 
+Page 3:
 Page 3: Quintile 4
-Page 3: 
+Page 3:
 Page 3: Quintile 5
-Page 3: 
+Page 3:
 Page 3: CRSP
-Page 3: 
+Page 3:
 Page 3: ΓêÆ 80.798%
 Page 3: ΓêÆ 0.501626
 Page 3: ΓêÆ 82.073%
 Page 3: 4.147%
-Page 3: 
+Page 3:
 Page 3: ΓêÆ 41.240%
 Page 3: ΓêÆ 0.183588
 Page 3: ΓêÆ 48.318%
 Page 3: 9.704%
-Page 3: 
+Page 3:
 Page 3: ΓêÆ 7.102%
 Page 3: ΓêÆ 0.022715
 Page 3: ΓêÆ 24.038%
 Page 3: 27.437%
-Page 3: 
+Page 3:
 Page 3: 46.513%
 Page 3: 0.156668
 Page 3: ΓêÆ 13.444%
 Page 3: 38.024%
-Page 3: 
+Page 3:
 Page 3: 287.544%
 Page 3: 0.517607
 Page 3: ΓêÆ 7.187%
 Page 3: 45.663%
-Page 3: 
+Page 3:
 Page 3: ΓêÆ 6.012%
 Page 3: ΓêÆ 0.018106
 Page 3: ΓêÆ 20.960%
 Page 3: ΓÇö
-Page 3: 
+Page 3:
 Page 3: Panel 2: Momentum-reversal strategy
 Page 3: Annualized return
 Page 3: Sharp ratio
 Page 3: Max. drawdown
 Page 3: Win rate
-Page 3: 
+Page 3:
 Page 3: on the annualized return and win rate, where the win rate refers to the ratio of the number of stocks with a positive return to the
 Page 3: number of stocks with non-zero returns. The results are shown in Table 1, where the assessments for Methods 1ΓÇô4 are given in columns
 Page 3: 2ΓÇô5 and the results of market index is given in column 6.
@@ -272,19 +272,19 @@ Page 3: annualized return in Method 1 is negative, and its win rate is the lowes
 Page 3: depending on RSI is insufficient6; 3) Method 2 has the highest win rate, which indicates that the concept of take-profit can effectively
 Page 3: avoid making wrong investment decisions, and achieves good performance in quantitative investing; 4) the annualized returns in both
 Page 3: Methods 3 and 4 are positive and are substantially higher than the market return, which suggests that the momentum factor is a
-Page 3: 
+Page 3:
 Page 3: 6
 Page 3: In addition to the sell threshold of RSI=70 suggested by Wilder (1978), we also use RSI=80 as the sell threshold and RSI=20 as the buy
 Page 3: threshold. The annualized return and win rate of Method 1 are both improved. Specifically, the annualized return improves from ΓêÆ 7.145% to
 Page 3: 7.465%, while the win rate increases from 30.113% to 34.408%.
-Page 3: 
+Page 3:
 Page 3: 3
-Page 3: 
-Page 3: 
+Page 3:
+Page 3:
 Page 4: Finance Research Letters 45 (2022) 102185
-Page 4: 
+Page 4:
 Page 4: Y. Fang et al.
-Page 4: 
+Page 4:
 Page 4: Algorithm 1
 Page 4: The process for the CTS.
 Page 4: 1 Start with time t,
@@ -295,14 +295,14 @@ Page 4: i we will buy when they reach the buy limit order during our observation
 Page 4: ii we will sell when they reach the sell limit order or when the stop-loss price has been reached during our observation period; otherwise, we
 Page 4: will sell them at the end of the observation period.
 Page 4: 2 2. RepeatStep 1.
-Page 4: 
+Page 4:
 Page 4: Algorithm 2
 Page 4: The process of CMRS.
 Page 4: 1 Start with time t,
 Page 4: a) Buy the top 20% of stocks sorted by the new comprehensive factor at the end of month t;
 Page 4: b) Hold stocks till the end of month t + 1 and sell them.
 Page 4: 2 Repeat Step 1.
-Page 4: 
+Page 4:
 Page 4: workable market timing indicator.
 Page 4: 3.2. Performance of CMRS
 Page 4: In order to evaluate the performance of CMRS, all momentum factors and crash factors at the end of the month (t) are sorted in
@@ -338,44 +338,44 @@ Page 4: Unlike previous studies, this article explores quantitative trading stra
 Page 4: 7
 Page 4: The so-called scoring method is a method where stocksΓÇÖ crash factors are ranked in ascending order, their momentum factors are ranked in
 Page 4: descending order, and the average of the two ranks is defined as the comprehensive scoring factor.
-Page 4: 
+Page 4:
 Page 4: 4
-Page 4: 
-Page 4: 
+Page 4:
+Page 4:
 Page 5: Finance Research Letters 45 (2022) 102185
-Page 5: 
+Page 5:
 Page 5: Y. Fang et al.
-Page 5: 
+Page 5:
 Page 5: Table A.1
 Page 5: Performance of CTS with different methods in 2015.
 Page 5: Annualized return
 Page 5: Win rate
-Page 5: 
+Page 5:
 Page 5: Method 1
-Page 5: 
+Page 5:
 Page 5: Method 2
-Page 5: 
+Page 5:
 Page 5: Method 3
-Page 5: 
+Page 5:
 Page 5: Method 4
-Page 5: 
+Page 5:
 Page 5: Market Index
-Page 5: 
+Page 5:
 Page 5: ΓêÆ 4.749%
 Page 5: 28.049%
-Page 5: 
+Page 5:
 Page 5: 9.497%
 Page 5: 57.927%
-Page 5: 
+Page 5:
 Page 5: 6.332%
 Page 5: 46.154%
-Page 5: 
+Page 5:
 Page 5: 0.712%
 Page 5: 43.357%
-Page 5: 
+Page 5:
 Page 5: ΓêÆ 6.989%
 Page 5: ΓÇö
-Page 5: 
+Page 5:
 Page 5: the effect from stock market crash, momentum factor, and RSI. This approach provides investors useful trading strategies to potentially
 Page 5: exploit behavioral bias in stock markets. However, there is room for future studies to further explore and extend these strategies. First,
 Page 5: more studies are needed in the application of those strategies. For instance, potential profits from long-short portfolios in the context of
@@ -387,10 +387,10 @@ Page 5: None
 Page 5: Appendix 1. Crash factor
 Page 5: Crash factor is defined as:
 Page 5: Crash factor =
-Page 5: 
+Page 5:
 Page 5: exp(C)
 Page 5: 1 + exp(C) + exp(J)
-Page 5: 
+Page 5:
 Page 5: where
 Page 5: C = ╬▒0 + ╬▒1 RM12 + ╬▒2 EXRET12 + ╬▒3 TVOL + ╬▒4 TSKEW + ╬▒5 SIZE + ╬▒6 DTURN + ╬▒7 AGE + ╬▒8 TANG + ╬▒9 SALESG
 Page 5: and
@@ -410,115 +410,115 @@ Page 5: Table A.1.
 Page 5: As we can see, 1) over the period, the market return is negative and all the Methods 1ΓÇô4 outperform the market index; 2) the
 Page 5: annualized return in Method 1 is negative and its win rate is the lowest, indicating that the market timing strategy solely depending on
 Page 5: RSI is insufficient; 3) Method 2 has the highest annualized return and win rate, implying the take-profit strategy can effectively avoid
-Page 5: 
+Page 5:
 Page 5: 5
-Page 5: 
-Page 5: 
+Page 5:
+Page 5:
 Page 6: Finance Research Letters 45 (2022) 102185
-Page 6: 
+Page 6:
 Page 6: Y. Fang et al.
-Page 6: 
+Page 6:
 Page 6: Fig. A.1. Performance of CMRS from quintile 1 to 5 for 2015 CMRS. Note: Benchmark refers to the cumulative return of the market index. The
 Page 6: vertical line represents the date of July 31, 2015.
 Page 6: Table A.2
 Page 6: Performance of CMRS and Momentum-reversal Strategy in 2015.
 Page 6: Panel 1: CMRS
-Page 6: 
+Page 6:
 Page 6: Quintile 1
-Page 6: 
+Page 6:
 Page 6: Quintile 2
-Page 6: 
+Page 6:
 Page 6: Quintile 3
-Page 6: 
+Page 6:
 Page 6: Quintile 4
-Page 6: 
+Page 6:
 Page 6: Quintile 5
-Page 6: 
+Page 6:
 Page 6: RM
-Page 6: 
+Page 6:
 Page 6: ΓêÆ 23.039%
 Page 6: ΓêÆ 0.073
 Page 6: ΓêÆ 36.575%
 Page 6: 45.117%
-Page 6: 
+Page 6:
 Page 6: ΓêÆ 20.981%
 Page 6: ΓêÆ 0.082
 Page 6: ΓêÆ 31.096%
 Page 6: 22.472%
-Page 6: 
+Page 6:
 Page 6: ΓêÆ 19.836%
 Page 6: ΓêÆ 0.078
 Page 6: ΓêÆ 29.028%
 Page 6: 22.532%
-Page 6: 
+Page 6:
 Page 6: ΓêÆ 12.608%
 Page 6: ΓêÆ 0.052
 Page 6: ΓêÆ 21.128%
 Page 6: 23.088%
-Page 6: 
+Page 6:
 Page 6: ΓêÆ 13.447%
 Page 6: ΓêÆ 0.062
 Page 6: ΓêÆ 19.734%
 Page 6: 22.298%
-Page 6: 
+Page 6:
 Page 6: ΓêÆ 7.620%
 Page 6: ΓêÆ 0.027
 Page 6: ΓêÆ 17.486%
 Page 6: ΓÇö
-Page 6: 
+Page 6:
 Page 6: Panel 2: Momentum-reversal strategy
 Page 6: Quintile 1
-Page 6: 
+Page 6:
 Page 6: Quintile 2
-Page 6: 
+Page 6:
 Page 6: Quintile 3
-Page 6: 
+Page 6:
 Page 6: Quintile 4
-Page 6: 
+Page 6:
 Page 6: Quintile 5
-Page 6: 
+Page 6:
 Page 6: RM
-Page 6: 
+Page 6:
 Page 6: Annualized return
 Page 6: Sharp ratio
 Page 6: Max. drawdown
 Page 6: Win rate
-Page 6: 
+Page 6:
 Page 6: ΓêÆ 17.747%
 Page 6: ΓêÆ 0.070
 Page 6: ΓêÆ 27.822%
 Page 6: 22.170%
-Page 6: 
+Page 6:
 Page 6: ΓêÆ 15.981%
 Page 6: ΓêÆ 0.065
 Page 6: ΓêÆ 24.707%
 Page 6: 23.241%
-Page 6: 
+Page 6:
 Page 6: ΓêÆ 15.022%
 Page 6: ΓêÆ 0.064
 Page 6: ΓêÆ 22.425%
 Page 6: 22.951%
-Page 6: 
+Page 6:
 Page 6: ΓêÆ 21.312%
 Page 6: ΓêÆ 0.089
 Page 6: ΓêÆ 27.636%
 Page 6: 22.182%
-Page 6: 
+Page 6:
 Page 6: ΓêÆ 7.620%
 Page 6: ΓêÆ 0.027
 Page 6: ΓêÆ 17.486%
 Page 6: ΓÇö
-Page 6: 
+Page 6:
 Page 6: Annualized return
 Page 6: Sharp ratio
 Page 6: Max. drawdown
 Page 6: Win rate
-Page 6: 
+Page 6:
 Page 6: ΓêÆ 20.144%
 Page 6: ΓêÆ 0.064
 Page 6: ΓêÆ 34.123%
 Page 6: 44.826%
-Page 6: 
+Page 6:
 Page 6: making wrong investment decisions; 4) the results in both Methods 3 and 4 considerably outperform the market index, which indicates
 Page 6: that the momentum factor is a workable market timing indicator. In sum, this trading strategy seems robust.
 Page 6: 2. Robustness Test for CMRS
@@ -531,7 +531,7 @@ Page 6: Although all groups underperform the market index, the annualized return
 Page 6: monotonicity. In this case, investors can long the best performer and short the worst performer so as to achieve excess returns. All
 Page 6: indicators of the momentum-reversal strategy fail to maintain their monotonic patterns, indicating that this strategy is ineffective. The
 Page 6: CMRS contains certain robustness as it achieves favorable results during a momentum crash.
-Page 6: 
+Page 6:
 Page 6: 8
 Page 6: The empirical results observed between Jan. 2015 and Aug. 2015 are opposite to those observed in 2018 although both periods are relatively
 Page 6: stable. A potential reason is the existence of bubbles in 2015. The theory of rational bubbles (Blanchard and Watson, 1982) implies that investorsΓÇÖ
@@ -540,14 +540,14 @@ Page 6: automatically leads to a crash in the market. Scheinkman and Xiong (2003
 Page 6: overconfidence bring bubbles to the market and then increase the possibility of its crash. Heterogeneous beliefs from overconfident investors would
 Page 6: result in prices that deviate from the true value, and then lead to a momentum reversal effect in the market. As a result, the order of cumulative
 Page 6: returns from quintiles 1 to 5 in Figure A.1 before the crash in August is different from that in Figure 1.
-Page 6: 
+Page 6:
 Page 6: 6
-Page 6: 
-Page 6: 
+Page 6:
+Page 6:
 Page 7: Finance Research Letters 45 (2022) 102185
-Page 7: 
+Page 7:
 Page 7: Y. Fang et al.
-Page 7: 
+Page 7:
 Page 7: Reference
 Page 7: Avery, C., Zemsky, P., 1998. Multidimensional uncertainty and herd behavior in financial markets. Am. Econ. Rev. 724ΓÇô748.
 Page 7: Bali, T.G., Cakici, N., Whitelaw, R.F., 2011. Maxing out: stocks as lotteries and the cross-section of expected returns. J. Financ. Econ. 99 (2), 427ΓÇô446.
@@ -567,7 +567,7 @@ Page 7: Pelster, M., 2020. The gamblerΓÇÖs and hot-hand fallacies: empirical 
 Page 7: Scheinkman, J.A., Xiong, W., 2003. Overconfidence and speculative bubbles. J. Political Econ. 111 (6), 1183ΓÇô1220.
 Page 7: Tversky, A., Kahneman, D., 1971. Belief in the law of small numbers. Psychol. Bull. 76 (2), 105ΓÇô110.
 Page 7: Wilder Jr., J.W., 1978. New Concepts in Technical Trading Systems. Hunter Publishing Company, Greensboro, N.C.
-Page 7: 
+Page 7:
 Page 7: 7
-Page 7: 
-Page 7: 
+Page 7:
+Page 7:

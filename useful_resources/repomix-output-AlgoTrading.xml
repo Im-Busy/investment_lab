@@ -49890,14 +49890,14 @@ multi signal buy /sell based on buy / sell thresholds (Basically, it buys if the
 - **Walk-Forward Optimization**
 - **Parameter tuning** using cross-validation to dynamically adjust buy/sell thresholds.
 - **Risk-adjusted return optimization** for improved robustness.
-  
+
 ---
 
 ## **Results & Performance**
 
 ### **S&P500 Strategy Results**
 
-Implemented backtesting with `Walk-forward` optimization to ensure no look ahead biases were there. Results :  
+Implemented backtesting with `Walk-forward` optimization to ensure no look ahead biases were there. Results :
 - **Cumulative Return**: ~76% over the test period.
 - **Maximum Drawdown**: ~19%.
 - **Number of Trades**: 963.
@@ -49920,7 +49920,7 @@ Implemented backtesting with `Walk-forward` optimization to ensure no look ahead
 
 ### **US Technology Sector Strategy Results**
 
-Implemented backtesting with `Walk-forward` optimization to ensure no look ahead biases were there. Results :  
+Implemented backtesting with `Walk-forward` optimization to ensure no look ahead biases were there. Results :
 - **Cumulative Return**: ~84% over the test period.
 - **Maximum Drawdown**: ~27%.
 - **Number of Trades**: 906.
@@ -72114,10 +72114,10 @@ Evaluate strategy performance using equity curves and metrics like Sharpe Ratio
 
 # Data Collection
 
-Source: 
+Source:
 USSC2000.IDXUSD & COPPER.CMDUSD FROM YAHOO FINANCE
 
-Time Period: 
+Time Period:
 January 2020 - August 2024
 
 Data Frequency:
@@ -72133,7 +72133,7 @@ HG=F: Copper Futures
 
 # Statistical Analysis
 
-Log Transformation: 
+Log Transformation:
 Log-transformed prices for linearity.
 
 OLS Regression:
@@ -72152,7 +72152,7 @@ Rolling Z-score to normalize the spread
 # Technical Indicators Used
 
 RSI:
-Measures Momentum 
+Measures Momentum
 Overbought > 70
 Oversold < 30
 
@@ -72198,19 +72198,19 @@ Limited outperformance vs. benchmark in tested timeframe.
 
 # Performance Metrics
 
-In-Sample Performance: 
-Cumulative Return: 43% 
+In-Sample Performance:
+Cumulative Return: 43%
 Maximum Drawdown: -8.94%
 Sharpe Ratio: 0.88
 
-Out-of-Sample Performance: 
+Out-of-Sample Performance:
 Cumulative Return: 21.74%
-Maximum Drawdown: -7.94% 
+Maximum Drawdown: -7.94%
 Sharpe Ratio: 0.99
 
-Walk-Forward Testing Performance: 
-Cumulative Return: 8.42% 
-Maximum Drawdown: -6.42% 
+Walk-Forward Testing Performance:
+Cumulative Return: 8.42%
+Maximum Drawdown: -6.42%
 Sharpe Ratio: 0.72
 
 <img width="470" alt="image" src="./assets/buy_hold.png" />

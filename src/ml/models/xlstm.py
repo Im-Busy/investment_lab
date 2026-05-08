@@ -10,7 +10,7 @@ GitHub: https://github.com/NX-AI/xlstm
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 import pandas as pd
 import numpy as np
 
@@ -71,7 +71,6 @@ class xLSTMForecaster:
 
     def _build_model(self, input_size: int) -> None:
         """Build xLSTM architecture."""
-        import torch
 
         try:
             from xlstm import xLSTMTime

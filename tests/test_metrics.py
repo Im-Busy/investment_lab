@@ -23,10 +23,12 @@ def correlated_data():
     returns = np.random.randn(n) * 0.02
     feature_good = returns + np.random.randn(n) * 0.01
     feature_noise = np.random.randn(n)
-    return pd.DataFrame({
-        "good_feature": feature_good,
-        "noise_feature": feature_noise,
-    }), pd.Series(returns, name="forward_return")
+    return pd.DataFrame(
+        {
+            "good_feature": feature_good,
+            "noise_feature": feature_noise,
+        }
+    ), pd.Series(returns, name="forward_return")
 
 
 class TestComputeIC:
@@ -144,8 +146,18 @@ class TestICSummary:
     def test_summary_columns(self, correlated_data):
         features, returns = correlated_data
         summary = ic_summary(features, returns)
-        expected = {"feature", "ic", "rank_ic", "abs_ic", "abs_rank_ic",
-                     "t_stat", "p_value", "hit_rate", "n_samples", "significant"}
+        expected = {
+            "feature",
+            "ic",
+            "rank_ic",
+            "abs_ic",
+            "abs_rank_ic",
+            "t_stat",
+            "p_value",
+            "hit_rate",
+            "n_samples",
+            "significant",
+        }
         assert expected.issubset(set(summary.columns))
 
     def test_ranking_by_abs_rank_ic(self, correlated_data):

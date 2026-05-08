@@ -1,13 +1,13 @@
 Page 1: Against a Universal Trading Strategy: No-Arbitrage, No-Free-Lunch, and Adversarial
 Page 1: Cantor Diagonalization
 Page 1: Karl Svozil
-Page 1: 
+Page 1:
 Page 1: arXiv:2604.13334v1 [q-fin.TR] 14 Apr 2026
-Page 1: 
+Page 1:
 Page 1: 1
-Page 1: 
+Page 1:
 Page 1: 1
-Page 1: 
+Page 1:
 Page 1: Institute for Theoretical Physics, TU Wien, Wiedner Hauptstrasse 8-10/136, A-1040 Vienna, AustriaΓêù
 Page 1: (Dated: April 16, 2026)
 Page 1: We investigate the impossibility of universally winning trading strategiesΓÇöthose generating strict
@@ -21,11 +21,11 @@ Page 1: measures and thermodynamic detailed balance, resolving the MaxwellΓÇÖ
 Page 1: without relying on physically irrelevant Landauer erasure costs. Using the Wheel Options Strategy
 Page 1: as a case study, we demonstrate that strategies succeeding ΓÇ£for all practical purposesΓÇ¥ (FAPP) inherently depend on transient regime assumptions, meaning their automated execution systematically
 Page 1: amplifies tail risks.
-Page 1: 
+Page 1:
 Page 1: I.
-Page 1: 
+Page 1:
 Page 1: INTRODUCTION
-Page 1: 
+Page 1:
 Page 1: The question of whether a trading strategy can always make moneyΓÇöregardless of what the market doesΓÇö
 Page 1: is older than mathematical finance itself. It animated
 Page 1: BachelierΓÇÖs 1900 thesis [1], was formalized by Samuelson [2] and Fama [3] into the Efficient Market Hypothesis
@@ -45,9 +45,9 @@ Page 1: 1. Financial (Measure-Theoretic, Sec. III). The
 Page 1: rigorous core of the impossibility. We show that under standard admissibility constraints, a universal
 Page 1: strategy trivially constitutes an arbitrage opportunity. By the First Fundamental Theorem of Asset
 Page 1: Pricing [4, 5], this is precluded in markets admitting an equivalent martingale measure.
-Page 1: 
+Page 1:
 Page 1: Γêù karl.svozil@tuwien.ac.at; http://tph.tuwien.ac.at/╦£svozil
-Page 1: 
+Page 1:
 Page 1: 2. Combinatorial (Uniform Search, Sec. V). The
 Page 1: WolpertΓÇôMacready No-Free-Lunch theorem [6] establishes that under a uniform distribution over all
 Page 1: possible discrete evolutions, no strategy uniformly
@@ -66,19 +66,19 @@ Page 1: is examined in Sec. VIII as a concrete illustration, and
 Page 1: the fragile scope of strategies operating for all practical
 Page 1: purposes (FAPP) is discussed in Sec. IX.
 Page 1: II.
-Page 1: 
+Page 1:
 Page 1: THE TIME-REVERSAL HEURISTIC
-Page 1: 
+Page 1:
 Page 1: To build intuition, we define a purely kinematic criterion. Let M be a suitably rich space of strictly positive
 Page 1: paths P : [0, T ] ΓåÆ Rn>0 . The time reversal Pe of a path P
 Page 1: is
 Page 1: Pe(t) = P (T ΓêÆ t),
-Page 1: 
+Page 1:
 Page 1: t Γêê [0, T ].
-Page 1: 
+Page 1:
 Page 1: (1)
-Page 1: 
-Page 1: 
+Page 1:
+Page 1:
 Page 2: 2
 Page 2: Definition 1 (Pathwise Universal Strategy). A strategy
 Page 2: ╧â is universally successful if its realized profit-and-loss
@@ -94,14 +94,14 @@ Page 2: standard semimartingale generally destroys both its semimartingale prope
 Page 2: filtration. Therefore, this criterion serves as a conceptual framing for strict pathwise claims, while the rigorous
 Page 2: probabilistic formulation is provided in Sec. III.
 Page 2: III.
-Page 2: 
+Page 2:
 Page 2: THE NO-ARBITRAGE FOUNDATION
 Page 2: A.
-Page 2: 
+Page 2:
 Page 2: B.
-Page 2: 
+Page 2:
 Page 2: The Martingale Constraint
-Page 2: 
+Page 2:
 Page 2: By the DelbaenΓÇôSchachermayer generalization of the
 Page 2: First Fundamental Theorem [4, 5], a market satisfies
 Page 2: the condition of No Free Lunch with Vanishing Risk
@@ -115,15 +115,15 @@ Page 2: arbitrage; its preclusion is the foundational premise of
 Page 2: modern asset pricing. Thus, the non-existence of universal strategies is not a deep extension of asset pricing
 Page 2: theory, but rather a direct corollary of its foundational
 Page 2: no-arbitrage axiom.
-Page 2: 
+Page 2:
 Page 2: IV.
-Page 2: 
+Page 2:
 Page 2: THE MAXWELLΓÇÖS DEMON ANALOGY:
 Page 2: HONEST BOUNDARIES
-Page 2: 
+Page 2:
 Page 2: Admissibility and Arbitrage
 Page 2: A.
-Page 2: 
+Page 2:
 Page 2: The defining proof of impossibility stems from the First
 Page 2: Fundamental Theorem. We must first impose standard
 Page 2: regularity. Without admissibility constraints, pathwise
@@ -146,9 +146,9 @@ Page 2: =ΓçÆ Universal) is generally false. Our definition of universality de
 Page 2: all ╧ë), which is a strictly stronger condition than classical arbitrage (which requires only P(╬á ΓëÑ 0) = 1 and
 Page 2: P(╬á > 0) > 0). Because pathwise universality trivially
 Page 2: implies strong arbitrage, its impossibility is mathematically immediate once admissibility constraints are imposed under an equivalent martingale measure.
-Page 2: 
+Page 2:
 Page 2: Formal Analogy, Not Equivalence
-Page 2: 
+Page 2:
 Page 2: MaxwellΓÇÖs Demon observes individual gas molecules
 Page 2: and sorts them to extract net work from thermal
 Page 2: equilibriumΓÇöviolating the Second Law of Thermodynamics. The physical resolution (Landauer, Bennett [8, 9])
@@ -159,7 +159,7 @@ Page 2: A universally successful trading strategy claims to act
 Page 2: as a financial MaxwellΓÇÖs Demon, extracting net profit
 Page 2: from market fluctuations in both temporal directions.
 Page 2: The conceptual mapping is highly instructive (Table I).
-Page 2: 
+Page 2:
 Page 2: TABLE I. Formal analogy between MaxwellΓÇÖs Demon and universally winning trading strategies.
 Page 2: MaxwellΓÇÖs Demon
 Page 2: Universal Strategy
@@ -169,16 +169,16 @@ Page 2: Works in both time directions Profits on P and Pe
 Page 2: Extracts equilibrium work
 Page 2: Extracts universal profit
 Page 2: Resolution: info. erasure cost Resolution: absence of EMM
-Page 2: 
+Page 2:
 Page 2: The deepest point of contact lies in the concept of equilibrium. In statistical mechanics, true equilibrium satisfies detailed balance: microscopic processes equal their
 Page 2: time reversals. In finance, the equivalent martingale measure Q enforces the financial equivalent of detailed balance: there is no preferred drift direction under the pricing measure.
-Page 2: 
-Page 2: 
+Page 2:
+Page 2:
 Page 3: 3
 Page 3: B.
-Page 3: 
+Page 3:
 Page 3: What the Analogy Does Not Establish
-Page 3: 
+Page 3:
 Page 3: We must aggressively limit the scope of this analogy.
 Page 3: It is a formal mapping, not a category-theoretic isomorphism.
 Page 3: Transaction costs are not the core mechanism.
@@ -190,10 +190,10 @@ Page 3: erasure as a financially relevant constraint on algorithms
 Page 3: is numerically dishonest.
 Page 3: The analogy illuminates why attempts to defeat efficient markets resemble attempts to build perpetual motion machines, but the independent proof of financial impossibility lies strictly in measure theory (Sec. III).
 Page 3: V.
-Page 3: 
+Page 3:
 Page 3: THE COMBINATORIAL PERSPECTIVE
 Page 3: (NFL)
-Page 3: 
+Page 3:
 Page 3: The No-Free-Lunch (NFL) theorem of Wolpert and
 Page 3: Macready [6] provides a second paradigm. NFL explores
 Page 3: optimization over function spaces.
@@ -215,13 +215,13 @@ Page 3: cannot be inherently, universally superior; it can only be
 Page 3: perfectly fitted to a specific, potentially transient, market
 Page 3: regime.
 Page 3: VI.
-Page 3: 
+Page 3:
 Page 3: THE COMPUTATIONAL PERSPECTIVE
 Page 3: (ADVERSARIAL DIAGONALIZATION)
-Page 3: 
+Page 3:
 Page 3: Our third paradigm discards the assumption of exogenous price processes entirely and asks: what if the market
 Page 3: is an adaptive adversary? If a trading strategy is fully
-Page 3: 
+Page 3:
 Page 3: automated, it acts as a computable Turing machine [10].
 Page 3: This guarantees its defeat via formal Turing diagonalization [7, 11].
 Page 3: The Adversarial Market Construction can be modelled
@@ -265,7 +265,7 @@ Page 3: undecidable; no master program can consistently flag impending failure s
 Page 3: VII. ANALOGY TO SOCIAL CHOICE:
 Page 3: ARROWΓÇÖS IMPOSSIBILITY THEOREM AND
 Page 3: FIXED POINTS
-Page 3: 
+Page 3:
 Page 3: To contextualize the severity of this computational
 Page 3: boundary, it is instructive to draw a parallel to social
 Page 3: choice theoryΓÇöspecifically, ArrowΓÇÖs Impossibility Theorem [13]. Just as the Halting Problem establishes a definitive boundary for computer science by proving that no
@@ -274,8 +274,8 @@ Page 3: can universally aggregate individual preferences into a
 Page 3: consistent group decision without violating basic fairness
 Page 3: criteria.
 Page 3: There is a profound structural parallel between ArrowΓÇÖs Theorem and our adversarial diagonalization argument:
-Page 3: 
-Page 3: 
+Page 3:
+Page 3:
 Page 4: 4
 Page 4: The ΓÇ£UniversalΓÇ¥ Claim: Arrow investigates a voting
 Page 4: rule that is expected to work flawlessly across all
@@ -302,47 +302,47 @@ Page 4: (moving the price down when the strategy buys, and up
 Page 4: when it sells). Because this adversarial response function inherently lacks a fixed point, a universal mapping
 Page 4: from trading algorithms to strictly profitable outcomes is
 Page 4: mathematically impossible.
-Page 4: 
+Page 4:
 Page 4: VIII.
-Page 4: 
+Page 4:
 Page 4: CASE STUDY: THE WHEEL OPTIONS
 Page 4: STRATEGY
-Page 4: 
+Page 4:
 Page 4: To ground these theoretical limits, we evaluate the
 Page 4: Wheel Strategy: selling a cash-secured put to collect premium, and upon assignment, selling a covered call. It
 Page 4: is widely marketed as generating universal, directionless
 Page 4: income. Our paradigms predict specific failure modes.
-Page 4: 
+Page 4:
 Page 4: A.
-Page 4: 
+Page 4:
 Page 4: Failure I: Catastrophic Drop (Time Asymmetry)
-Page 4: 
+Page 4:
 Page 4: If the underlying stock crashes post-assignment, the
 Page 4: covered call loses value, and capital is trapped at a severe
 Page 4: loss. This trajectory is the exact time-reversal of a rapid,
 Page 4: profitable rally. By our heuristic (Criterion 1), failure on
 Page 4: the reversed path confirms the strategy is not universal.
-Page 4: 
+Page 4:
 Page 4: B.
-Page 4: 
+Page 4:
 Page 4: Failure II: Slow Bleed (Combinatorial Cost)
-Page 4: 
+Page 4:
 Page 4: A persistent downtrend yields premiums but suffers linear capital decay. The NFL paradigm reminds us that a
 Page 4: strategy structurally specialized to harvest variance premium in sideways markets mathematically must underperform in sustained directional regimes.
-Page 4: 
+Page 4:
 Page 4: C.
-Page 4: 
+Page 4:
 Page 4: Failure III: Violent Breakout (Capped Upside)
-Page 4: 
+Page 4:
 Page 4: A massive rally results in assignment at the call strike,
 Page 4: generating nominal profit but massive opportunity cost.
 Page 4: The strategyΓÇÖs structurally capped upside ensures its expected value aligns with the martingale constraint (Corollary 2) by forfeiting the tail events that offset the catastrophic drops (Failure I).
-Page 4: 
+Page 4:
 Page 4: IX.
-Page 4: 
+Page 4:
 Page 4: FAPP STRATEGIES AND THEIR HONEST
 Page 4: SCOPE
-Page 4: 
+Page 4:
 Page 4: While true universality is mathematically precluded,
 Page 4: strategies can be profitable for all practical purposes
 Page 4: (FAPP, following Bell [14]) relative to a specific physical
@@ -364,8 +364,8 @@ Page 4: The failure set F╧â of the Wheel Strategy is nonempty
 Page 4: (by Corollary 2), algorithmically unavoidable in advance
 Page 4: (by Theorem 4), visited with nonzero probability under
 Page 4: any continuous price process.
-Page 4: 
-Page 4: 
+Page 4:
+Page 4:
 Page 5: 5
 Page 5: TABLE II. Canonical failure modes of the Wheel Strategy and the formal paradigms predicting their existence.
 Page 5: Failure
@@ -373,45 +373,45 @@ Page 5: I: Crash
 Page 5: II: Bleed
 Page 5: III: Breakout
 Page 5: IV: Ruin
-Page 5: 
+Page 5:
 Page 5: Trajectory Class
 Page 5: Reversed uptrend
 Page 5: Persistent drift ┬╡ < 0
 Page 5: Fat-tailed upside
 Page 5: Absorbing state
-Page 5: 
+Page 5:
 Page 5: X.
-Page 5: 
+Page 5:
 Page 5: CONCLUSION
-Page 5: 
+Page 5:
 Page 5: The impossibility of a universally winning trading
 Page 5: strategy is fundamentally a corollary of the absence of
 Page 5: arbitrage in continuous-time mathematical finance. Subject to standard admissibility constraints, any strategy
 Page 5: claiming pathwise universal success implies an arbitrage
 Page 5: opportunity, which is strictly precluded by the existence
 Page 5: of an equivalent martingale measure.
-Page 5: 
+Page 5:
 Page 5: Predicted By
 Page 5: Criterion 1
 Page 5: NFL Thm.
 Page 5: Cor. 2
 Page 5: Thm. 4
-Page 5: 
+Page 5:
 Page 5: Mechanism
 Page 5: Time asymmetry
 Page 5: Specialization
 Page 5: Capped upside
 Page 5: Undecidability
-Page 5: 
+Page 5:
 Page 5: measures and detailed balance, provided we reject physically irrelevant appeals to Landauer erasure costs. Ultimately, any strategy claimed to work ΓÇ¥in all market
 Page 5: conditionsΓÇ¥ must conceal an implicit assumption about
 Page 5: the underlying market measure, relying on excluded tail
 Page 5: risks that are mathematically guaranteed to exist.
-Page 5: 
+Page 5:
 Page 5: ACKNOWLEDGMENTS
-Page 5: 
+Page 5:
 Page 5: The thermodynamic analogy of MaxwellΓÇÖs Demon provides an elegant conceptual mapping between martingale
-Page 5: 
+Page 5:
 Page 5: Noson S. Yanofsky has drawn my attention to notable
 Page 5: parallels between the present result and both ArrowΓÇÖs Impossibility Theorem and diagonalization techniques, the
 Page 5: latter of which also imply the absence of fixed points.
@@ -422,7 +422,7 @@ Page 5: The author acknowledges TU Wien Bibliothek for financial support through
 Page 5: its Open Access Funding Programme.
 Page 5: This text was partially created and revised with assistance from large language models. All content, ideas,
 Page 5: and prompts were provided by the author.
-Page 5: 
+Page 5:
 Page 5: [1] L. Bachelier, The╠üorie de la spe╠üculation, Annales Scientifiques de lΓÇÖE╠ücole Normale Supe╠ürieure 17, 21 (1900).
 Page 5: [2] P. A. Samuelson, Proof that properly anticipated prices
 Page 5: fluctuate randomly, Industrial Management Review 6, 41
@@ -438,7 +438,7 @@ Page 5: [7] A. M. Turing, On computable numbers, with an application to the Ents
 Page 5: London Mathematical Society, Series 2 42, 43, 230 (19367 and 1937).
 Page 5: [8] R. Landauer, Irreversibility and heat generation in the
 Page 5: computing process, IBM Journal of Research and Development 5, 183 (1961).
-Page 5: 
+Page 5:
 Page 5: [9] C. H. Bennett, The thermodynamics of computationΓÇöa
 Page 5: review, International Journal of Theoretical Physics 21,
 Page 5: 905 (1982).
@@ -461,20 +461,20 @@ Page 5: [15] A. W. Lo, The adaptive markets hypothesis: Market efficiency from a
 Page 5: Portfolio Management 30, 15 (2004).
 Page 5: [16] N. F. Brady, J. C. Cotting, R. G. Kirby, J. R. Opel, and
 Page 5: H. M. Stein, Report of the Presidential Task Force on
-Page 5: 
+Page 5:
 Page 5: While the First Fundamental Theorem provides the
 Page 5: definitive proof, structurally analogous limitations appear across incompatible mathematical paradigms. From
 Page 5: a combinatorial perspective, the No-Free-Lunch theorem
 Page 5: emphasizes that trading success relies entirely on exploiting non-uniform market structure. From a computational
 Page 5: perspective, Turing diagonalization guarantees that for
 Page 5: any computable algorithm there exists an adversarial environment that defeats it.
-Page 5: 
-Page 5: 
+Page 5:
+Page 5:
 Page 6: 6
 Page 6: Market Mechanisms (U.S. Government Printing Office,
 Page 6: Washington, D.C., 1988).
 Page 6: [17] A. Kirilenko, A. S. Kyle, M. Samadi, and T. Tuzun, The
-Page 6: 
+Page 6:
 Page 6: flash crash: High-frequency trading in an electronic market, The Journal of Finance 72, 967 (2017).
-Page 6: 
-Page 6: 
+Page 6:
+Page 6:

@@ -38,7 +38,7 @@ class Harami(BasePattern):
         self,
         body_threshold: float = 0.6,
         small_body_ratio: float = 0.7,
-        require_confirmation: bool = True,
+        require_confirmation: bool = False,
         trend_lookback: int = 10,
         confirmation_filter: float = 0.005,
     ):
@@ -65,10 +65,10 @@ class Harami(BasePattern):
 
     def _get_candle_data(self, df: pd.DataFrame, i: int) -> Tuple[float, float, float, float]:
         """Get OHLC values for a candle."""
-        open_price = float(df['Open'].iloc[i])
-        high = float(df['High'].iloc[i])
-        low = float(df['Low'].iloc[i])
-        close = float(df['Close'].iloc[i])
+        open_price = float(df["Open"].iloc[i])
+        high = float(df["High"].iloc[i])
+        low = float(df["Low"].iloc[i])
+        close = float(df["Close"].iloc[i])
         return open_price, high, low, close
 
     def _analyze_candle(
@@ -91,27 +91,27 @@ class Harami(BasePattern):
         body_low = min(open_price, close)
 
         return {
-            'body': body,
-            'range': total_range,
-            'is_bullish': is_bullish,
-            'body_high': body_high,
-            'body_low': body_low,
-            'open': open_price,
-            'high': high,
-            'low': low,
-            'close': close,
+            "body": body,
+            "range": total_range,
+            "is_bullish": is_bullish,
+            "body_high": body_high,
+            "body_low": body_low,
+            "open": open_price,
+            "high": high,
+            "low": low,
+            "close": close,
         }
 
     def _get_trend_direction(self, df: pd.DataFrame, i: int) -> str:
         """Determine the prior trend direction."""
         if i < self.trend_lookback + 1:
-            return 'sideways'
+            return "sideways"
 
         start_idx = i - self.trend_lookback - 1
-        closes = df['Close'].iloc[start_idx:i].values
+        closes = df["Close"].iloc[start_idx:i].values
 
         if len(closes) < 2:
-            return 'sideways'
+            return "sideways"
 
         # Calculate trend using linear regression slope
         closes_arr = np.asarray(closes, dtype=np.float64)
@@ -122,11 +122,11 @@ class Harami(BasePattern):
         normalized_slope = slope / avg_price if avg_price > 0 else 0
 
         if normalized_slope > 0.001:
-            return 'up'
+            return "up"
         elif normalized_slope < -0.001:
-            return 'down'
+            return "down"
         else:
-            return 'sideways'
+            return "sideways"
 
     def _detect_harami(
         self,
@@ -144,30 +144,30 @@ class Harami(BasePattern):
             Tuple of (is_harami, harami_type, direction)
         """
         # Candle 1 must have substantial body
-        if candle1['range'] == 0 or candle1['body'] / candle1['range'] < self.body_threshold:
+        if candle1["range"] == 0 or candle1["body"] / candle1["range"] < self.body_threshold:
             return False, None, None
 
         # Candle 2 body must be smaller than Candle 1 body
-        if candle2['body'] >= candle1['body'] * self.small_body_ratio:
+        if candle2["body"] >= candle1["body"] * self.small_body_ratio:
             return False, None, None
 
         # Bodies must be opposite colors
-        if candle1['is_bullish'] == candle2['is_bullish']:
+        if candle1["is_bullish"] == candle2["is_bullish"]:
             return False, None, None
 
         # Candle 2 body must be completely inside Candle 1 body
-        if candle2['body_high'] > candle1['body_high']:
+        if candle2["body_high"] > candle1["body_high"]:
             return False, None, None
-        if candle2['body_low'] < candle1['body_low']:
+        if candle2["body_low"] < candle1["body_low"]:
             return False, None, None
 
         # Determine Harami type and direction
-        if candle1['is_bullish']:
+        if candle1["is_bullish"]:
             # First candle bullish, second bearish = Bearish Harami
-            return True, 'bearish_harami', SignalDirection.SHORT
+            return True, "bearish_harami", SignalDirection.SHORT
         else:
             # First candle bearish, second bullish = Bullish Harami
-            return True, 'bullish_harami', SignalDirection.LONG
+            return True, "bullish_harami", SignalDirection.LONG
 
     def _check_confirmation(
         self,
@@ -177,40 +177,75 @@ class Harami(BasePattern):
         candle1: Dict[str, float],
     ) -> bool:
         """
-        Check if pattern is confirmed by next candle.
+        Check if pattern is confirmed using bar-i data only (no look-ahead).
 
-        Args:
-            df: DataFrame with OHLC data
-            i: Pattern end bar index (candle 2)
-            direction: Signal direction
-            candle1: First candle data
-
-        Returns:
-            True if confirmed
+        Confirms via volume spike. Does NOT read bar i+1.
         """
-        if i >= len(df) - 1:
-            return False
-
-        next_close = float(df['Close'].iloc[i + 1])
-
-        if direction == SignalDirection.LONG:
-            # Bullish Harami - confirm with close above candle 1 high
-            return next_close > candle1['body_high'] * (1 + self.confirmation_filter)
-        else:
-            # Bearish Harami - confirm with close below candle 1 low
-            return next_close < candle1['body_low'] * (1 - self.confirmation_filter)
+        return self._check_volume_spike(df, i)
 
     def _check_volume_spike(self, df: pd.DataFrame, i: int, threshold: float = 1.5) -> bool:
         """Check if volume is above average."""
-        if 'Volume' not in df.columns or i < 20:
+        if "Volume" not in df.columns or i < 20:
             return False
 
-        avg_volume = df['Volume'].iloc[i - 20:i].mean()
+        avg_volume = df["Volume"].iloc[i - 20 : i].mean()
         if avg_volume == 0:
             return False
 
-        current_volume = float(df['Volume'].iloc[i])
+        current_volume = float(df["Volume"].iloc[i])
         return bool(current_volume > avg_volume * threshold)
+
+    def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Vectorized detection of Harami signals across the entire DataFrame.
+
+        Args:
+            df: DataFrame with 'Open', 'High', 'Low', 'Close' columns
+
+        Returns:
+            np.ndarray of np.int8: 0=no signal, 1=LONG, -1=SHORT
+        """
+        n = len(df)
+        result = np.zeros(n, dtype=np.int8)
+        if n < self.trend_lookback + 4:
+            return result
+
+        open_a = df["Open"].to_numpy(dtype=np.float64)
+        high_a = df["High"].to_numpy(dtype=np.float64)
+        low_a = df["Low"].to_numpy(dtype=np.float64)
+        close_a = df["Close"].to_numpy(dtype=np.float64)
+
+        body_a = np.abs(close_a - open_a)
+        range_a = high_a - low_a
+        is_bullish_a = close_a > open_a
+        body_high_a = np.maximum(open_a, close_a)
+        body_low_a = np.minimum(open_a, close_a)
+
+        for i in range(2, n):
+            c1_body = body_a[i - 1]
+            c1_range = range_a[i - 1]
+            c2_body = body_a[i]
+
+            if c1_range == 0 or c1_body / c1_range < self.body_threshold:
+                continue
+
+            if c2_body >= c1_body * self.small_body_ratio:
+                continue
+
+            if is_bullish_a[i - 1] == is_bullish_a[i]:
+                continue
+
+            if body_high_a[i] > body_high_a[i - 1]:
+                continue
+            if body_low_a[i] < body_low_a[i - 1]:
+                continue
+
+            if is_bullish_a[i]:
+                result[i] = 1
+            else:
+                result[i] = -1
+
+        return result
 
     def detect(
         self,
@@ -229,6 +264,11 @@ class Harami(BasePattern):
         Returns:
             PatternResult with detection status and any signal
         """
+        if not self._validate_data(df, i, window_start):
+            return PatternResult(
+                detected=False, pattern_name=self.name, pattern_type=self.pattern_type
+            )
+
         # Need at least 2 candles (candle1 at i-1, candle2 at i)
         if i < 2 or i >= len(df):
             return PatternResult(
@@ -272,9 +312,9 @@ class Harami(BasePattern):
         confidence = 0.50  # Base confidence for Harami
 
         # Increase confidence if in correct trend context
-        if harami_type == 'bullish_harami' and trend == 'down':
+        if harami_type == "bullish_harami" and trend == "down":
             confidence = 0.55
-        elif harami_type == 'bearish_harami' and trend == 'up':
+        elif harami_type == "bearish_harami" and trend == "up":
             confidence = 0.55
 
         # Increase confidence with volume spike
@@ -297,17 +337,17 @@ class Harami(BasePattern):
         # Calculate entry, stop, and target
         atr = self._calculate_atr(df, i)
         if atr is None or atr <= 0:
-            atr = (candle1['high'] - candle1['low']) * 0.5
+            atr = (candle1["high"] - candle1["low"]) * 0.5
 
         if direction == SignalDirection.LONG:
-            entry_price = candle1['body_high']  # Entry on breakout above candle 1
-            stop_loss = min(candle1['low'], candle2['low']) - atr * 0.25
+            entry_price = candle1["body_high"]  # Entry on breakout above candle 1
+            stop_loss = min(candle1["low"], candle2["low"]) - atr * 0.25
             take_profit_1 = entry_price + atr * 1.5
             take_profit_2 = entry_price + atr * 2.5
             take_profit_3 = entry_price + atr * 4.0
         else:  # SHORT
-            entry_price = candle1['body_low']  # Entry on breakout below candle 1
-            stop_loss = max(candle1['high'], candle2['high']) + atr * 0.25
+            entry_price = candle1["body_low"]  # Entry on breakout below candle 1
+            stop_loss = max(candle1["high"], candle2["high"]) + atr * 0.25
             take_profit_1 = entry_price - atr * 1.5
             take_profit_2 = entry_price - atr * 2.5
             take_profit_3 = entry_price - atr * 4.0
@@ -323,10 +363,10 @@ class Harami(BasePattern):
             confidence=confidence,
             pattern_name=self.name,
             metadata={
-                'harami_type': harami_type,
-                'trend': trend,
-                'confirmed': True,
-                'volume_spike': self._check_volume_spike(df, i),
+                "harami_type": harami_type,
+                "trend": trend,
+                "confirmed": True,
+                "volume_spike": self._check_volume_spike(df, i),
             },
         )
 
@@ -342,11 +382,11 @@ class Harami(BasePattern):
     def generate_signal(self, df: pd.DataFrame, i: int) -> Optional[TradeSignal]:
         """
         Generate trade signal for Harami pattern.
-        
+
         Args:
             df: DataFrame with OHLC data
             i: Current bar index
-            
+
         Returns:
             TradeSignal if confirmed pattern, None otherwise
         """
@@ -359,9 +399,9 @@ class Harami(BasePattern):
             return None
 
         try:
-            high = df['High'].iloc[i - period:i + 1].values
-            low = df['Low'].iloc[i - period:i + 1].values
-            close = df['Close'].iloc[i - period - 1:i].values
+            high = df["High"].iloc[i - period : i + 1].values
+            low = df["Low"].iloc[i - period : i + 1].values
+            close = df["Close"].iloc[i - period - 1 : i].values
 
             tr_list = []
             for j in range(len(high)):

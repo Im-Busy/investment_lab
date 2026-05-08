@@ -98,7 +98,7 @@ class PurgedKFold(KFold):
             # Sample i's label uses data in [i, i + label_span].
             # Purge from training any i where i + label_span >= t1 (i.e. i >= t1 - label_span)
             # and also i <= t2 + embargo (samples right after test period due to embargo).
-            purge_start = t1 - self.label_span
+            purge_start = max(0, t1 - self.label_span)
             purge_end = t2 + embargo
 
             train_idx = base_train_idx[

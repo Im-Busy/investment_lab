@@ -75,9 +75,7 @@ def main() -> None:
     )
 
     # Add vertical line at forecast boundary
-    ax.axvline(
-        x=df["date"].max(), color="#6b7280", linestyle="--", linewidth=1, alpha=0.7
-    )
+    ax.axvline(x=df["date"].max(), color="#6b7280", linestyle="--", linewidth=1, alpha=0.7)
 
     # Formatting
     ax.set_xlabel("Date", fontsize=12)

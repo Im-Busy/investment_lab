@@ -1,0 +1,27 @@
+Investigate ABC Pattern+Bollinger Bands pair — synergy score: 0.000
+Investigate ABC Pattern+Floor Pivot Breakout pair — synergy score: 0.000
+Investigate ABC Pattern+Gartley Pattern pair — synergy score: 0.000
+Consider separating ABC Pattern+Bollinger Bands — negative synergy: 0.000
+Consider separating ABC Pattern+Floor Pivot Breakout — negative synergy: 0.000
+Consider separating ABC Pattern+Gartley Pattern — negative synergy: 0.000
+Review Floor Pivot Breakout — low win rate: 0.0%
+Review Double Bottom — low win rate: 0.0%
+Review Triple Bottom — low win rate: 0.0%
+Review Triple Top — low win rate: 0.0%
+Review Head and Shoulders — low win rate: 0.0%
+Review Double Top — low win rate: 0.0%
+Review Matching Lows — low win rate: 0.0%
+Review Donchian Channel Breakout — low win rate: 0.0%
+Review Rectangle — low win rate: 0.0%
+Review Bollinger Bands (Bullish Reversal) — low win rate: 0.0%
+Review Gap Pattern — low win rate: 0.0%
+Review bullish_engulfing — low win rate: 0.0%
+Review bearish_engulfing — low win rate: 0.0%
+Review Harami — low win rate: 0.0%
+Review Symmetric Triangle — low win rate: 0.0%
+Review Hammer — low win rate: 0.0%
+Review Doji — low win rate: 0.0%
+Review n-Bar Decline — low win rate: 0.0%
+Review piercing_line — low win rate: 0.0%
+Review Three Hills and Mountain — low win rate: 0.0%
+Review NR7ID — low win rate: 0.0%

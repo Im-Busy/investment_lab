@@ -48,6 +48,32 @@ class PatternType(Enum):
     VOLATILITY = "Volatility Breakout/Reversal"
 
 
+# R4: Default regime compatibility by pattern type (Jorion BET research)
+# Patterns auto-inherit these unless explicitly overridden in their dataclass
+DEFAULT_REGIME_MAPPING: Dict[PatternType, Dict[str, List[RegimeState]]] = {
+    PatternType.REVERSAL: {
+        "preferred": [RegimeState.TRENDING, RegimeState.TRANSITION],
+        "incompatible": [],
+    },
+    PatternType.CONTINUATION: {
+        "preferred": [RegimeState.TRENDING],
+        "incompatible": [RegimeState.RANGING],
+    },
+    PatternType.BREAKOUT: {
+        "preferred": [RegimeState.RANGING, RegimeState.VOLATILE],
+        "incompatible": [],
+    },
+    PatternType.COUNTER_TREND: {
+        "preferred": [RegimeState.TRENDING, RegimeState.TRANSITION],
+        "incompatible": [RegimeState.RANGING],
+    },
+    PatternType.VOLATILITY: {
+        "preferred": [RegimeState.VOLATILE],
+        "incompatible": [],
+    },
+}
+
+
 class SignalDirection(Enum):
     """Trading signal direction"""
 
@@ -168,6 +194,13 @@ class BasePattern(ABC):
     incompatible_regimes: List[RegimeState] = field(default_factory=list)
 
     def __post_init__(self):
+        # R4: Auto-populate regimes from PatternType default if not explicitly set
+        if not self.preferred_regimes and not self.incompatible_regimes:
+            mapping = DEFAULT_REGIME_MAPPING.get(self.pattern_type)
+            if mapping:
+                self.preferred_regimes = list(mapping["preferred"])
+                self.incompatible_regimes = list(mapping["incompatible"])
+
         # Performance optimization: cached arrays
         self._arrays: Optional[Dict[str, np.ndarray]] = None
         self._arrays_df_id: Optional[int] = None
@@ -191,15 +224,22 @@ class BasePattern(ABC):
         Check if pattern is compatible with given regime (R4 enhancement).
 
         Args:
-            regime: Current market regime
+            regime: Current market regime (accepts any RegimeState-style enum
+                    or RegimeState itself)
 
         Returns:
             True if pattern should be active in this regime
         """
-        if regime in self.incompatible_regimes:
-            return False
+        regime_val = getattr(regime, "value", str(regime))
 
-        if self.preferred_regimes and regime not in self.preferred_regimes:
+        for inc in self.incompatible_regimes:
+            if inc.value == regime_val:
+                return False
+
+        if self.preferred_regimes:
+            for pref in self.preferred_regimes:
+                if pref.value == regime_val:
+                    return True
             return False
 
         return True
@@ -214,11 +254,15 @@ class BasePattern(ABC):
         Returns:
             Preference score: 1.0 (preferred), 0.5 (neutral), 0.0 (incompatible)
         """
-        if regime in self.incompatible_regimes:
-            return 0.0
+        regime_val = getattr(regime, "value", str(regime))
 
-        if regime in self.preferred_regimes:
-            return 1.0
+        for inc in self.incompatible_regimes:
+            if inc.value == regime_val:
+                return 0.0
+
+        for pref in self.preferred_regimes:
+            if pref.value == regime_val:
+                return 1.0
 
         if self.preferred_regimes:
             return 0.3

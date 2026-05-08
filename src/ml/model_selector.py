@@ -15,15 +15,13 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import (
     accuracy_score,
-    f1_score,
-    mean_squared_error,
     r2_score,
     roc_auc_score,
 )
@@ -659,7 +657,7 @@ class ModelSelector:
             try:
                 result = self.train_and_evaluate(X, y, model_config, validation_config)
                 results.append(result)
-            except Exception as e:
+            except Exception:
                 continue
 
         return sorted(results, key=lambda x: x.test_score, reverse=True)

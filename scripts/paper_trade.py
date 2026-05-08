@@ -29,8 +29,8 @@ import json
 import logging
 import sys
 import time
-from dataclasses import asdict, dataclass, field
-from datetime import datetime, timedelta
+from dataclasses import asdict, dataclass
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -202,8 +202,6 @@ class PaperTradeEngine:
 
         For paper trading, this runs the same pipeline as backtesting.
         """
-        from src.strategies.confluence import ConfluenceScorer
-        from src.indicators.regime import MarketRegimeDetector
 
         signals = []
         try:
@@ -627,7 +625,7 @@ def print_report() -> None:
             )
             .sort_values("total_pnl", ascending=False)
         )
-        print(f"\n  Performance by Signal Type:")
+        print("\n  Performance by Signal Type:")
         for sig, row in signal_perf.iterrows():
             print(
                 f"    {sig:<25s}: {row['count']:>3d} trades, PnL={row['total_pnl']:+.2f}, "
@@ -645,7 +643,7 @@ def print_report() -> None:
                     win_rate=("pnl", lambda x: (x > 0).mean()),
                 )
             )
-            print(f"\n  Performance by Regime:")
+            print("\n  Performance by Regime:")
             for reg, row in regime_perf.iterrows():
                 print(
                     f"    {reg:<15s}: {row['count']:>3d} trades, PnL={row['total_pnl']:+.2f}, "
@@ -669,7 +667,7 @@ def print_report() -> None:
         cumulative = np.cumsum(equity_curve)
         max_dd = np.max(np.maximum.accumulate(cumulative) - cumulative)
 
-        print(f"\nGO/NO-GO EVALUATION:")
+        print("\nGO/NO-GO EVALUATION:")
         print(f"  Duration (days):    {'N/A (need to check start date)'}")
         print(
             f"  Win Rate:           {wr_pct:.1f}% {'[PASS]' if wr_pct >= 45 else '[FAIL]'} (threshold: 45%)"

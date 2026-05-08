@@ -26,14 +26,14 @@ from .wedge import Wedge
 from .dead_cat_bounce import DeadCatBounce
 
 __all__ = [
-    'DoubleTop',
-    'DoubleBottom',
-    'TraderVic2B',
-    'TripleTop',
-    'TripleBottom',
-    'AscendingTriangle',
-    'DescendingTriangle',
-    'Rectangle',
-    'Wedge',
-    'DeadCatBounce',
+    "DoubleTop",
+    "DoubleBottom",
+    "TraderVic2B",
+    "TripleTop",
+    "TripleBottom",
+    "AscendingTriangle",
+    "DescendingTriangle",
+    "Rectangle",
+    "Wedge",
+    "DeadCatBounce",
 ]

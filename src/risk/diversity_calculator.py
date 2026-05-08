@@ -190,9 +190,7 @@ def calculate_pattern_correlation_matrix(
     corr_matrix = returns.corr(method="pearson")
 
     # Extract summary statistics
-    upper_tri = corr_matrix.where(
-        np.triu(np.ones(corr_matrix.shape), k=1).astype(bool)
-    )
+    upper_tri = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
     correlations = upper_tri.stack()
 
     summary = {
@@ -286,9 +284,7 @@ def generate_diversity_dashboard(
 
 def main():
     """Main entry point."""
-    parser = argparse.ArgumentParser(
-        description="Calculate portfolio diversity score (Q2)"
-    )
+    parser = argparse.ArgumentParser(description="Calculate portfolio diversity score (Q2)")
     parser.add_argument(
         "--data-dir",
         type=str,
@@ -329,8 +325,12 @@ def main():
 
     print("\n✅ Q2 Analysis complete!")
     print("\nKey Finding:")
-    print(f"  Your 34-pattern portfolio has effective diversity of ~{results['summary']['effective_bets']:.1f} independent bets")
-    print(f"  This implies a capital requirement multiplier of {results['summary']['implied_capital_reduction']:.1f}x")
+    print(
+        f"  Your 34-pattern portfolio has effective diversity of ~{results['summary']['effective_bets']:.1f} independent bets"
+    )
+    print(
+        f"  This implies a capital requirement multiplier of {results['summary']['implied_capital_reduction']:.1f}x"
+    )
 
 
 if __name__ == "__main__":

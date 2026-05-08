@@ -48,3 +48,25 @@ uv run -c "from src.ml.models import xLSTMForecaster; m = xLSTMForecaster(); m.f
 # - start_date: '2019-01-01' (5 years max)
 # - memory_safe: True
 # - use_walk_forward: False
+
+### Phase 3 — New ML Models
+
+# FS1: Survival Analysis (Time-to-Target) — scikit-survival
+# Predict time-to-TP/SL using triple-barrier labels
+uv run -c "from src.ml.survival_analyzer import SurvivalAnalyzer, SurvivalTarget; analyzer = SurvivalAnalyzer(model_type='gbs'); analyzer.fit(X, labels)"
+
+# FS8: Volatility Forecasting — CatBoost regression on realized vol
+# Predict forward volatility for dynamic position sizing
+uv run -c "from src.ml.volatility_forecaster import VolatilityForecaster; vf = VolatilityForecaster(horizon=10); vf.fit(df)"
+
+# FS13: Breakout Probability ML — CatBoost classification on Donchian breakouts
+# Score breakout profitability
+uv run -c "from src.ml.breakout_classifier import BreakoutClassifier; clf = BreakoutClassifier(); clf.fit(df)"
+
+# T5: Ensemble Methods — Stacking/Voting/Blending CatBoost+LightGBM+RF
+# Combine models with purged time-series CV
+uv run -c "from src.ml.ensemble_models import EnsembleBuilder; b = EnsembleBuilder(method='stacking'); b.add_catboost(); b.add_lightgbm(); b.add_rf(); b.fit(X, y)"
+
+# T8: SHAP Dashboard — Waterfall/beeswarm/force plots
+# Model explainability and debugging
+uv run -c "from src.ml.shap_dashboard import quick_shap_analysis; quick_shap_analysis(model, X_test)"

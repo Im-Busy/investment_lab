@@ -561,4 +561,3 @@ uv pip install -U shap
 - **Nature MI Paper**: Lundberg et al. (2020) - "From local explanations to global understanding with explainable AI for trees"
 
 This skill provides comprehensive coverage of SHAP for model interpretability across all use cases and model types.
-

@@ -14,10 +14,9 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Dict, List, Optional, Tuple
 
-import numpy as np
 import pandas as pd
 
-from ..indicators.technical import atr, sma
+from ..indicators.technical import sma
 
 
 class VolumeSignalType(Enum):

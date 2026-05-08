@@ -66,7 +66,9 @@ class Rectangle(BasePattern):
             volume_filter: Require volume confirmation on breakout
         """
         super().__init__(
-            name="Rectangle", pattern_type=PatternType.CONTINUATION, min_bars_required=min_pattern_bars
+            name="Rectangle",
+            pattern_type=PatternType.CONTINUATION,
+            min_bars_required=min_pattern_bars,
         )
         self.lookback = lookback
         self.level_tolerance = level_tolerance
@@ -77,6 +79,81 @@ class Rectangle(BasePattern):
         self.stop_offset = stop_offset
         self.confirmation_filter = confirmation_filter
         self.volume_filter = volume_filter
+
+    def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Vectorized Rectangle detection across all bars.
+
+        Returns np.int8 array: 0=no signal, 1=long, -1=short.
+        """
+        n = len(df)
+        signals = np.zeros(n, dtype=np.int8)
+        close = df["Close"].to_numpy(dtype=np.float64)
+
+        swing_highs = find_swing_highs(df, self.lookback)
+        swing_lows = find_swing_lows(df, self.lookback)
+
+        sh_arr = swing_highs.to_numpy(dtype=np.float64)
+        sl_arr = swing_lows.to_numpy(dtype=np.float64)
+        n_swing_highs = pd.notna(swing_highs).to_numpy()
+        n_swing_lows = pd.notna(swing_lows).to_numpy()
+
+        for i in range(max(self.lookback, self.min_pattern_bars), n):
+            lookback = min(self.max_pattern_bars * 2, i)
+
+            peaks: list = []
+            troughs: list = []
+            for j in range(i - lookback, i + 1):
+                if j < 0:
+                    continue
+                if n_swing_highs[j]:
+                    peaks.append((j, float(sh_arr[j])))
+                if n_swing_lows[j]:
+                    troughs.append((j, float(sl_arr[j])))
+
+            if len(peaks) < self.min_touches or len(troughs) < self.min_touches:
+                continue
+
+            resistance_result = self._find_horizontal_level(
+                peaks, self.level_tolerance, self.min_touches
+            )
+            if resistance_result is None:
+                continue
+            resistance_points, resistance_level = resistance_result
+
+            support_result = self._find_horizontal_level(
+                troughs, self.level_tolerance, self.min_touches
+            )
+            if support_result is None:
+                continue
+            support_points, support_level = support_result
+
+            if resistance_level <= support_level:
+                continue
+
+            pattern_height = resistance_level - support_level
+            mid_price = (resistance_level + support_level) / 2.0
+            height_pct = pattern_height / mid_price if mid_price > 0 else 0
+            if height_pct < 0.01 or height_pct > 0.20:
+                continue
+
+            all_indices = [p[0] for p in resistance_points] + [t[0] for t in support_points]
+            p_start = min(all_indices)
+            p_end = max(all_indices)
+            if p_end - p_start < self.min_pattern_bars or p_end - p_start > self.max_pattern_bars:
+                continue
+
+            curr_close = float(close[i])
+
+            upside = curr_close > resistance_level * (1.0 + self.confirmation_filter)
+            downside = curr_close < support_level * (1.0 - self.confirmation_filter)
+
+            if upside:
+                signals[i] = 1
+            elif downside:
+                signals[i] = -1
+
+        return signals
 
     def _find_pivots(
         self, df: pd.DataFrame, i: int
@@ -136,21 +213,19 @@ class Rectangle(BasePattern):
                     candidate_points.append(point)
 
             if len(candidate_points) >= min_touches:
-                    # Calculate average level price
-                    avg_level = float(np.mean([p[1] for p in candidate_points]))
-                    
-                    if best_cluster is None or len(candidate_points) > len(best_cluster):
-                        best_cluster = candidate_points
-                        best_level = avg_level
-    
+                # Calculate average level price
+                avg_level = float(np.mean([p[1] for p in candidate_points]))
+
+                if best_cluster is None or len(candidate_points) > len(best_cluster):
+                    best_cluster = candidate_points
+                    best_level = avg_level
+
             if best_cluster is not None and best_level is not None:
                 return (best_cluster, best_level)
 
         return None
 
-    def _check_volume_breakout(
-        self, arrays: dict, i: int, lookback: int = 20
-    ) -> Tuple[bool, bool]:
+    def _check_volume_breakout(self, arrays: dict, i: int, lookback: int = 20) -> Tuple[bool, bool]:
         """
         Check if volume confirms breakout.
 
@@ -162,7 +237,7 @@ class Rectangle(BasePattern):
             return (False, False)
 
         current_volume = float(volume_arr[i])
-        avg_volume = float(np.mean(volume_arr[i - lookback:i]))
+        avg_volume = float(np.mean(volume_arr[i - lookback : i]))
 
         volume_above_average = current_volume > avg_volume
         volume_spike = current_volume > avg_volume * 1.5  # 50% above average
@@ -189,14 +264,18 @@ class Rectangle(BasePattern):
         low_arr = arrays["low"]
 
         # Find horizontal resistance level
-        resistance_result = self._find_horizontal_level(peaks, self.level_tolerance, self.min_touches)
+        resistance_result = self._find_horizontal_level(
+            peaks, self.level_tolerance, self.min_touches
+        )
         if resistance_result is None:
             return None
 
         resistance_points, resistance_level = resistance_result
 
         # Find horizontal support level
-        support_result = self._find_horizontal_level(troughs, self.level_tolerance, self.min_touches)
+        support_result = self._find_horizontal_level(
+            troughs, self.level_tolerance, self.min_touches
+        )
         if support_result is None:
             return None
 

@@ -8,17 +8,14 @@ Run: uv run streamlit run scripts/ml_selector_app.py
 
 from __future__ import annotations
 
-import io
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any
 
 import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-import seaborn as sns
 import streamlit as st
 
 st.set_page_config(

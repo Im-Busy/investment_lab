@@ -483,7 +483,9 @@ class MatchingLows(BasePattern):
             end_index=i,
         )
 
-    def generate_signal(self, df: pd.DataFrame, i: int, match_info: Optional[dict] = None) -> Optional[TradeSignal]:  # type: ignore[override]
+    def generate_signal(
+        self, df: pd.DataFrame, i: int, match_info: Optional[dict] = None
+    ) -> Optional[TradeSignal]:  # type: ignore[override]
         """
         Generate trade signal for Matching Lows pattern.
 
@@ -729,7 +731,9 @@ class MatchingHighs(BasePattern):
             end_index=i,
         )
 
-    def generate_signal(self, df: pd.DataFrame, i: int, match_info: Optional[dict] = None) -> Optional[TradeSignal]:  # type: ignore[override]
+    def generate_signal(
+        self, df: pd.DataFrame, i: int, match_info: Optional[dict] = None
+    ) -> Optional[TradeSignal]:  # type: ignore[override]
         """Generate short trade signal for Matching Highs pattern."""
         assert match_info is not None, "match_info is required"
         arrays = self._extract_arrays(df)

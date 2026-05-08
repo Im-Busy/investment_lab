@@ -116,13 +116,13 @@ Fix ML Enhancement → R1 → R3 → R4 → R5 → R2 → [Tier 2 items]
 # src/risk/turnover_penalty.py
 class TurnoverPenalty:
     """Penalizes strategies with excessive annualized turnover."""
-    
+
     def calculate_penalty(self, trades: int, holding_period_days: float) -> float:
         """Returns 0.0-1.0 penalty scaling factor."""
         # OOM-RL finding: 6700% turnover destroyed alpha
         annualized_turnover = (365.0 / holding_period_days) * trades
         max_allowed_turnover = 2000  # Conservative threshold
-        
+
         if annualized_turnover <= max_allowed_turnover:
             return 0.0
         else:
@@ -135,11 +135,11 @@ class TurnoverPenalty:
 # src/risk/circuit_breakers.py
 class CircuitBreaker:
     """Portfolio-wide drawdown halt mechanism.
-    
+
     Jorion finding: Individual position risk < aggregate portfolio risk
     Need portfolio-level halt to prevent cascade failures.
     """
-    
+
     def __init__(self, max_drawdown_pct: float = 20.0, cooldown_bars: int = 20):
         self.max_dd = max_drawdown_pct
         self.cooldown = cooldown_bars
@@ -167,11 +167,11 @@ class CircuitBreaker:
 @dataclass
 class BasePattern(ABC):
     """Enhanced with regime compatibility declaration."""
-    
+
     name: str
     pattern_type: PatternType
     min_bars_required: int = 20
-    
+
     # NEW: Regime compatibility fields
     preferred_regimes: List[RegimeState] = field(default_factory=list)
     incompatible_regimes: List[RegimeState] = field(default_factory=list)
@@ -188,12 +188,12 @@ class BasePattern(ABC):
 class BacktestEngine:
     def estimate_optimal_frequency(self, signal_decay_rate: float, tx_cost_pct: float) -> str:
         """Returns 'daily', 'weekly', or 'monthly' based on decay/cost ratio.
-        
+
         OOM-RL finding: signal decay vs. transaction cost tradeoff
         Daily rebalancing destroyed 6700% turnover alpha.
         """
         ratio = signal_decay_rate / tx_cost_pct
-        
+
         if ratio > 10:
             return "daily"
         elif ratio > 2:
@@ -208,16 +208,16 @@ class BacktestEngine:
 
 class PositionRiskModel:
     """Binomial outcome model per position (Jorion BET approach).
-    
+
     Jorion finding: Per-position probability > aggregate VaR
     Need position-level success/failure estimates for proper capital allocation.
     """
-    
+
     def estimate_success_prob(self, signal_confidence: float, regime: RegimeState) -> float:
         """Returns probability of successful outcome."""
         # Base probability from signal confidence
         base_prob = signal_confidence
-        
+
         # Adjust for regime (volatile regimes = lower success)
         if regime == RegimeState.VOLATILE:
             return base_prob * 0.7

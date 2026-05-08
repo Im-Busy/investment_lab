@@ -7,11 +7,11 @@ Page 1: 3 Kings International School Port-Harcourt, Rivers State Nigeria.
 Page 1: 4 Ignition Ajuru University of Education, Rivers State, Nigeria.
 Page 1: 5 Independent Researcher, Nashville, Tennessee, USA.
 Page 1: 6 Independent Researcher, Nigeria.
-Page 1: 
+Page 1:
 Page 1: World Journal of Advanced Engineering Technology and Sciences, 2024, 11(01), 258ΓÇô267
 Page 1: Publication history: Received on 02 January 2024; revised on 12 February 2024; accepted on 14 February 2024
 Page 1: Article DOI: https://doi.org/10.30574/wjaets.2024.11.1.0054
-Page 1: 
+Page 1:
 Page 1: Abstract
 Page 1: This review explores the dynamic intersection of algorithmic trading and artificial intelligence (AI) within financial
 Page 1: markets. It delves into the evolution, strategies, and broader market impact of algorithmic trading fueled by AI
@@ -36,15 +36,15 @@ Page 1: the evolving landscape of financial markets are discussed, offering insi
 Page 1: potential disruptions in the realm of algorithmic trading. In essence, this review provides a nuanced perspective on the
 Page 1: intricate relationship between algorithmic trading and AI, offering a comprehensive understanding of their strategies
 Page 1: and the transformative impact on financial markets.
-Page 1: 
+Page 1:
 Page 1: Keywords: Algorithmic; Trading; AI; Strategies; Market Impact
 Page 1: 1. Introduction
 Page 1: Algorithmic Trading, a paradigm shift in financial markets, represents the intersection of advanced technology and
 Page 1: financial strategies (Currie et al., 2022). At its core, algorithmic trading involves the use of pre-programmed instructions
 Page 1: ∩Ç¬ Corresponding author: Wilhelmina Afua Addy
 Page 1: Copyright ┬⌐ 2024 Author(s) retain the copyright of this article. This article is published under the terms of the Creative Commons Attribution Liscense 4.0.
-Page 1: 
-Page 1: 
+Page 1:
+Page 1:
 Page 2: World Journal of Advanced Engineering Technology and Sciences, 2024, 11(01), 258ΓÇô267
 Page 2: to execute trading orders at optimal conditions (Yadav, 2018). In recent years, the integration of Artificial Intelligence
 Page 2: (AI) has propelled this practice into new dimensions, revolutionizing how financial markets operate (El Hajj and
@@ -68,7 +68,7 @@ Page 2: financial industry continues to embrace technological advancements, unde
 Page 2: and AI becomes imperative for traders, regulators, and stakeholders alike. This review serves as a comprehensive
 Page 2: exploration of the strategies employed and the market impact wrought by the amalgamation of algorithmic trading and
 Page 2: AI.
-Page 2: 
+Page 2:
 Page 2: 2. Algorithmic Trading and AI: A Historical Overview
 Page 2: The history of algorithmic trading and artificial intelligence (AI) is a fascinating journey through the evolution of
 Page 2: financial markets, technological advancements, and the transformative impact of automation on trading strategies
@@ -97,14 +97,14 @@ Page 2: Ethical considerations, algorithmic bias, and regulatory frameworks are 
 Page 2: with responsible AI applications (Du and Xie, 2021).
 Page 2: In conclusion, the history of algorithmic trading and AI reflects a continuous quest for efficiency, speed, and precision
 Page 2: in financial markets. From early computational experiments to the machine learning revolution, each era has
-Page 2: 
+Page 2:
 Page 2: 259
-Page 2: 
-Page 2: 
+Page 2:
+Page 2:
 Page 3: World Journal of Advanced Engineering Technology and Sciences, 2024, 11(01), 258ΓÇô267
 Page 3: contributed to the ever-evolving landscape of algorithmic trading, shaping the way financial markets operate today
 Page 3: (Swathi and Pahuja, 2024).
-Page 3: 
+Page 3:
 Page 3: 3. Evolution of Algorithmic Trading
 Page 3: Algorithmic Trading, or algo-trading, has undergone a remarkable evolution, transforming the landscape of financial
 Page 3: markets (Dananjayan et al., 2023). The roots of algorithmic trading can be traced back to the 1970s and 1980s when
@@ -136,7 +136,7 @@ Page 3: complexity and adaptability, ushering in an era where algorithms are not
 Page 3: learning and evolving (Roslan and Ahmad, 2023). As we navigate the impact of these changes, it becomes essential to
 Page 3: understand the historical context and technological milestones that have shaped the present state of algorithmic
 Page 3: trading.
-Page 3: 
+Page 3:
 Page 3: 4. Core Strategies in Algorithmic Trading
 Page 3: Algorithmic trading has revolutionized financial markets, introducing a diverse array of strategies that leverage
 Page 3: computational power and real-time data analysis. Understanding these core strategies is crucial for traders and
@@ -154,8 +154,8 @@ Page 3: analysis, and correlation-based models are common techniques employed in
 Page 3: High-frequency trading is characterized by the execution of a large number of orders at extremely high speeds. HFT
 Page 3: strategies aim to capitalize on small price discrepancies and market inefficiencies, often holding positions for very brief
 Page 3: 260
-Page 3: 
-Page 3: 
+Page 3:
+Page 3:
 Page 4: World Journal of Advanced Engineering Technology and Sciences, 2024, 11(01), 258ΓÇô267
 Page 4: periods, sometimes just milliseconds (Hossain, 2022). Market-making, liquidity provision, and arbitrage opportunities
 Page 4: in fragmented markets are key areas where HFT excels. To execute orders swiftly, HFT relies on advanced algorithms
@@ -173,7 +173,7 @@ Page 4: markets. Whether capitalizing on trends, exploiting statistical relation
 Page 4: leveraging machine learning, these strategies reflect the adaptability and complexity introduced by algorithmic trading
 Page 4: in the quest for alpha. As the landscape continues to evolve, staying abreast of these strategies is crucial for participants
 Page 4: in the algorithmic trading arena (Etukudoh et al., 2024).
-Page 4: 
+Page 4:
 Page 4: 5. Market Impact and Efficiency
 Page 4: Algorithmic trading, driven by artificial intelligence (AI), has significantly transformed financial markets, influencing
 Page 4: market liquidity, altering price discovery mechanisms, challenging traditional trading practices, and prompting
@@ -204,12 +204,12 @@ Page 4: shaping price discovery, transforming traditional trading practices, and
 Page 4: technologies continue to evolve, market participants and regulators must adapt to the changing landscape. Balancing
 Page 4: innovation with risk management will be essential to harness the benefits while safeguarding the integrity and stability
 Page 4: of financial markets (Patel, 2024).
-Page 4: 
+Page 4:
 Page 4: 261
-Page 4: 
-Page 4: 
+Page 4:
+Page 4:
 Page 5: World Journal of Advanced Engineering Technology and Sciences, 2024, 11(01), 258ΓÇô267
-Page 5: 
+Page 5:
 Page 5: 6. Ethical and Regulatory Landscape
 Page 5: The integration of artificial intelligence (AI) in algorithmic trading has brought forth a complex ethical and regulatory
 Page 5: landscape, requiring careful consideration of algorithmic bias, risks, regulatory frameworks, and ethical considerations
@@ -243,7 +243,7 @@ Page 5: approach. Addressing algorithmic bias, managing risks, complying with re
 Page 5: considerations are integral to fostering a resilient and ethical trading environment. As these technologies continue to
 Page 5: evolve, ongoing collaboration between market participants, developers, and regulators is essential to strike the right
 Page 5: balance between innovation and ethical responsibility (Lescrauwaet et al., 2022).
-Page 5: 
+Page 5:
 Page 5: 7. Case Studies and Real-world Examples
 Page 5: Algorithmic trading and AI have left an indelible mark on financial markets, shaping success stories, contributing to
 Page 5: market disruptions, and presenting ethical challenges (Chiu and Lim, 2021). Examining case studies provides valuable
@@ -260,10 +260,10 @@ Page 5: Average plunged nearly 1,000 points in minutes. The rapid and unexpected
 Page 5: algorithmic trading. High-frequency trading algorithms exacerbated the volatility, triggering a cascade of sell orders.
 Page 5: This incident underscores the potential risks associated with algorithmic trading, requiring continuous monitoring and
 Page 5: circuit breakers to prevent such disruptions.
-Page 5: 
+Page 5:
 Page 5: 262
-Page 5: 
-Page 5: 
+Page 5:
+Page 5:
 Page 6: World Journal of Advanced Engineering Technology and Sciences, 2024, 11(01), 258ΓÇô267
 Page 6: In 2012, Knight Capital Group faced a severe financial setback due to a software glitch in its algorithmic trading system.
 Page 6: The glitch led to a series of unintended stock orders, resulting in a loss of over $400 million in less than an hour. This
@@ -281,7 +281,7 @@ Page 6: disruptions emphasize the need for robust risk management. Ethical lapse
 Page 6: regulatory oversight to ensure fair and transparent markets. The evolving landscape of algorithmic trading requires
 Page 6: ongoing efforts to strike a balance between innovation and the responsible use of these technologies (Abdallah and
 Page 6: Salah, 2024).
-Page 6: 
+Page 6:
 Page 6: 8. Future Trends and Innovations
 Page 6: The landscape of algorithmic trading and artificial intelligence (AI) is poised for continuous evolution, driven by
 Page 6: advancements in technology, regulatory responses, and the potential for disruptive innovations (Liu et al., 2020).
@@ -317,14 +317,14 @@ Page 6: In conclusion, the future trends and innovations in algorithmic trading 
 Page 6: cutting-edge technologies, increased regulatory scrutiny, and the potential for disruptive advancements. Evolving
 Page 6: technologies like quantum computing and advanced machine learning will reshape algorithmic strategies, while
 Page 6: regulatory responses aim to ensure ethical and responsible AI usage (Ajani et al., 2024). The landscape may witness the
-Page 6: 
+Page 6:
 Page 6: 263
-Page 6: 
-Page 6: 
+Page 6:
+Page 6:
 Page 7: World Journal of Advanced Engineering Technology and Sciences, 2024, 11(01), 258ΓÇô267
 Page 7: emergence of decentralized finance and risk-aware algorithms, contributing to a dynamic and transformative future for
 Page 7: algorithmic trading. Market participants and regulators must stay adaptive to navigate these changes effectively.
-Page 7: 
+Page 7:
 Page 7: 9. Conclusion
 Page 7: As we conclude our review of algorithmic trading and artificial intelligence (AI), it becomes evident that the intersection
 Page 7: of technology and finance is reshaping the landscape of financial markets. This review has delved into the historical
@@ -355,290 +355,290 @@ Page 7: markets. Striking a balance between opportunities and risks is paramount
 Page 7: participants, regulators, and technologists. The future trajectory is one of continued innovation, where responsible and
 Page 7: ethical practices will be integral to sustaining the integrity and efficiency of financial markets. As we navigate this everevolving landscape, vigilance, adaptability, and ethical considerations will be the guiding principles for a harmonious
 Page 7: integration of technology and finance.
-Page 7: 
+Page 7:
 Page 7: Compliance with ethical standards
 Page 7: Disclosure of conflict of interest
 Page 7: No conflict of interest to disclosed.
-Page 7: 
+Page 7:
 Page 7: References
 Page 7: [1]
-Page 7: 
+Page 7:
 Page 7: Abdallah, M. and Salah, M., 2024. Artificial Intelligence and Intellectual Properties: Legal and Ethical
 Page 7: Considerations. International Journal of Intelligent Systems and Applications in Engineering, 12(1), pp.368-376.
-Page 7: 
+Page 7:
 Page 7: [2]
-Page 7: 
+Page 7:
 Page 7: Ajani, S.N., Khobragade, P., Dhone, M., Ganguly, B., Shelke, N. and Parati, N., 2024. Advancements in Computing:
 Page 7: Emerging Trends in Computational Science with Next-Generation Computing. International Journal of Intelligent
 Page 7: Systems and Applications in Engineering, 12(7s), pp.546-559.
-Page 7: 
+Page 7:
 Page 7: [3]
-Page 7: 
+Page 7:
 Page 7: Alaminos, D., Salas, M.B. and Fern├índez-G├ímez, M.A., 2023. High-Frequency Trading in Bond Returns: A
 Page 7: Comparison Across Alternative Methods and Fixed-Income Markets. Computational Economics, pp.1-92.
-Page 7: 
+Page 7:
 Page 7: 264
-Page 7: 
-Page 7: 
+Page 7:
+Page 7:
 Page 8: World Journal of Advanced Engineering Technology and Sciences, 2024, 11(01), 258ΓÇô267
 Page 8: [4]
-Page 8: 
+Page 8:
 Page 8: Ayala, J., Garc├¡a-Torres, M., Noguera, J.L.V., G├│mez-Vela, F. and Divina, F., 2021. Technical analysis strategy
 Page 8: optimization using a machine learning approach in stock market indices. Knowledge-Based Systems, 225,
 Page 8: p.107119.
-Page 8: 
+Page 8:
 Page 8: [5]
-Page 8: 
+Page 8:
 Page 8: Azeema, N., Nawaz, H., Gill, M.A., Khan, M.A., Miraj, J. and Lodhi, K., 2023. Impact of Artificial Intelligence on
 Page 8: Financial Markets: Possibilities & Challenges. Journal of Computing & Biomedical Informatics, 6(01), pp.287-299.
-Page 8: 
+Page 8:
 Page 8: [6]
-Page 8: 
+Page 8:
 Page 8: Azzutti, A., 2022. The algorithmic future of EU market conduct supervision: a preliminary check. In Digitalisation,
 Page 8: Sustainability, and the Banking and Capital Markets Union: Thoughts on Current Issues of EU Financial Regulation
 Page 8: (pp. 53-98). Cham: Springer International Publishing.
-Page 8: 
+Page 8:
 Page 8: [7]
-Page 8: 
+Page 8:
 Page 8: Bharadiya, J.P., 2023. Machine learning and AI in business intelligence: Trends and opportunities. International
 Page 8: Journal of Computer (IJC), 48(1), pp.123-134.
-Page 8: 
+Page 8:
 Page 8: [8]
-Page 8: 
+Page 8:
 Page 8: Chesterman, S., 2021. " Move fast and break things": Law, technology, and the problem of speed. Singapore
 Page 8: Academy of Law Journal, 33, pp.5-23.
-Page 8: 
+Page 8:
 Page 8: [9]
-Page 8: 
+Page 8:
 Page 8: Chiu, I.H.Y. and Lim, E.W., 2021. Technology vs ideology: how far will artificial intelligence and distributed ledger
 Page 8: technology transform corporate governance and business?. Berkeley Bus. LJ, 18, p.1.
-Page 8: 
+Page 8:
 Page 8: [10]
-Page 8: 
+Page 8:
 Page 8: Currie, W.L., Seddon, J.J. and Van Vliet, B., 2022. From decision optimization to satisficing: Regulation of
 Page 8: automated trading in the US financial markets. Information & Management, 59(8), p.103721.
-Page 8: 
+Page 8:
 Page 8: [11]
-Page 8: 
+Page 8:
 Page 8: Dananjayan, M.P., Gopakumar, S. and Narayanasamy, P., 2023. Unleashing the algorithmic frontier: Navigating
 Page 8: the impact of algo trading on investor portfolios. Journal of Information Technology Teaching Cases,
 Page 8: p.20438869231189519.
-Page 8: 
+Page 8:
 Page 8: [12]
-Page 8: 
+Page 8:
 Page 8: De Bruyn, A., Viswanathan, V., Beh, Y.S., Brock, J.K.U. and Von Wangenheim, F., 2020. Artificial intelligence and
 Page 8: marketing: Pitfalls and opportunities. Journal of Interactive Marketing, 51(1), pp.91-105.
-Page 8: 
+Page 8:
 Page 8: [13]
-Page 8: 
+Page 8:
 Page 8: Du, S. and Xie, C., 2021. Paradoxes of artificial intelligence in consumer markets: Ethical challenges and
 Page 8: opportunities. Journal of Business Research, 129, pp.961-974.
-Page 8: 
+Page 8:
 Page 8: [14]
-Page 8: 
+Page 8:
 Page 8: El Hajj, M. and Hammoud, J., 2023. Unveiling the influence of artificial intelligence and machine learning on
 Page 8: financial markets: A comprehensive analysis of AI applications in trading, risk management, and financial
 Page 8: operations. Journal of Risk and Financial Management, 16(10), p.434.
-Page 8: 
+Page 8:
 Page 8: [15]
-Page 8: 
+Page 8:
 Page 8: Ellis, S., Sharma, S. and Brzeszczy┼äski, J., 2022. Systemic risk measures and regulatory challenges. Journal of
 Page 8: Financial Stability, 61, p.100960.
-Page 8: 
+Page 8:
 Page 8: [16]
-Page 8: 
+Page 8:
 Page 8: Etukudoh, E.A., Nwokediegwu, Z.Q.S., Umoh, A.A., Ibekwe, K.I., Ilojianya, V.I. and Adefemi, A., 2024. Solar power
 Page 8: integration in Urban areas: A review of design innovations and efficiency enhancements. World Journal of
 Page 8: Advanced Research and Reviews, 21(1), pp.1383-1394.
-Page 8: 
+Page 8:
 Page 8: [17]
-Page 8: 
+Page 8:
 Page 8: Ezeigweneme, C.A., Umoh, A.A., Ilojianya, V.I. and Adegbite, A.O., 2024. Telecommunications Energy Efficiency:
 Page 8: Optimizing Network Infrastructure for Sustainability. Computer Science & IT Research Journal, 5(1), pp.26-40.
-Page 8: 
+Page 8:
 Page 8: [18]
-Page 8: 
+Page 8:
 Page 8: Gerner-Beuerle, C., 2022. Algorithmic trading and the limits of securities regulation. Vand. L. Rev, 1607, p.1619.
-Page 8: 
+Page 8:
 Page 8: [19]
-Page 8: 
+Page 8:
 Page 8: Goodman, E.P. and Trehu, J., 2022. Algorithmic Auditing: Chasing AI Accountability. Santa Clara High Tech. LJ, 39,
 Page 8: p.289.
-Page 8: 
+Page 8:
 Page 8: [20]
-Page 8: 
+Page 8:
 Page 8: Hansen, K.B. and Borch, C., 2022. Alternative data and sentiment analysis: Prospecting non-standard data in
 Page 8: machine learning-driven finance. Big Data & Society, 9(1), p.20539517211070701.
-Page 8: 
+Page 8:
 Page 8: [21]
-Page 8: 
+Page 8:
 Page 8: Hilbert, M. and Darmon, D., 2020. How complexity and uncertainty grew with algorithmic trading. Entropy, 22(5),
 Page 8: p.499.
-Page 8: 
+Page 8:
 Page 8: [22]
-Page 8: 
+Page 8:
 Page 8: Hossain, S., 2022. High-Frequency Trading (HFT) and Market Quality Research: An Evaluation of the Alternative
 Page 8: HFT Proxies. Journal of Risk and Financial Management, 15(2), p.54.
-Page 8: 
+Page 8:
 Page 8: [23]
-Page 8: 
+Page 8:
 Page 8: How, M.L. and Cheah, S.M., 2023. Business Renaissance: Opportunities and challenges at the dawn of the Quantum
 Page 8: Computing Era. Businesses, 3(4), pp.585-605.
-Page 8: 
+Page 8:
 Page 8: [24]
-Page 8: 
+Page 8:
 Page 8: Ibekwe, K.I., Ohenhen, P.E., Chidolue, O., Umoh, A.A., Ngozichukwu, B., Ilojianya, V.I. and Fafure, A.V., 2024.
 Page 8: Microgrid systems in US energy infrastructure: A comprehensive review: Exploring decentralized energy
 Page 8: solutions, their benefits, and challenges in regional implementation.
-Page 8: 
+Page 8:
 Page 8: 265
-Page 8: 
-Page 8: 
+Page 8:
+Page 8:
 Page 9: World Journal of Advanced Engineering Technology and Sciences, 2024, 11(01), 258ΓÇô267
 Page 9: [25]
-Page 9: 
+Page 9:
 Page 9: Ilojianya, V.I., Usman, F.O., Ibekwe, K.I., Nwokediegwu, Z.Q.S., Umoh, A.A. and Adefemi, A., 2024. Data-Driven
 Page 9: Energy Management: Review of Practices in Canada, Usa, And Africa. Engineering Science & Technology
 Page 9: Journal, 5(1), pp.219-230.
-Page 9: 
+Page 9:
 Page 9: [26]
-Page 9: 
+Page 9:
 Page 9: Kaur, D., Uslu, S., Rittichier, K.J. and Durresi, A., 2022. Trustworthy artificial intelligence: a review. ACM Computing
 Page 9: Surveys (CSUR), 55(2), pp.1-38.
-Page 9: 
+Page 9:
 Page 9: [27]
-Page 9: 
+Page 9:
 Page 9: Kunduru, A.R., 2023. Artificial intelligence advantages in cloud Fintech application security. Central Asian Journal
 Page 9: of Mathematical Theory and Computer Sciences, 4(8), pp.48-53.
-Page 9: 
+Page 9:
 Page 9: [28]
-Page 9: 
+Page 9:
 Page 9: Larsson, S. and Heintz, F., 2020. Transparency in artificial intelligence. Internet policy review, 9(2).
-Page 9: 
+Page 9:
 Page 9: [29]
-Page 9: 
+Page 9:
 Page 9: Lee, J. and Schu, L., 2022. Regulation of algorithmic trading: frameworks or human supervision and direct market
 Page 9: interventions. European Business Law Review, 33(2).
-Page 9: 
+Page 9:
 Page 9: [30]
-Page 9: 
+Page 9:
 Page 9: Lee, J., 2020. Access to finance for artificial intelligence regulation in the financial services industry. European
 Page 9: Business Organization Law Review, 21, pp.731-757.
-Page 9: 
+Page 9:
 Page 9: [31]
-Page 9: 
+Page 9:
 Page 9: Lescrauwaet, L., Wagner, H., Yoon, C. and Shukla, S., 2022. Adaptive Legal Frameworks and Economic Dynamics
 Page 9: in Emerging Tech-nologies: Navigating the Intersection for Responsible Innovation. Law and Economics, 16(3),
 Page 9: pp.202-220.
-Page 9: 
+Page 9:
 Page 9: [32]
-Page 9: 
+Page 9:
 Page 9: Liu, H.Y., Maas, M., Danaher, J., Scarcella, L., Lexer, M. and Van Rompaey, L., 2020. Artificial intelligence and legal
 Page 9: disruption: a new model for analysis. Law, Innovation and Technology, 12(2), pp.205-258.
-Page 9: 
+Page 9:
 Page 9: [33]
-Page 9: 
+Page 9:
 Page 9: Nabipour, M., Nayyeri, P., Jabani, H., Shahab, S. and Mosavi, A., 2020. Predicting stock market trends using
 Page 9: machine learning and deep learning algorithms via continuous and binary data; a comparative analysis. IEEE
 Page 9: Access, 8, pp.150199-150212.
-Page 9: 
+Page 9:
 Page 9: [34]
-Page 9: 
+Page 9:
 Page 9: Njemanze, P.C., Njemanze, J., Skelton, A., Akudo, A., Akagha, O., Chukwu, A.A., Peters, C. and Maduka, O., 2008.
 Page 9: HighΓÇÉfrequency ultrasound imaging of the duodenum and colon in patients with symptomatic giardiasis in
 Page 9: comparison to amebiasis and healthy subjects. Journal of Gastroenterology and Hepatology, 23(7pt2), pp.e34-e42.
-Page 9: 
+Page 9:
 Page 9: [35]
-Page 9: 
+Page 9:
 Page 9: Nti, I.K., Adekoya, A.F. and Weyori, B.A., 2020. A systematic review of fundamental and technical analysis of stock
 Page 9: market predictions. Artificial Intelligence Review, 53(4), pp.3007-3057.
-Page 9: 
+Page 9:
 Page 9: [36]
-Page 9: 
+Page 9:
 Page 9: Patel, K., 2024. Ethical Reflections on Data-Centric AI: Balancing Benefits and Risks. International Journal of
 Page 9: Artificial Intelligence Research and Development, 2(1), pp.1-17.
-Page 9: 
+Page 9:
 Page 9: [37]
-Page 9: 
+Page 9:
 Page 9: Pothumsetty, R., 2020. Application of Artificial Intelligence in Algorithmic Trading. Int. J. Eng. Appl. Sci. Technol.,
 Page 9: 4(12), pp.140-149.
-Page 9: 
+Page 9:
 Page 9: [38]
-Page 9: 
+Page 9:
 Page 9: Priem, R., 2022. A European distributed ledger technology pilot regime for market infrastructures: finding a
 Page 9: balance between innovation, investor protection and financial stability. Journal of Financial Regulation and
 Page 9: Compliance, 30(3), pp.371-390.
-Page 9: 
+Page 9:
 Page 9: [39]
-Page 9: 
+Page 9:
 Page 9: Rahmani, A.M., Rezazadeh, B., Haghparast, M., Chang, W.C. and Ting, S.G., 2023. Applications of artificial
 Page 9: intelligence in the economy, including applications in stock trading, market analysis, and risk management. IEEE
 Page 9: Access.
-Page 9: 
+Page 9:
 Page 9: [40]
-Page 9: 
+Page 9:
 Page 9: Rahmani, F.M. and Zohuri, B., 2023. The Transformative Impact of AI on Financial Institutions, with a Focus on
 Page 9: Banking. Journal of Engineering and Applied Sciences Technology. SRC/JEAST-279. DOI: doi.
 Page 9: org/10.47363/JEAST/2023 (5), 192, pp.2-6.
-Page 9: 
+Page 9:
 Page 9: [41]
-Page 9: 
+Page 9:
 Page 9: Roslan, F.A.B.M. and Ahmad, N.B., 2023. The rise of AI-powered voice assistants: Analyzing their transformative
 Page 9: impact on modern customer service paradigms and consumer expectations. Quarterly Journal of Emerging
 Page 9: Technologies and Innovations, 8(3), pp.33-64.
-Page 9: 
+Page 9:
 Page 9: [42]
-Page 9: 
+Page 9:
 Page 9: Sonkavde, G., Dharrao, D.S., Bongale, A.M., Deokate, S.T., Doreswamy, D. and Bhat, S.K., 2023. Forecasting stock
 Page 9: market prices using machine learning and deep learning models: A systematic review, performance analysis and
 Page 9: discussion of implications. International Journal of Financial Studies, 11(3), p.94.
-Page 9: 
+Page 9:
 Page 9: [43]
-Page 9: 
+Page 9:
 Page 9: Swathi, G. and Pahuja, A., 2024. FinTech Frontiers: Cloud Computing and Artificial Intelligence Applications for
 Page 9: Intelligent Finance Investment and Blockchain in the Financial Sector. International Journal of Intelligent Systems
 Page 9: and Applications in Engineering, 12(4s), pp.654-659.
-Page 9: 
+Page 9:
 Page 9: 266
-Page 9: 
-Page 9: 
+Page 9:
+Page 9:
 Page 10: World Journal of Advanced Engineering Technology and Sciences, 2024, 11(01), 258ΓÇô267
 Page 10: [44]
-Page 10: 
+Page 10:
 Page 10: Umoh, A.A., Adefemi, A., Ibewe, K.I., Etukudoh, E.A., Ilojianya, V.I. and Nwokediegwu, Z.Q.S., 2024. Green
 Page 10: Architecture and Energy Efficiency: A Review Of Innovative Design And Construction Techniques. Engineering
 Page 10: Science & Technology Journal, 5(1), pp.185-200.
-Page 10: 
+Page 10:
 Page 10: [45]
-Page 10: 
+Page 10:
 Page 10: Uzougbo, N.S., Akagha, O.V., Coker, J.O., Bakare, S.S. and Ijiga, A.C., 2023. Effective strategies for resolving labour
 Page 10: disputes in the corporate sector: Lessons from Nigeria and the United States.
-Page 10: 
+Page 10:
 Page 10: [46]
-Page 10: 
+Page 10:
 Page 10: Varga, S., Brynielsson, J. and Franke, U., 2021. Cyber-threat perception and risk management in the Swedish
 Page 10: financial sector. Computers & security, 105, p.102239.
-Page 10: 
+Page 10:
 Page 10: [47]
-Page 10: 
+Page 10:
 Page 10: Verma, P. and Sehgal, S., 2023. Leveraging Artificial Intelligence for Enhancing Customer Experience and
 Page 10: Efficiency in the Banking Industry. In AI and Emotional Intelligence for Modern Business Management (pp. 282310). IGI Global.
-Page 10: 
+Page 10:
 Page 10: [48]
-Page 10: 
+Page 10:
 Page 10: Xu, J., Paruch, K., Cousaert, S. and Feng, Y., 2023. Sok: Decentralized exchanges (dex) with automated market
 Page 10: maker (amm) protocols. ACM Computing Surveys, 55(11), pp.1-50.
-Page 10: 
+Page 10:
 Page 10: [49]
-Page 10: 
+Page 10:
 Page 10: Yadav, Y., 2018. Algorithmic trading and market regulation. Global Algorithmic Capital Markets: High Frequency
 Page 10: Trading, Dark Pools, and Regulatory Challenges, p.232.
-Page 10: 
+Page 10:
 Page 10: [50]
-Page 10: 
+Page 10:
 Page 10: Zaharudin, K.Z., Young, M.R. and Hsu, W.H., 2022. HighΓÇÉfrequency trading: Definition, implications, and
 Page 10: controversies. Journal of Economic Surveys, 36(1), pp.75-107.
-Page 10: 
+Page 10:
 Page 10: 267
-Page 10: 
-Page 10: 
+Page 10:
+Page 10:

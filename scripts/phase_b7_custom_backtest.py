@@ -13,9 +13,9 @@ from __future__ import annotations
 
 import argparse
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 import numpy as np
 import pandas as pd
@@ -27,7 +27,7 @@ if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
 from src.backtest.engine import BacktestEngine, BacktestConfig
-from src.indicators.regime_detector import RegimeDetector, RegimeState
+from src.indicators.regime_detector import RegimeDetector
 from src.ml.features import FeatureEngineer
 from src.ml.pipeline import MLPipeline
 from src.patterns.base import BasePattern, PatternResult
@@ -300,7 +300,7 @@ def print_comparison_table(
             elif diff < 0:
                 print(f"v{abs(diff):.2f}{suffix} (worse)", end="")
             else:
-                print(f"= (same)", end="")
+                print("= (same)", end="")
         print()
 
     print("=" * 100)

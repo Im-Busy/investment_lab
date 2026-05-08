@@ -21,14 +21,13 @@ import argparse
 import logging
 import sys
 import warnings
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
 import yfinance as yf
-from tqdm import tqdm
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -540,8 +539,6 @@ def train_signal_scorer_on_multi_asset(
     from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
     from sklearn.linear_model import LogisticRegression
     from sklearn.metrics import accuracy_score, roc_auc_score
-
-    from src.ml.signal_scorer import SignalScorer
 
     df = pd.read_csv(csv_path)
     if df.empty or len(df) < 300:

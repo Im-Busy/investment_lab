@@ -28,20 +28,20 @@ Take Profit Rules:
 
 import pandas as pd
 import numpy as np
-from typing import Optional, List, Tuple, Dict
+from typing import Optional, Dict
 from ..base import BasePattern, PatternType, SignalDirection, TradeSignal, PatternResult
 from ...indicators.pivots import get_recent_swing_high, get_recent_swing_low
-from ...indicators.technical import volume_sma, average_range
+from ...indicators.technical import volume_sma
 
 
 class SpikeAndLedge(BasePattern):
     """
     Spike and Ledge Pattern Detector
-    
+
     A reversal pattern where a climax spike is followed by a consolidation
     ledge, then a reversal in the opposite direction.
     """
-    
+
     def __init__(
         self,
         spike_lookback: int = 20,
@@ -50,11 +50,11 @@ class SpikeAndLedge(BasePattern):
         ledge_range_threshold: float = 0.02,
         volume_threshold: float = 2.0,
         entry_offset: float = 0.01,
-        stop_offset: float = 0.01
+        stop_offset: float = 0.01,
     ):
         """
         Initialize Spike and Ledge pattern detector.
-        
+
         Args:
             spike_lookback: Lookback period for spike detection
             min_ledge_bars: Minimum bars for ledge formation
@@ -67,7 +67,7 @@ class SpikeAndLedge(BasePattern):
         super().__init__(
             name="Spike and Ledge",
             pattern_type=PatternType.REVERSAL,
-            min_bars_required=spike_lookback + min_ledge_bars
+            min_bars_required=spike_lookback + min_ledge_bars,
         )
         self.spike_lookback = spike_lookback
         self.min_ledge_bars = min_ledge_bars
@@ -76,247 +76,324 @@ class SpikeAndLedge(BasePattern):
         self.volume_threshold = volume_threshold
         self.entry_offset = entry_offset
         self.stop_offset = stop_offset
-    
-    def _find_spike(
-        self,
-        df: pd.DataFrame,
-        i: int
-    ) -> Optional[Dict]:
+
+    def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Vectorized detection of Spike and Ledge patterns across the entire DataFrame.
+
+        Returns:
+            np.ndarray of np.int8: 0=no signal, 1=LONG (reversal after bearish spike), -1=SHORT (reversal after bullish spike)
+        """
+        n = len(df)
+        result = np.zeros(n, dtype=np.int8)
+        min_bars = self.spike_lookback + self.min_ledge_bars
+        if n < min_bars:
+            return result
+
+        high_a = df["High"].to_numpy()
+        low_a = df["Low"].to_numpy()
+        close_a = df["Close"].to_numpy()
+        vol_a = df["Volume"].to_numpy()
+
+        sl = self.spike_lookback
+        min_ledge = self.min_ledge_bars
+        max_ledge = self.max_ledge_bars
+        ledge_thresh = self.ledge_range_threshold
+        vol_thresh = self.volume_threshold
+
+        vol_sma_arr = np.zeros(n)
+        for i in range(20, n):
+            vol_sma_arr[i] = float(np.mean(vol_a[i - 20 : i]))
+
+        for i in range(min_bars, n):
+            # Search for spike in recent bars
+            spike = None
+            for j in range(i, max(i - max_ledge - 1, sl), -1):
+                if j < sl:
+                    continue
+
+                cur_high = high_a[j]
+                cur_low = low_a[j]
+                cur_vol = vol_a[j]
+
+                prev_highs = high_a[j - sl : j]
+                prev_lows = low_a[j - sl : j]
+                bullish_spike = cur_high > float(np.max(prev_highs))
+                bearish_spike = cur_low < float(np.min(prev_lows))
+
+                if not (bullish_spike or bearish_spike):
+                    continue
+
+                avg_vol = vol_sma_arr[j] if j < n else 0.0
+                is_climax = avg_vol <= 0 or cur_vol > avg_vol * vol_thresh
+
+                spike = {
+                    "idx": j,
+                    "high": cur_high,
+                    "low": cur_low,
+                    "volume": cur_vol,
+                    "type": "bullish" if bullish_spike else "bearish",
+                    "is_climax_vol": is_climax,
+                }
+                break
+
+            if spike is None:
+                continue
+
+            spike_idx = spike["idx"]
+            if i - spike_idx < min_ledge or i - spike_idx > max_ledge:
+                continue
+
+            # Analyze ledge bars between spike and current
+            ledge_slice = slice(spike_idx + 1, i + 1)
+            ledge_high = float(np.max(high_a[ledge_slice]))
+            ledge_low = float(np.min(low_a[ledge_slice]))
+            ledge_range = ledge_high - ledge_low
+            avg_price = (ledge_high + ledge_low) / 2.0
+            if ledge_range > avg_price * ledge_thresh:
+                continue
+
+            # Volume contracting
+            ledge_vols = vol_a[ledge_slice]
+            avg_ledge_vol = float(np.mean(ledge_vols))
+            volume_contracting = avg_ledge_vol < spike["volume"]
+
+            # Check breakout from ledge (reversal direction)
+            if spike["type"] == "bullish":
+                if close_a[i] < ledge_low:
+                    result[i] = -1
+            else:
+                if close_a[i] > ledge_high:
+                    result[i] = 1
+
+        return result
+
+    def _find_spike(self, df: pd.DataFrame, i: int) -> Optional[Dict]:
         """
         Find spike formation at or before bar i.
-        
+
         Args:
             df: DataFrame with OHLCV data
             i: Current bar index
-            
+
         Returns:
             Dictionary with spike details or None
         """
         if i < self.spike_lookback:
             return None
-        
+
         # Look for spike in recent bars
         for j in range(i, max(i - self.max_ledge_bars - 1, self.spike_lookback), -1):
             if j < self.spike_lookback:
                 continue
-            
-            current_high = self._safe_float(df.iloc[j]['High'])
-            current_low = self._safe_float(df.iloc[j]['Low'])
-            current_vol = self._safe_float(df.iloc[j]['Volume'])
-            
+
+            current_high = self._safe_float(df.iloc[j]["High"])
+            current_low = self._safe_float(df.iloc[j]["Low"])
+            current_vol = self._safe_float(df.iloc[j]["Volume"])
+
             # Check for bullish spike (new high)
-            prev_highs = [self._safe_float(df.iloc[k]['High']) for k in range(j - self.spike_lookback, j)]
+            prev_highs = [
+                self._safe_float(df.iloc[k]["High"]) for k in range(j - self.spike_lookback, j)
+            ]
             is_bullish_spike = current_high > max(prev_highs) if prev_highs else False
-            
+
             # Check for bearish spike (new low)
-            prev_lows = [self._safe_float(df.iloc[k]['Low']) for k in range(j - self.spike_lookback, j)]
+            prev_lows = [
+                self._safe_float(df.iloc[k]["Low"]) for k in range(j - self.spike_lookback, j)
+            ]
             is_bearish_spike = current_low < min(prev_lows) if prev_lows else False
-            
+
             if not (is_bullish_spike or is_bearish_spike):
                 continue
-            
+
             # Check for climax volume
-            vol_sma = volume_sma(df['Volume'], 20)
+            vol_sma = volume_sma(df["Volume"], 20)
             if j < len(vol_sma):
                 avg_vol = self._safe_float(vol_sma.iloc[j])
                 is_climax_vol = current_vol > (avg_vol * self.volume_threshold)
             else:
                 is_climax_vol = True  # Assume climax if we can't verify
-            
-            spike_type = 'bullish' if is_bullish_spike else 'bearish'
-            
+
+            spike_type = "bullish" if is_bullish_spike else "bearish"
+
             return {
-                'idx': j,
-                'high': current_high,
-                'low': current_low,
-                'volume': current_vol,
-                'type': spike_type,
-                'is_climax_vol': is_climax_vol
+                "idx": j,
+                "high": current_high,
+                "low": current_low,
+                "volume": current_vol,
+                "type": spike_type,
+                "is_climax_vol": is_climax_vol,
             }
-        
+
         return None
-    
-    def _find_ledge(
-        self,
-        df: pd.DataFrame,
-        i: int,
-        spike: Dict
-    ) -> Optional[Dict]:
+
+    def _find_ledge(self, df: pd.DataFrame, i: int, spike: Dict) -> Optional[Dict]:
         """
         Find ledge formation after spike.
-        
+
         Args:
             df: DataFrame with OHLCV data
             i: Current bar index
             spike: Spike formation dictionary
-            
+
         Returns:
             Dictionary with ledge details or None
         """
-        spike_idx = spike['idx']
-        
+        spike_idx = spike["idx"]
+
         # Ledge should form after spike
         if i - spike_idx < self.min_ledge_bars:
             return None
-        
+
         if i - spike_idx > self.max_ledge_bars:
             return None
-        
+
         # Analyze bars between spike and current
         ledge_bars = list(range(spike_idx + 1, i + 1))
-        
+
         if len(ledge_bars) < self.min_ledge_bars:
             return None
-        
+
         # Calculate ledge range
-        ledge_highs = [self._safe_float(df.iloc[j]['High']) for j in ledge_bars]
-        ledge_lows = [self._safe_float(df.iloc[j]['Low']) for j in ledge_bars]
-        
+        ledge_highs = [self._safe_float(df.iloc[j]["High"]) for j in ledge_bars]
+        ledge_lows = [self._safe_float(df.iloc[j]["Low"]) for j in ledge_bars]
+
         ledge_high = max(ledge_highs)
         ledge_low = min(ledge_lows)
         ledge_range = ledge_high - ledge_low
-        
+
         # Average price for threshold calculation
         avg_price = (ledge_high + ledge_low) / 2
         threshold = avg_price * self.ledge_range_threshold
-        
+
         # Check if range is tight enough
         if ledge_range > threshold:
             return None
-        
+
         # Check volume contraction during ledge
-        spike_vol = spike['volume']
-        ledge_vols = [self._safe_float(df.iloc[j]['Volume']) for j in ledge_bars]
+        spike_vol = spike["volume"]
+        ledge_vols = [self._safe_float(df.iloc[j]["Volume"]) for j in ledge_bars]
         avg_ledge_vol = np.mean(ledge_vols)
-        
+
         volume_contracting = avg_ledge_vol < spike_vol
-        
+
         return {
-            'start_idx': spike_idx + 1,
-            'end_idx': i,
-            'num_bars': len(ledge_bars),
-            'high': ledge_high,
-            'low': ledge_low,
-            'range': ledge_range,
-            'volume_contracting': volume_contracting,
-            'bars': ledge_bars
+            "start_idx": spike_idx + 1,
+            "end_idx": i,
+            "num_bars": len(ledge_bars),
+            "high": ledge_high,
+            "low": ledge_low,
+            "range": ledge_range,
+            "volume_contracting": volume_contracting,
+            "bars": ledge_bars,
         }
-    
+
     def detect(self, df: pd.DataFrame, i: int, window_start: Optional[int] = None) -> PatternResult:
         """
         Detect Spike and Ledge pattern at bar index i.
-        
+
         Args:
             df: DataFrame with OHLCV data
             i: Current bar index
-            
+
         Returns:
             PatternResult with detection status and signal
         """
         if not self._validate_data(df, i):
             return PatternResult(
-                detected=False,
-                pattern_name=self.name,
-                pattern_type=self.pattern_type
+                detected=False, pattern_name=self.name, pattern_type=self.pattern_type
             )
-        
+
         # Find spike
         spike = self._find_spike(df, i)
-        
+
         if spike is None:
             return PatternResult(
-                detected=False,
-                pattern_name=self.name,
-                pattern_type=self.pattern_type
+                detected=False, pattern_name=self.name, pattern_type=self.pattern_type
             )
-        
+
         # Find ledge
         ledge = self._find_ledge(df, i, spike)
-        
+
         if ledge is None:
             return PatternResult(
                 detected=False,
                 pattern_name=self.name,
                 pattern_type=self.pattern_type,
-                pivot_points={'spike_detected': True, 'spike': spike}
+                pivot_points={"spike_detected": True, "spike": spike},
             )
-        
+
         # Check for breakout from ledge (reversal direction)
-        current_close = self._safe_float(df.iloc[i]['Close'])
-        current_high = self._safe_float(df.iloc[i]['High'])
-        current_low = self._safe_float(df.iloc[i]['Low'])
-        
+        current_close = self._safe_float(df.iloc[i]["Close"])
+        current_high = self._safe_float(df.iloc[i]["High"])
+        current_low = self._safe_float(df.iloc[i]["Low"])
+
         # For bullish spike, look for breakdown (reversal)
         # For bearish spike, look for breakout (reversal)
-        if spike['type'] == 'bullish':
+        if spike["type"] == "bullish":
             # Expect breakdown for reversal
-            breakdown = current_close < ledge['low']
+            breakdown = current_close < ledge["low"]
             if not breakdown:
                 return PatternResult(
                     detected=False,
                     pattern_name=self.name,
                     pattern_type=self.pattern_type,
-                    pivot_points={'spike': spike, 'ledge': ledge, 'awaiting_breakdown': True}
+                    pivot_points={"spike": spike, "ledge": ledge, "awaiting_breakdown": True},
                 )
-            direction = 'short'
+            direction = "short"
         else:
             # Expect breakout for reversal
-            breakout = current_close > ledge['high']
+            breakout = current_close > ledge["high"]
             if not breakout:
                 return PatternResult(
                     detected=False,
                     pattern_name=self.name,
                     pattern_type=self.pattern_type,
-                    pivot_points={'spike': spike, 'ledge': ledge, 'awaiting_breakout': True}
+                    pivot_points={"spike": spike, "ledge": ledge, "awaiting_breakout": True},
                 )
-            direction = 'long'
-        
+            direction = "long"
+
         # Generate signal
         signal = self._generate_signal(df, i, spike, ledge, direction)
-        
+
         return PatternResult(
             detected=True,
             pattern_name=f"{self.name} ({spike['type'].title()} Spike)",
             pattern_type=self.pattern_type,
             signal=signal,
             pivot_points={
-                'spike_idx': spike['idx'],
-                'spike_type': spike['type'],
-                'spike_high': spike['high'],
-                'spike_low': spike['low'],
-                'ledge_high': ledge['high'],
-                'ledge_low': ledge['low'],
-                'ledge_bars': ledge['num_bars'],
-                'direction': direction
+                "spike_idx": spike["idx"],
+                "spike_type": spike["type"],
+                "spike_high": spike["high"],
+                "spike_low": spike["low"],
+                "ledge_high": ledge["high"],
+                "ledge_low": ledge["low"],
+                "ledge_bars": ledge["num_bars"],
+                "direction": direction,
             },
             bars_since_detection=0,
-            start_index=spike['idx'],
-            end_index=i
+            start_index=spike["idx"],
+            end_index=i,
         )
-    
+
     def generate_signal(self, df: pd.DataFrame, i: int) -> Optional[TradeSignal]:
         """Generate trade signal."""
         result = self.detect(df, i)
         return result.signal if result.detected else None
-    
+
     def _generate_signal(
-        self,
-        df: pd.DataFrame,
-        i: int,
-        spike: Dict,
-        ledge: Dict,
-        direction: str
+        self, df: pd.DataFrame, i: int, spike: Dict, ledge: Dict, direction: str
     ) -> Optional[TradeSignal]:
         """Generate trade signal for Spike and Ledge reversal."""
-        
-        current_high = self._safe_float(df.iloc[i]['High'])
-        current_low = self._safe_float(df.iloc[i]['Low'])
-        
-        if direction == 'long':
+
+        current_high = self._safe_float(df.iloc[i]["High"])
+        current_low = self._safe_float(df.iloc[i]["Low"])
+
+        if direction == "long":
             # Breakout from ledge after bearish spike
-            entry_price = ledge['high'] + self.entry_offset
-            stop_loss = ledge['low'] - self.stop_offset
-            
+            entry_price = ledge["high"] + self.entry_offset
+            stop_loss = ledge["low"] - self.stop_offset
+
             # Target prior swing high
             swing_high = get_recent_swing_high(df, i, lookback=50)
             if swing_high:
@@ -324,16 +401,16 @@ class SpikeAndLedge(BasePattern):
             else:
                 risk = entry_price - stop_loss
                 take_profit_1 = entry_price + (risk * 2)
-            
+
             take_profit_2 = entry_price + (entry_price - stop_loss) * 3
-            
+
             signal_direction = SignalDirection.LONG
-        
+
         else:  # direction == 'short'
             # Breakdown from ledge after bullish spike
-            entry_price = ledge['low'] - self.entry_offset
-            stop_loss = ledge['high'] + self.stop_offset
-            
+            entry_price = ledge["low"] - self.entry_offset
+            stop_loss = ledge["high"] + self.stop_offset
+
             # Target prior swing low
             swing_low = get_recent_swing_low(df, i, lookback=50)
             if swing_low:
@@ -341,18 +418,18 @@ class SpikeAndLedge(BasePattern):
             else:
                 risk = stop_loss - entry_price
                 take_profit_1 = entry_price - (risk * 2)
-            
+
             take_profit_2 = entry_price - (stop_loss - entry_price) * 3
-            
+
             signal_direction = SignalDirection.SHORT
-        
+
         # Confidence
         confidence = 0.55
-        if spike['is_climax_vol']:
+        if spike["is_climax_vol"]:
             confidence += 0.1
-        if ledge['volume_contracting']:
+        if ledge["volume_contracting"]:
             confidence += 0.1
-        
+
         return TradeSignal(
             pattern_name=f"{self.name} ({direction.title()})",
             direction=signal_direction,
@@ -362,14 +439,14 @@ class SpikeAndLedge(BasePattern):
             take_profit_2=take_profit_2,
             take_profit_3=None,
             confidence=min(confidence, 1.0),
-            timestamp=df.iloc[i].name if hasattr(df.iloc[i], 'name') else None,
+            timestamp=df.iloc[i].name if hasattr(df.iloc[i], "name") else None,
             metadata={
-                'spike_type': spike['type'],
-                'spike_idx': spike['idx'],
-                'ledge_bars': ledge['num_bars'],
-                'ledge_range': ledge['range'],
-                'volume_contracting': ledge['volume_contracting'],
-                'climax_volume': spike['is_climax_vol'],
-                'entry_type': 'buy_stop' if direction == 'long' else 'sell_stop'
-            }
+                "spike_type": spike["type"],
+                "spike_idx": spike["idx"],
+                "ledge_bars": ledge["num_bars"],
+                "ledge_range": ledge["range"],
+                "volume_contracting": ledge["volume_contracting"],
+                "climax_volume": spike["is_climax_vol"],
+                "entry_type": "buy_stop" if direction == "long" else "sell_stop",
+            },
         )

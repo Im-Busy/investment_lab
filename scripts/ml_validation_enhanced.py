@@ -21,7 +21,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import yfinance as yf
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -166,7 +166,7 @@ def compare_baseline_vs_cross_asset(spy_df: pd.DataFrame):
         X_ca, y_ca = X_base, y_base
 
     # Feature selection on combined
-    print(f"\nApplying feature selection (target=25, corr_threshold=0.85)...")
+    print("\nApplying feature selection (target=25, corr_threshold=0.85)...")
     selector = FeatureSelector(target_features=25, corr_threshold=0.85, random_state=42)
     result = selector.fit(X_ca.fillna(0), y_ca)
     X_sel = selector.transform(X_ca.fillna(0))
@@ -194,7 +194,7 @@ def compare_baseline_vs_cross_asset(spy_df: pd.DataFrame):
     )
 
     # Walk-forward comparison
-    print(f"\n--- WALK-FORWARD COMPARISON ---")
+    print("\n--- WALK-FORWARD COMPARISON ---")
 
     wf_base = eval_walk_forward(X_base, y_base)
     wf_ca = eval_walk_forward(X_ca, y_ca)
@@ -212,7 +212,7 @@ def compare_baseline_vs_cross_asset(spy_df: pd.DataFrame):
     )
 
     # Top selected features
-    print(f"\n--- TOP 25 SELECTED FEATURES (MI Score) ---")
+    print("\n--- TOP 25 SELECTED FEATURES (MI Score) ---")
     rankings = selector.get_feature_rankings(top_n=25)
     for i, row in rankings.iterrows():
         print(f"  {i + 1:>2d}. {row['feature']:<25s} {row['mi_score']:.4f}")
@@ -245,11 +245,11 @@ def main():
 
     if wf_sel["mean_test"] - wf_base["mean_test"] > 0.02:
         print(
-            f"\n  [SUCCESS] Feature selection with cross-asset data shows meaningful improvement! (>2pp)"
+            "\n  [SUCCESS] Feature selection with cross-asset data shows meaningful improvement! (>2pp)"
         )
     else:
         print(
-            f"\n  [INFO] Cross-asset + feature selection shows marginal change. Further work needed."
+            "\n  [INFO] Cross-asset + feature selection shows marginal change. Further work needed."
         )
 
 

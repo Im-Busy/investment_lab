@@ -315,17 +315,17 @@ class HybridStrategy(Strategy):
         self.registry = StrategyRegistry()
         self.registry.register(SMCReversalPlugin())
         self.registry.register(InfluencerMTFPlugin())
-    
+
     def next(self):
         signals = self.registry.evaluate(self.data.df)
-        
+
         # Filter for high-quality signals
         high_quality = [
             s for s in signals
             if s.quality == SignalQuality.HIGH
             and s.confidence >= 0.7
         ]
-        
+
         for signal in high_quality:
             if signal.direction == 'long' and not self.position:
                 self.buy()

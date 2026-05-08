@@ -13,7 +13,7 @@ from __future__ import annotations
 import argparse
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List
 
 import numpy as np
 import pandas as pd
@@ -283,7 +283,7 @@ def main():
 
     summary_path = output_dir / "benchmark_summary.txt"
     with open(summary_path, "w") as f:
-        f.write(f"Vectorized Engine Benchmark Results\n")
+        f.write("Vectorized Engine Benchmark Results\n")
         f.write(f"Date Range: {args.start} to {args.end}\n")
         f.write(f"Data: SPY ({len(df)} bars)\n\n")
         f.write(

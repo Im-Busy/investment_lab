@@ -46,7 +46,7 @@ class TestPurgedKFold:
             n_purged = total - len(train_idx) - len(test_idx)
             if n_purged > 0:
                 at_least_one_purged = True
-        assert at_least_one_purged, f"No samples purged in any fold! label_span=5 should purge some"
+        assert at_least_one_purged, "No samples purged in any fold! label_span=5 should purge some"
 
     def test_embargo_removes_additional_samples(self, sample_df):
         """Test that embargo removes more samples than no embargo."""

@@ -19,11 +19,9 @@ Example:
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional, Type
+from typing import Any, Dict, List, Optional
 
 import pandas as pd
-
-from ..patterns.base import BasePattern, PatternResult, SignalDirection, TradeSignal
 
 
 class StrategyType(Enum):

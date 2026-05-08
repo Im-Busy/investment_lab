@@ -76,6 +76,58 @@ class BollingerBands(BasePattern):
         self.use_atr_targets = use_atr_targets
         self.volume_filter = volume_filter
 
+    def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Vectorized detection of Bollinger Bands breakout and reversal signals.
+
+        Returns:
+            np.ndarray of np.int8: 0=no signal, 1=LONG, -1=SHORT
+        """
+        n = len(df)
+        result = np.zeros(n, dtype=np.int8)
+        if n < self.period + 1:
+            return result
+
+        close_a = df["Close"].to_numpy()
+        period = self.period
+        num_std = self.num_std
+        sq_thresh = self.squeeze_threshold
+
+        sma = df["Close"].rolling(period).mean().to_numpy()
+        std = df["Close"].rolling(period).std(ddof=0).to_numpy()
+
+        upper = sma + num_std * std
+        lower = sma - num_std * std
+        bandwidth = (upper - lower) / sma
+        avg_bandwidth = pd.Series(bandwidth).rolling(period).mean().to_numpy()
+
+        for i in range(period, n):
+            if np.isnan(sma[i]):
+                continue
+
+            sq_ratio = bandwidth[i] / avg_bandwidth[i] if avg_bandwidth[i] > 0 else 0.0
+            is_squeeze = sq_ratio < sq_thresh
+
+            up_band = upper[i]
+            lo_band = lower[i]
+            prev_up = upper[i - 1] if i > 0 else up_band
+            prev_lo = lower[i - 1] if i > 0 else lo_band
+
+            # Breakout from squeeze
+            if close_a[i] > up_band and is_squeeze:
+                result[i] = 1
+            elif close_a[i] < lo_band and is_squeeze:
+                result[i] = -1
+            elif i > 0:
+                # Reversal: was below lower band, now back inside → bullish
+                prev_close = close_a[i - 1]
+                if prev_close < prev_lo and close_a[i] > lo_band:
+                    result[i] = 1
+                elif prev_close > prev_up and close_a[i] < up_band:
+                    result[i] = -1
+
+        return result
+
     def _calculate_bands(self, df: pd.DataFrame, i: int) -> Optional[Dict]:
         """
         Calculate Bollinger Band values at bar i.
@@ -211,6 +263,7 @@ class BollingerBands(BasePattern):
 
         # Check for squeeze
         is_squeeze = self._is_squeeze(bands)
+        bands["is_squeeze"] = is_squeeze
 
         # Check for breakout
         breakout = self._detect_breakout(df, i, bands)

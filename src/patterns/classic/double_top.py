@@ -77,6 +77,79 @@ class DoubleTop(BasePattern):
         self.stop_offset = stop_offset
         self.volume_filter = volume_filter
 
+    def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Vectorized Double Top detection across all bars.
+
+        Returns np.int8 array: 0=no signal, 1=long, -1=short.
+        """
+        n = len(df)
+        signals = np.zeros(n, dtype=np.int8)
+        close = df["Close"].to_numpy(dtype=np.float64)
+
+        swing_highs = find_swing_highs(df, self.lookback)
+        swing_lows = find_swing_lows(df, self.lookback)
+
+        sh_arr = swing_highs.to_numpy(dtype=np.float64)
+        sl_arr = swing_lows.to_numpy(dtype=np.float64)
+
+        n_swing_highs = pd.notna(swing_highs).to_numpy()
+        n_swing_lows = pd.notna(swing_lows).to_numpy()
+
+        for i in range(max(self.lookback, self.min_pattern_bars), n):
+            lookback = min(self.max_pattern_bars * 2, i)
+
+            peaks: list = []
+            troughs: list = []
+            for j in range(i - lookback, i + 1):
+                if j < 0:
+                    continue
+                if n_swing_highs[j]:
+                    peaks.append((j, float(sh_arr[j])))
+                if n_swing_lows[j]:
+                    troughs.append((j, float(sl_arr[j])))
+
+            if len(peaks) < 2 or len(troughs) < 1:
+                continue
+
+            peaks_sorted = sorted(peaks, key=lambda x: x[0])
+
+            pattern_found = False
+            neckline_idx = 0
+            neckline_price = 0.0
+
+            for ip in range(len(peaks_sorted) - 1):
+                p1 = peaks_sorted[ip]
+                for jp in range(ip + 1, len(peaks_sorted)):
+                    p2 = peaks_sorted[jp]
+                    peak_diff = abs(p1[1] - p2[1]) / max(p1[1], p2[1])
+                    if peak_diff > self.peak_tolerance:
+                        continue
+                    duration = p2[0] - p1[0]
+                    if duration < self.min_pattern_bars or duration > self.max_pattern_bars:
+                        continue
+                    neckline_troughs = [(ti, tp) for ti, tp in troughs if p1[0] < ti < p2[0]]
+                    if not neckline_troughs:
+                        continue
+                    nl = min(neckline_troughs, key=lambda x: x[1])
+                    depth = max(p1[1], p2[1]) - nl[1]
+                    if depth <= 0:
+                        continue
+                    neckline_idx = nl[0]
+                    neckline_price = nl[1]
+                    pattern_found = True
+                    break
+                if pattern_found:
+                    break
+
+            if not pattern_found:
+                continue
+
+            if i > neckline_idx and float(close[i]) < neckline_price:
+                signals[i] = -1
+
+        return signals
+
     def _find_peaks_and_troughs(
         self, df: pd.DataFrame, i: int
     ) -> Tuple[List[Tuple[int, float]], List[Tuple[int, float]]]:

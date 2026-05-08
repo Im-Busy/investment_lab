@@ -34,8 +34,8 @@ def sample_data():
 def trained_on_features(sample_data):
     """Train a classifier on actual FeatureEngineer output."""
     eng = FeatureEngineer()
-    features = eng.generate_features(sample_data).dropna()
-    X = features.values
+    features = eng.generate_features(sample_data)
+    X = features.replace([np.inf, -np.inf], np.nan).fillna(0).values
     y = (features.iloc[:, 0] > features.iloc[:, 0].median()).astype(int).values
     model = RandomForestClassifier(n_estimators=5, random_state=42, max_depth=3)
     model.fit(X, y)

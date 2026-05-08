@@ -1,9 +1,9 @@
 # Implementation Plan: FR-001 - London Breakout Strategy
 
-**Date:** 2026-04-20  
-**Feature Request:** FR-001  
-**Priority:** HIGH VALUE (15-25% Sharpe improvement on FX pairs)  
-**Estimated Time:** 2-3 hours  
+**Date:** 2026-04-20
+**Feature Request:** FR-001
+**Priority:** HIGH VALUE (15-25% Sharpe improvement on FX pairs)
+**Estimated Time:** 2-3 hours
 **Status:** Planning Phase
 
 ---
@@ -145,9 +145,9 @@ class LondonBreakoutParams:
 
 class LondonBreakoutStrategy(Strategy):
     """London Breakout Strategy for backtesting.py."""
-    
+
     params = LondonBreakoutParams()
-    
+
     def init(self) -> None:
         """Initialize strategy state."""
         self.tokyo_highs: list[float] = []
@@ -159,12 +159,12 @@ class LondonBreakoutStrategy(Strategy):
         self.entry_price: float = 0.0
         self.signals_this_session: int = 0
         self.in_london_session: bool = False
-        
+
     def next(self) -> None:
         """Execute strategy logic on each bar."""
         current_time = self.data.index[-1]
         current_hour = current_time.hour
-        
+
         # Implementation continues...
 ```
 
@@ -173,17 +173,17 @@ class LondonBreakoutStrategy(Strategy):
     def _is_tokyo_hour(self, dt: pd.Timestamp) -> bool:
         """Check if time is within Tokyo hour window."""
         return dt.hour == self.params.tokyo_start_hour
-    
+
     def _is_london_session_start(self, dt: pd.Timestamp) -> bool:
         """Check if time is London open."""
         return dt.hour == self.params.london_trading_start and dt.minute == 0
-    
+
     def _is_london_trading_window(self, dt: pd.Timestamp) -> bool:
         """Check if within London trading window."""
-        return (self.params.tokyo_end_hour <= dt.hour < 
+        return (self.params.tokyo_end_hour <= dt.hour <
                 self.params.tokyo_end_hour and
                 dt.minute < self.params.london_trading_minutes)
-    
+
     def _is_london_close(self, dt: pd.Timestamp) -> bool:
         """Check if London session ends."""
         return dt.hour >= self.params.london_close_hour
@@ -195,12 +195,12 @@ class LondonBreakoutStrategy(Strategy):
         """Collect high/low during Tokyo hour."""
         self.tokyo_highs.append(self.data.High[-1])
         self.tokyo_lows.append(self.data.Low[-1])
-    
+
     def _calculate_tokyo_range(self) -> float:
         """Calculate Tokyo hour price range."""
         if not self.tokyo_highs:
             return 0.0
-        
+
         tokyo_high = max(self.tokyo_highs)
         tokyo_low = min(self.tokyo_lows)
         return tokyo_high - tokyo_low
@@ -212,13 +212,13 @@ class LondonBreakoutStrategy(Strategy):
         """Set upper/lower thresholds at London open."""
         self.tokyo_range = self._calculate_tokyo_range()
         self.london_open_price = self.data.Close[-1]
-        
+
         self.upper_threshold = (
-            self.london_open_price + 
+            self.london_open_price +
             self.params.param * self.tokyo_range
         )
         self.lower_threshold = (
-            self.london_open_price - 
+            self.london_open_price -
             self.params.param * self.tokyo_range
         )
 ```
@@ -228,21 +228,21 @@ class LondonBreakoutStrategy(Strategy):
     def _generate_signals(self) -> Optional[int]:
         """Generate buy/sell signals based on breakout."""
         current_price = self.data.Close[-1]
-        
+
         # Upper breakout
         if current_price > self.upper_threshold:
             if self._check_stop_loss(current_price):
                 return None
             return 1  # BUY
-        
+
         # Lower breakout
         if current_price < self.lower_threshold:
             if self._check_stop_loss(current_price):
                 return None
             return -1  # SELL
-        
+
         return None
-    
+
     def _check_stop_loss(self, price: float) -> bool:
         """Check if signal should be rejected by stop loss."""
         if self.entry_price == 0:
@@ -255,11 +255,11 @@ class LondonBreakoutStrategy(Strategy):
     def _manage_positions(self, signal: int) -> None:
         """Manage positions based on signals."""
         current_price = self.data.Close[-1]
-        
+
         # Single position per session
         if self.signals_this_session >= 1 and signal != 0:
             return
-        
+
         # Reverse position detection
         if self.position and self.position.is_short and signal == 1:
             self.position.close()
@@ -267,31 +267,31 @@ class LondonBreakoutStrategy(Strategy):
             self.entry_price = current_price
             self.signals_this_session += 1
             return
-        
+
         if self.position and self.position.is_long and signal == -1:
             self.position.close()
             self.sell()
             self.entry_price = current_price
             self.signals_this_session += 1
             return
-        
+
         # Regular entry
         if signal == 1 and not self.position:
             self.buy()
             self.entry_price = current_price
             self.signals_this_session += 1
-        
+
         if signal == -1 and not self.position:
             self.sell()
             self.entry_price = current_price
             self. signals_this_session += 1
-    
+
     def _clear_positions_at_close(self) -> None:
         """Clear all positions at London close."""
         if self.position:
             self.position.close()
         self._reset_session_state()
-    
+
     def _reset_session_state(self) -> None:
         """Reset session state."""
         self.tokyo_highs.clear()
@@ -313,25 +313,25 @@ class LondonBreakoutStrategy(Strategy):
         """Execute strategy logic on each bar."""
         current_time = self.data.index[-1]
         current_price = self.data.Close[-1]
-        
+
         # Tokyo hour: Collect price data
         if self._is_tokyo_hour(current_time):
             self._collect_tokyo_data()
             return
-        
+
         # London open: Set thresholds
         if self._is_london_session_start(current_time):
-            self._set_london_thresholds() 
+            self._set_london_thresholds()
             self.in_london_session = True
             return
-        
+
         # London trading window: Generate signals
         if self._is_london_trading_window(current_time) and self.in_london_session:
             signal = self._generate_signals()
             if signal:
                 self._manage_positions(signal)
             return
-        
+
         # London close: Clear positions
         if self._is_london_close(current_time):
             self._clear_positions_at_close()
@@ -352,7 +352,7 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 from src.strategies.london_breakout import (
-    LondonBreakoutStrategy, 
+    LondonBreakoutStrategy,
     LondonBreakoutParams
 )
 from src.backtest.engine import BacktestEngine
@@ -363,20 +363,20 @@ def sample_fx_data():
     """Generate sample FX minute data for testing."""
     np.random.seed(42)
     n_points = 10000
-    
+
     dates = pd.date_range(
         start='2023-01-01 00:00:00',
         periods=n_points,
         freq='1min'
     )
-    
+
     base_price = 1.2500  # GBP/USD
     volatility = 0.0002
-    
+
     prices = np.cumsum(
         np.random.randn(n_points) * volatility
     ) + base_price
-    
+
     data = pd.DataFrame({
         'Open': prices + np.random.randn(n_points) * 0.0001,
         'High': prices + np.abs(np.random.randn(n_points)) * 0.0003,
@@ -384,7 +384,7 @@ def sample_fx_data():
         'Close': prices,
         'Volume': np.random.randint(100, 1000, n_points)
     }, index=dates)
-    
+
     return data
 
 
@@ -405,79 +405,79 @@ def strategy_params():
 ```python
 class TestLondonBreakoutStrategy:
     """Test suite for London Breakout Strategy."""
-    
+
     def test_time_zone_detection(self, sample_fx_data, strategy_params):
         """Test Tokyo hour and London session detection."""
         strategy = LondonBreakoutStrategy()
         strategy.params = strategy_params
-        
+
         # Test Tokyo hour
         tokyo_time = pd.Timestamp('2023-01-01 02:30:00')
         assert strategy._is_tokyo_hour(tokyo_time) == True
-        
+
         # Test non-Tokyo hour
         non_tokyo_time = pd.Timestamp('2023-01-01 05:30:00')
         assert strategy._is_tokyo_hour(non_tokyo_time) == False
-        
+
         # Test London open
         london_open = pd.Timestamp('2023-01-01 03:00:00')
         assert strategy._is_london_session_start(london_open) == True
-    
+
     def test_tokyo_range_calculation(self, strategy_params):
         """Test Tokyo hour price range calculation."""
         strategy = LondonBreakoutStrategy()
         strategy.params = strategy_params
-        
+
         # Simulate Tokyo hour data
         strategy.tokyo_highs = [1.2510, 1.2515, 1.2520]
         strategy.tokyo_lows = [1.2490, 1.2485, 1.2480]
-        
+
         tokyo_range = strategy._calculate_tokyo_range()
         assert tokyo_range == pytest.approx(0.0040, rel=1e-4)
-    
+
     def test_threshold_setting(self, strategy_params):
         """Test London open threshold calculation."""
         strategy = LondonBreakoutStrategy()
         strategy.params = strategy_params
-        
+
         # Set Tokyo range
         strategy.tokyo_range = 0.0040
         strategy.london_open_price = 1.2500
-        
+
         strategy = self._set_london_thresholds()
-        
+
         expected_upper = 1.2500 + 0.5 * 0.0040
         expected_lower = 1.2500 - 0.5 * 0.0040
-        
+
         assert strategy.upper_threshold == pytest.approx(expected_upper, rel=1e-4)
         assert strategy.lower_threshold == pytest.approx(expected_lower, rel=1e-4)
-    
+
     def test_stop_loss_filtering(self, strategy_params):
         """Test stop loss signal rejection."""
         strategy = LondonBreakoutStrategy()
         strategy.params = strategy_params
-        
+
         strategy.entry_price = 1.2500
-        
+
         # Within stop loss
         assert strategy._check_stop_loss(1.2525) == False
-        
+
         # Beyond stop loss (1%)
         assert strategy._check_stop_loss(1.2650) == True
         assert strategy._check_stop_loss(1.2350) == True
-    
+
     def test_position_clearing(self, strategy_params):
         """Test London close position clearing."""
         strategy = LondonBreakoutStrategy()
         strategy.params = strategy_params
-        
+
         # Simulate active session
         strategy.tokyo_highs = [1.2510]
         strategy.tokyo_lows = [1.2490]
         strategy.signals_this_session = 1
-        
+
         strategy._clear_positions_at_close()
-        
+
         assert len(strategy.tokyo_highs) == 0
         assert len(strategy.tokyo_lows) == 0
         assert strategy.signals_this_session == 0
@@ -493,15 +493,15 @@ class TestLondonBreakoutStrategy:
             data=sample_fx_data,
             initial_cash=10000
         )
-        
+
         results = engine.run()
-        
+
         # Validate results
         assert 'total_return' in results
         assert 'sharpe_ratio' in results
         assert 'max_drawdown' in results
         assert len(results['trades']) > 0
-    
+
     def test_signal_timing(self, sample_fx_data, strategy_params):
         """Test signals generate only during London trading window."""
         engine = BacktestEngine(
@@ -510,15 +510,15 @@ class TestLondonBreakoutStrategy:
             data=sample_fx_data,
             initial_cash=10000
         )
-        
+
         results = engine.run()
         signals = results['signals']
-        
+
         # Check signal timing
         for signal in signals:
             signal_time = signal['timestamp']
             hour = signal_time.hour
-            
+
             # Signals should only be during 3:00-3:30 EST
             assert hour == 3
             assert signal_time.minute < 30
@@ -534,9 +534,9 @@ class TestLondonBreakoutStrategy:
             data=sample_fx_data,
             initial_cash=10000
         )
-        
+
         results = engine.run()
-        
+
         # Minimum viable thresholds
         assert len(results['trades']) >= 30  # Minimum trades
         assert results['sharpe_ratio'] > 0.0   # Positive risk-adjusted return
@@ -549,35 +549,35 @@ class TestLondonBreakoutStrategy:
 ```python
 class TestDataRequirements:
     """Test data requirements for London Breakout."""
-    
+
     def test_minute_frequency_data(self):
         """Verify minute-frequency OHLCV data."""
         # Load validation dataset (GBP/USD 2022-2023)
         data_path = Path('data/validation/gbp_usd_2022_2023.csv')
-        
+
         if data_path.exists():
             data = pd.read_csv(data_path, index_col=0, parse_dates=True)
-            
+
             # Check frequency
             time_diffs = data.index.to_series().diff()
             avg_diff = time_diffs.mean()
-            
+
             assert avg_diff == pd.Timedelta(minutes=1)
-    
+
     def test_timezone_coverage(self):
         """Verify data covers all required time zones."""
         data_path = Path('data/validation/gbp_usd_2022_2023.csv')
-        
+
         if data_path.exists():
             data = pd.read_csv(data_path, index_col=0, parse_dates=True)
-            
+
             # Check Tokyo hour coverage (2:00-3:00 EST)
             tokyo_hours = data.index[data.index.hour == 2]
             assert len(tokyo_hours) > 0
-            
+
             # Check London session coverage (3:00-12:00 EST)
             london_hours = data.index[
-                (data.index.hour >= 3) & 
+                (data.index.hour >= 3) &
                 (data.index.hour < 12)
             ]
             assert len(london_hours) > 0
@@ -603,27 +603,27 @@ import matplotlib.pyplot as plt
 def run_validation():
     """Run full validation suite."""
     print("=== London Breakout Strategy Validation ===\n")
-    
+
     # Load data
     data_path = Path('data/validation/gbp_usd_2022_2023.csv')
-    
+
     if not data_path.exists():
         print(f"Data file not found: {data_path}")
         print("Please download GBP/USD minute data for 2022-2023")
         return
-    
+
     data = pd.read_csv(data_path, index_col=0, parse_dates=True)
     print(f"Loaded {len(data)} data points\n")
-    
+
     # Run backtest
     engine = BacktestEngine(
         strategy=LondonBreakoutStrategy,
         initial_cash=10000,
         commission=0.0001  # 1 pip spread
     )
-    
+
     results = engine.run(data)
-    
+
     # Print metrics
     print("=== Backtest Results ===")
     print(f"Total Return: {results['total_return']:.2%}")
@@ -631,13 +631,13 @@ def run_validation():
     print(f"Max Drawdown: {results['max_drawdown']:.2%}")
     print(f"Win Rate: {results['win_rate']:.2%}")
     print(f"Total Trades: {len(results['trades'])}\n")
-    
+
     # Validate metrics
     validate_results(results)
-    
+
     # Plot equity curve
     plot_equity_curve(results)
-    
+
     # Save results
     save_validation_results(results)
 
@@ -645,21 +645,21 @@ def run_validation():
 def validate_results(results: dict) -> None:
     """Validate results meet minimum criteria."""
     print("=== Validation ===")
-    
+
     # Trade count
     trades = len(results['trades'])
     if trades < 50:
         print(f"⚠️  Warning: Only {trades} trades (expected 50+)")
     else:
         print(f"✅ Trade count: {trades} (meets 50+ minimum)")
-    
+
     # Sharpe ratio
     sharpe = results['sharpe_ratio']
     if sharpe < 0.5:
         print(f"⚠️  Warning: Sharpe {sharpe:.2f} (expected > 0.5)")
     else:
         print(f"✅ Sharpe ratio: {sharpe:.2f} (exceeds 0.5 threshold)")
-    
+
     # Max drawdown
     mdd = results['max_drawdown']
     if mdd > -0.3:
@@ -671,7 +671,7 @@ def validate_results(results: dict) -> None:
 def plot_equity_curve(results: dict) -> None:
     """Plot equity curve."""
     equity = results['equity_curve']
-    
+
     plt.figure(figsize=(12, 6))
     plt.plot(equity.index, equity.values, label='London Breakout')
     plt.axhline(y=10000, color='r', linestyle='--', label='Initial Capital')
@@ -687,7 +687,7 @@ def plot_equity_curve(results: dict) -> None:
 def save_validation_results(results: dict) -> None:
     """Save validation results to file."""
     results_path = Path('docs/london_breakout_results.json')
-    
+
     results_data = {
         'total_return': results['total_return'],
         'sharpe_ratio': results['sharpe_ratio'],
@@ -696,11 +696,11 @@ def save_validation_results(results: dict) -> None:
         'total_trades': len(results['trades']),
         'profit_factor': results['profit_factor']
     }
-    
+
     import json
     with open(results_path, 'w') as f:
         json.dump(results_data, f, indent=2)
-    
+
     print(f"\nResults saved to: {results_path}")
 
 
@@ -892,6 +892,6 @@ results = engine.run(data)
 
 ---
 
-**Implementation Start:** Ready to begin  
-**Estimated Completion:** 2-3 hours  
+**Implementation Start:** Ready to begin
+**Estimated Completion:** 2-3 hours
 **Next Review:** Backtest results and validation metrics

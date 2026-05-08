@@ -7,6 +7,13 @@ Exports all key classes from the pattern selection analysis modules:
 - WalkForwardValidator: walk-forward analysis with overfitting detection
 - SignalQualityFilter: signal quality scoring and filtering
 - PatternSelector: orchestrator for the full selection pipeline
+
+Phase 08 - Contribution & Attribution System (4-Layer Architecture):
+- SignalEventLog: per-bar signal capture with pattern/regime metadata (Layer 1)
+- TradeAttributor: P&L attribution to individual patterns (Layer 2)
+- AblationEngine: leave-one-out pattern ablation studies (Layer 3)
+- SynergyAnalyzer: pattern interaction effect analysis (Layer 4)
+- ContributionReport: aggregated contribution report generation
 """
 
 from .statistical_filter import (
@@ -24,7 +31,6 @@ from .correlation_analyzer import (
 
 from .contribution_analyzer import (
     DEFAULT_REDUNDANCY_THRESHOLD,
-    AblationResult,
     ContributionAnalyzer,
 )
 
@@ -51,6 +57,47 @@ from .pattern_selector import (
     SelectionResult,
 )
 
+# Phase 08 - Contribution & Attribution System
+from .signal_event_log import (
+    SignalEvent,
+    SignalEventLog,
+)
+
+from .trade_attributor import (
+    AttributedTrade,
+    TradeAttributor,
+)
+
+from .ablation_engine import (
+    AblationEngine,
+    AblationResult,
+)
+
+from .synergy_analyzer import (
+    SynergyAnalyzer,
+    SynergyResult,
+)
+
+from .contribution_report import (
+    ContributionReport,
+)
+
+from .contribution_charts import (
+    create_contribution_charts,
+)
+
+from .deflated_sharpe import (
+    PSRResult,
+    FDRResult,
+    compute_psr,
+    compute_psr_from_returns,
+    compute_dsr,
+    compute_dsr_from_returns,
+    benjamini_hochberg,
+    deflated_sharpe_batch,
+    dsr_significance,
+)
+
 __all__ = [
     # Statistical Significance Filter
     "StatisticalSignificanceFilter",
@@ -63,7 +110,6 @@ __all__ = [
     "DEFAULT_CORRELATION_THRESHOLD",
     # Contribution Analyzer
     "ContributionAnalyzer",
-    "AblationResult",
     "DEFAULT_REDUNDANCY_THRESHOLD",
     # Walk-Forward Validator
     "WalkForwardValidator",
@@ -82,4 +128,25 @@ __all__ = [
     "PatternSelector",
     "SelectionConfig",
     "SelectionResult",
+    # Phase 08 - Contribution & Attribution System
+    "SignalEvent",
+    "SignalEventLog",
+    "AttributedTrade",
+    "TradeAttributor",
+    "AblationEngine",
+    "AblationResult",
+    "SynergyAnalyzer",
+    "SynergyResult",
+    "ContributionReport",
+    "create_contribution_charts",
+    # DSR/PSR/FDR
+    "PSRResult",
+    "FDRResult",
+    "compute_psr",
+    "compute_psr_from_returns",
+    "compute_dsr",
+    "compute_dsr_from_returns",
+    "benjamini_hochberg",
+    "deflated_sharpe_batch",
+    "dsr_significance",
 ]

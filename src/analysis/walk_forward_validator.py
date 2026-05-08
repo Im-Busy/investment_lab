@@ -7,8 +7,9 @@ comparing in-sample vs out-of-sample performance across windows.
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from dataclasses import dataclass
+from enum import Enum
+from typing import Callable, Dict, List, Optional
 
 import numpy as np
 import pandas as pd
@@ -18,6 +19,57 @@ logger = logging.getLogger(__name__)
 DEFAULT_TRAIN_DAYS = 252
 DEFAULT_TEST_DAYS = 63
 DEFAULT_OVERFITTING_DEGRADATION = 0.5
+
+
+class OverfitStatus(Enum):
+    """Overfitting classification based on IS/OOS degradation ratio."""
+
+    PASS = "pass"
+    MILD_OVERFIT = "mild_overfit"
+    MEDIUM_OVERFIT = "medium_overfit"
+    HIGH_OVERFIT = "high_overfit"
+    OOS_UNPROFITABLE = "oos_unprofitable"
+
+
+def detect_overfitting(
+    train_sharpe: float,
+    oos_sharpe: float,
+    degradation_threshold: float = DEFAULT_OVERFITTING_DEGRADATION,
+) -> OverfitStatus:
+    """Detect overfitting by comparing training vs OOS Sharpe ratio."""
+    if oos_sharpe <= 0:
+        return OverfitStatus.OOS_UNPROFITABLE
+    if train_sharpe <= 0:
+        return OverfitStatus.PASS
+    ratio = oos_sharpe / train_sharpe
+    if ratio >= 0.7:
+        return OverfitStatus.PASS
+    if ratio >= 0.5:
+        return OverfitStatus.MILD_OVERFIT
+    if ratio >= 0.4:
+        return OverfitStatus.MEDIUM_OVERFIT
+    return OverfitStatus.HIGH_OVERFIT
+
+
+@dataclass
+class WalkForwardConfig:
+    """Configuration for walk-forward validation."""
+
+    train_days: int = DEFAULT_TRAIN_DAYS
+    test_days: int = DEFAULT_TEST_DAYS
+    degradation_threshold: float = DEFAULT_OVERFITTING_DEGRADATION
+
+
+@dataclass
+class WalkForwardResult:
+    """Aggregated walk-forward validation result."""
+
+    windows: List[WindowResult]
+    oos_sharpe_mean: float
+    oos_sharpe_std: float
+    train_sharpe_mean: float
+    overfit_status: OverfitStatus
+    degradation_ratio: float
 
 
 @dataclass
@@ -235,13 +287,57 @@ class WalkForwardValidator:
         for key in wf_results[0].train_metrics:
             train_vals = [w.train_metrics.get(key, 0.0) for w in wf_results]
             oos_vals = [w.oos_metrics.get(key, 0.0) for w in wf_results]
-
             avg_train = float(np.mean(train_vals))
             avg_oos = float(np.mean(oos_vals))
-
             if abs(avg_train) > 1e-12:
                 ratios[key] = (avg_train - avg_oos) / abs(avg_train)
             else:
                 ratios[key] = 0.0
 
         return ratios
+
+    # ---- Legacy compat methods for test suite ----
+
+    def split_data(self, data: "pd.DataFrame") -> Dict[str, "pd.DataFrame"]:
+        """Split data into is/oos/fv sets (legacy compat)."""
+        n = len(data)
+        is_end = int(n * 0.6)
+        oos_end = int(n * 0.8)
+        return {
+            "is": data.iloc[:is_end],
+            "oos": data.iloc[is_end:oos_end],
+            "fv": data.iloc[oos_end:],
+        }
+
+    def run_validation(self, name: str, metrics: Dict[str, Dict[str, float]]):
+        """Run validation from pre-computed metrics dict (legacy compat)."""
+        is_metrics = metrics.get("is", {})
+        oos_metrics = metrics.get("oos", {})
+        is_sharpe = is_metrics.get("sharpe_ratio", 0.0)
+        oos_sharpe = oos_metrics.get("sharpe_ratio", 0.0)
+        status = detect_overfitting(is_sharpe, oos_sharpe, self.degradation_threshold)
+        passes = status in (OverfitStatus.PASS, OverfitStatus.MILD_OVERFIT)
+
+        class _Result:
+            __slots__ = ("pattern_name", "passes_validation", "overfit_status")
+
+            def __init__(self, n, p, s):
+                self.pattern_name = n
+                self.passes_validation = p
+                self.overfit_status = s
+
+        return _Result(name, passes, status)
+
+    def validate_multiple_patterns(self, pattern_metrics: Dict[str, Dict]) -> "pd.DataFrame":
+        """Validate multiple patterns (legacy compat)."""
+        rows = []
+        for name, metrics in pattern_metrics.items():
+            r = self.run_validation(name, metrics)
+            rows.append(
+                {
+                    "pattern_name": r.pattern_name,
+                    "passes_validation": r.passes_validation,
+                    "overfit_status": r.overfit_status.value,
+                }
+            )
+        return pd.DataFrame(rows)

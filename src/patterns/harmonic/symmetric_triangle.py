@@ -75,6 +75,84 @@ class SymmetricTriangle(BasePattern):
         self.stop_offset = stop_offset
         self.volume_filter = volume_filter
 
+    def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Vectorized Symmetric Triangle detection across all bars.
+
+        Returns np.int8 array: 0=no signal, 1=long, -1=short.
+        """
+        n = len(df)
+        signals = np.zeros(n, dtype=np.int8)
+        close = df["Close"].to_numpy(dtype=np.float64)
+        high = df["High"].to_numpy(dtype=np.float64)
+        low = df["Low"].to_numpy(dtype=np.float64)
+
+        for i in range(max(self.min_pattern_bars, 3), n):
+            start = max(0, i - self.max_pattern_bars)
+            lower_highs = self._find_lower_highs_arrays(high, start, i, self.min_highs)
+            if len(lower_highs) < self.min_highs:
+                continue
+            higher_lows = self._find_higher_lows_arrays(low, start, i, self.min_lows)
+            if len(higher_lows) < self.min_lows:
+                continue
+
+            upper_slope = self._calculate_trendline_slope(lower_highs)
+            lower_slope = self._calculate_trendline_slope(higher_lows)
+            if upper_slope >= 0.0 or lower_slope <= 0.0:
+                continue
+
+            upper_trendline = lower_highs[-1][1]
+            lower_trendline = higher_lows[-1][1]
+            curr_close = float(close[i])
+            if curr_close > upper_trendline:
+                signals[i] = 1
+            elif curr_close < lower_trendline:
+                signals[i] = -1
+
+        return signals
+
+    @staticmethod
+    def _find_lower_highs_arrays(high_arr: np.ndarray, start: int, i: int, min_highs: int) -> list:
+        highs: list = []
+        for j in range(start + 2, i + 1):
+            pv = float(high_arr[j - 1])
+            cv = float(high_arr[j])
+            nv = float(high_arr[j + 1]) if j + 1 <= i else cv
+            if cv > pv and cv > nv:
+                highs.append((j, cv))
+        if len(highs) < min_highs:
+            return []
+        lower_highs: list = []
+        for k in range(len(highs) - 1, 0, -1):
+            if highs[k][1] < highs[k - 1][1]:
+                if not lower_highs:
+                    lower_highs.insert(0, highs[k])
+                lower_highs.insert(0, highs[k - 1])
+            else:
+                break
+        return lower_highs if len(lower_highs) >= min_highs else []
+
+    @staticmethod
+    def _find_higher_lows_arrays(low_arr: np.ndarray, start: int, i: int, min_lows: int) -> list:
+        lows: list = []
+        for j in range(start + 2, i + 1):
+            pv = float(low_arr[j - 1])
+            cv = float(low_arr[j])
+            nv = float(low_arr[j + 1]) if j + 1 <= i else cv
+            if cv < pv and cv < nv:
+                lows.append((j, cv))
+        if len(lows) < min_lows:
+            return []
+        higher_lows: list = []
+        for k in range(len(lows) - 1, 0, -1):
+            if lows[k][1] > lows[k - 1][1]:
+                if not higher_lows:
+                    higher_lows.insert(0, lows[k])
+                higher_lows.insert(0, lows[k - 1])
+            else:
+                break
+        return higher_lows if len(higher_lows) >= min_lows else []
+
     def _find_lower_highs(
         self, df: pd.DataFrame, i: int, lookback: int = 30
     ) -> List[Tuple[int, float]]:
@@ -180,7 +258,11 @@ class SymmetricTriangle(BasePattern):
         sum_xy = np.sum(x * y)
         sum_x2 = np.sum(x**2)
 
-        slope = (n * sum_xy - sum_x * sum_y) / (n * sum_x2 - sum_x**2)
+        denominator = n * sum_x2 - sum_x**2
+        if denominator == 0:
+            return 0.0
+
+        slope = (n * sum_xy - sum_x * sum_y) / denominator
 
         return float(slope)
 

@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import logging
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 import pandas as pd
@@ -55,11 +55,17 @@ class RegimeClassifier:
         >>> predictions = classifier.predict(new_features)
     """
 
-    SUPPORTED_MODELS = ["random_forest", "gradient_boosting", "logistic_regression", "lightgbm"]
+    SUPPORTED_MODELS = [
+        "random_forest",
+        "gradient_boosting",
+        "logistic_regression",
+        "lightgbm",
+        "catboost",
+    ]
 
     def __init__(
         self,
-        model_type: str = "random_forest",
+        model_type: str = "catboost",
         n_estimators: int = 100,
         max_depth: Optional[int] = 3,
         random_state: int = 42,
@@ -70,7 +76,7 @@ class RegimeClassifier:
         Initialize regime classifier.
 
         Args:
-            model_type: Type of classifier ("random_forest", "gradient_boosting", "logistic_regression", "lightgbm")
+            model_type: Type of classifier ("random_forest", "gradient_boosting", "logistic_regression", "lightgbm", "catboost")
             n_estimators: Number of trees (for tree-based models)
             max_depth: Maximum tree depth (reduced from 5 to 3 to prevent overfitting)
             random_state: Random seed for reproducibility
@@ -97,7 +103,20 @@ class RegimeClassifier:
         from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
         from sklearn.linear_model import LogisticRegression
 
-        if self.model_type == "random_forest":
+        if self.model_type == "catboost":
+            from catboost import CatBoostClassifier
+
+            return CatBoostClassifier(
+                iterations=self.n_estimators,
+                depth=self.max_depth if self.max_depth else 6,
+                learning_rate=0.03,
+                l2_leaf_reg=3.0,
+                random_seed=self.random_state,
+                verbose=False,
+                loss_function="MultiClass",
+                auto_class_weights="Balanced",
+            )
+        elif self.model_type == "random_forest":
             return RandomForestClassifier(
                 n_estimators=self.n_estimators,
                 max_depth=self.max_depth,
@@ -116,6 +135,7 @@ class RegimeClassifier:
             )
         elif self.model_type == "lightgbm":
             import lightgbm as lgb
+
             return lgb.LGBMClassifier(
                 n_estimators=self.n_estimators,
                 max_depth=self.max_depth if self.max_depth else -1,
@@ -139,6 +159,7 @@ class RegimeClassifier:
         X: pd.DataFrame,
         y: pd.Series,
         test_size: float = 0.2,
+        purge_window: int = 5,
     ) -> Dict[str, Any]:
         """
         Train the classifier on features and labels.
@@ -147,6 +168,9 @@ class RegimeClassifier:
             X: Feature DataFrame
             y: Labels series (regime names)
             test_size: Fraction of data for testing
+            purge_window: Number of training samples at the split boundary
+                to exclude from training (prevents label overlap leakage).
+                Set to match the forward-return horizon used for labels.
 
         Returns:
             Dict with train/test scores and feature importance
@@ -158,9 +182,10 @@ class RegimeClassifier:
         y_clean = y[valid_mask]
 
         split_idx = int(len(X_clean) * (1 - test_size))
-        X_train = X_clean.iloc[:split_idx]
+        train_end = max(0, split_idx - purge_window)
+        X_train = X_clean.iloc[:train_end]
         X_test = X_clean.iloc[split_idx:]
-        y_train = y_clean.iloc[:split_idx]
+        y_train = y_clean.iloc[:train_end]
         y_test = y_clean.iloc[split_idx:]
 
         self.model = self._create_model()
@@ -169,13 +194,21 @@ class RegimeClassifier:
         self.classes_ = list(self.model.classes_)
 
         train_pred = self.model.predict(X_train)
-        test_pred = self.model.predict(X_test)
+
+        if len(X_test) > 0:
+            test_pred = self.model.predict(X_test)
+            test_accuracy = accuracy_score(y_test, test_pred)
+            test_report = classification_report(y_test, test_pred, output_dict=True)
+        else:
+            test_pred = None
+            test_accuracy = None
+            test_report = {}
 
         results = {
             "train_accuracy": accuracy_score(y_train, train_pred),
-            "test_accuracy": accuracy_score(y_test, test_pred),
+            "test_accuracy": test_accuracy,
             "train_report": classification_report(y_train, train_pred, output_dict=True),
-            "test_report": classification_report(y_test, test_pred, output_dict=True),
+            "test_report": test_report,
             "n_train": len(X_train),
             "n_test": len(X_test),
         }
@@ -286,17 +319,21 @@ class RegimeClassifier:
         y_clean = y_clean.loc[idx]
 
         result = permutation_importance(
-            self.model, X_clean, y_clean,
+            self.model,
+            X_clean,
+            y_clean,
             n_repeats=n_repeats,
             random_state=self.random_state,
             scoring=scoring,
         )
 
-        return pd.DataFrame({
-            "feature": self.feature_names_,
-            "importance_mean": result.importances_mean,
-            "importance_std": result.importances_std,
-        }).sort_values("importance_mean", ascending=False)
+        return pd.DataFrame(
+            {
+                "feature": self.feature_names_,
+                "importance_mean": result.importances_mean,
+                "importance_std": result.importances_std,
+            }
+        ).sort_values("importance_mean", ascending=False)
 
     def compute_shap_values(
         self,
@@ -343,10 +380,12 @@ class RegimeClassifier:
             if mean_abs_shap.ndim > 1:
                 mean_abs_shap = mean_abs_shap.sum(axis=1)
 
-            importance_df = pd.DataFrame({
-                "feature": self.feature_names_[:len(mean_abs_shap)],
-                "mean_abs_shap": mean_abs_shap,
-            }).sort_values("mean_abs_shap", ascending=False)
+            importance_df = pd.DataFrame(
+                {
+                    "feature": self.feature_names_[: len(mean_abs_shap)],
+                    "mean_abs_shap": mean_abs_shap,
+                }
+            ).sort_values("mean_abs_shap", ascending=False)
 
             return importance_df, shap_vals
 
@@ -392,12 +431,14 @@ class RegimeClassifier:
 
             hit = compute_hit_rate(pred.values, forward_returns.values)
 
-            results.append({
-                "regime": cls_name,
-                "rank_ic": ic_df["rank_ic"].iloc[0] if not ic_df.empty else np.nan,
-                "ic": pearson_df["ic"].iloc[0] if not pearson_df.empty else np.nan,
-                "hit_rate": hit,
-            })
+            results.append(
+                {
+                    "regime": cls_name,
+                    "rank_ic": ic_df["rank_ic"].iloc[0] if not ic_df.empty else np.nan,
+                    "ic": pearson_df["ic"].iloc[0] if not pearson_df.empty else np.nan,
+                    "hit_rate": hit,
+                }
+            )
 
         return pd.DataFrame(results).sort_values("rank_ic", key=abs, ascending=False)
 
@@ -429,7 +470,7 @@ class RegimeClassifier:
         Returns:
             Dict with mean/std metrics per fold, overfit gap, feature importance.
         """
-        from sklearn.metrics import accuracy_score, classification_report
+        from sklearn.metrics import accuracy_score
         from src.ml.purged_cv import PurgedKFold
         from src.ml.metrics import compute_rank_ic, compute_hit_rate
 
@@ -479,21 +520,33 @@ class RegimeClassifier:
                 "n_test": len(y_test),
                 "train_accuracy": train_acc,
                 "test_accuracy": test_acc,
-                "train_start": str(train_idx[0]) if hasattr(train_idx[0], "strftime") else str(train_idx[0]),
-                "train_end": str(train_idx[-1]) if hasattr(train_idx[-1], "strftime") else str(train_idx[-1]),
-                "test_start": str(test_idx[0]) if hasattr(test_idx[0], "strftime") else str(test_idx[0]),
-                "test_end": str(test_idx[-1]) if hasattr(test_idx[-1], "strftime") else str(test_idx[-1]),
+                "train_start": str(train_idx[0])
+                if hasattr(train_idx[0], "strftime")
+                else str(train_idx[0]),
+                "train_end": str(train_idx[-1])
+                if hasattr(train_idx[-1], "strftime")
+                else str(train_idx[-1]),
+                "test_start": str(test_idx[0])
+                if hasattr(test_idx[0], "strftime")
+                else str(test_idx[0]),
+                "test_end": str(test_idx[-1])
+                if hasattr(test_idx[-1], "strftime")
+                else str(test_idx[-1]),
             }
 
             if forward_returns is not None and len(test_idx) > 0:
-                trending_idx = list(model.classes_).index("Trending") if "Trending" in model.classes_ else 0
+                trending_idx = (
+                    list(model.classes_).index("Trending") if "Trending" in model.classes_ else 0
+                )
                 test_proba_trending = pd.Series(test_proba[:, trending_idx], index=X_test.index)
                 ic_df = compute_rank_ic(test_proba_trending, forward_returns)
                 if not ic_df.empty:
                     fold_record["test_rank_ic"] = ic_df["rank_ic"].iloc[0]
                     test_ic.append(ic_df["rank_ic"].iloc[0])
 
-                hit = compute_hit_rate(test_proba_trending.values, forward_returns.loc[X_test.index].values)
+                hit = compute_hit_rate(
+                    test_proba_trending.values, forward_returns.loc[X_test.index].values
+                )
                 fold_record["test_hit_rate"] = hit
 
             fold_results.append(fold_record)
@@ -504,7 +557,11 @@ class RegimeClassifier:
                     train_metrics={"accuracy": train_acc},
                     test_metrics={
                         "accuracy": test_acc,
-                        **({"rank_ic": fold_record.get("test_rank_ic", 0)} if "test_rank_ic" in fold_record else {}),
+                        **(
+                            {"rank_ic": fold_record.get("test_rank_ic", 0)}
+                            if "test_rank_ic" in fold_record
+                            else {}
+                        ),
                     },
                     n_train=len(y_train),
                     n_test=len(y_test),
@@ -523,7 +580,9 @@ class RegimeClassifier:
             "std_train_accuracy": float(np.std(train_scores)) if train_scores else 0,
             "mean_test_accuracy": float(np.mean(test_scores)) if test_scores else 0,
             "std_test_accuracy": float(np.std(test_scores)) if test_scores else 0,
-            "overfit_gap": float(np.mean(train_scores) - np.mean(test_scores)) if train_scores and test_scores else 0,
+            "overfit_gap": float(np.mean(train_scores) - np.mean(test_scores))
+            if train_scores and test_scores
+            else 0,
             "n_folds": len(fold_results),
             "fold_details": fold_results,
         }
@@ -536,7 +595,8 @@ class RegimeClassifier:
             results["feature_importance"] = dict(
                 sorted(
                     zip(self.feature_names_, self.model.feature_importances_),
-                    key=lambda x: x[1], reverse=True,
+                    key=lambda x: x[1],
+                    reverse=True,
                 )[:20]
             )
 
@@ -548,7 +608,11 @@ class RegimeClassifier:
                     "max_depth": self.max_depth,
                 },
                 features=self.feature_names_,
-                cv_params={"n_splits": n_splits, "pct_embargo": pct_embargo, "label_span": label_span},
+                cv_params={
+                    "n_splits": n_splits,
+                    "pct_embargo": pct_embargo,
+                    "label_span": label_span,
+                },
             )
             experiment_logger.log_feature_importance(
                 mdi=results.get("feature_importance", {}),
@@ -656,17 +720,21 @@ class RegimeClassifier:
                 continue
 
             clf = RegimeClassifier(model_type=mt)
-            result = clf.train_with_purged_cv(X, y, forward_returns=forward_returns, n_splits=n_splits)
+            result = clf.train_with_purged_cv(
+                X, y, forward_returns=forward_returns, n_splits=n_splits
+            )
 
             if "error" not in result:
-                results.append({
-                    "model": mt,
-                    "mean_test_accuracy": result.get("mean_test_accuracy", 0),
-                    "std_test_accuracy": result.get("std_test_accuracy", 0),
-                    "mean_test_rank_ic": result.get("mean_test_rank_ic", 0),
-                    "overfit_gap": result.get("overfit_gap", 0),
-                    "n_folds": result.get("n_folds", 0),
-                })
+                results.append(
+                    {
+                        "model": mt,
+                        "mean_test_accuracy": result.get("mean_test_accuracy", 0),
+                        "std_test_accuracy": result.get("std_test_accuracy", 0),
+                        "mean_test_rank_ic": result.get("mean_test_rank_ic", 0),
+                        "overfit_gap": result.get("overfit_gap", 0),
+                        "n_folds": result.get("n_folds", 0),
+                    }
+                )
 
         if not results:
             return pd.DataFrame()

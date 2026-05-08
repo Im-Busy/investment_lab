@@ -55,6 +55,16 @@ def sma_numba(values: np.ndarray, period: int) -> np.ndarray:
     if n < period:
         return result
 
+    # Calculate SMA using cumulative sum for efficiency
+    cs = np.cumsum(values)
+    for i in range(period - 1, n):
+        if i == period - 1:
+            result[i] = cs[i] / period
+        else:
+            result[i] = (cs[i] - cs[i - period]) / period
+
+    return result
+
     # Calculate first SMA value
     total = 0.0
     for i in range(period):
@@ -63,7 +73,9 @@ def sma_numba(values: np.ndarray, period: int) -> np.ndarray:
 
     # Calculate remaining values using rolling window
     for i in range(period, n):
-        total = total - values[i - period] + values[i]
+        v_cur = values[i]
+        v_old = values[i - period]
+        total = total - v_old + v_cur
         result[i] = total / period
 
     return result

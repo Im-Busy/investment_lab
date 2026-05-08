@@ -2,14 +2,14 @@
 type: phase
 phase: "06"
 name: "Research-Based Enhancements"
-status: active
+status: complete
 started: 2026-04-26
-completed: null
+completed: 2026-05-01
 sub_phases:
   - name: "Tier 1: High Impact, Low Complexity"
-    status: active
+    status: complete
   - name: "Tier 2: High Impact, Medium Complexity"
-    status: pending
+    status: complete
 source: "useful_resources/papers_md/research_synthesis_report.md"
 ---
 
@@ -25,10 +25,10 @@ Tier 1 items are high impact + low complexity. Tier 2 are high impact + medium c
 | # | Item | File | Status | Notes |
 |---|------|------|--------|-------|
 | R1 | Turnover Penalty | `src/risk/turnover_penalty.py` | ✅ Done | OOM-RL: 6700% turnover destroys alpha |
-| R2 | Per-Position Risk Model | `src/risk/position_probability.py` | ⏳ Pending | Jorion BET: per-position probability > aggregate VaR |
+| R2 | Per-Position Risk Model | `src/risk/position_probability.py` | ✅ Done | Jorion BET: per-position probability > aggregate VaR |
 | R3 | Circuit Breakers | `src/risk/circuit_breakers.py` | ✅ Done | Portfolio-level 20% max DD halt |
-| R4 | Regime Declaration per Strategy | `src/patterns/base.py` | ⏳ Pending | Tag patterns with preferred/incompatible regimes |
-| R5 | Dynamic Rebalancing | `src/backtest/engine.py` | ⏳ Pending | Signal decay vs transaction cost tradeoff |
+| R4 | Regime Declaration per Strategy | `src/patterns/base.py` + `engine.py` | ✅ Done | DEFAULT_REGIME_MAPPING + `_apply_regime_gating()` |
+| R5 | Dynamic Rebalancing | `src/risk/dynamic_rebalancing.py` | ✅ Done | Signal decay vs transaction cost tradeoff |
 
 ### Completed Tier 1 Details
 
@@ -37,14 +37,25 @@ Tier 1 items are high impact + low complexity. Tier 2 are high impact + medium c
 - Threshold: 2000% annualized turnover
 - Integrates with engine.py signal confidence
 
+**R2: Per-Position Risk Model**
+- `PositionRiskModel` class using Jorion's binomial outcome model
+- `estimate_success_prob()` with regime-adjusted base probability
+- Kelly Criterion position sizing, batch risk estimation
+- Integrated via `_apply_position_probability()` in BacktestEngine
+
 **R3: Circuit Breakers**
 - `CircuitBreaker` class: 20% max DD, 20-bar cooldown
 - Portfolio-wide halt mechanism for cascade failure prevention
 
-### Pending Tier 1 Tasks
-1. R2: Create `src/risk/position_probability.py` — binomial outcome model per position
-2. R4: Update `BasePattern` with `preferred_regimes` and `incompatible_regimes` fields
-3. R5: Add `estimate_optimal_frequency()` to `BacktestEngine`
+**R4: Regime Declaration per Strategy**
+- `DEFAULT_REGIME_MAPPING` in `src/patterns/base.py` — auto-assigns preferred/incompatible regimes by PatternType
+- `BasePattern.__post_init__()` auto-populates from type defaults if not explicitly set
+- `is_regime_compatible()` and `get_regime_preference()` support cross-namespace enum compatibility
+- `_apply_regime_gating()` in BacktestEngine filters signals by regime compatibility, adjusts confidence by preference score
+
+**R5: Dynamic Rebalancing**
+- `DynamicRebalancer` class with `estimate_optimal_frequency()` (signal_decay/tx_cost ratio)
+- Integrated via `should_rebalance()` in BacktestEngine.run() main loop
 
 ## Tier 2: Implement Second
 

@@ -64,10 +64,10 @@ class Engulfing(BasePattern):
 
     def _get_candle_data(self, df: pd.DataFrame, i: int) -> Tuple[float, float, float, float]:
         """Get OHLC values for a candle."""
-        open_price = float(df['Open'].iloc[i])
-        high = float(df['High'].iloc[i])
-        low = float(df['Low'].iloc[i])
-        close = float(df['Close'].iloc[i])
+        open_price = float(df["Open"].iloc[i])
+        high = float(df["High"].iloc[i])
+        low = float(df["Low"].iloc[i])
+        close = float(df["Close"].iloc[i])
         return open_price, high, low, close
 
     def _analyze_candle(
@@ -85,27 +85,27 @@ class Engulfing(BasePattern):
         body_low = min(open_price, close)
 
         return {
-            'body': body,
-            'range': total_range,
-            'is_bullish': is_bullish,
-            'body_high': body_high,
-            'body_low': body_low,
-            'open': open_price,
-            'high': high,
-            'low': low,
-            'close': close,
+            "body": body,
+            "range": total_range,
+            "is_bullish": is_bullish,
+            "body_high": body_high,
+            "body_low": body_low,
+            "open": open_price,
+            "high": high,
+            "low": low,
+            "close": close,
         }
 
     def _get_trend_direction(self, df: pd.DataFrame, i: int) -> str:
         """Determine the prior trend direction."""
         if i < self.trend_lookback + 1:
-            return 'sideways'
+            return "sideways"
 
         start_idx = i - self.trend_lookback - 1
-        closes = np.asarray(df['Close'].iloc[start_idx:i].values, dtype=np.float64)
+        closes = np.asarray(df["Close"].iloc[start_idx:i].values, dtype=np.float64)
 
         if len(closes) < 2:
-            return 'sideways'
+            return "sideways"
 
         x = np.arange(len(closes))
         slope = float(np.polyfit(x, closes, 1)[0])
@@ -114,11 +114,11 @@ class Engulfing(BasePattern):
         normalized_slope = slope / avg_price if avg_price > 0 else 0
 
         if normalized_slope > 0.001:
-            return 'up'
+            return "up"
         elif normalized_slope < -0.001:
-            return 'down'
+            return "down"
         else:
-            return 'sideways'
+            return "sideways"
 
     def _detect_engulfing(
         self,
@@ -136,34 +136,34 @@ class Engulfing(BasePattern):
             Tuple of (is_engulfing, engulfing_type, direction)
         """
         # Candle 2 must have substantial body
-        if candle2['range'] == 0 or candle2['body'] / candle2['range'] < self.body_threshold:
+        if candle2["range"] == 0 or candle2["body"] / candle2["range"] < self.body_threshold:
             return False, None, None
 
         # Candle 2 body must be larger than Candle 1 body
-        if candle1['body'] == 0:
+        if candle1["body"] == 0:
             # First candle is a doji - still valid engulfing
             pass
-        elif candle2['body'] < candle1['body'] * self.min_engulf_ratio:
+        elif candle2["body"] < candle1["body"] * self.min_engulf_ratio:
             return False, None, None
 
         # Candles must be opposite colors
-        if candle1['is_bullish'] == candle2['is_bullish']:
+        if candle1["is_bullish"] == candle2["is_bullish"]:
             return False, None, None
 
         # Candle 2 must engulf Candle 1 body
         # Engulfing means: candle2 body completely contains candle1 body
-        if candle2['body_high'] <= candle1['body_high']:
+        if candle2["body_high"] <= candle1["body_high"]:
             return False, None, None
-        if candle2['body_low'] >= candle1['body_low']:
+        if candle2["body_low"] >= candle1["body_low"]:
             return False, None, None
 
         # Determine type
-        if candle2['is_bullish']:
+        if candle2["is_bullish"]:
             # Bearish candle engulfed by bullish candle = Bullish Engulfing
-            return True, 'bullish_engulfing', SignalDirection.LONG
+            return True, "bullish_engulfing", SignalDirection.LONG
         else:
             # Bullish candle engulfed by bearish candle = Bearish Engulfing
-            return True, 'bearish_engulfing', SignalDirection.SHORT
+            return True, "bearish_engulfing", SignalDirection.SHORT
 
     def _check_confirmation(
         self,
@@ -176,24 +176,76 @@ class Engulfing(BasePattern):
         if i >= len(df) - 1:
             return False
 
-        next_close = float(df['Close'].iloc[i + 1])
+        next_close = float(df["Close"].iloc[i + 1])
 
         if direction == SignalDirection.LONG:
-            return next_close > candle2['close']
+            return next_close > candle2["close"]
         else:
-            return next_close < candle2['close']
+            return next_close < candle2["close"]
 
     def _check_volume_spike(self, df: pd.DataFrame, i: int, threshold: float = 1.5) -> bool:
         """Check if volume is above average."""
-        if 'Volume' not in df.columns or i < 20:
+        if "Volume" not in df.columns or i < 20:
             return False
 
-        avg_volume = df['Volume'].iloc[i - 20:i].mean()
+        avg_volume = df["Volume"].iloc[i - 20 : i].mean()
         if avg_volume == 0:
             return False
 
-        current_volume = float(df['Volume'].iloc[i])
+        current_volume = float(df["Volume"].iloc[i])
         return bool(current_volume > avg_volume * threshold)
+
+    def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Vectorized detection of Engulfing signals across the entire DataFrame.
+
+        Args:
+            df: DataFrame with 'Open', 'High', 'Low', 'Close' columns
+
+        Returns:
+            np.ndarray of np.int8: 0=no signal, 1=LONG, -1=SHORT
+        """
+        n = len(df)
+        result = np.zeros(n, dtype=np.int8)
+        if n < 3:
+            return result
+
+        open_a = df["Open"].to_numpy(dtype=np.float64)
+        high_a = df["High"].to_numpy(dtype=np.float64)
+        low_a = df["Low"].to_numpy(dtype=np.float64)
+        close_a = df["Close"].to_numpy(dtype=np.float64)
+
+        body_a = np.abs(close_a - open_a)
+        range_a = high_a - low_a
+        is_bullish_a = close_a > open_a
+        body_high_a = np.maximum(open_a, close_a)
+        body_low_a = np.minimum(open_a, close_a)
+
+        for i in range(2, n):
+            c1_body = body_a[i - 1]
+            c2_body = body_a[i]
+            c2_range = range_a[i]
+
+            if c2_range == 0 or c2_body / c2_range < self.body_threshold:
+                continue
+
+            if c1_body > 0 and c2_body < c1_body * self.min_engulf_ratio:
+                continue
+
+            if is_bullish_a[i - 1] == is_bullish_a[i]:
+                continue
+
+            if body_high_a[i] <= body_high_a[i - 1]:
+                continue
+            if body_low_a[i] >= body_low_a[i - 1]:
+                continue
+
+            if is_bullish_a[i]:
+                result[i] = 1
+            else:
+                result[i] = -1
+
+        return result
 
     def detect(
         self,
@@ -212,6 +264,11 @@ class Engulfing(BasePattern):
         Returns:
             PatternResult with detection status and any signal
         """
+        if not self._validate_data(df, i, window_start):
+            return PatternResult(
+                detected=False, pattern_name=self.name, pattern_type=self.pattern_type
+            )
+
         if i < 2 or i >= len(df):
             return PatternResult(
                 detected=False,
@@ -254,14 +311,14 @@ class Engulfing(BasePattern):
         confidence = 0.65  # Higher base confidence for Engulfing
 
         # Increase confidence if in correct trend context
-        if engulfing_type == 'bullish_engulfing' and trend == 'down':
+        if engulfing_type == "bullish_engulfing" and trend == "down":
             confidence = 0.70
-        elif engulfing_type == 'bearish_engulfing' and trend == 'up':
+        elif engulfing_type == "bearish_engulfing" and trend == "up":
             confidence = 0.70
 
         # Increase confidence with larger engulfing body
-        if candle1['body'] > 0:
-            engulf_ratio = candle2['body'] / candle1['body']
+        if candle1["body"] > 0:
+            engulf_ratio = candle2["body"] / candle1["body"]
             if engulf_ratio > 2.0:
                 confidence = min(confidence + 0.05, 0.80)
 
@@ -285,17 +342,17 @@ class Engulfing(BasePattern):
         # Calculate entry, stop, and target
         atr = self._calculate_atr(df, i)
         if atr is None or atr <= 0:
-            atr = candle2['range'] * 0.5
+            atr = candle2["range"] * 0.5
 
         if direction == SignalDirection.LONG:
-            entry_price = candle2['close']  # Entry on close of engulfing candle
-            stop_loss = min(candle1['low'], candle2['low']) - atr * 0.25
+            entry_price = candle2["close"]  # Entry on close of engulfing candle
+            stop_loss = min(candle1["low"], candle2["low"]) - atr * 0.25
             take_profit_1 = entry_price + atr * 1.5
             take_profit_2 = entry_price + atr * 2.5
             take_profit_3 = entry_price + atr * 4.0
         else:  # SHORT
-            entry_price = candle2['close']  # Entry on close of engulfing candle
-            stop_loss = max(candle1['high'], candle2['high']) + atr * 0.25
+            entry_price = candle2["close"]  # Entry on close of engulfing candle
+            stop_loss = max(candle1["high"], candle2["high"]) + atr * 0.25
             take_profit_1 = entry_price - atr * 1.5
             take_profit_2 = entry_price - atr * 2.5
             take_profit_3 = entry_price - atr * 4.0
@@ -324,11 +381,11 @@ class Engulfing(BasePattern):
     def generate_signal(self, df: pd.DataFrame, i: int) -> Optional[TradeSignal]:
         """
         Generate trade signal for Engulfing pattern.
-        
+
         Args:
             df: DataFrame with OHLC data
             i: Current bar index
-            
+
         Returns:
             TradeSignal if confirmed pattern, None otherwise
         """
@@ -341,9 +398,9 @@ class Engulfing(BasePattern):
             return None
 
         try:
-            high = df['High'].iloc[i - period:i + 1].values
-            low = df['Low'].iloc[i - period:i + 1].values
-            close = df['Close'].iloc[i - period - 1:i].values
+            high = df["High"].iloc[i - period : i + 1].values
+            low = df["Low"].iloc[i - period : i + 1].values
+            close = df["Close"].iloc[i - period - 1 : i].values
 
             tr_list = []
             for j in range(len(high)):

@@ -20,13 +20,13 @@ Example:
 
 from __future__ import annotations
 
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, Optional
 
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
-from src.ml.regime_base import RegimeDetectorBase, RegimeSummary, RegimeType
+from src.ml.regime_base import RegimeDetectorBase, RegimeSummary
 
 
 class HMMRegimeDetector(RegimeDetectorBase):

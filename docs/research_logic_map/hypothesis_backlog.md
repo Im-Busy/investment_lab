@@ -1,7 +1,7 @@
 # Hypothesis Backlog
 
-**Last Updated:** 2026-04-25  
-**Total Hypotheses:** 12  
+**Last Updated:** 2026-04-25
+**Total Hypotheses:** 12
 **Ready for Testing:** 8
 
 ---
@@ -22,7 +22,7 @@ Each hypothesis includes:
 
 - **Statement:** Weighting signals by event-type (vs. equal weight) improves Sharpe by ≥15%
 - **Source:** P6 (Event-Based Trading: IE Tools) — "Event-type signals outperform aggregated sentiment"
-- **Experiment:** 
+- **Experiment:**
   1. Tag all 34 patterns with event-type taxonomy (continuation, reversal, breakout, indecision)
   2. Backtest equal-weight vs. event-type-weight aggregation on SPY 2020-2025
   3. Compare Sharpe, win rate, max drawdown
@@ -49,7 +49,7 @@ Each hypothesis includes:
 
 - **Statement:** Pre-trade failure-set validation (time-reversal, counter-trend, fat-tail) reduces max drawdown by ≥20%
 - **Source:** P4 (Against Universal Trading) — "Every strategy has a mapped failure set"
-- **Experiment:** 
+- **Experiment:**
   1. Build failure-set analyzers for top 5 strategies
   2. Backtest with/without validation on 2008, 2020 stress periods
   3. Measure MDD, tail loss, recovery time
@@ -64,7 +64,7 @@ Each hypothesis includes:
 
 - **Statement:** Sizing positions by diversity-adjusted capital (BET formula) improves portfolio Sharpe by ≥10%
 - **Source:** P3 (Jorion) — "ρ=0.03 correlation → 6x economic capital reduction"
-- **Experiment:** 
+- **Experiment:**
   1. Calculate pattern signal correlation matrix
   2. Compute diversity score using BET formula
   3. Backtest equal-weight vs. diversity-weighted sizing
@@ -79,7 +79,7 @@ Each hypothesis includes:
 
 - **Statement:** Filtering trades by crash probability (top 10% excluded) reduces 99th percentile loss by ≥25%
 - **Source:** P13 (Crash-Based Strategies) — CMRS quintiles show monotonic risk pattern
-- **Experiment:** 
+- **Experiment:**
   1. Implement crash factor logistic model (10 features from P13)
   2. Backtest strategy with/without crash filter
   3. Compare tail metrics (99th %ile loss, skewness, kurtosis)
@@ -106,7 +106,7 @@ Each hypothesis includes:
 
 - **Statement:** Strategies with friction drag >50 bps annualized underperform by ≥1.0 Sharpe
 - **Source:** P1 — "0.08% slippage × 6700% turnover = alpha destruction"
-- **Experiment:** 
+- **Experiment:**
   1. Calculate friction drag for 20 strategies
   2. Sort into friction quartiles
   3. Compare net Sharpe vs. gross Sharpe across quartiles
@@ -121,7 +121,7 @@ Each hypothesis includes:
 
 - **Statement:** Regime-filtered strategy selection (ADX-based) improves Sharpe by ≥0.3 vs. always-on
 - **Source:** P4, P8 — "Regime declaration mandatory"
-- **Experiment:** 
+- **Experiment:**
   1. Classify bars into Trending/Ranging/Volatile regimes
   2. Enable/disable strategies per regime mapping
   3. Compare vs. always-on baseline
@@ -136,7 +136,7 @@ Each hypothesis includes:
 
 - **Statement:** Divergence-in-bits metric better predicts OOS performance than Sharpe ratio
 - **Source:** P2 (Investing Is Compression) — "D_KL(W*\|W) is unit-independent strategy comparison metric"
-- **Experiment:** 
+- **Experiment:**
   1. Implement KL divergence estimator for strategy weight distributions
   2. Compute divergence-in-bits for 20 strategies
   3. Correlate with OOS Sharpe degradation
@@ -163,7 +163,7 @@ Each hypothesis includes:
 
 - **Statement:** Monitoring rolling Sharpe (60-day) and retiring strategies below threshold reduces MDD by ≥15%
 - **Source:** P4 — "As capital follows, market becomes adversarial to your logic"
-- **Experiment:** 
+- **Experiment:**
   1. Implement rolling Sharpe, win rate, capacity monitoring
   2. Set retirement thresholds (Sharpe < 0.5 for 60 days)
   3. Backtest with/without retirement logic
@@ -178,7 +178,7 @@ Each hypothesis includes:
 
 - **Statement:** Adding cointegration-based pairs trading (8th pattern category) improves portfolio Sharpe by ≥0.2
 - **Source:** P5 — "Cointegration + ML hybrid approaches dominate pure methods"
-- **Experiment:** 
+- **Experiment:**
   1. Implement cointegration pair screening (Engle-Granger, Johansen)
   2. Add ML spread predictor (XGBoost/LSTM)
   3. Backtest as overlay to existing 34 patterns

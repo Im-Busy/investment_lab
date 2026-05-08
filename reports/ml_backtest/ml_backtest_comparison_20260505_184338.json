@@ -1,0 +1,50 @@
+{
+  "baseline_metrics": {
+    "total_return": 57.431105553177275,
+    "annualized_return": 11.513634526173965,
+    "sharpe_ratio": 3.945671457533377,
+    "max_drawdown": 18.5029571540748,
+    "win_rate": 69.6969696969697,
+    "profit_factor": 1.773530519933664,
+    "total_trades": 66,
+    "avg_trade_return": 0.871912090137507
+  },
+  "ml_metrics": {
+    "total_return": -16.449322309332818,
+    "annualized_return": -3.2977161670261497,
+    "sharpe_ratio": -1.9383107861861957,
+    "max_drawdown": 37.75709687033429,
+    "win_rate": 50.0,
+    "profit_factor": 0.7536869102252772,
+    "total_trades": 38,
+    "avg_trade_return": -0.4337443916605003
+  },
+  "uplift_metrics": {
+    "return_uplift": -73.88042786251009,
+    "sharpe_uplift": -5.883982243719572,
+    "win_rate_uplift": -19.696969696969703,
+    "drawdown_reduction": -19.254139716259488,
+    "profit_factor_uplift": -1.0198436097083867,
+    "trade_count_change": -28,
+    "avg_return_improvement": -1.3056564817980072
+  },
+  "pattern_analyses": [
+    {
+      "pattern": "all",
+      "baseline_trades": 66,
+      "ml_filtered_trades": 38,
+      "win_rate_improvement": -19.696969696969703,
+      "return_improvement": -1.3056564817980072
+    }
+  ],
+  "config": {
+    "symbol": "SPY",
+    "strategy": "VWAPBounceStrategy",
+    "start_date": "2020-01-02",
+    "end_date": "2024-12-30",
+    "n_bars": 1257,
+    "n_signals": 66,
+    "model_type": "catboost",
+    "probability_threshold": 0.55
+  }
+}

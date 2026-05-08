@@ -28,6 +28,7 @@ from .utils import get_device, to_numpy
 @dataclass
 class GPUAggregatedSignals:
     """Batch of aggregated signals across all bars."""
+
     direction: torch.Tensor  # [N] int8: -1, 0, 1
     confidence: torch.Tensor  # [N] float32
     entry_price: torch.Tensor
@@ -56,21 +57,23 @@ class GPUAggregatedSignals:
         records = []
         for i, d in enumerate(dir_np):
             if d != 0 and conf_np[i] > 0:
-                records.append({
-                    "date": df.index[i],
-                    "bar_index": i,
-                    "direction": "Long" if d > 0 else "Short",
-                    "confidence": conf_np[i],
-                    "entry_price": entry_np[i],
-                    "stop_loss": stop_np[i],
-                    "take_profit_1": tp1_np[i],
-                    "take_profit_2": tp2_np[i],
-                    "take_profit_3": tp3_np[i],
-                    "pattern_count": count_np[i],
-                    "dominant_event_count": to_numpy(self.dominant_event_count)[i],
-                    "event_weighted": event_np[i],
-                    "confluence_boost": boost_np[i],
-                })
+                records.append(
+                    {
+                        "date": df.index[i],
+                        "bar_index": i,
+                        "direction": "Long" if d > 0 else "Short",
+                        "confidence": conf_np[i],
+                        "entry_price": entry_np[i],
+                        "stop_loss": stop_np[i],
+                        "take_profit_1": tp1_np[i],
+                        "take_profit_2": tp2_np[i],
+                        "take_profit_3": tp3_np[i],
+                        "pattern_count": count_np[i],
+                        "dominant_event_count": to_numpy(self.dominant_event_count)[i],
+                        "event_weighted": event_np[i],
+                        "confluence_boost": boost_np[i],
+                    }
+                )
 
         return pd.DataFrame(records)
 
@@ -120,16 +123,26 @@ class GPUSignalAggregator:
         self._pattern_event_map = pattern_event_map or {}
 
         self._default_event_weights = {
-            "REVERSAL": 0.65, "BREAKOUT": 0.70, "CONTINUATION": 0.60,
-            "TREND_INITIATION": 0.75, "MEAN_REVERSION": 0.55,
-            "MOMENTUM": 0.65, "VOLATILITY": 0.50, "STRUCTURAL": 0.70,
+            "REVERSAL": 0.65,
+            "BREAKOUT": 0.70,
+            "CONTINUATION": 0.60,
+            "TREND_INITIATION": 0.75,
+            "MEAN_REVERSION": 0.55,
+            "MOMENTUM": 0.65,
+            "VOLATILITY": 0.50,
+            "STRUCTURAL": 0.70,
         }
         self._default_pattern_events = {
-            "MSL": "REVERSAL", "MSH": "REVERSAL",
-            "Doji": "REVERSAL", "Hammer": "REVERSAL",
-            "Engulfing": "REVERSAL", "Harami": "REVERSAL",
-            "DarkCloudCover": "REVERSAL", "TwoBarReversal": "REVERSAL",
-            "DonchianBreakout": "BREAKOUT", "Gap": "BREAKOUT",
+            "MSL": "REVERSAL",
+            "MSH": "REVERSAL",
+            "Doji": "REVERSAL",
+            "Hammer": "REVERSAL",
+            "Engulfing": "REVERSAL",
+            "Harami": "REVERSAL",
+            "DarkCloudCover": "REVERSAL",
+            "TwoBarReversal": "REVERSAL",
+            "DonchianBreakout": "BREAKOUT",
+            "Gap": "BREAKOUT",
             "NR7ID": "VOLATILITY",
         }
 
@@ -162,8 +175,12 @@ class GPUSignalAggregator:
             tp1_list.append(sb.take_profit_1)
             tp2 = sb.take_profit_2
             tp3 = sb.take_profit_3
-            tp2_list.append(tp2 if tp2 is not None else torch.zeros(self._n_bars, device=self.device))
-            tp3_list.append(tp3 if tp3 is not None else torch.zeros(self._n_bars, device=self.device))
+            tp2_list.append(
+                tp2 if tp2 is not None else torch.zeros(self._n_bars, device=self.device)
+            )
+            tp3_list.append(
+                tp3 if tp3 is not None else torch.zeros(self._n_bars, device=self.device)
+            )
 
         self._signal_matrix = torch.stack(signals_list, dim=1)  # [N, P]
         self._confidence_matrix = torch.stack(conf_list, dim=1)
@@ -177,7 +194,9 @@ class GPUSignalAggregator:
         """Build [P] tensor of event type base weights for each pattern."""
         weights = torch.zeros(len(self._pattern_names), device=self.device)
         for i, name in enumerate(self._pattern_names):
-            event = self._pattern_event_map.get(name) or self._default_pattern_events.get(name, "REVERSAL")
+            event = self._pattern_event_map.get(name) or self._default_pattern_events.get(
+                name, "REVERSAL"
+            )
             w = self._event_type_weights.get(event) or self._default_event_weights.get(event, 0.5)
             weights[i] = w
         return weights
@@ -187,7 +206,9 @@ class GPUSignalAggregator:
         event_types = list(self._default_event_weights.keys())
         indices = torch.zeros(len(self._pattern_names), dtype=torch.int32, device=self.device)
         for i, name in enumerate(self._pattern_names):
-            event = self._pattern_event_map.get(name) or self._default_pattern_events.get(name, "REVERSAL")
+            event = self._pattern_event_map.get(name) or self._default_pattern_events.get(
+                name, "REVERSAL"
+            )
             try:
                 indices[i] = event_types.index(event)
             except ValueError:
@@ -340,7 +361,9 @@ class GPUSignalAggregator:
 
             combined = d_s + d_c
             total_weight = d_c.sum(dim=1)
-            total_weight_safe = torch.where(total_weight > 0, total_weight, torch.ones_like(total_weight))
+            total_weight_safe = torch.where(
+                total_weight > 0, total_weight, torch.ones_like(total_weight)
+            )
 
             weighted_entry = (self.entry_matrix * d_c).sum(dim=1) / total_weight_safe
             weighted_tp1 = (self.tp1_matrix * d_c).sum(dim=1) / total_weight_safe
@@ -360,10 +383,14 @@ class GPUSignalAggregator:
 
             dir_sign = float(direction)
             if dir_sign > 0:
-                stop_combined = torch.where(d_mask, self.stop_matrix, torch.full_like(self.stop_matrix, float("inf")))
+                stop_combined = torch.where(
+                    d_mask, self.stop_matrix, torch.full_like(self.stop_matrix, float("inf"))
+                )
                 stop_vals = stop_combined.min(dim=1).values
             else:
-                stop_combined = torch.where(d_mask, self.stop_matrix, torch.full_like(self.stop_matrix, float("-inf")))
+                stop_combined = torch.where(
+                    d_mask, self.stop_matrix, torch.full_like(self.stop_matrix, float("-inf"))
+                )
                 stop_vals = stop_combined.max(dim=1).values
 
             base_conf = d_c.sum(dim=1) / total_weight_safe
@@ -442,9 +469,11 @@ class GPUSignalAggregator:
         )
 
         boost = torch.where(
-            max_same_event >= 3, torch.tensor(0.20, device=self.device),
+            max_same_event >= 3,
+            torch.tensor(0.20, device=self.device),
             torch.where(
-                max_same_event >= 2, torch.tensor(0.12, device=self.device),
+                max_same_event >= 2,
+                torch.tensor(0.12, device=self.device),
                 torch.zeros(n_bars, device=self.device),
             ),
         )

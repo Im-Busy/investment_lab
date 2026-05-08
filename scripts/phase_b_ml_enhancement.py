@@ -27,9 +27,8 @@ import yfinance as yf
 
 from src.ml.experiment_logger import ExperimentLogger
 from src.ml.feature_selector import FeatureSelector
-from src.ml.feature_store import FeatureStore
 from src.ml.features import FeatureEngineer
-from src.ml.metrics import compute_ic, compute_rank_ic, filter_features_by_ic, ic_summary
+from src.ml.metrics import filter_features_by_ic, ic_summary
 from src.ml.purged_cv import PurgedKFold
 from src.ml.regime_model import RegimeClassifier
 from src.ml.signal_scorer import SignalScorer

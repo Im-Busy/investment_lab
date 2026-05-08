@@ -100,6 +100,3 @@ set(CMAKE_CXX23_COMPILER_IMPORT_STD_NOT_FOUND_MESSAGE "Unsupported generator: Mi
 
 ### Imported target for C++26 standard library
 set(CMAKE_CXX26_COMPILER_IMPORT_STD_NOT_FOUND_MESSAGE "Unsupported generator: MinGW Makefiles")
-
-
-

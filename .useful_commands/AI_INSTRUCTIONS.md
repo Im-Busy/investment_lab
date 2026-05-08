@@ -18,7 +18,7 @@ When you complete tasks that involve running commands, scripts, or workflows:
 3. **Documentation Format**
    ```
    ## Category/Feature Name
-   
+
    # Description of what the command does
    actual-command-here
    ```
@@ -52,5 +52,5 @@ uv run scripts/train_ml_model.py --symbol SPY --model-type xgboost
 
 ---
 
-**Remember**: Future AI sessions and human developers will use these command references. 
+**Remember**: Future AI sessions and human developers will use these command references.
 Keep them current, accurate, and well-organized.

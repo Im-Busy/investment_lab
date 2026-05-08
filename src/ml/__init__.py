@@ -61,6 +61,68 @@ from src.ml.feature_engineering import FeatureExtractor, FeatureConfig
 from src.ml.feature_selector import FeatureSelector, SelectionResult
 from src.ml.ensemble_regime import EnsembleRegimeDetector, EnsembleStrategy
 from src.ml.cross_asset_features import CrossAssetFeatures, prepare_cross_asset_data
+from src.ml.triple_barrier import TripleBarrierLabeler, BarrierLabel
+from src.ml.combinatorial_purged_cv import CombinatorialPurgedCV
+from src.ml.gmm_regime import GMMRegimeDetector
+from src.ml.drawdown_target import DrawdownTargetGenerator
+from src.ml.frac_diff import FracDiff
+from src.ml.historical_analog import HistoricalAnalogMatcher, AnalogMatchSet, AnalogResult
+
+# Phase 3 — New Models (FS1, FS8, FS13, T5, T8)
+from src.ml.survival_analyzer import (
+    SurvivalAnalyzer,
+    SurvivalResult,
+    SurvivalTarget,
+    compare_survival_models,
+)
+from src.ml.volatility_forecaster import VolatilityForecaster, VolForecastResult
+from src.ml.breakout_classifier import BreakoutClassifier, BreakoutResult
+from src.ml.ensemble_models import (
+    EnsembleBuilder,
+    EnsembleResult,
+    EnsembleMethod,
+    TaskType,
+    BaseModelConfig,
+)
+from src.ml.shap_dashboard import (
+    SHAPDashboard,
+    PredictionExplanation,
+    GlobalImportance,
+    quick_shap_analysis,
+)
+
+# Phase 4 — Advanced Pipeline (FS7, FS9, FS10, FS12)
+from src.ml.change_point_regime import ChangePointRegimeDetector
+from src.ml.volume_profile_cluster import VolumeProfileCluster
+from src.ml.hdbscan_anomaly import HDBSCANAnomalyDetector
+from src.ml.cross_symbol_cluster import CrossSymbolCluster
+
+# Phase 6b — Pioneer Research (T9, FS19)
+from src.ml.meta_labeler import MetaLabeler, MetaLabelResult, MetaLabelPrediction
+from src.ml.gap_fill_predictor import (
+    GapFillPredictor,
+    GapFillPrediction,
+    GapFillTrainingResult,
+    GapDetection,
+)
+
+# Phase 4+ — Risk, Alpha Research & Ensemble (T6, QW2, RS1, RS2)
+from src.ml.stop_loss_optimizer import (
+    StopLossOptimizer,
+    StopLossRecommendation,
+    LabelGenerator,
+)
+from src.ml.ebm_alpha import (
+    EBMAlphaPipeline,
+    AlphaResult,
+    AlphaFeature,
+    AlphaShape,
+)
+from src.ml.dream_team_ensemble import (
+    DreamTeamEnsemble,
+    DreamTeamResult,
+    DreamTeamConfig,
+)
 
 __all__ = [
     # Part A infrastructure
@@ -111,4 +173,57 @@ __all__ = [
     "EnsembleStrategy",
     "CrossAssetFeatures",
     "prepare_cross_asset_data",
+    # Triple barrier + combinatorial purged CV
+    "TripleBarrierLabeler",
+    "BarrierLabel",
+    "CombinatorialPurgedCV",
+    # Phase 2 — Quick Wins (FS2, FS3, FS5, FS11)
+    "GMMRegimeDetector",
+    "DrawdownTargetGenerator",
+    "FracDiff",
+    "HistoricalAnalogMatcher",
+    "AnalogMatchSet",
+    "AnalogResult",
+    # Phase 3 — New Models (FS1, FS8, FS13, T5, T8)
+    "SurvivalAnalyzer",
+    "SurvivalResult",
+    "SurvivalTarget",
+    "compare_survival_models",
+    "VolatilityForecaster",
+    "VolForecastResult",
+    "BreakoutClassifier",
+    "BreakoutResult",
+    "EnsembleBuilder",
+    "EnsembleResult",
+    "EnsembleMethod",
+    "TaskType",
+    "BaseModelConfig",
+    "SHAPDashboard",
+    "PredictionExplanation",
+    "GlobalImportance",
+    "quick_shap_analysis",
+    # Phase 4 — Advanced Pipeline (FS7, FS9, FS10, FS12)
+    "ChangePointRegimeDetector",
+    "VolumeProfileCluster",
+    "HDBSCANAnomalyDetector",
+    "CrossSymbolCluster",
+    # Phase 4+ — Risk, Alpha Research & Ensemble (T6, QW2, RS1, RS2)
+    "StopLossOptimizer",
+    "StopLossRecommendation",
+    "LabelGenerator",
+    "EBMAlphaPipeline",
+    "AlphaResult",
+    "AlphaFeature",
+    "AlphaShape",
+    "DreamTeamEnsemble",
+    "DreamTeamResult",
+    "DreamTeamConfig",
+    # Phase 6b — Pioneer Research
+    "MetaLabeler",
+    "MetaLabelResult",
+    "MetaLabelPrediction",
+    "GapFillPredictor",
+    "GapFillPrediction",
+    "GapFillTrainingResult",
+    "GapDetection",
 ]

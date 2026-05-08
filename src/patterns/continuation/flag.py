@@ -66,7 +66,9 @@ class Flag(BasePattern):
             confirmation_filter: Minimum breakout percentage for confirmation
         """
         super().__init__(
-            name="Flag", pattern_type=PatternType.CONTINUATION, min_bars_required=pole_bars + flag_bars_min
+            name="Flag",
+            pattern_type=PatternType.CONTINUATION,
+            min_bars_required=pole_bars + flag_bars_min,
         )
         self.lookback = lookback
         self.pole_bars = pole_bars
@@ -77,6 +79,105 @@ class Flag(BasePattern):
         self.entry_offset = entry_offset
         self.stop_offset = stop_offset
         self.confirmation_filter = confirmation_filter
+
+    def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Vectorized detection of Flag patterns across the entire DataFrame.
+
+        Returns:
+            np.ndarray of np.int8: 0=no signal, 1=LONG (bullish flag), -1=SHORT (bearish flag)
+        """
+        n = len(df)
+        result = np.zeros(n, dtype=np.int8)
+        min_bars = self.pole_bars + self.flag_bars_min
+        if n < min_bars:
+            return result
+
+        close_a = df["Close"].to_numpy()
+        high_a = df["High"].to_numpy()
+        low_a = df["Low"].to_numpy()
+        pb = self.pole_bars
+        pmin = self.pole_min_slope
+        fmin = self.flag_bars_min
+        fmax = self.flag_bars_max
+        fslope = self.flag_slope_threshold
+        confirm = self.confirmation_filter
+
+        for i in range(min_bars, n):
+            search_start = max(0, i - fmax - pb - 10)
+
+            # Bullish flag: pole up
+            for pole_start in range(search_start, i - fmin - pb + 1):
+                pole_end = pole_start + pb
+                if pole_end >= i - fmin:
+                    continue
+                pole_start_price = close_a[pole_start]
+                pole_end_price = high_a[pole_end]
+                pole_height = pole_end_price - pole_start_price
+                if pole_height <= 0:
+                    continue
+                pole_pct = pole_height / pole_start_price if pole_start_price > 0 else 0.0
+                if pole_pct < pmin:
+                    continue
+
+                flag_start = pole_end
+                flag_end = i
+                flag_len = flag_end - flag_start
+                if flag_len < fmin or flag_len > fmax:
+                    continue
+
+                flag_highs = high_a[flag_start : flag_end + 1]
+                flag_lows = low_a[flag_start : flag_end + 1]
+
+                high_slope = (flag_highs[-1] - flag_highs[0]) / flag_len
+                low_slope = (flag_lows[-1] - flag_lows[0]) / flag_len
+
+                if high_slope > fslope or low_slope > fslope:
+                    continue
+
+                flag_high = float(np.max(flag_highs))
+                if close_a[i] > flag_high * (1.0 + confirm):
+                    result[i] = 1
+                    break
+
+            if result[i] != 0:
+                continue
+
+            # Bearish flag: pole down
+            for pole_start in range(search_start, i - fmin - pb + 1):
+                pole_end = pole_start + pb
+                if pole_end >= i - fmin:
+                    continue
+                pole_start_price = close_a[pole_start]
+                pole_end_price = low_a[pole_end]
+                pole_height = pole_start_price - pole_end_price
+                if pole_height <= 0:
+                    continue
+                pole_pct = pole_height / pole_start_price if pole_start_price > 0 else 0.0
+                if pole_pct < pmin:
+                    continue
+
+                flag_start = pole_end
+                flag_end = i
+                flag_len = flag_end - flag_start
+                if flag_len < fmin or flag_len > fmax:
+                    continue
+
+                flag_highs = high_a[flag_start : flag_end + 1]
+                flag_lows = low_a[flag_start : flag_end + 1]
+
+                high_slope = (flag_highs[-1] - flag_highs[0]) / flag_len
+                low_slope = (flag_lows[-1] - flag_lows[0]) / flag_len
+
+                if high_slope < -fslope or low_slope < -fslope:
+                    continue
+
+                flag_low = float(np.min(flag_lows))
+                if close_a[i] < flag_low * (1.0 - confirm):
+                    result[i] = -1
+                    break
+
+        return result
 
     def _find_pivots(
         self, df: pd.DataFrame, i: int
@@ -100,7 +201,9 @@ class Flag(BasePattern):
 
         return peaks, troughs
 
-    def _calculate_slope(self, start_idx: int, start_price: float, end_idx: int, end_price: float) -> float:
+    def _calculate_slope(
+        self, start_idx: int, start_price: float, end_idx: int, end_price: float
+    ) -> float:
         """Calculate slope between two points."""
         if end_idx == start_idx:
             return 0.0
@@ -150,7 +253,10 @@ class Flag(BasePattern):
         low_arr = arrays["low"]
 
         # Search for pole within valid range
-        for pole_start in range(max(0, i - self.flag_bars_max - self.pole_bars - 10), i - self.flag_bars_min - self.pole_bars + 1):
+        for pole_start in range(
+            max(0, i - self.flag_bars_max - self.pole_bars - 10),
+            i - self.flag_bars_min - self.pole_bars + 1,
+        ):
             pole_end = pole_start + self.pole_bars
 
             # Check if pole is within range
@@ -177,18 +283,28 @@ class Flag(BasePattern):
             flag_start = pole_end
             flag_end = i
 
-            if flag_end - flag_start < self.flag_bars_min or flag_end - flag_start > self.flag_bars_max:
+            if (
+                flag_end - flag_start < self.flag_bars_min
+                or flag_end - flag_start > self.flag_bars_max
+            ):
                 continue
 
             # Calculate flag slope (should be negative/flat for bullish flag)
             flag_highs = [float(high_arr[j]) for j in range(flag_start, flag_end + 1)]
             flag_lows = [float(low_arr[j]) for j in range(flag_start, flag_end + 1)]
 
-            flag_high_slope = self._calculate_slope(flag_start, flag_highs[0], flag_end, flag_highs[-1])
-            flag_low_slope = self._calculate_slope(flag_start, flag_lows[0], flag_end, flag_lows[-1])
+            flag_high_slope = self._calculate_slope(
+                flag_start, flag_highs[0], flag_end, flag_highs[-1]
+            )
+            flag_low_slope = self._calculate_slope(
+                flag_start, flag_lows[0], flag_end, flag_lows[-1]
+            )
 
             # Flag should slope down or be flat (opposite to pole)
-            if flag_high_slope > self.flag_slope_threshold or flag_low_slope > self.flag_slope_threshold:
+            if (
+                flag_high_slope > self.flag_slope_threshold
+                or flag_low_slope > self.flag_slope_threshold
+            ):
                 continue
 
             # Check for breakout above flag
@@ -222,7 +338,10 @@ class Flag(BasePattern):
         low_arr = arrays["low"]
 
         # Search for pole within valid range
-        for pole_start in range(max(0, i - self.flag_bars_max - self.pole_bars - 10), i - self.flag_bars_min - self.pole_bars + 1):
+        for pole_start in range(
+            max(0, i - self.flag_bars_max - self.pole_bars - 10),
+            i - self.flag_bars_min - self.pole_bars + 1,
+        ):
             pole_end = pole_start + self.pole_bars
 
             # Check if pole is within range
@@ -249,18 +368,28 @@ class Flag(BasePattern):
             flag_start = pole_end
             flag_end = i
 
-            if flag_end - flag_start < self.flag_bars_min or flag_end - flag_start > self.flag_bars_max:
+            if (
+                flag_end - flag_start < self.flag_bars_min
+                or flag_end - flag_start > self.flag_bars_max
+            ):
                 continue
 
             # Calculate flag slope (should be positive/flat for bearish flag)
             flag_highs = [float(high_arr[j]) for j in range(flag_start, flag_end + 1)]
             flag_lows = [float(low_arr[j]) for j in range(flag_start, flag_end + 1)]
 
-            flag_high_slope = self._calculate_slope(flag_start, flag_highs[0], flag_end, flag_highs[-1])
-            flag_low_slope = self._calculate_slope(flag_start, flag_lows[0], flag_end, flag_lows[-1])
+            flag_high_slope = self._calculate_slope(
+                flag_start, flag_highs[0], flag_end, flag_highs[-1]
+            )
+            flag_low_slope = self._calculate_slope(
+                flag_start, flag_lows[0], flag_end, flag_lows[-1]
+            )
 
             # Flag should slope up or be flat (opposite to pole)
-            if flag_high_slope < -self.flag_slope_threshold or flag_low_slope < -self.flag_slope_threshold:
+            if (
+                flag_high_slope < -self.flag_slope_threshold
+                or flag_low_slope < -self.flag_slope_threshold
+            ):
                 continue
 
             # Check for breakout below flag

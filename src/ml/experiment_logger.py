@@ -38,10 +38,10 @@ import hashlib
 import json
 import logging
 import uuid
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional, Sequence
+from typing import Any, Sequence
 
 import joblib
 import numpy as np

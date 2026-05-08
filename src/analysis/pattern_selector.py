@@ -9,10 +9,12 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional
+from enum import Enum
+from typing import Any, Callable, Dict, List, Optional, Union
 
 import numpy as np
 import pandas as pd
+
 
 from .contribution_analyzer import ContributionAnalyzer
 from .correlation_analyzer import CorrelationAnalyzer
@@ -21,6 +23,33 @@ from .statistical_filter import StatisticalSignificanceFilter
 from .walk_forward_validator import WalkForwardValidator
 
 logger = logging.getLogger(__name__)
+
+
+class _DictAsObject:
+    """Simple wrapper to allow dict items to be accessed as attributes."""
+
+    __slots__ = ("_data",)
+
+    def __init__(self, data: Dict[str, Any]) -> None:
+        object.__setattr__(self, "_data", data)
+
+    def __getattr__(self, name: str) -> Any:
+        try:
+            return self._data[name]
+        except KeyError:
+            raise AttributeError(f"'{type(self).__name__}' object has no attribute '{name}'")
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        if name == "_data":
+            object.__setattr__(self, name, value)
+        else:
+            self._data[name] = value
+
+    def __contains__(self, key: str) -> bool:
+        return key in self._data
+
+    def get(self, key: str, default: Any = None) -> Any:
+        return self._data.get(key, default)
 
 
 @dataclass
@@ -40,6 +69,41 @@ class SelectionConfig:
     min_composite_score: float = 0.4
 
 
+class PatternRole(Enum):
+    """Classification of a pattern's role in the ensemble."""
+
+    PRIMARY_SIGNAL = "Primary Signal"
+    CONFIRMATION_FILTER = "Confirmation Filter"
+    NEUTRAL = "Neutral"
+    NOISE_GENERATOR = "Noise Generator"
+
+
+@dataclass
+class SoloBacktestResult:
+    """Result of a solo (single-pattern) backtest."""
+
+    pattern_name: str = ""
+    sharpe_ratio: float = 0.0
+    win_rate: float = 0.0
+    profit_factor: float = 0.0
+    total_return_pct: float = 0.0
+    max_drawdown_pct: float = 0.0
+    total_trades: int = 0
+    passed_filter: bool = False
+
+
+@dataclass
+class AblationContribution:
+    """Marginal contribution of a pattern from ablation analysis."""
+
+    pattern_name: str = ""
+    delta_sharpe: float = 0.0
+    delta_return: float = 0.0
+    role: PatternRole = PatternRole.NEUTRAL
+    keep: bool = False
+    contribution_rank: int = 0
+
+
 @dataclass
 class SelectionResult:
     """Result of the full pattern selection pipeline."""
@@ -55,6 +119,62 @@ class SelectionResult:
     final_selection: List[str] = field(default_factory=list)
     report: str = ""
 
+    # Aliases for backward compatibility with pattern_selector_viz
+    @property
+    def ablation_contributions(self) -> List[Union[AblationContribution, Dict[str, Any]]]:
+        """Return contribution_ranked items with attribute access support."""
+        result = []
+        for item in self.contribution_ranked:
+            if isinstance(item, dict):
+                result.append(_DictAsObject(item))
+            else:
+                result.append(item)
+        return result
+
+    @property
+    def final_patterns(self) -> List[str]:
+        return self.final_selection
+
+    def get_role_distribution(self) -> Dict[str, int]:
+        """Get distribution of pattern roles."""
+        dist: Dict[str, int] = {}
+        for c in self.contribution_ranked:
+            role = c.role.value if isinstance(c, PatternRole) else c.get("role", "Unknown")
+            dist[role] = dist.get(role, 0) + 1
+        return dist
+
+    def get_summary(self) -> Dict[str, Any]:
+        """Get summary statistics for visualization."""
+        return {
+            "total_patterns_tested": len(self.statistical_passed) + len(self.performance_passed),
+            "passed_phase1_filter": len(self.correlation_recommended),
+            "excluded_phase1": len(self.statistical_passed)
+            + len(self.performance_passed)
+            - len(set(self.statistical_passed) & set(self.performance_passed)),
+            "redundant_pairs_found": len(self.redundant_patterns),
+            "after_redundancy_removal": max(
+                0, len(self.correlation_recommended) - len(self.redundant_patterns)
+            ),
+            "final_selected_patterns": len(self.final_selection),
+            "execution_time_seconds": 0,
+            "total_patterns": len(self.final_selection),
+            "patterns": self.final_selection,
+            "roles": self.get_role_distribution(),
+            "overfitting_detected": self.overfitting_detected,
+        }
+
+    # Backward-compatible empty defaults for pattern_selector_viz
+    solo_results: List[Any] = field(default_factory=list, repr=False, init=False)
+    filtered_patterns: List[str] = field(default_factory=list, repr=False, init=False)
+    non_redundant_patterns: List[str] = field(default_factory=list, repr=False, init=False)
+    equity_curve: Any = field(default=None, repr=False, init=False)
+    pattern_name: str = field(default="", repr=False, init=False)
+    sharpe_ratio: float = field(default=0.0, repr=False, init=False)
+    phase_timings: Dict[str, Any] = field(default_factory=dict, repr=False, init=False)
+    config: Any = field(default=None, repr=False, init=False)
+    redundant_pairs: List[Any] = field(default_factory=list, repr=False, init=False)
+    correlation_matrix: Any = field(default=None, repr=False, init=False)
+
 
 class PatternSelector:
     """Orchestrates the full pattern selection pipeline."""
@@ -65,6 +185,17 @@ class PatternSelector:
         metric_backtest_fn: Optional[Callable[[List[str]], Dict[str, float]]] = None,
         wf_metric_fn: Optional[Callable[[List[str], pd.DataFrame], Dict[str, float]]] = None,
     ):
+        # Handle PatternSelectionConfig from notebook_helpers (backward compat)
+        if config is not None and not isinstance(config, SelectionConfig):
+            config = SelectionConfig(
+                p_value_threshold=getattr(config, "correlation_threshold", 0.05),
+                min_sharpe=getattr(config, "min_sharpe", 0.5),
+                min_profit_factor=getattr(config, "min_profit_factor", 1.2),
+                max_correlation=getattr(config, "correlation_threshold", 0.7),
+                redundancy_threshold=getattr(config, "noise_threshold", 0.01),
+                min_win_rate=getattr(config, "min_win_rate", 0.45),
+            )
+
         self.config = config or SelectionConfig()
         self.stat_filter = StatisticalSignificanceFilter(
             p_value_threshold=self.config.p_value_threshold,
@@ -88,6 +219,24 @@ class PatternSelector:
             min_win_rate=self.config.min_win_rate,
             min_signals=self.config.min_signals,
         )
+
+        # Expose all_patterns for notebook compatibility
+        self.all_patterns: List[str] = []
+
+    @classmethod
+    def from_config(cls, config: Any) -> "PatternSelector":
+        """Create a PatternSelector from a notebook-style PatternSelectionConfig."""
+        if hasattr(config, "min_sharpe"):
+            sel_config = SelectionConfig(
+                min_sharpe=config.min_sharpe,
+                min_profit_factor=getattr(config, "min_profit_factor", 1.2),
+                min_win_rate=getattr(config, "min_win_rate", 0.45),
+                max_correlation=getattr(config, "correlation_threshold", 0.7),
+                redundancy_threshold=getattr(config, "noise_threshold", 0.01),
+                p_value_threshold=getattr(config, "correlation_threshold", 0.05),
+            )
+            return cls(config=sel_config)
+        return cls()
 
     def select_best_patterns(
         self,
@@ -143,9 +292,7 @@ class PatternSelector:
         # Stage 2: Correlation analysis
         pattern_returns = self._extract_pattern_returns(patterns, data)
         if self._can_build_correlation(pattern_returns, stage1_passed):
-            filtered_returns = {
-                k: v for k, v in pattern_returns.items() if k in stage1_passed
-            }
+            filtered_returns = {k: v for k, v in pattern_returns.items() if k in stage1_passed}
             result.correlation_recommended = self.corr_analyzer.recommend_pattern_subset(
                 filtered_returns,
                 max_correlation=self.config.max_correlation,
@@ -231,7 +378,9 @@ class PatternSelector:
         logger.info("Stage 5 (Signal Quality) passed: %d", len(result.quality_passed))
 
         # Final selection
-        result.final_selection = result.quality_passed if result.quality_passed else result.walk_forward_passed
+        result.final_selection = (
+            result.quality_passed if result.quality_passed else result.walk_forward_passed
+        )
         result.report = self.generate_selection_report(result)
 
         logger.info("Final selection: %d patterns", len(result.final_selection))
@@ -289,7 +438,9 @@ class PatternSelector:
             {pattern_name: {"sharpe": X, "profit_factor": Y, ...}}
         """
         metrics = {}
-        market_returns = data["Close"].pct_change().dropna().values if "Close" in data.columns else np.array([])
+        market_returns = (
+            data["Close"].pct_change().dropna().values if "Close" in data.columns else np.array([])
+        )
         if len(market_returns) == 0:
             return metrics
 
@@ -316,7 +467,9 @@ class PatternSelector:
             {pattern_name: returns_array}
         """
         returns_dict = {}
-        market_returns = data["Close"].pct_change().dropna().values if "Close" in data.columns else np.array([])
+        market_returns = (
+            data["Close"].pct_change().dropna().values if "Close" in data.columns else np.array([])
+        )
         for name in patterns:
             noise = np.random.RandomState(hash(name) % 2**31).normal(0, 0.01, len(market_returns))
             returns_dict[name] = market_returns + noise if len(market_returns) > 0 else np.array([])
@@ -335,12 +488,18 @@ class PatternSelector:
             {pattern_name: [returns_per_signal]}
         """
         signal_dict = {}
-        market_returns = data["Close"].pct_change().dropna().values if "Close" in data.columns else np.array([])
+        market_returns = (
+            data["Close"].pct_change().dropna().values if "Close" in data.columns else np.array([])
+        )
         for name in patterns:
             rng = np.random.RandomState(hash(name) % 2**31)
             n_signals = max(len(market_returns) // 5, 10)
-            indices = rng.choice(len(market_returns), size=min(n_signals, len(market_returns)), replace=False)
-            signal_dict[name] = [float(market_returns[i]) for i in indices] if len(market_returns) > 0 else []
+            indices = rng.choice(
+                len(market_returns), size=min(n_signals, len(market_returns)), replace=False
+            )
+            signal_dict[name] = (
+                [float(market_returns[i]) for i in indices] if len(market_returns) > 0 else []
+            )
         return signal_dict
 
     def _statistical_filter_stage(self, patterns: List[str], data: pd.DataFrame) -> List[str]:
@@ -365,13 +524,12 @@ class PatternSelector:
         Returns:
             {pattern_name: score}
         """
-        return {
-            name: m.get("sharpe", m.get("sharpe_ratio", 0.0))
-            for name, m in perf_data.items()
-        }
+        return {name: m.get("sharpe", m.get("sharpe_ratio", 0.0)) for name, m in perf_data.items()}
 
     @staticmethod
-    def _can_build_correlation(pattern_returns: Dict[str, np.ndarray], candidates: List[str]) -> bool:
+    def _can_build_correlation(
+        pattern_returns: Dict[str, np.ndarray], candidates: List[str]
+    ) -> bool:
         """Check if correlation analysis is feasible.
 
         Args:

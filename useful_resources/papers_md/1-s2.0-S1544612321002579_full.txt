@@ -563,5 +563,3 @@ Tversky, A., Kahneman, D., 1971. Belief in the law of small numbers. Psychol. Bu
 Wilder Jr., J.W., 1978. New Concepts in Technical Trading Systems. Hunter Publishing Company, Greensboro, N.C.
 
 7
-
-

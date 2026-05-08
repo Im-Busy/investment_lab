@@ -5,15 +5,13 @@ Aggregates all analysis layers into a unified report.
 """
 
 import os
-from typing import Any, Dict, List, Optional, DefaultDict
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 import pandas as pd
 
 from .signal_event_log import SignalEventLog
 from .trade_attributor import TradeAttributor
-from .ablation_engine import AblationEngine
-from .synergy_analyzer import SynergyAnalyzer
 
 
 class ContributionReport:
@@ -36,7 +34,11 @@ class ContributionReport:
         self.signal_log = signal_log
         self.attributor = attributor
         self.ablation_results = ablation_results
-        self.synergy_results = synergy_results
+        self.synergy_results = (
+            self._flatten_synergy(synergy_results)
+            if synergy_results is not None and not synergy_results.empty
+            else synergy_results
+        )
 
     def generate_summary(self) -> Dict[str, Any]:
         """
@@ -59,21 +61,30 @@ class ContributionReport:
         if self.ablation_results is not None and not self.ablation_results.empty:
             ablation_summary = {
                 "total_patterns": len(self.ablation_results),
-                "positive_contributors": len(self.ablation_results[self.ablation_results["delta_sharpe"] > 0]),
-                "negative_contributors": len(self.ablation_results[self.ablation_results["delta_sharpe"] < 0]),
+                "positive_contributors": len(
+                    self.ablation_results[self.ablation_results["delta_sharpe"] > 0]
+                ),
+                "negative_contributors": len(
+                    self.ablation_results[self.ablation_results["delta_sharpe"] < 0]
+                ),
                 "avg_delta_sharpe": self.ablation_results["delta_sharpe"].mean(),
-                "best_pattern": self.ablation_results.iloc[0]["pattern_name"] if len(self.ablation_results) > 0 else None,
-                "worst_pattern": self.ablation_results.iloc[-1]["pattern_name"] if len(self.ablation_results) > 0 else None,
+                "best_pattern": self.ablation_results.iloc[0]["pattern_name"]
+                if len(self.ablation_results) > 0
+                else None,
+                "worst_pattern": self.ablation_results.iloc[-1]["pattern_name"]
+                if len(self.ablation_results) > 0
+                else None,
             }
 
         # Synergy stats
         synergy_summary = {}
         if self.synergy_results is not None and not self.synergy_results.empty:
+            synergy_flat = self._flatten_synergy(self.synergy_results)
             synergy_summary = {
-                "total_pairs": len(self.synergy_results),
-                "complementary_pairs": len(self.synergy_results[self.synergy_results["synergy_score"] > 0]),
-                "conflicting_pairs": len(self.synergy_results[self.synergy_results["synergy_score"] < 0]),
-                "avg_synergy_score": self.synergy_results["synergy_score"].mean(),
+                "total_pairs": len(synergy_flat),
+                "complementary_pairs": len(synergy_flat[synergy_flat["synergy_score"] > 0]),
+                "conflicting_pairs": len(synergy_flat[synergy_flat["synergy_score"] < 0]),
+                "avg_synergy_score": synergy_flat["synergy_score"].mean(),
             }
 
         return {
@@ -83,6 +94,36 @@ class ContributionReport:
             "ablation": ablation_summary,
             "synergy": synergy_summary,
         }
+
+    def _flatten_synergy(self, synergy_df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Convert synergy matrix (NxN with pattern names as index/columns) to flat format
+        with columns: pattern_a, pattern_b, synergy_score.
+
+        Args:
+            synergy_df: NxN DataFrame from SynergyAnalyzer.get_synergy_matrix()
+
+        Returns:
+            Flat DataFrame with synergy_score column
+        """
+        # Check if already flat
+        if "synergy_score" in synergy_df.columns:
+            return synergy_df
+
+        # Convert matrix to flat
+        patterns = synergy_df.index.tolist()
+        rows = []
+        for i, pa in enumerate(patterns):
+            for j, pb in enumerate(patterns):
+                if i < j:
+                    rows.append(
+                        {
+                            "pattern_a": pa,
+                            "pattern_b": pb,
+                            "synergy_score": synergy_df.iloc[i, j],
+                        }
+                    )
+        return pd.DataFrame(rows)
 
     def get_pattern_leaderboard(self) -> pd.DataFrame:
         """
@@ -104,11 +145,15 @@ class ContributionReport:
 
         # Add ablation data if available
         if self.ablation_results is not None and not self.ablation_results.empty:
-            ablation_data = self.ablation_results[["pattern_name", "delta_sharpe", "delta_return"]].copy()
-            ablation_data = ablation_data.rename(columns={
-                "delta_sharpe": "ablation_delta_sharpe",
-                "delta_return": "ablation_delta_return",
-            })
+            ablation_data = self.ablation_results[
+                ["pattern_name", "delta_sharpe", "delta_return"]
+            ].copy()
+            ablation_data = ablation_data.rename(
+                columns={
+                    "delta_sharpe": "ablation_delta_sharpe",
+                    "delta_return": "ablation_delta_return",
+                }
+            )
             leaderboard = leaderboard.merge(ablation_data, on="pattern_name", how="left")
         else:
             leaderboard["ablation_delta_sharpe"] = np.nan
@@ -155,22 +200,26 @@ class ContributionReport:
         )
 
         # Sort by composite score
-        leaderboard = leaderboard.sort_values("composite_score", ascending=False).reset_index(drop=True)
+        leaderboard = leaderboard.sort_values("composite_score", ascending=False).reset_index(
+            drop=True
+        )
 
         # Add rank
         leaderboard["rank"] = range(1, len(leaderboard) + 1)
 
         # Select columns
-        result = leaderboard[[
-            "rank",
-            "pattern_name",
-            "trade_count",
-            "win_rate",
-            "avg_pnl",
-            "ablation_delta_sharpe",
-            "avg_synergy_score",
-            "composite_score",
-        ]].copy()
+        result = leaderboard[
+            [
+                "rank",
+                "pattern_name",
+                "trade_count",
+                "win_rate",
+                "avg_pnl",
+                "ablation_delta_sharpe",
+                "avg_synergy_score",
+                "composite_score",
+            ]
+        ].copy()
 
         return result
 
@@ -278,9 +327,7 @@ class ContributionReport:
             for _, row in low_win_rate.iterrows():
                 pattern = row["pattern_name"]
                 win_rate = row["win_rate"]
-                recommendations.append(
-                    f"Review {pattern} — low win rate: {win_rate:.1%}"
-                )
+                recommendations.append(f"Review {pattern} — low win rate: {win_rate:.1%}")
 
         return recommendations
 
@@ -313,8 +360,12 @@ class ContributionReport:
         leaderboard = self.get_pattern_leaderboard()
         if not leaderboard.empty:
             lines.append("## Pattern Leaderboard\n")
-            lines.append("| Rank | Pattern | Trades | Win Rate | Avg P&L | Ablation ΔSharpe | Synergy | Score |")
-            lines.append("|------|---------|--------|----------|---------|------------------|---------|-------|")
+            lines.append(
+                "| Rank | Pattern | Trades | Win Rate | Avg P&L | Ablation ΔSharpe | Synergy | Score |"
+            )
+            lines.append(
+                "|------|---------|--------|----------|---------|------------------|---------|-------|"
+            )
             for _, row in leaderboard.head(20).iterrows():
                 lines.append(
                     f"| {int(row['rank'])} | {row['pattern_name']} | {int(row['trade_count'])} | "
@@ -365,6 +416,7 @@ class ContributionReport:
         summary = self.generate_summary()
         summary_path = os.path.join(output_dir, "summary.json")
         import json
+
         with open(summary_path, "w") as f:
             json.dump(summary, f, indent=2, default=str)
         saved_files["summary"] = summary_path
@@ -388,14 +440,14 @@ class ContributionReport:
         recommendations = self.get_recommendations()
         if recommendations:
             rec_path = os.path.join(output_dir, "recommendations.txt")
-            with open(rec_path, "w") as f:
+            with open(rec_path, "w", encoding="utf-8") as f:
                 f.write("\n".join(recommendations))
             saved_files["recommendations"] = rec_path
 
         # Save markdown report
         markdown = self.to_markdown()
         markdown_path = os.path.join(output_dir, "report.md")
-        with open(markdown_path, "w") as f:
+        with open(markdown_path, "w", encoding="utf-8") as f:
             f.write(markdown)
         saved_files["report"] = markdown_path
 

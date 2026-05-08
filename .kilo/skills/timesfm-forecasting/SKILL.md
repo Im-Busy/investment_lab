@@ -782,4 +782,3 @@ prices = df.groupby('store_id')['price'].mean()
 assert prices['store_A'] > prices['store_B'] > prices['store_C'], 'Store price ordering wrong'
 print('Covariates regression: PASS')"
 ```
-

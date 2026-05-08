@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from backtesting import Backtest
 
-from src.strategies.smc_reversal_bt import SMCReversalBacktest, SMCState
+from src.strategies.smc_reversal_bt import SMCReversalBacktest
 
 
 def _make_daily_data(n: int = 500, seed: int = 42) -> pd.DataFrame:

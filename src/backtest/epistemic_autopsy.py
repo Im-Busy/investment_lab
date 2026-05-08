@@ -7,10 +7,9 @@ from random losses.
 """
 
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
-from src.patterns.base import RegimeState
 
 logger = logging.getLogger(__name__)
 
@@ -83,9 +82,7 @@ class EpistemicAutopsy:
             "Transition": ["continuation", "breakout"],
         }
 
-    def analyze_trade_result(
-        self, trade: dict, market_state: dict
-    ) -> AutopsyResult:
+    def analyze_trade_result(self, trade: dict, market_state: dict) -> AutopsyResult:
         """
         Analyze a single closed trade and determine why it won or lost.
 
@@ -129,9 +126,7 @@ class EpistemicAutopsy:
             confidence_at_entry=confidence,
         )
 
-    def analyze_strategy_performance(
-        self, trades: list, benchmark_return: float
-    ) -> dict:
+    def analyze_strategy_performance(self, trades: list, benchmark_return: float) -> dict:
         """
         Overall strategy post-mortem comparing against benchmark.
 
@@ -168,19 +163,11 @@ class EpistemicAutopsy:
         systematic_losses, random_losses = self._classify_loss_types(autopsies)
 
         total_losses = len(losses)
-        systematic_pct = (
-            systematic_losses / total_losses if total_losses > 0 else 0.0
-        )
-        random_pct = (
-            random_losses / total_losses if total_losses > 0 else 0.0
-        )
+        systematic_pct = systematic_losses / total_losses if total_losses > 0 else 0.0
+        random_pct = random_losses / total_losses if total_losses > 0 else 0.0
 
-        avg_loss = (
-            sum(a.actual_pnl for a in losses) / len(losses) if losses else 0.0
-        )
-        avg_win = (
-            sum(a.actual_pnl for a in wins) / len(wins) if wins else 0.0
-        )
+        avg_loss = sum(a.actual_pnl for a in losses) / len(losses) if losses else 0.0
+        avg_win = sum(a.actual_pnl for a in wins) / len(wins) if wins else 0.0
 
         regime_performance = self._analyze_regime_performance(autopsies)
 
@@ -232,9 +219,7 @@ class EpistemicAutopsy:
         }
 
         dominant_mode = (
-            max(mode_counts, key=mode_counts.get)
-            if mode_counts and total_losses > 0
-            else None
+            max(mode_counts, key=mode_counts.get) if mode_counts and total_losses > 0 else None
         )
 
         mode_details = self._group_trades_by_failure_mode(autopsies)
@@ -244,16 +229,13 @@ class EpistemicAutopsy:
             "total_trades_analyzed": total_trades,
             "total_losses": total_losses,
             "mode_counts": mode_counts,
-            "mode_frequencies_pct": {
-                k: round(v * 100, 2) for k, v in mode_frequencies.items()
-            },
+            "mode_frequencies_pct": {k: round(v * 100, 2) for k, v in mode_frequencies.items()},
             "dominant_failure_mode": dominant_mode,
             "mode_details": mode_details,
             "systematic_losses": systematic,
             "random_losses": random,
-            "systematic_pct": round(
-                systematic / total_losses if total_losses > 0 else 0.0, 4
-            ) * 100,
+            "systematic_pct": round(systematic / total_losses if total_losses > 0 else 0.0, 4)
+            * 100,
         }
 
     def generate_autopsy_report(self, trades: list, strategy_name: str) -> str:
@@ -283,12 +265,8 @@ class EpistemicAutopsy:
         mode_counts = self._count_failure_modes(autopsies)
         systematic, random = self._classify_loss_types(autopsies)
         total_losses = len(losses)
-        systematic_pct = (
-            systematic / total_losses * 100 if total_losses > 0 else 0.0
-        )
-        random_pct = (
-            random / total_losses * 100 if total_losses > 0 else 0.0
-        )
+        systematic_pct = systematic / total_losses * 100 if total_losses > 0 else 0.0
+        random_pct = random / total_losses * 100 if total_losses > 0 else 0.0
 
         win_rate = len(wins) / len(autopsies) * 100 if autopsies else 0.0
         total_pnl = sum(a.actual_pnl for a in autopsies)
@@ -310,12 +288,8 @@ class EpistemicAutopsy:
         if mode_counts:
             lines.append("| Failure Mode | Count | % of Losses |")
             lines.append("|---|---|---|")
-            for mode, count in sorted(
-                mode_counts.items(), key=lambda x: x[1], reverse=True
-            ):
-                pct_of_losses = (
-                    count / total_losses * 100 if total_losses > 0 else 0.0
-                )
+            for mode, count in sorted(mode_counts.items(), key=lambda x: x[1], reverse=True):
+                pct_of_losses = count / total_losses * 100 if total_losses > 0 else 0.0
                 display_name = mode.replace("_", " ").title()
                 lines.append(f"| {display_name} | {count} | {pct_of_losses:.1f}% |")
         else:
@@ -334,8 +308,7 @@ class EpistemicAutopsy:
 
         if systematic_pct > 50:
             lines.append(
-                "> **WARNING:** Majority of losses are systematic. "
-                "Strategy logic requires review."
+                "> **WARNING:** Majority of losses are systematic. Strategy logic requires review."
             )
         elif systematic_pct > 30:
             lines.append(
@@ -374,9 +347,7 @@ class EpistemicAutopsy:
         """
         evidence: Dict[str, float] = {}
 
-        regime_score = self._score_regime_mismatch(
-            trade, market_state, regime_at_entry
-        )
+        regime_score = self._score_regime_mismatch(trade, market_state, regime_at_entry)
         evidence["regime_mismatch_score"] = regime_score
 
         whipsaw_score = self._score_whipsaw(trade, direction)
@@ -428,17 +399,11 @@ class EpistemicAutopsy:
             return 0.0
 
         incompatible = self._regime_incompatible_map.get(regime_at_entry, [])
-        mismatches = sum(
-            1
-            for p in patterns
-            if any(inc in p.lower() for inc in incompatible)
-        )
+        mismatches = sum(1 for p in patterns if any(inc in p.lower() for inc in incompatible))
 
         return min(mismatches / max(len(patterns), 1), 1.0)
 
-    def _score_whipsaw(
-        self, trade: dict, direction: str
-    ) -> float:
+    def _score_whipsaw(self, trade: dict, direction: str) -> float:
         """Score how likely a whipsaw caused the loss (0.0-1.0)."""
         max_adverse = trade.get("max_adverse_excursion", 0.0)
         max_favorable = trade.get("max_favorable_excursion", 0.0)
@@ -461,9 +426,7 @@ class EpistemicAutopsy:
 
         return 0.0
 
-    def _score_fat_tail(
-        self, pnl_pct: float, market_state: dict
-    ) -> float:
+    def _score_fat_tail(self, pnl_pct: float, market_state: dict) -> float:
         """Score how likely a fat tail event caused the loss (0.0-1.0)."""
         if pnl_pct > PNL_PCT_THRESHOLD_FAT_TAIL:
             return 0.0
@@ -486,9 +449,7 @@ class EpistemicAutopsy:
         decay_ratio = holding_period / HOLDING_PERIOD_DECAY_BARS
         return min(decay_ratio, 1.0) if decay_ratio > 1.0 else 0.0
 
-    def _score_slippage(
-        self, trade: dict, market_state: dict
-    ) -> float:
+    def _score_slippage(self, trade: dict, market_state: dict) -> float:
         """Score how much slippage contributed to the loss (0.0-1.0)."""
         expected_slippage = trade.get("expected_slippage_bps", 10)
         actual_slippage = market_state.get("slippage_bps", expected_slippage)
@@ -511,9 +472,7 @@ class EpistemicAutopsy:
             return "WIN"
         return "LOSS"
 
-    def _determine_expected_outcome(
-        self, trade: dict, market_state: dict
-    ) -> str:
+    def _determine_expected_outcome(self, trade: dict, market_state: dict) -> str:
         """
         Determine what outcome the strategy predicted based on signals.
 
@@ -570,9 +529,7 @@ class EpistemicAutopsy:
                 counts[a.failure_mode] = counts.get(a.failure_mode, 0) + 1
         return counts
 
-    def _classify_loss_types(
-        self, autopsies: list
-    ) -> tuple:
+    def _classify_loss_types(self, autopsies: list) -> tuple:
         """
         Classify losses into systematic vs random.
 
@@ -589,18 +546,18 @@ class EpistemicAutopsy:
             if a.outcome != "LOSS":
                 continue
 
-            if a.failure_mode and a.failure_evidence.get(
-                "classification_confidence", 0
-            ) > SYSTEMATIC_LOSS_FREQUENCY_THRESHOLD:
+            if (
+                a.failure_mode
+                and a.failure_evidence.get("classification_confidence", 0)
+                > SYSTEMATIC_LOSS_FREQUENCY_THRESHOLD
+            ):
                 systematic += 1
             else:
                 random += 1
 
         return systematic, random
 
-    def _group_trades_by_failure_mode(
-        self, autopsies: list
-    ) -> Dict[str, List[Dict[str, Any]]]:
+    def _group_trades_by_failure_mode(self, autopsies: list) -> Dict[str, List[Dict[str, Any]]]:
         """Group trade IDs by their failure mode."""
         groups: Dict[str, List[Dict[str, Any]]] = {}
 
@@ -620,9 +577,7 @@ class EpistemicAutopsy:
 
         return groups
 
-    def _analyze_regime_performance(
-        self, autopsies: list
-    ) -> Dict[str, Dict[str, Any]]:
+    def _analyze_regime_performance(self, autopsies: list) -> Dict[str, Dict[str, Any]]:
         """Analyze performance broken down by regime."""
         regime_stats: Dict[str, Dict[str, Any]] = {}
 
@@ -647,18 +602,12 @@ class EpistemicAutopsy:
                 stats["losses"] += 1
                 if a.failure_mode:
                     fm = a.failure_mode
-                    stats["failure_modes"][fm] = (
-                        stats["failure_modes"].get(fm, 0) + 1
-                    )
+                    stats["failure_modes"][fm] = stats["failure_modes"].get(fm, 0) + 1
 
         for stats in regime_stats.values():
             total = stats["total_trades"]
-            stats["win_rate"] = (
-                stats["wins"] / total if total > 0 else 0.0
-            )
-            stats["avg_pnl"] = (
-                stats["total_pnl"] / total if total > 0 else 0.0
-            )
+            stats["win_rate"] = stats["wins"] / total if total > 0 else 0.0
+            stats["avg_pnl"] = stats["total_pnl"] / total if total > 0 else 0.0
 
         return regime_stats
 
@@ -724,17 +673,13 @@ class EpistemicAutopsy:
         ):
             wr = stats["win_rate"] * 100
             avg = stats["avg_pnl"]
-            lines.append(
-                f"| {regime} | {stats['total_trades']} | {wr:.1f}% | {avg:,.2f} |"
-            )
+            lines.append(f"| {regime} | {stats['total_trades']} | {wr:.1f}% | {avg:,.2f} |")
 
         return lines
 
     def _build_low_confidence_section(self, losses: list) -> List[str]:
         """Build section for losses with low entry confidence."""
-        low_conf = [
-            a for a in losses if a.confidence_at_entry < CONFIDENCE_LOW_THRESHOLD
-        ]
+        low_conf = [a for a in losses if a.confidence_at_entry < CONFIDENCE_LOW_THRESHOLD]
 
         if not low_conf:
             return []

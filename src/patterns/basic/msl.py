@@ -326,7 +326,9 @@ class MarketStructureLow(BasePattern):
             take_profit_2=take_profit_2,
             take_profit_3=None,
             confidence=min(confidence, 1.0),
-            timestamp=pd.Timestamp(df.iloc[i].name) if hasattr(df.iloc[i], "name") and df.iloc[i].name is not None else None,  # type: ignore[arg-type]
+            timestamp=pd.Timestamp(df.iloc[i].name)
+            if hasattr(df.iloc[i], "name") and df.iloc[i].name is not None
+            else None,  # type: ignore[arg-type]
             metadata={
                 "msl_high_close": max_close,
                 "msl_low": msl_low,
@@ -460,6 +462,8 @@ class MarketStructureHigh(BasePattern):
             take_profit_2=take_profit_2,
             take_profit_3=None,
             confidence=confidence,
-            timestamp=pd.Timestamp(df.iloc[i].name) if hasattr(df.iloc[i], "name") and df.iloc[i].name is not None else None,  # type: ignore[arg-type]
+            timestamp=pd.Timestamp(df.iloc[i].name)
+            if hasattr(df.iloc[i], "name") and df.iloc[i].name is not None
+            else None,  # type: ignore[arg-type]
             metadata={"msh_low_close": min_close, "msh_high": msh_high, "entry_type": "sell_stop"},
         )

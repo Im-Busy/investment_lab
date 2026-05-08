@@ -430,7 +430,7 @@ def main():
     spy_df_results.to_csv(output_dir / "validation_spy_daily.csv", index=False)
     btc_df_results.to_csv(output_dir / "validation_btc_1h.csv", index=False)
 
-    print(f"\nResults saved to:")
+    print("\nResults saved to:")
     print(f"  {output_dir / 'validation_spy_daily.csv'}")
     print(f"  {output_dir / 'validation_btc_1h.csv'}")
 

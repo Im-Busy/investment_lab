@@ -1,9 +1,9 @@
 # Research Logic Map: Navigation Guide
 
-**Last Updated:** 2026-04-25  
-**Version:** 1.0  
-**Synthesized Papers:** 13  
-**Tracked Insights:** 42  
+**Last Updated:** 2026-04-25
+**Version:** 1.0
+**Synthesized Papers:** 13
+**Tracked Insights:** 42
 **Hypotheses:** 12
 
 ---

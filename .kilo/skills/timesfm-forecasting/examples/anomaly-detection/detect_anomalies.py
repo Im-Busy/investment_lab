@@ -28,9 +28,7 @@ import numpy as np
 import pandas as pd
 
 HORIZON = 12
-DATA_FILE = (
-    Path(__file__).parent.parent / "global-temperature" / "temperature_anomaly.csv"
-)
+DATA_FILE = Path(__file__).parent.parent / "global-temperature" / "temperature_anomaly.csv"
 OUTPUT_DIR = Path(__file__).parent / "output"
 
 CRITICAL_Z = 3.0
@@ -185,9 +183,7 @@ def plot_results(
     OUTPUT_DIR.mkdir(exist_ok=True)
 
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(15, 10), gridspec_kw={"hspace": 0.42})
-    fig.suptitle(
-        "TimesFM Anomaly Detection — Two-Phase Method", fontsize=14, fontweight="bold"
-    )
+    fig.suptitle("TimesFM Anomaly Detection — Two-Phase Method", fontsize=14, fontweight="bold")
 
     # -----------------------------------------------------------------------
     # Panel 1 — full timeline
@@ -316,12 +312,8 @@ def plot_results(
     ax2.bar(xs[36:], bar_heights[36:], color=bar_colors[36:], alpha=0.8)
 
     # threshold lines for context section only
-    ax2.hlines(
-        [2 * res_std, -2 * res_std], -0.5, 35.5, colors=CLR["NORMAL"], lw=1.2, ls="--"
-    )
-    ax2.hlines(
-        [3 * res_std, -3 * res_std], -0.5, 35.5, colors=CLR["NORMAL"], lw=1.0, ls=":"
-    )
+    ax2.hlines([2 * res_std, -2 * res_std], -0.5, 35.5, colors=CLR["NORMAL"], lw=1.2, ls="--")
+    ax2.hlines([3 * res_std, -3 * res_std], -0.5, 35.5, colors=CLR["NORMAL"], lw=1.0, ls=":")
 
     # PI bands for forecast section
     fc_xs = xs[36:]
@@ -400,8 +392,8 @@ def main() -> None:
 
     context_values = df["anomaly_c"].values.astype(np.float32)
     context_dates = [pd.Timestamp(d) for d in df["date"].tolist()]
-    start_str = context_dates[0].strftime('%Y-%m') if not pd.isnull(context_dates[0]) else '?'
-    end_str   = context_dates[-1].strftime('%Y-%m') if not pd.isnull(context_dates[-1]) else '?'
+    start_str = context_dates[0].strftime("%Y-%m") if not pd.isnull(context_dates[0]) else "?"
+    end_str = context_dates[-1].strftime("%Y-%m") if not pd.isnull(context_dates[-1]) else "?"
     print(f"\n  Context: {len(context_values)} months  ({start_str} - {end_str})")
 
     # --- Phase 1: context anomaly detection ----------------------------------
@@ -423,9 +415,7 @@ def main() -> None:
     import timesfm
 
     hparams = timesfm.TimesFmHparams(horizon_len=HORIZON)
-    checkpoint = timesfm.TimesFmCheckpoint(
-        huggingface_repo_id="google/timesfm-1.0-200m-pytorch"
-    )
+    checkpoint = timesfm.TimesFmCheckpoint(huggingface_repo_id="google/timesfm-1.0-200m-pytorch")
     model = timesfm.TimesFm(hparams=hparams, checkpoint=checkpoint)
 
     point_out, quant_out = model.forecast([context_values], freq=[0])

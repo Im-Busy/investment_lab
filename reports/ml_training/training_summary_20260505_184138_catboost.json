@@ -1,0 +1,24 @@
+{
+  "run_id": "20260505_184138_catboost",
+  "symbol": "SPY",
+  "model_type": "catboost",
+  "horizon": 5,
+  "n_samples": 1005,
+  "n_features": 132,
+  "train_auc": 1.0,
+  "test_auc": 0.581598821145699,
+  "test_accuracy": 0.5592417061611374,
+  "calibration_error": 0.21854761774529413,
+  "top_features": {
+    "vol_regime": 2.6790107371019576,
+    "highest_20": 2.6406441284684696,
+    "ema_21": 2.4778832073336874,
+    "price_to_ma_100": 2.3613710828160603,
+    "vwap_20": 2.0890297918101224,
+    "adx": 1.9771572920560023,
+    "obv_change": 1.9462479336387255,
+    "bb_width_20": 1.8909190785803824,
+    "ema_21_55_spread": 1.8536690680327161,
+    "adx_trend": 1.8386630191170383
+  }
+}

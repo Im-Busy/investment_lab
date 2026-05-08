@@ -1,15 +1,15 @@
 {
 	"archive" : {},
-	"artifacts" : 
+	"artifacts" :
 	[
 		{
 			"path" : "lib/libgtestd.a"
 		}
 	],
 	"backtrace" : 3,
-	"backtraceGraph" : 
+	"backtraceGraph" :
 	{
-		"commands" : 
+		"commands" :
 		[
 			"add_library",
 			"cxx_library_with_type",
@@ -18,13 +18,13 @@
 			"install_project",
 			"include_directories"
 		],
-		"files" : 
+		"files" :
 		[
 			"C:/Dev/projects/investment_trying/build/googletest-src/googletest/cmake/internal_utils.cmake",
 			"C:/Dev/projects/investment_trying/build/googletest-src/googletest/CMakeLists.txt",
 			"CMakeLists.txt"
 		],
-		"nodes" : 
+		"nodes" :
 		[
 			{
 				"file" : 1
@@ -76,10 +76,10 @@
 			}
 		]
 	},
-	"compileGroups" : 
+	"compileGroups" :
 	[
 		{
-			"compileCommandFragments" : 
+			"compileCommandFragments" :
 			[
 				{
 					"fragment" : "-g -std=c++11"
@@ -88,7 +88,7 @@
 					"fragment" : "-Wall -Wshadow -Werror -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers"
 				}
 			],
-			"includes" : 
+			"includes" :
 			[
 				{
 					"backtrace" : 7,
@@ -104,53 +104,53 @@
 				}
 			],
 			"language" : "CXX",
-			"languageStandard" : 
+			"languageStandard" :
 			{
-				"backtraces" : 
+				"backtraces" :
 				[
 					3
 				],
 				"standard" : "11"
 			},
-			"sourceIndexes" : 
+			"sourceIndexes" :
 			[
 				0
 			]
 		}
 	],
 	"id" : "gtest::@32fe1c6cd3a65a2fab56",
-	"install" : 
+	"install" :
 	{
-		"destinations" : 
+		"destinations" :
 		[
 			{
 				"backtrace" : 5,
 				"path" : "lib"
 			}
 		],
-		"prefix" : 
+		"prefix" :
 		{
 			"path" : "C:/Program Files (x86)/OrderBookProject"
 		}
 	},
 	"name" : "gtest",
 	"nameOnDisk" : "libgtestd.a",
-	"paths" : 
+	"paths" :
 	{
 		"build" : "googletest-build/googletest",
 		"source" : "C:/Dev/projects/investment_trying/build/googletest-src/googletest"
 	},
-	"sourceGroups" : 
+	"sourceGroups" :
 	[
 		{
 			"name" : "Source Files",
-			"sourceIndexes" : 
+			"sourceIndexes" :
 			[
 				0
 			]
 		}
 	],
-	"sources" : 
+	"sources" :
 	[
 		{
 			"backtrace" : 3,

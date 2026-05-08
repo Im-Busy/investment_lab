@@ -1,16 +1,21 @@
 # Current Session Log
 
-## Session: 2026-05-01T00:09+08:00 | Progress Docs Migration
-
 | Time | Action | Files | Result |
 |------|--------|-------|--------|
-| 00:09 | created | `progress_docs/` directory structure | Directories ready |
-| 00:09 | created | `progress_docs/README.md` | Navigation index + type catalog written |
-| 00:09 | created | `progress_docs/current.md` | Session log initialized |
-| 00:09 | created | `progress_docs/plans/full.md` | Master plan aggregated |
-| 00:09 | created | `progress_docs/plans/01-patterns.md` through `08-attribution.md` | All 8 phase plans migrated |
-| 00:09 | created | `progress_docs/plans/study-*.md`, `eval-*.md`, `setup-*.md` | Non-phase plans migrated |
-| 00:09 | created | `progress_docs/logs/full.md` | Chronological project log |
-| 00:09 | created | Phase/type-specific log files | Individual logs seeded |
-| 00:09 | updated | `AGENTS.md` | Replaced Pending Items section with Progress Documentation section |
-| 00:09 | archived | Root HANDOVER/PHASE files | Moved root clutter to `progress_docs/logs/` |
+| 2026-05-08 08:38 | Phase 6b Pioneer Research plan created — 7 tasks across 3 tiers (T9, FS19, Ablation, FS16, FS15-lite, FS20, FS14). LGBM-first principle: default to LightGBM, CatBoost only when ≥10% better on PurgedKFold. Prove-or-discard model. | `progress_docs/plans/enhance-pioneer-research.md`, `progress_docs/plans/full.md`, `progress_docs/README.md`, `progress_docs/current.md` | Plan complete. Tier 1 ready: P1.1 (T9 Meta-Labeling), P1.2 (FS19 Gap-Fill), P1.3 (Pattern Ablation). |
+| 2026-05-08 08:45 | T7 implemented: Black-Litterman portfolio optimization | `src/portfolio/black_litterman.py`, `src/portfolio/__init__.py` | BL optimizer: equilibrium returns (Π = λΣw_mkt), investor views (absolute/relative), Bayesian posterior blending. Ledoit-Wolf covariance shrinkage, constrained optimization, efficient frontier, rolling optimization, volatility targeting. 4 new exports. Lint + smoke test pass. |
+| 2026-05-08 08:20 | Phase 4+ complete: T6 (MC VaR/CVaR), QW2 (Stop-Loss Optimizer), RS1 (EBM Alpha Pipeline), RS2 (Dream Team Ensemble) | `src/risk/mc_var.py`, `src/ml/stop_loss_optimizer.py`, `src/ml/ebm_alpha.py`, `src/ml/dream_team_ensemble.py`, `src/ml/__init__.py`, `src/risk/__init__.py`, `src/risk/circuit_breakers.py` | 4 new modules, 12 new exports (27→39). MCVaR integrated into CircuitBreaker.check_full() with var_95/var_99/cvar_95 thresholds. All imports + lint pass. |
+| 2026-05-07 16:31 | External OHLCV pipeline review — friend's 20 guesses evaluated against codebase | `progress_docs/plans/enhance-ml-capabilities.md`, `progress_docs/plans/full.md`, `progress_docs/current.md` | 21 new FS tasks added (6 Tier 1, 7 Tier 2, 8 Tier 3/Deferred). T9 (Triple Barrier) elevated to P1 as FS4. Execution order: Foundation Fixes → Quick Wins → New Models → Advanced → Deferred. |
+| 2026-05-06 21:12 | T3 implemented: AutoGluon AutoML baseline | `src/ml/automl.py`, `scripts/run_automl.py`, `tests/test_automl.py`, `pyproject.toml` | AutoMLBaseline wraps TabularPredictor for accuracy benchmarking. Medium/high/deploy presets. Leaderboard, baseline comparison, save/load. Downgraded scikit-learn→1.7.2, scipy→1.16.3, pyarrow→20.0.0 to satisfy AutoGluon constraints. 8 tests pass. |
+| 2026-05-06 15:20 | T2 implemented: InterpretML EBM regime classifier | `src/ml/ebm_classifier.py`, `tests/test_ebm_classifier.py`, `docs/ML_TRAINING_GUIDE.md` | EBMRegimeClassifier — glassbox regime classification. 10 tests pass. |
+| 2026-05-06 15:20 | Beginner ML guide created | `docs/ML_TRAINING_GUIDE.md` | Comprehensive guide covering all 30+ ML components. |
+| 2026-05-06 15:20 | COMMAND_CHEATSHEET updated | `COMMAND_CHEATSHEET.md` | Added EBM glassbox explainability section. |
+
+**All P1 tasks complete (Enhancement Phase 1: Foundation Fixes).** T4 (DSR/PSR/FDR), FS4 (Triple Barrier), FS6 (Combinatorial Purged CV) all done. Next priority: Phase 2 quick wins — FS2 (Historical Analog Matching), FS3 (MAE/Drawdown Target), FS5 (GMM Regimes), FS11 (Fractional Differentiation).
+
+| 2026-05-06 14:50 | T1c implemented: GA regime optimizer | `src/ml/tuning/ga_tuner.py`, `scripts/tune_model.py` | GA optimizes n_regimes via silhouette score on KMeans clustering. Tournament selection, arithmetic crossover, adaptive Gaussian mutation. RegimeDiscovery wrapper extracts centroids + labels. 4 tests pass. |
+| 2026-05-06 14:50 | T1d implemented: WOA pattern threshold tuner | `src/ml/tuning/woa_tuner.py`, `scripts/tune_model.py` | Whale spiral search for per-pattern min_confidence thresholds. Shrinking encircling + random exploration + spiral exploitation. 4 tests pass. |
+| 2026-05-06 14:50 | QW1 implemented: Pattern confidence scoring | `src/ml/pattern_scorer.py` | PatternScorer wraps CatBoost for per-detection profitability probability scoring. 6 tests pass. |
+
+| 2026-05-05 20:15 | ML capability survey — 10 areas audited | `src/ml/`, `src/risk/`, `src/portfolio/`, `src/signals/` | Critical gaps: (1) No HP tuning, (2) No AutoML, (3) No DSR/PSR/FDR, (4) No ensemble stacking, (5) No InterpretML/EBM. Full survey in `plans/enhance-ml-capabilities.md`. |
+| 2026-05-05 20:30 | Created ML enhancement plan (GWO, InterpretML, AutoGluon + wider gaps) | `plans/enhance-ml-capabilities.md`, `plans/full.md`, `README.md` | 13 tasks across 3 tiers. P1: Optuna/GWO tuning, InterpretML EBM, AutoGluon, DSR/PSR/FDR, ensemble stacking. P2: MC VaR, SHAP dashboard, Black-Litterman, meta-labeling. P3: XGBoost, TabNet, TFT, HRP. Added `enhancement` type to README catalog. |

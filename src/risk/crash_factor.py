@@ -32,7 +32,7 @@ import sys
 import warnings
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
@@ -137,58 +137,69 @@ class CrashFactorModel:
         Calculate all 10 crash factor features.
 
         Args:
-            prices: OHLCV DataFrame with 'close', 'volume' columns
+            prices: OHLCV DataFrame with 'Close'/'close', 'Volume'/'volume' columns
             fundamentals: Optional fundamental data DataFrame
             market_returns: Optional market returns for excess return calc
 
         Returns:
             DataFrame with feature columns
         """
+        # Normalize column names to lowercase for internal use
+        _prices = prices.rename(
+            columns={
+                "Close": "close",
+                "Volume": "volume",
+                "Open": "open",
+                "High": "high",
+                "Low": "low",
+            }
+        )
+
         features = {}
 
         # 1. 12-month return
-        returns = prices["close"].pct_change(self.config.return_window)
+        returns = _prices["close"].pct_change(self.config.return_window)
         features["return_12m"] = returns
 
         # 2. Excess return (vs market)
         if market_returns is not None:
-            stock_returns = prices["close"].pct_change()
+            stock_returns = _prices["close"].pct_change()
             excess = stock_returns - market_returns.reindex(stock_returns.index, method="ffill")
             features["excess_return"] = excess.rolling(self.config.return_window).sum()
         else:
             features["excess_return"] = returns
 
         # 3. Total volatility
-        daily_returns = prices["close"].pct_change()
-        features["total_volatility"] = (
-            daily_returns.rolling(self.config.volatility_window).std() * np.sqrt(252)
-        )
+        daily_returns = _prices["close"].pct_change()
+        features["total_volatility"] = daily_returns.rolling(
+            self.config.volatility_window
+        ).std() * np.sqrt(252)
 
         # 4. Skewness
-        features["skewness"] = daily_returns.rolling(
-            self.config.return_window
-        ).skew()
+        features["skewness"] = daily_returns.rolling(self.config.return_window).skew()
 
         # 5. Size (log market cap) - use volume as proxy if no fundamentals
         if fundamentals is not None and "market_cap" in fundamentals.columns:
             features["size"] = np.log(fundamentals["market_cap"])
         else:
-            features["size"] = np.log(prices["volume"] * prices["close"])
+            features["size"] = np.log(_prices["volume"] * _prices["close"])
 
         # 6. Turnover change
-        turnover = prices["volume"] / prices["close"]
+        turnover = _prices["volume"] / (_prices["close"].replace(0, np.nan))
         avg_turnover = turnover.rolling(self.config.turnover_window).mean()
         prev_turnover = avg_turnover.shift(self.config.turnover_window)
-        features["turnover_change"] = (avg_turnover - prev_turnover) / prev_turnover
+        features["turnover_change"] = np.where(
+            prev_turnover > 0, (avg_turnover - prev_turnover) / prev_turnover, 0.0
+        )
 
         # 7. Firm age (days since first data)
         features["firm_age"] = np.arange(len(prices)) / 252.0
 
         # 8. Tangibility (use volume/price ratio as proxy)
-        features["tangibility"] = prices["volume"] / (prices["close"] + 1e-8)
+        features["tangibility"] = _prices["volume"] / (_prices["close"] + 1e-8)
 
         # 9. Sales growth (use volume change as proxy)
-        features["sales_growth"] = prices["volume"].pct_change(252)
+        features["sales_growth"] = _prices["volume"].pct_change(252)
 
         # 10. Negative earnings dummy (use negative return as proxy)
         features["negative_earnings"] = (daily_returns < 0).astype(int)
@@ -362,9 +373,7 @@ class CrashFactorFilter:
                 continue
 
             prices = prices_dict[symbol]
-            fundamentals = (
-                fundamentals_dict.get(symbol) if fundamentals_dict else None
-            )
+            fundamentals = fundamentals_dict.get(symbol) if fundamentals_dict else None
 
             result = self.model.predict(prices, fundamentals, symbol)
             crash_probs.append(
@@ -461,7 +470,7 @@ def run_batch_analysis(
         symbol = filepath.stem
         try:
             prices = pd.read_csv(filepath, index_col=0, parse_dates=True)
-            if "close" not in prices.columns:
+            if "close" not in prices.columns and "Close" not in prices.columns:
                 continue
 
             result = model.predict(prices, symbol=symbol)
@@ -510,9 +519,7 @@ def run_batch_analysis(
 
 def main():
     """Main entry point."""
-    parser = argparse.ArgumentParser(
-        description="Crash Factor Model - Pre-trade Risk Filter (R17)"
-    )
+    parser = argparse.ArgumentParser(description="Crash Factor Model - Pre-trade Risk Filter (R17)")
     parser.add_argument(
         "--data-dir",
         type=str,

@@ -1,7 +1,6 @@
 """Unit tests for FeatureStore."""
 
 import json
-from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -10,7 +9,7 @@ import pytest
 from src.ml.feature_store import FeatureStore
 
 
-def _make_ohlcv(n: int = 500, seed: int = 42) -> pd.DataFrame:
+def _make_ohlcv(n: int = 1500, seed: int = 42) -> pd.DataFrame:
     """Create synthetic OHLCV data."""
     np.random.seed(seed)
     prices = 100 + np.cumsum(np.random.randn(n) * 0.5)
@@ -36,8 +35,8 @@ def tmp_store(tmp_path):
 def sample_data():
     """Sample OHLCV data for two tickers."""
     return {
-        "SPY": _make_ohlcv(500, seed=42),
-        "QQQ": _make_ohlcv(500, seed=99),
+        "SPY": _make_ohlcv(1500, seed=42),
+        "QQQ": _make_ohlcv(1500, seed=99),
     }
 
 

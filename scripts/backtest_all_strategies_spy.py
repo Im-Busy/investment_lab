@@ -182,7 +182,7 @@ def main() -> None:
     total = len(results)
     valid = sum(1 for r in results if r["Trades"] > 0)
     print(f"\nSummary: {valid}/{total} strategies produced valid signals")
-    print(f"Signal log format: consistent (backtesting.py standard)")
+    print("Signal log format: consistent (backtesting.py standard)")
 
     # Save results
     output_path = project_root / "reports" / "spy_daily_backtest.csv"

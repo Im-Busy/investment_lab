@@ -1,0 +1,57 @@
+repos:
+  # --- File-level hygiene ---
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: detect-private-key
+      - id: debug-statements
+        exclude: "scripts/(fix_notebook_02|optimize_passing_patterns|ml_selector_gradio)\\.py$"
+
+  # --- Ruff linter ---
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.5
+    hooks:
+      - id: ruff
+        args: [--fix]
+        exclude: |
+          (?x)^(
+            scripts/(fix_notebook_02|optimize_passing_patterns|ml_selector_gradio)\.py|
+            notebooks/.*\.py$|
+            .*\.ipynb$|
+            .kilo/skills/.*|
+            useful_resources/.*
+          )$
+      - id: ruff-format
+        exclude: |
+          (?x)^(
+            scripts/(fix_notebook_02|optimize_passing_patterns|ml_selector_gradio)\.py|
+            notebooks/.*\.py$|
+            .*\.ipynb$|
+            .kilo/skills/.*|
+            useful_resources/.*
+          )$
+
+  # --- Mypy type checker ---
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.19.1
+    hooks:
+      - id: mypy
+        args: ["--explicit-package-bases"]
+        additional_dependencies:
+          - pandas>=2.0.0
+          - numpy>=1.24.0
+        exclude: |
+          (?x)^(
+            scripts/.*|
+            notebooks/.*\.py$|
+            .*\.ipynb$|
+            .kilo/skills/.*|
+            useful_resources/.*
+          )$

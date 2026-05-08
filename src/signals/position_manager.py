@@ -5,11 +5,9 @@ Handles position sizing, risk management, and portfolio-level controls.
 """
 
 import pandas as pd
-import numpy as np
 from typing import Optional, Dict, Any, List
 from dataclasses import dataclass, field
 from enum import Enum
-from datetime import datetime
 
 from ..patterns.base import SignalDirection
 from ..risk.crash_factor import CrashFactorModel, CrashFactorConfig
@@ -161,7 +159,7 @@ class PositionManager:
         self.use_take_profit_3 = use_take_profit_3
         self.use_crash_filter = use_crash_filter
         self.crash_threshold = crash_threshold
-        
+
         # Crash factor model for pre-trade filtering (R17/H5)
         self.crash_model = CrashFactorModel(CrashFactorConfig(crash_threshold=crash_threshold))
 
@@ -266,7 +264,12 @@ class PositionManager:
         ]
         return sum(losses) / len(losses) if losses else 0.0
 
-    def can_open_position(self, signal: Any, timestamp: Optional[pd.Timestamp] = None, price_data: Optional[pd.DataFrame] = None) -> tuple:
+    def can_open_position(
+        self,
+        signal: Any,
+        timestamp: Optional[pd.Timestamp] = None,
+        price_data: Optional[pd.DataFrame] = None,
+    ) -> tuple:
         """
         Check if a new position can be opened.
 
@@ -296,13 +299,18 @@ class PositionManager:
                 if crash_result.crash_probability >= self.crash_threshold:
                     return False, f"Crash risk too high (p={crash_result.crash_probability:.2%})"
             except Exception:
-                # If crash model fails, allow trade but log warning
-                pass
+                import logging
+
+                logging.warning("Crash model prediction failed in can_open_position", exc_info=True)
 
         return True, "Position allowed"
 
     def open_position(
-        self, signal: Any, timestamp: Optional[pd.Timestamp] = None, atr: Optional[float] = None, price_data: Optional[pd.DataFrame] = None
+        self,
+        signal: Any,
+        timestamp: Optional[pd.Timestamp] = None,
+        atr: Optional[float] = None,
+        price_data: Optional[pd.DataFrame] = None,
     ) -> Optional[Position]:
         """
         Open a new position from a signal.
@@ -345,7 +353,9 @@ class PositionManager:
                 crash_result = self.crash_model.predict(price_data, symbol="UNKNOWN")
                 crash_prob = crash_result.crash_probability
             except Exception:
-                pass
+                import logging
+
+                logging.warning("Crash model prediction failed in open_position", exc_info=True)
 
         position = Position(
             id=position_id,

@@ -15,7 +15,7 @@ Regime-Strategy Mapping (from trading_strategy.md):
 from __future__ import annotations
 
 from enum import Enum
-from typing import Any, Dict, List, Optional, Set, Type
+from typing import Any, Dict, List, Optional
 
 import pandas as pd
 

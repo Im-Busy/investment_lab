@@ -5,7 +5,7 @@ Tests for position sizing with short positions.
 
 import pytest
 
-from src.risk.position_sizing import PositionSizer, PositionSizeResult
+from src.risk.position_sizing import PositionSizer
 
 
 class TestPositionSizingShorts:

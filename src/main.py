@@ -416,13 +416,13 @@ def main():
 Examples:
   # Run backtest on data file
   python -m src.main backtest data/SPY_historical.csv --start 2020-01-01 --end 2023-12-31
-  
+
   # Scan for patterns only
   python -m src.main scan data/SPY_historical.csv --category classic
-  
+
   # Run with specific patterns
   python -m src.main backtest data/SPY_historical.csv --patterns "Double Top,Double Bottom"
-  
+
   # Export results
   python -m src.main backtest data/SPY_historical.csv --output results.json
         """,

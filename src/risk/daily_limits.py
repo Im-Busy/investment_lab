@@ -263,7 +263,8 @@ class DailyLossLimiter:
 
         # Linear reduction from warning threshold to limit
         warning_ratio = self.warning_threshold_pct
-        if loss_ratio >= warning_ratio:
+        if loss_ratio >= warning_ratio and warning_ratio < 1.0:
+            reduction = 1.0 - ((loss_ratio - warning_ratio) / (1.0 - warning_ratio))
             reduction = 1.0 - ((loss_ratio - warning_ratio) / (1.0 - warning_ratio))
             reduction *= 1.0 - self.position_size_reduction_pct
             return max(self.position_size_reduction_pct, reduction)

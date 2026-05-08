@@ -13,6 +13,10 @@ Performance optimizations (Phase 1):
 This version maintains the same functionality but runs significantly faster.
 """
 
+import logging
+
+_logger = logging.getLogger(__name__)
+
 import multiprocessing
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -305,6 +309,7 @@ class MultiPatternStrategyOptimized(Strategy):
                         pattern.precompute_signals(self._df)
             except Exception:
                 # Fall back to no caching for this pattern
+                _logger.debug("Pattern precompute failed for %s", pattern.name, exc_info=True)
                 self._pattern_signals_cache[pattern.name] = None
 
     def _get_cached_signal(self, pattern_name: str, idx: int) -> int:
@@ -377,6 +382,7 @@ class MultiPatternStrategyOptimized(Strategy):
                         "pattern_type": result.pattern_type.value,
                     }
         except Exception:
+            _logger.debug("Pattern detection failed for %s", pattern_name, exc_info=True)
             pass
         return None
 
@@ -500,6 +506,7 @@ class MultiPatternStrategyOptimized(Strategy):
             )
 
         except Exception:
+            _logger.debug("Confluence scoring failed, using simple average", exc_info=True)
             confluence = None
 
         # Calculate entry, stop, and targets
@@ -645,7 +652,7 @@ class MultiPatternStrategyFast(Strategy):
                     else:
                         short_count += 1
                         short_signals.append(result.signal)
-            except:
+            except Exception:
                 continue
 
         # Require at least min_confluence_count patterns to agree

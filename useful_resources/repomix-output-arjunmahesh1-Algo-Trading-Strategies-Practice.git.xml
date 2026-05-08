@@ -72436,7 +72436,7 @@ Date,Close/Last,Volume,Open,High,Low
 
 Practice in Python from "Algorithmic Trading: Winning Strategies and Their Rationale". Ernest P. Chan. © 2013 Ernest P. Chan. Published 2013 by John Wiley & Sons, Inc.
 
-#### Mean Reversion and Stationarity:  
+#### Mean Reversion and Stationarity:
 _Utilizes EUR_USD data from https://sdw.ecb.europa.eu/quickview.do;jsessionid=D2CD02A53B09A6A89782BD21F16BC2A6?SERIES_KEY=120.EXR.D.USD.EUR.SP00.A_
 > Tests Demonstrated:
 > - ADF Test
@@ -72445,9 +72445,9 @@ _Utilizes EUR_USD data from https://sdw.ecb.europa.eu/quickview.do;jsessionid=D2
 > - Half-Life of Mean Reversion
 
 
-  
+
 #### Impractical Mean-Reverting Strategy:
-Mean-Reverting Strategy on non mean-reverting EUR_USD data above. Shows that trading a nonstationary price series can be profitable with a mean-reverting strategy.  
+Mean-Reverting Strategy on non mean-reverting EUR_USD data above. Shows that trading a nonstationary price series can be profitable with a mean-reverting strategy.
 Impractical Assumptions:
  - Unlimited capital (no maximum imposed on portfolio market value)
  - No transaction costs
@@ -72463,7 +72463,7 @@ _Utilizes EWA and EWC ETF historical data from Nasdaq, IGE ETF data for 3-way_
 > - Kalman Filter + Kalman Strategy
 
 
-#### Trading Pairs Comparison:  
+#### Trading Pairs Comparison:
 _Utilizes USO and GLD historical data from Nasdaq_
 > Compared:
 > - Spread (Strategy + Returns)
@@ -72472,14 +72472,14 @@ _Utilizes USO and GLD historical data from Nasdaq_
 > - + Final statistics for each (Sharpe + APR)
 
 
-#### Bollinger Bands Strategy:  
+#### Bollinger Bands Strategy:
 _Utilizes USO and GLD historical data from Nasdaq_
 > Bollinger Bands Strategy/Returns/Statistics (Sharpe + APR)
 
 
 #### Buy/Short-on-Gap Strategy:
 _Utilizes hourly DOW Jones data_
-Intra-Day mean reversion strategy  
+Intra-Day mean reversion strategy
 Unlimited capital/No transaction costs, signal noise from open/preopen difference
 > Buy-on-Gap Strategy + Statistics
 > Short-on-Gap Strategy + Statistics

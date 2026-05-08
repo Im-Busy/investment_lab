@@ -11,9 +11,9 @@ This module provides pattern detection for 20 chart patterns across 4 categories
 from .base import BasePattern, PatternType, SignalDirection, TradeSignal, PatternResult
 
 __all__ = [
-    'BasePattern',
-    'PatternType',
-    'SignalDirection',
-    'TradeSignal',
-    'PatternResult',
+    "BasePattern",
+    "PatternType",
+    "SignalDirection",
+    "TradeSignal",
+    "PatternResult",
 ]

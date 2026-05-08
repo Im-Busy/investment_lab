@@ -24,6 +24,7 @@ Take Profit Rules:
 
 from typing import Dict, List, Optional, Tuple
 
+import numpy as np
 import pandas as pd
 
 from ...indicators.pivots import find_swing_highs, find_swing_lows
@@ -70,6 +71,82 @@ class TripleTop(BasePattern):
         self.entry_offset = entry_offset
         self.stop_offset = stop_offset
         self.volume_filter = volume_filter
+
+    def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Vectorized Triple Top detection across all bars.
+
+        Returns np.int8 array: 0=no signal, 1=long, -1=short.
+        """
+        n = len(df)
+        signals = np.zeros(n, dtype=np.int8)
+        close = df["Close"].to_numpy(dtype=np.float64)
+
+        swing_highs = find_swing_highs(df, self.lookback)
+        swing_lows = find_swing_lows(df, self.lookback)
+
+        sh_arr = swing_highs.to_numpy(dtype=np.float64)
+        sl_arr = swing_lows.to_numpy(dtype=np.float64)
+        n_swing_highs = pd.notna(swing_highs).to_numpy()
+        n_swing_lows = pd.notna(swing_lows).to_numpy()
+
+        for i in range(max(self.lookback, self.min_pattern_bars), n):
+            lookback = min(self.max_pattern_bars * 2, i)
+
+            peaks: list = []
+            troughs: list = []
+            for j in range(i - lookback, i + 1):
+                if j < 0:
+                    continue
+                if n_swing_highs[j]:
+                    peaks.append((j, float(sh_arr[j])))
+                if n_swing_lows[j]:
+                    troughs.append((j, float(sl_arr[j])))
+
+            if len(peaks) < 3 or len(troughs) < 2:
+                continue
+
+            peaks_sorted = sorted(peaks, key=lambda x: x[0])
+
+            pattern_found = False
+            neckline = 0.0
+
+            for ip1 in range(len(peaks_sorted) - 2):
+                p1 = peaks_sorted[ip1]
+                for ip2 in range(ip1 + 1, len(peaks_sorted) - 1):
+                    p2 = peaks_sorted[ip2]
+                    for ip3 in range(ip2 + 1, len(peaks_sorted)):
+                        p3 = peaks_sorted[ip3]
+                        duration = p3[0] - p1[0]
+                        if duration < self.min_pattern_bars or duration > self.max_pattern_bars:
+                            continue
+                        max_p = max(p1[1], p2[1], p3[1])
+                        min_p = min(p1[1], p2[1], p3[1])
+                        if max_p == 0:
+                            continue
+                        if (max_p - min_p) / max_p > self.peak_tolerance:
+                            continue
+
+                        t1_candidates = [(ti, tp) for ti, tp in troughs if p1[0] < ti < p2[0]]
+                        t2_candidates = [(ti, tp) for ti, tp in troughs if p2[0] < ti < p3[0]]
+                        if not t1_candidates or not t2_candidates:
+                            continue
+                        t1 = min(t1_candidates, key=lambda x: x[1])
+                        t2 = min(t2_candidates, key=lambda x: x[1])
+                        neckline = min(t1[1], t2[1])
+
+                        if float(close[i]) < neckline:
+                            pattern_found = True
+                            break
+                    if pattern_found:
+                        break
+                if pattern_found:
+                    break
+
+            if pattern_found:
+                signals[i] = -1
+
+        return signals
 
     def _find_peaks_and_troughs(
         self, df: pd.DataFrame, i: int

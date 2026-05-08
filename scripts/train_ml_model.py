@@ -28,12 +28,7 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 from src.ml.feature_engineering import FeatureExtractor
-from src.ml.feature_store import FeatureStore
-from src.ml.features import FeatureEngineer
-from src.ml.metrics import compute_ic, compute_rank_ic, ic_summary
 from src.ml.pattern_classifier import PatternClassifier
-from src.ml.purged_cv import PurgedKFold
-from src.ml.signal_scorer import SignalScorer
 
 logging.basicConfig(
     level=logging.INFO,
@@ -189,7 +184,7 @@ def prepare_training_data(
 def train_with_walk_forward(
     X: pd.DataFrame,
     y: pd.Series,
-    model_type: str = "lightgbm",
+    model_type: str = "catboost",
     n_splits: int = 5,
     train_size: int = 500,
     step_size: int = 100,
@@ -199,7 +194,7 @@ def train_with_walk_forward(
 
     Args:
         X: Feature matrix
-        y: Labels
+        y: Target labels
         model_type: Type of model
         n_splits: Number of splits for PurgedKFold
         train_size: Initial training window
@@ -242,7 +237,7 @@ def train_with_walk_forward(
 def train_final_model(
     X: pd.DataFrame,
     y: pd.Series,
-    model_type: str = "lightgbm",
+    model_type: str = "catboost",
     test_size: float = 0.3,
 ) -> Tuple[PatternClassifier, Dict[str, Any]]:
     """
@@ -429,8 +424,8 @@ def main():
     parser.add_argument("--end", default="2024-12-31", help="End date for Yahoo Finance download")
     parser.add_argument(
         "--model-type",
-        default="lightgbm",
-        choices=["lightgbm", "xgboost", "random_forest", "gradient_boosting"],
+        default="catboost",
+        choices=["catboost", "chronos", "fincast", "xlstm"],
         help="Model type",
     )
     parser.add_argument(
@@ -470,9 +465,7 @@ def main():
 
     args = parser.parse_args()
     model_types = (
-        ["lightgbm", "xgboost", "random_forest", "gradient_boosting"]
-        if args.compare_models
-        else [args.model_type]
+        ["catboost", "chronos", "fincast", "xlstm"] if args.compare_models else [args.model_type]
     )
 
     iteration = 0

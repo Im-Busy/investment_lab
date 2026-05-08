@@ -237,7 +237,7 @@ def main() -> None:
     total_trades = sum(r["Trades"] for r in results)
     avg_wr = sum(r["Win Rate"] for r in results) / len(results) if results else 0
     pos_return_count = sum(1 for r in results if r["Return"] > 0)
-    print(f"\nAggregate:")
+    print("\nAggregate:")
     print(f"  Total trades across all strategies: {total_trades}")
     print(f"  Average win rate: {avg_wr:.1f}%")
     print(f"  Strategies with positive return: {pos_return_count}/{len(results)}")

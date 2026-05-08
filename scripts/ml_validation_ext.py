@@ -9,7 +9,6 @@ Extends the base ML validation with:
 
 from __future__ import annotations
 
-import os
 import sys
 import warnings
 from datetime import datetime
@@ -19,19 +18,15 @@ import matplotlib
 import numpy as np
 import pandas as pd
 import yfinance as yf
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.metrics import accuracy_score, classification_report
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src.indicators.regime_detector import RegimeDetector
 from src.ml.features import FeatureEngineer
-from src.ml.pipeline import MLPipeline
-from src.ml.regime_model import RegimeClassifier
-from src.ml.signal_scorer import SignalScorer
 from src.strategies.backtest_py.runner import BacktestPyRunner
 
 warnings.filterwarnings("ignore")

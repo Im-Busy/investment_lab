@@ -1,7 +1,7 @@
 Page 1: INVESTING IS COMPRESSION
-Page 1: 
+Page 1:
 Page 1: arXiv:2604.10758v3 [cs.CE] 15 Apr 2026
-Page 1: 
+Page 1:
 Page 1: OSCAR STIFFELMAN
 Page 1: NAND CAPITAL
 Page 1: ozzie@cs.stanford.edu
@@ -30,7 +30,7 @@ Page 1: proportion to each assetΓÇÖs probability of dominating the candidate 
 Page 1: growth shortfall of this heuristic relative to the optimal portfolio is bounded
 Page 1: by the entropy of the winner fraction distribution. To my knowledge, both the
 Page 1: heuristic and the entropy bound are original contributions.
-Page 1: 
+Page 1:
 Page 1: 1. Introduction
 Page 1: In 1956 John Kelly wrote a paper while working at Bell Labs [9] describing
 Page 1: the relationship between gambling and Information Theory. The paper describes
@@ -43,12 +43,12 @@ Page 1: function to balance risk and reward. The math of utility functions came 
 Page 1: Neumann and MorgensternΓÇÖs game theory. It formalizes a subjective preference or
 Page 1: willingness to risk loss in pursuit of gain. Kelly wanted to avoid the ΓÇ£introduction of an arbitrary cost function,ΓÇ¥ likening it to the external value that people
 Page 1: 1
-Page 1: 
-Page 1: 
+Page 1:
+Page 1:
 Page 2: 2
-Page 2: 
+Page 2:
 Page 2: OSCAR STIFFELMAN
-Page 2: 
+Page 2:
 Page 2: attempted to attach to ShannonΓÇÖs information. Kelly realized that maximizing logarithmic growth rather than simple expectation simultaneously avoids ruin while
 Page 2: maximizing asymptotic wealth. Kelly wasnΓÇÖt the first to propose this objective. It
 Page 2: was originally proposed by Bernoulli in 1738 as the solution to the Saint Petersburg
@@ -92,12 +92,12 @@ Page 2: Equipartition Property (AEP) for markets to show that it dominates every
 Page 2: strategy over the long run [1], and an application of Kuhn-Tucker conditions [3] to
 Page 2: show that it is also optimal in a game-theoretic sense over the short term. Cover
 Page 2: noted that it was ΓÇ£tantalizing that [the log optimal strategy] arises as the solution
-Page 2: 
-Page 2: 
+Page 2:
+Page 2:
 Page 3: INVESTING IS COMPRESSION
-Page 3: 
+Page 3:
 Page 3: 3
-Page 3: 
+Page 3:
 Page 3: to such dissimilar problemsΓÇ¥ and wondered if it was just a mathematical coincidence
 Page 3: or something more fundamental. [2]. As Cover observed:
 Page 3: ΓÇ£there is no essential conflict between good short-term and longrun performance. Both are achieved by maximizing the conditional
@@ -125,51 +125,51 @@ Page 3: return multiplier, not the more common odds = r ΓêÆ 1.
 Page 3: If we start with initial wealth V0 , then with probability p we will win and our
 Page 3: wealth at the next step will be
 Page 3: V1 = V0 (f r + (1 ΓêÆ f ))
-Page 3: 
+Page 3:
 Page 3: (1)
-Page 3: 
+Page 3:
 Page 3: and with probability (1 ΓêÆ p) we will lose and our wealth will be
 Page 3: V1 = V0 (1 ΓêÆ f )
-Page 3: 
+Page 3:
 Page 3: (2)
-Page 3: 
+Page 3:
 Page 3: After n steps, our wealth becomes
 Page 3: Vn = V0 (1 ΓêÆ f )n0 (f r + (1 ΓêÆ f ))n1
-Page 3: 
+Page 3:
 Page 3: (3)
-Page 3: 
+Page 3:
 Page 3: if we have n0 losses and n1 wins.
 Page 3: KellyΓÇÖs proposal is that we maximize the expected log wealth, or the probability
 Page 3: weighted average log return. Note that log is monotonic, so maximizing log return
 Page 3: also maximizes total growth after n steps. KellyΓÇÖs focus was the expected loggrowth per step, g. Since each step is multiplicative, the log of the full product is
 Page 3: the sum of the logs, and the average converges to the expectation in the limit.
 Page 3: log
-Page 3: 
+Page 3:
 Page 3: 
-Page 3: 
+Page 3:
 Page 3: Vn
 Page 3: V0
-Page 3: 
+Page 3:
 Page 3: 
-Page 3: 
+Page 3:
 Page 3: = p log(f r + (1 ΓêÆ f )) + (1 ΓêÆ p) log(1 ΓêÆ f )
 Page 3: n
 Page 3: We can find the f that maximizes g by taking the derivative and setting it equal
 Page 3: to zero
 Page 3: (4)
-Page 3: 
+Page 3:
 Page 3: g(f ) = lim
-Page 3: 
+Page 3:
 Page 3: nΓåÆΓê₧
 Page 3: Γêù
-Page 3: 
-Page 3: 
+Page 3:
+Page 3:
 Page 4: 4
-Page 4: 
+Page 4:
 Page 4: OSCAR STIFFELMAN
-Page 4: 
+Page 4:
 Page 4: (5)
-Page 4: 
+Page 4:
 Page 4: dg
 Page 4: p(r ΓêÆ 1)
 Page 4: 1ΓêÆp
@@ -178,35 +178,35 @@ Page 4: ΓêÆ
 Page 4: =0
 Page 4: df
 Page 4: fr ΓêÆ f + 1 1 ΓêÆ f
-Page 4: 
+Page 4:
 Page 4: Solving for f we get
-Page 4: 
+Page 4:
 Page 4: fΓêù =
-Page 4: 
+Page 4:
 Page 4: (6)
-Page 4: 
+Page 4:
 Page 4: pr ΓêÆ 1
 Page 4: rΓêÆ1
-Page 4: 
+Page 4:
 Page 4: This is the famous ΓÇ£edge/oddsΓÇ¥ Kelly solution that maximizes growth. Plugging
 Page 4: it back into the growth equation:
-Page 4: 
+Page 4:
 Page 4: (7)
-Page 4: 
+Page 4:
 Page 4: g Γêù = p log(pr) + (1 ΓêÆ p) log
-Page 4: 
+Page 4:
 Page 4: 
-Page 4: 
+Page 4:
 Page 4: (1 ΓêÆ p)r
 Page 4: rΓêÆ1
-Page 4: 
+Page 4:
 Page 4: 
-Page 4: 
+Page 4:
 Page 4: If the market makerΓÇÖs probability is q and the odds are fair, then q ┬╖ r = 1, and
 Page 4: r = 1q . Substituting into the equation:
-Page 4: 
+Page 4:
 Page 4: (8)
-Page 4: 
+Page 4:
 Page 4: 
 Page 4: 
 Page 4:  
@@ -217,10 +217,10 @@ Page 4: g = p log
 Page 4: q
 Page 4: 1ΓêÆq
 Page 4: Γêù
-Page 4: 
+Page 4:
 Page 4: This is the KL divergence DKL (P ΓêÑQ) between our distribution p and the marketΓÇÖs
 Page 4: distribution q.
-Page 4: 
+Page 4:
 Page 4: 3. Horse Race Market
 Page 4: Consider a market where you can bet fractionally on mutually exclusive events
 Page 4: and you must fully allocate your capital. This is described as a ΓÇ£horse race marketΓÇ¥
@@ -229,163 +229,163 @@ Page 4: than a single wager fraction f . If there are n horses, let wi be the fr
 Page 4: on the ith horse, let pi be the probability of the ith horse winning, and let ri be
 Page 4: the return or the wealth ratio for capital wagered on that horse. KellyΓÇÖs expected
 Page 4: log return for this game becomes:
-Page 4: 
+Page 4:
 Page 4: (9)
-Page 4: 
+Page 4:
 Page 4: g(W ) =
-Page 4: 
+Page 4:
 Page 4: N
 Page 4: X
-Page 4: 
+Page 4:
 Page 4: pi log (ri wi )
-Page 4: 
+Page 4:
 Page 4: i=1
-Page 4: 
+Page 4:
 Page 4: In the classic Kelly example, we used calculus to find the optimal solution and
 Page 4: observed the information theoretic KL divergence in the solution. This time we
 Page 4: will take a more direct information theoretic approach to find and characterize the
 Page 4: solution. This problem is simple to analyze because there is only one nonzero term
 Page 4: inside the logarithm (the single winning horse).
 Page 4: Because the log of a product is the sum of logs, we can rewrite this as
-Page 4: 
-Page 4: 
+Page 4:
+Page 4:
 Page 5: INVESTING IS COMPRESSION
-Page 5: 
+Page 5:
 Page 5: (10)
-Page 5: 
+Page 5:
 Page 5: g(W ) =
-Page 5: 
+Page 5:
 Page 5: N
 Page 5: X
-Page 5: 
+Page 5:
 Page 5: 5
-Page 5: 
+Page 5:
 Page 5: pi log(ri wi )
-Page 5: 
+Page 5:
 Page 5: i=1
-Page 5: 
+Page 5:
 Page 5: (11)
-Page 5: 
+Page 5:
 Page 5: =
-Page 5: 
+Page 5:
 Page 5: N
 Page 5: X
-Page 5: 
+Page 5:
 Page 5: pi log(ri ) +
-Page 5: 
+Page 5:
 Page 5: i=1
-Page 5: 
+Page 5:
 Page 5: (12)
-Page 5: 
+Page 5:
 Page 5: =
-Page 5: 
+Page 5:
 Page 5: (14)
-Page 5: 
+Page 5:
 Page 5: =
-Page 5: 
+Page 5:
 Page 5: =
-Page 5: 
+Page 5:
 Page 5: N
 Page 5: X
-Page 5: 
+Page 5:
 Page 5: pi log(ri ) +
-Page 5: 
+Page 5:
 Page 5: =
-Page 5: 
+Page 5:
 Page 5: N
 Page 5: X
-Page 5: 
+Page 5:
 Page 5: 
 Page 5: pi log
-Page 5: 
+Page 5:
 Page 5: i=1
-Page 5: 
+Page 5:
 Page 5: N
 Page 5: X
-Page 5: 
+Page 5:
 Page 5: pi log(ri ) +
-Page 5: 
+Page 5:
 Page 5: N
 Page 5: X
-Page 5: 
+Page 5:
 Page 5: i=1
-Page 5: 
+Page 5:
 Page 5: i=1
-Page 5: 
+Page 5:
 Page 5: N
 Page 5: X
-Page 5: 
+Page 5:
 Page 5: N
 Page 5: X
-Page 5: 
+Page 5:
 Page 5: pi log(ri ) ΓêÆ
-Page 5: 
+Page 5:
 Page 5: i=1
-Page 5: 
+Page 5:
 Page 5: (15)
-Page 5: 
+Page 5:
 Page 5: pi log (wi )
-Page 5: 
+Page 5:
 Page 5: i=1
-Page 5: 
+Page 5:
 Page 5: i=1
-Page 5: 
+Page 5:
 Page 5: (13)
-Page 5: 
+Page 5:
 Page 5: N
 Page 5: X
-Page 5: 
+Page 5:
 Page 5: N
 Page 5: X
-Page 5: 
+Page 5:
 Page 5: pi log (pi ) +
-Page 5: 
+Page 5:
 Page 5: 
 Page 5: pi log
-Page 5: 
+Page 5:
 Page 5: i=1
-Page 5: 
+Page 5:
 Page 5: 
 Page 5: pi log
-Page 5: 
+Page 5:
 Page 5: i=1
-Page 5: 
+Page 5:
 Page 5: N
 Page 5: X
-Page 5: 
+Page 5:
 Page 5: 
-Page 5: 
+Page 5:
 Page 5: pi wi
 Page 5: pi
-Page 5: 
+Page 5:
 Page 5: 1
 Page 5: pi
-Page 5: 
+Page 5:
 Page 5: 
 Page 5: ΓêÆ
-Page 5: 
+Page 5:
 Page 5: N
 Page 5: X
-Page 5: 
+Page 5:
 Page 5: wi
 Page 5: pi
 Page 5: 
-Page 5: 
+Page 5:
 Page 5: pi log
-Page 5: 
+Page 5:
 Page 5: i=1
-Page 5: 
+Page 5:
 Page 5: 
-Page 5: 
+Page 5:
 Page 5: pi
 Page 5: wi
-Page 5: 
+Page 5:
 Page 5: 
-Page 5: 
+Page 5:
 Page 5: pi log (ri ) ΓêÆ H(P ) ΓêÆ DKL (P ΓêÑW )
-Page 5: 
+Page 5:
 Page 5: i=1
-Page 5: 
+Page 5:
 Page 5: Notice that the first two terms donΓÇÖt depend on W. The only way to maximize
 Page 5: growth is to minimize the third term which is the KL divergence between the
 Page 5: probability distribution and the weight vector. Because the weight vector sums
@@ -397,32 +397,32 @@ Page 5: return distribution, just the probability of winning.
 Page 5: If the payoffs are priced fairly using a market probability Q, then as before
 Page 5: qi ┬╖ ri = 1 and so qi = r1i .
 Page 5: Substituting that back into the above solution, we have
-Page 5: 
+Page 5:
 Page 5: (16)
-Page 5: 
+Page 5:
 Page 5: g(W ) =
-Page 5: 
+Page 5:
 Page 5: N
 Page 5: X
 Page 5: i=1
-Page 5: 
+Page 5:
 Page 5: 
 Page 5: pi log
-Page 5: 
+Page 5:
 Page 5: 1
 Page 5: qi
-Page 5: 
+Page 5:
 Page 5: 
 Page 5: ΓêÆ H(P ) ΓêÆ DKL (P ΓêÑW )
-Page 5: 
+Page 5:
 Page 5: (17)
-Page 5: 
+Page 5:
 Page 5: = H(P, Q) ΓêÆ H(P ) ΓêÆ DKL (P ΓêÑW )
-Page 5: 
+Page 5:
 Page 5: (18)
-Page 5: 
+Page 5:
 Page 5: = DKL (P ΓêÑQ) ΓêÆ DKL (P ΓêÑW )
-Page 5: 
+Page 5:
 Page 5: Which follows from the fact that KL divergence is the difference between the
 Page 5: cross entropy and entropy.
 Page 5: The growth rate is the difference between these two KL divergences: the divergence of the market from the true distribution minus the divergence of our allocation
@@ -433,49 +433,49 @@ Page 5: 4. General Case
 Page 5: The Horse Race Market entails mutually exclusive events, with only one nonzero
 Page 5: term inside the logarithm at each step. This makes it straightforward to analyze
 Page 5: using standard mathematical techniques. Consider now the more general case where
-Page 5: 
-Page 5: 
+Page 5:
+Page 5:
 Page 6: 6
-Page 6: 
+Page 6:
 Page 6: OSCAR STIFFELMAN
-Page 6: 
+Page 6:
 Page 6: there can be more than one nonzero term at each point in time. In this case, the
 Page 6: return at each point in time is the inner product between the weight vector and the
 Page 6: return vector:
 Page 6: N
 Page 6: X
-Page 6: 
+Page 6:
 Page 6: (19)
-Page 6: 
+Page 6:
 Page 6: ri wi
-Page 6: 
+Page 6:
 Page 6: i=1
-Page 6: 
+Page 6:
 Page 6: and the log return is given by
-Page 6: 
+Page 6:
 Page 6: (20)
-Page 6: 
+Page 6:
 Page 6: log
-Page 6: 
+Page 6:
 Page 6: N
 Page 6: X
-Page 6: 
+Page 6:
 Page 6: !
 Page 6: ri wi
-Page 6: 
+Page 6:
 Page 6: i=1
-Page 6: 
+Page 6:
 Page 6: The Horse Race Market expected log return
-Page 6: 
+Page 6:
 Page 6: (21)
-Page 6: 
+Page 6:
 Page 6: N
 Page 6: X
-Page 6: 
+Page 6:
 Page 6: pi log(ri wi )
-Page 6: 
+Page 6:
 Page 6: i=1
-Page 6: 
+Page 6:
 Page 6: is a special case of this more general formulation in which the ith term is nonzero
 Page 6: with probability pi . The general case is more difficult to analyze because the sum
 Page 6: doesnΓÇÖt have the same clean factorization.
@@ -491,42 +491,42 @@ Page 6: did, IΓÇÖm simply borrowing the technique for the purpose of analysis
 Page 6: We traditionally think of the multi-period investing problem as a product of
 Page 6: scalars. We can write the return after n periods of some multi-period investment
 Page 6: process as the product of the individual returns:
-Page 6: 
+Page 6:
 Page 6: (22)
-Page 6: 
+Page 6:
 Page 6: Rn =
-Page 6: 
+Page 6:
 Page 6: n
 Page 6: Y
-Page 6: 
+Page 6:
 Page 6: rt
-Page 6: 
+Page 6:
 Page 6: t=1
-Page 6: 
+Page 6:
 Page 6: where Rn indicates the total growth of the multiplicative process after n steps.
 Page 6: Assuming we are compounding and rebalancing a fixed weight portfolio at each
 Page 6: point in time, we can write this full process, where wi is the portfolio weight assigned
 Page 6: to the ith asset, and ri,t is the return of the ith asset at time t.
-Page 6: 
+Page 6:
 Page 6: (23)
-Page 6: 
+Page 6:
 Page 6: Rn =
-Page 6: 
+Page 6:
 Page 6: n X
 Page 6: m
 Page 6: Y
-Page 6: 
+Page 6:
 Page 6: wi ri,t
-Page 6: 
+Page 6:
 Page 6: t=1 i=1
-Page 6: 
+Page 6:
 Page 6: Note that the product of scalars is now seen as a product of sums (dot products).
-Page 6: 
-Page 6: 
+Page 6:
+Page 6:
 Page 7: INVESTING IS COMPRESSION
-Page 7: 
+Page 7:
 Page 7: 7
-Page 7: 
+Page 7:
 Page 7: CoverΓÇÖs brilliant insight was that we can rewrite the product of sums as a sum of
 Page 7: products. This might seem like a trivially algebraic change. But as will become clear
 Page 7: momentarily, instead of compounding weighted returns per period, we can think of
@@ -534,19 +534,19 @@ Page 7: this as a weighted average of an exponential number of multi-period retu
 Page 7: Assume for now that there are only two assets in the system {a, b}. The return
 Page 7: after one period is
 Page 7: (24)
-Page 7: 
+Page 7:
 Page 7: wa ra,1 + wb rb,1
-Page 7: 
+Page 7:
 Page 7: After two periods the return is
 Page 7: (25)
-Page 7: 
+Page 7:
 Page 7: (wa ra,1 + wb rb,1 ) (wa ra,2 + wb rb,2 )
-Page 7: 
+Page 7:
 Page 7: Which we can expand as
 Page 7: (26)
-Page 7: 
+Page 7:
 Page 7: wa2 ra,1 ra,2 + wb2 rb,1 rb,2 + wa wb ra,1 rb,2 + wb wa rb,1 ra,2
-Page 7: 
+Page 7:
 Page 7: We have changed the product of sums into a sum of products. The number
 Page 7: of terms grows exponentially with the number of periods. With every additional
 Page 7: period, we double the number of terms in the two asset case.
@@ -555,9 +555,9 @@ Page 7: whether the return at time t should be aΓÇÖs or bΓÇÖs return at th
 Page 7: If na and nb indicate the number times each symbol occurs in a given sequence,
 Page 7: the weight for the sequence is
 Page 7: wana wbnb
-Page 7: 
+Page 7:
 Page 7: (27)
-Page 7: 
+Page 7:
 Page 7: The returns are more complex because they change over time. For now, think
 Page 7: of them as an additional product that goes with each term.
 Page 7: What we now have is an exponential number of sequences that describe horse
@@ -569,46 +569,46 @@ Page 7: number of multi-period investments. Imagine pre-allocating capital to an
 Page 7: Let Tn (P ) be the set of sequences of length n with empirical frequencies given
 Page 7: by
 Page 7: P = {p1 , . . . , pm }
-Page 7: 
+Page 7:
 Page 7: (28)
 Page 7: (29)
-Page 7: 
+Page 7:
 Page 7: m
 Page 7: X
-Page 7: 
+Page 7:
 Page 7: pi = 1
-Page 7: 
+Page 7:
 Page 7: i=1
-Page 7: 
+Page 7:
 Page 7: (30)
-Page 7: 
+Page 7:
 Page 7: npi Γêê N
-Page 7: 
+Page 7:
 Page 7: Each Tn (P ) defines a type class of sequences. It is the set of all permutations of
 Page 7: sequences of length n with symbol frequencies matching P . This lets us write the
 Page 7: total growth equation as a sum over all type classes
-Page 7: 
-Page 7: 
+Page 7:
+Page 7:
 Page 8: 8
-Page 8: 
+Page 8:
 Page 8: OSCAR STIFFELMAN
-Page 8: 
+Page 8:
 Page 8: (31)
-Page 8: 
+Page 8:
 Page 8: Rn (W ) =
-Page 8: 
+Page 8:
 Page 8: m
 Page 8: XY
 Page 8: P i=1
-Page 8: 
+Page 8:
 Page 8: winpi
-Page 8: 
+Page 8:
 Page 8: X
-Page 8: 
+Page 8:
 Page 8: rs
-Page 8: 
+Page 8:
 Page 8: sΓêêTn (P )
-Page 8: 
+Page 8:
 Page 8: where rs is the product of returns obtained by following sequence s, taking the
 Page 8: return of whichever asset the sequence selects at each time period. This is the same
 Page 8: exponential set ofQsequences as before, just grouped by type and with the common
@@ -648,227 +648,227 @@ Page 8: The size of Tn (W ) is the number of permutations of sequences of length
 Page 8: with ni = wi n. The size of this set is given by the multinomial
 Page 8: 
 Page 8: (32)
-Page 8: 
+Page 8:
 Page 8: n
 Page 8: n1 , n2 , n3 , . . . , nm
-Page 8: 
+Page 8:
 Page 8: 
-Page 8: 
+Page 8:
 Page 8: For the Tn (W ) type class, this is
-Page 8: 
+Page 8:
 Page 8: =
-Page 8: 
+Page 8:
 Page 8: n!
 Page 8: n!
 Page 8: = Qm
 Page 8: n1 !n2 !n3 ! . . . nm !
 Page 8: i=1 ni !
-Page 8: 
-Page 8: 
+Page 8:
+Page 8:
 Page 9: INVESTING IS COMPRESSION
-Page 9: 
+Page 9:
 Page 9: 9
-Page 9: 
+Page 9:
 Page 9: n!
 Page 9: i=1 (nwi )!
-Page 9: 
+Page 9:
 Page 9: (33)
-Page 9: 
+Page 9:
 Page 9: Qm
-Page 9: 
+Page 9:
 Page 9: Using StirlingΓÇÖs Approximation
-Page 9: 
+Page 9:
 Page 9: log(n!) = n log(n) ΓêÆ n + O(log(n))
-Page 9: 
+Page 9:
 Page 9: (34)
-Page 9: 
+Page 9:
 Page 9: Ignoring the sublinear term (this approximation will be revisited below), we can
 Page 9: rewrite the cardinality, using Tn (W ) to denote both the cardinality and the set
 Page 9: where itΓÇÖs unambiguous:
-Page 9: 
+Page 9:
 Page 9: (35)
 Page 9: (36)
 Page 9: (37)
-Page 9: 
+Page 9:
 Page 9: m
 Page 9: Y
-Page 9: 
+Page 9:
 Page 9: log(Tn (W )) = log(n!) ΓêÆ log
 Page 9: = n log(n) ΓêÆ n ΓêÆ
 Page 9: = n log(n) ΓêÆ n ΓêÆ
-Page 9: 
+Page 9:
 Page 9: !
 Page 9: (nwi )!
-Page 9: 
+Page 9:
 Page 9: i=1
 Page 9: m
 Page 9: X
 Page 9: i=1
 Page 9: m
 Page 9: X
-Page 9: 
+Page 9:
 Page 9: (nwi log(nwi ) ΓêÆ nwi )
 Page 9: nwi log(n) ΓêÆ
-Page 9: 
+Page 9:
 Page 9: i=1
-Page 9: 
+Page 9:
 Page 9: (38)
-Page 9: 
+Page 9:
 Page 9: = n log(n) ΓêÆ n ΓêÆ n log(n)
-Page 9: 
+Page 9:
 Page 9: m
 Page 9: X
-Page 9: 
+Page 9:
 Page 9: = ΓêÆn
-Page 9: 
+Page 9:
 Page 9: m
 Page 9: X
-Page 9: 
+Page 9:
 Page 9: nwi log(wi ) +
-Page 9: 
+Page 9:
 Page 9: i=1
 Page 9: m
 Page 9: X
-Page 9: 
+Page 9:
 Page 9: wi ΓêÆ n
-Page 9: 
+Page 9:
 Page 9: i=1
-Page 9: 
+Page 9:
 Page 9: (39)
-Page 9: 
+Page 9:
 Page 9: m
 Page 9: X
-Page 9: 
+Page 9:
 Page 9: i=1
-Page 9: 
+Page 9:
 Page 9: m
 Page 9: X
-Page 9: 
+Page 9:
 Page 9: nwi
-Page 9: 
+Page 9:
 Page 9: i=1
-Page 9: 
+Page 9:
 Page 9: wi log(wi ) + n
-Page 9: 
+Page 9:
 Page 9: m
 Page 9: X
-Page 9: 
+Page 9:
 Page 9: wi
-Page 9: 
+Page 9:
 Page 9: i=1
-Page 9: 
+Page 9:
 Page 9: wi log(wi )
-Page 9: 
+Page 9:
 Page 9: i=1
 Page 9: m
 Page 9: X
-Page 9: 
+Page 9:
 Page 9: (40)
-Page 9: 
+Page 9:
 Page 9: =n
-Page 9: 
+Page 9:
 Page 9: (41)
-Page 9: 
+Page 9:
 Page 9: = n H(W )
-Page 9: 
+Page 9:
 Page 9: 
-Page 9: 
+Page 9:
 Page 9: wi log
-Page 9: 
+Page 9:
 Page 9: i=1
-Page 9: 
+Page 9:
 Page 9: 1
 Page 9: wi
-Page 9: 
+Page 9:
 Page 9: 
-Page 9: 
+Page 9:
 Page 9: The cardinality is therefore
-Page 9: 
+Page 9:
 Page 9: (42)
-Page 9: 
+Page 9:
 Page 9: Tn (W ) = en H(W )
-Page 9: 
+Page 9:
 Page 9: The weight assigned to a sequence s is denoted by ws . This is the product of the
 Page 9: portfolio weights for each period corresponding to the selected symbol. Because all
 Page 9: sequences within the type class Tn (W ) have the same symbol frequencies (they are
 Page 9: permutations of each other), they share the same sequence weight. The sequence
 Page 9: weight ws for each sequence s Γêê Tn (W ) is
-Page 9: 
+Page 9:
 Page 9: (43)
-Page 9: 
+Page 9:
 Page 9: ws =
-Page 9: 
+Page 9:
 Page 9: m
 Page 9: Y
 Page 9: i=1
-Page 9: 
+Page 9:
 Page 9: Applying logs, this becomes
-Page 9: 
+Page 9:
 Page 9: winwi
-Page 9: 
-Page 9: 
+Page 9:
+Page 9:
 Page 10: 10
-Page 10: 
+Page 10:
 Page 10: OSCAR STIFFELMAN
-Page 10: 
+Page 10:
 Page 10: (44)
-Page 10: 
+Page 10:
 Page 10: log(ws ) = log
-Page 10: 
+Page 10:
 Page 10: m
 Page 10: Y
-Page 10: 
+Page 10:
 Page 10: !
 Page 10: winwi
-Page 10: 
+Page 10:
 Page 10: i=1
-Page 10: 
+Page 10:
 Page 10: =
-Page 10: 
+Page 10:
 Page 10: (45)
-Page 10: 
+Page 10:
 Page 10: m
 Page 10: X
-Page 10: 
+Page 10:
 Page 10: nwi log(wi )
-Page 10: 
+Page 10:
 Page 10: i=1
 Page 10: m
 Page 10: X
-Page 10: 
+Page 10:
 Page 10: =ΓêÆ
-Page 10: 
+Page 10:
 Page 10: (46)
-Page 10: 
+Page 10:
 Page 10: 
 Page 10: nwi log
-Page 10: 
+Page 10:
 Page 10: i=1
-Page 10: 
+Page 10:
 Page 10: 1
 Page 10: wi
-Page 10: 
+Page 10:
 Page 10: 
-Page 10: 
+Page 10:
 Page 10: = ΓêÆn H(W )
-Page 10: 
+Page 10:
 Page 10: (47)
-Page 10: 
+Page 10:
 Page 10: The weight for each sequence is therefore
 Page 10: ws = eΓêÆn H(W )
-Page 10: 
+Page 10:
 Page 10: (48)
-Page 10: 
+Page 10:
 Page 10: At least for large n (with precise refinement later), the sum of this per-sequence
 Page 10: weight across all of the sequences in the set is approximately
 Page 10: X
-Page 10: 
+Page 10:
 Page 10: (49)
-Page 10: 
+Page 10:
 Page 10: ws = eΓêÆn H(W ) en H(W ) = 1
-Page 10: 
+Page 10:
 Page 10: sΓêêTn (W )
-Page 10: 
+Page 10:
 Page 10: This indicates that the weight is concentrated in the set of sequences from the
 Page 10: type class P = W . Again this is the set of all permutations of sequences with
 Page 10: frequencies matching the portfolio weight vector. It is the uniform wager on all
@@ -890,69 +890,69 @@ Page 10: assigned to the set of sequences in the class is
 Page 10: (50)
 Page 10: !
 Page 10: log
-Page 10: 
+Page 10:
 Page 10: Y
-Page 10: 
+Page 10:
 Page 10: winpi enH(P )
-Page 10: 
+Page 10:
 Page 10: =
-Page 10: 
+Page 10:
 Page 10: X
 Page 10: (npi log (wi )) + n H(P )
-Page 10: 
+Page 10:
 Page 10: = ΓêÆn H(P, W ) + n H(p)
-Page 10: 
+Page 10:
 Page 10: i
-Page 10: 
+Page 10:
 Page 10: (51)
-Page 10: 
+Page 10:
 Page 10: = ΓêÆn DKL (P ΓêÑW )
-Page 10: 
+Page 10:
 Page 10: The total weight concentrated on sequences in that set declines exponentially
 Page 10: with the divergence from the portfolio weight vector W and with the number of
 Page 10: periods:
 Page 10: (52)
-Page 10: 
+Page 10:
 Page 10: eΓêÆn DKL (P ΓêÑW )
-Page 10: 
-Page 10: 
+Page 10:
+Page 10:
 Page 11: INVESTING IS COMPRESSION
-Page 11: 
+Page 11:
 Page 11: 11
-Page 11: 
+Page 11:
 Page 11: This gives us confidence that we can ignore sequences that do not match the
 Page 11: portfolio weights, with that confidence increasing exponentially with both the divergence (frequency mismatch) and the number of time periods. This lets us simplify the original growth equation, rewriting it as a single product rather than a
 Page 11: complex sum over classes.
 Page 11: The original product expression
-Page 11: 
+Page 11:
 Page 11: (53)
-Page 11: 
+Page 11:
 Page 11: Rn (W ) =
-Page 11: 
+Page 11:
 Page 11: m
 Page 11: XY
-Page 11: 
+Page 11:
 Page 11: X
-Page 11: 
+Page 11:
 Page 11: winpi
-Page 11: 
+Page 11:
 Page 11: P i=1
-Page 11: 
+Page 11:
 Page 11: rs
-Page 11: 
+Page 11:
 Page 11: sΓêêTn (P )
-Page 11: 
+Page 11:
 Page 11: can now be reduced to
 Page 11: X
-Page 11: 
+Page 11:
 Page 11: eΓêÆn H(W )
-Page 11: 
+Page 11:
 Page 11: (54)
-Page 11: 
+Page 11:
 Page 11: rs
-Page 11: 
+Page 11:
 Page 11: sΓêêTn (W )
-Page 11: 
+Page 11:
 Page 11: Because |Tn (W )| = en H(W ) , this is simply the average return across all multiperiod sequence returns in the class of sequences that look like the portfolio (symbol
 Page 11: frequencies equal to portfolio weights).
 Page 11: Now assume that W Γêù is the optimal portfolio weight vectorΓÇô the portfolio that
@@ -960,87 +960,87 @@ Page 11: maximizes the expected log return. As we showed above, almost all of it
 Page 11: assigned to the set of sequences with frequencies matching the portfolio weights.
 Page 11: If we invest using any other weight vector W ╠╕= W Γêù , the performance of this
 Page 11: suboptimal portfolio is (ignoring all but the dominant set for the optimal portfolio)
-Page 11: 
+Page 11:
 Page 11: (55)
-Page 11: 
+Page 11:
 Page 11: Rn (W ) =
-Page 11: 
+Page 11:
 Page 11: m
 Page 11: Y
 Page 11: i=1
-Page 11: 
+Page 11:
 Page 11: (56)
-Page 11: 
+Page 11:
 Page 11: log(Rn (W )) =
-Page 11: 
+Page 11:
 Page 11: m
 Page 11: X
-Page 11: 
+Page 11:
 Page 11: nwiΓêù
-Page 11: 
+Page 11:
 Page 11: X
-Page 11: 
+Page 11:
 Page 11: wi
-Page 11: 
+Page 11:
 Page 11: rs
-Page 11: 
+Page 11:
 Page 11: sΓêêTn (W Γêù )
-Page 11: 
+Page 11:
 Page 11: ∩ú½
-Page 11: 
+Page 11:
 Page 11: ∩ú╢
 Page 11: X
-Page 11: 
+Page 11:
 Page 11: nwiΓêù log(wi ) + log ∩ú¡
-Page 11: 
+Page 11:
 Page 11: i=1
-Page 11: 
+Page 11:
 Page 11: sΓêêTn
-Page 11: 
+Page 11:
 Page 11: ∩ú½
-Page 11: 
+Page 11:
 Page 11: ∩ú╢
 Page 11: X
-Page 11: 
+Page 11:
 Page 11: = ΓêÆn H(W Γêù , W ) + log ∩ú¡
-Page 11: 
+Page 11:
 Page 11: (57)
-Page 11: 
+Page 11:
 Page 11: rs ∩ú╕
-Page 11: 
+Page 11:
 Page 11: (W Γêù )
-Page 11: 
+Page 11:
 Page 11: sΓêêTn
-Page 11: 
+Page 11:
 Page 11: rs ∩ú╕
-Page 11: 
+Page 11:
 Page 11: (W Γêù )
-Page 11: 
+Page 11:
 Page 11: ∩ú½
 Page 11: Γêù
-Page 11: 
+Page 11:
 Page 11: Γêù
-Page 11: 
+Page 11:
 Page 11: = ΓêÆnH(W ) ΓêÆ n DKL (W ΓêÑW ) + log ∩ú¡
-Page 11: 
+Page 11:
 Page 11: (58)
-Page 11: 
+Page 11:
 Page 11: ∩ú╢
 Page 11: X
-Page 11: 
+Page 11:
 Page 11: sΓêêTn
-Page 11: 
+Page 11:
 Page 11: rs ∩ú╕
-Page 11: 
+Page 11:
 Page 11: (W Γêù )
-Page 11: 
+Page 11:
 Page 11: Defining R╠äT (W ) as the per-period geometric growth rate
 Page 11: X
 Page 11: (59)
 Page 11: R╠änT (W ) =
 Page 11: rs
 Page 11: sΓêêTn (W )
-Page 11: 
+Page 11:
 Page 11: The expected log return g(W) is therefore
 Page 11: 
 Page 11: log(Rn (W ))
@@ -1051,14 +1051,14 @@ Page 11: The general case is more complicated than the classic Kelly or the hors
 Page 11: market problem. But we once again see that KellyΓÇÖs objective has factored the
 Page 11: investing problem into the same three term decomposition: a money term (payoff
 Page 11: (60)
-Page 11: 
+Page 11:
 Page 11: g(W ) = lim
-Page 11: 
-Page 11: 
+Page 11:
+Page 11:
 Page 12: 12
-Page 12: 
+Page 12:
 Page 12: OSCAR STIFFELMAN
-Page 12: 
+Page 12:
 Page 12: / rules of the game), an entropy term (uncertainty) and a divergence term. As
 Page 12: before, the first two terms donΓÇÖt depend on our portfolio allocation. The only way
 Page 12: to maximize the compounding growth rate is to minimize the drag or friction from
@@ -1078,13 +1078,13 @@ Page 12: of Gibbs free energy in statistical mechanics.
 Page 12: (61)
 Page 12: (62)
 Page 12: (63)
-Page 12: 
+Page 12:
 Page 12: 
 Page 12: g(WA ) = log R╠äT (W Γêù ) ΓêÆ H(W Γêù ) ΓêÆ DKL (W Γêù ΓêÑWA )
 Page 12: 
 Page 12: g(WB ) = log R╠äT (W Γêù ) ΓêÆ H(W Γêù ) ΓêÆ DKL (W Γêù ΓêÑWB )
 Page 12: g(WB ) ΓêÆ g(WA ) = DKL (W Γêù ΓêÑWA ) ΓêÆ DKL (W Γêù ΓêÑWB )
-Page 12: 
+Page 12:
 Page 12: 5.2. MDL, Market Prediction, and Strategy Performance. Markets are
 Page 12: high-dimensional, sparse, and non-stationary. This makes it very difficult to separate signal from noise. It is especially challenging for techniques based on statistical
 Page 12: learning theory [20] which rely on resampling from a stationary stochastic source
@@ -1107,12 +1107,12 @@ Page 12: the problem of venture capital style investing. The investor has to dec
 Page 12: capital to allocate, often years before any real clarity on future cash flow.
 Page 12: We saw from equation 54 that the optimal portfolio concentrates on a particular type class. Finding that optimal type class is equivalent to solving the convex
 Page 12: 1Throughout, log denotes the natural logarithm. Results are stated in bits with the understanding that base conversion is a scaling constant.
-Page 12: 
-Page 12: 
+Page 12:
+Page 12:
 Page 13: INVESTING IS COMPRESSION
-Page 13: 
+Page 13:
 Page 13: 13
-Page 13: 
+Page 13:
 Page 13: optimization problem which is not feasible without a precise joint probability distribution of future returns. Even without the full return distribution, the structure
 Page 13: of this decomposition motivates a useful heuristic: winner fraction investing.
 Page 13: The principle is to invest in proportion to the fraction of universes where a given
@@ -1125,9 +1125,9 @@ Page 13: entropy, or the more extreme the ΓÇ£wins,ΓÇ¥ the better the appro
 Page 13: Let W Γêù be the growth-maximum portfolio, and let W ΓÇ▓ be the vector of winner
 Page 13: probabilities, in other words the probability that the ith startup dominates the
 Page 13: candidate set.
-Page 13: 
+Page 13:
 Page 13: (64)
-Page 13: 
+Page 13:
 Page 13: Γêù P
 Page 13: eΓêÆn H(W ) sΓêêTn (W Γêù ) rs
 Page 13: Rn (W Γêù )
@@ -1135,7 +1135,7 @@ Page 13: = ΓêÆn H(W ΓÇ▓ ) P
 Page 13: Rn (W ΓÇ▓ )
 Page 13: e
 Page 13: sΓêêTn (W ΓÇ▓ ) rs
-Page 13: 
+Page 13:
 Page 13: The numerator and denominator represent averages over their respective type
 Page 13: classes.
 Page 13: Recall that each sequence is an exclusive bet on only one asset per time period. A
@@ -1146,27 +1146,27 @@ Page 13: winner fraction set. Let rmax be the return for that sequence. By const
 Page 13: it must also be at least as large as every sequence in the optimal set Tn (W Γêù ).
 Page 13: Therefore
 Page 13: (65)
-Page 13: 
+Page 13:
 Page 13: (66)
-Page 13: 
+Page 13:
 Page 13: rs
-Page 13: 
+Page 13:
 Page 13: ΓêÇsΓêêTn (W Γêù )
-Page 13: 
+Page 13:
 Page 13: e
 Page 13: Rn (W Γêù )
 Page 13: Γëñ
 Page 13: ΓÇ▓
 Page 13: Rn (W )
-Page 13: 
+Page 13:
 Page 13: rmax
-Page 13: 
+Page 13:
 Page 13: ΓêÆn H(W Γêù )
-Page 13: 
+Page 13:
 Page 13: Γëñ1
-Page 13: 
+Page 13:
 Page 13: P
-Page 13: 
+Page 13:
 Page 13: sΓêêTn (W Γêù ) rs
 Page 13: ΓÇ▓)
 Page 13: ΓêÆn
@@ -1179,40 +1179,40 @@ Page 13: 1
 Page 13: sΓêêTn (W Γêù ) rmax
 Page 13: |Tn (W Γêù )|
 Page 13: eΓêÆnH(W ΓÇ▓ )
-Page 13: 
+Page 13:
 Page 13: (67)
-Page 13: 
+Page 13:
 Page 13: Γëñ
-Page 13: 
+Page 13:
 Page 13: (68)
-Page 13: 
+Page 13:
 Page 13: Γëñ enH(W )
-Page 13: 
+Page 13:
 Page 13: ΓÇ▓
-Page 13: 
+Page 13:
 Page 13: This shows the ratio of the optimal to the heuristic solution.
 Page 13: Taking limits to find expectation, we see
 Page 13: ΓÇ▓
-Page 13: 
+Page 13:
 Page 13: (69)
-Page 13: 
+Page 13:
 Page 13: log(enH(W ) )
 Page 13: = H(W ΓÇ▓ )
 Page 13: nΓåÆΓê₧
 Page 13: n
-Page 13: 
+Page 13:
 Page 13: g(W Γêù ) ΓêÆ g(W ΓÇ▓ ) Γëñ lim
-Page 13: 
+Page 13:
 Page 13: The difference between growth-optimal portfolio and the winner-fraction portfolio is bounded by the entropy of the winner-fraction distribution. That entropy is
 Page 13: itself bounded by the cardinality of the candidate set, so this heuristic is especially
 Page 13: useful when the candidate set is small or when the return distribution is extreme.
 Page 13: To my knowledge, this heuristic and proof of the entropy bound are both original.
-Page 13: 
-Page 13: 
+Page 13:
+Page 13:
 Page 14: 14
-Page 14: 
+Page 14:
 Page 14: OSCAR STIFFELMAN
-Page 14: 
+Page 14:
 Page 14: 6. Conclusion
 Page 14: The Kelly criterion describes how to allocate capital in simple games of chance
 Page 14: with known odds and edge. It is a closed form optimal solution to KellyΓÇÖs log
@@ -1261,12 +1261,12 @@ Page 14: 10. Ming Li and Paul M. B. Vita╠ünyi, An introduction to kolmogorov 
 Page 14: 11. Leonard C. MacLean, Edward O. Thorp, and William T. Ziemba, The Kelly capital growth
 Page 14: investment criterion: Theory and practice, World Scientific, 2011.
 Page 14: 12. Harry Markowitz, Portfolio selection, The Journal of Finance 7 (1952), no. 1, 77ΓÇô91.
-Page 14: 
-Page 14: 
+Page 14:
+Page 14:
 Page 15: INVESTING IS COMPRESSION
-Page 15: 
+Page 15:
 Page 15: 15
-Page 15: 
+Page 15:
 Page 15: 13. Robert C. Merton and Paul A. Samuelson, Fallacy of the log-normal approximation to optimal
 Page 15: portfolio decision-making over many periods, Journal of Financial Economics 1 (1974), no. 1,
 Page 15: 67ΓÇô94.
@@ -1284,5 +1284,5 @@ Page 15: 19.
 Page 15: , A man for all markets: From Las Vegas to Wall Street, how I beat the dealer and
 Page 15: the market, Random House, 2017.
 Page 15: 20. Vladimir N. Vapnik, Statistical learning theory, Wiley-Interscience, New York, 1998.
-Page 15: 
-Page 15: 
+Page 15:
+Page 15:

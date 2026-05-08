@@ -83,6 +83,111 @@ class CupAndHandle(BasePattern):
         self.stop_offset = stop_offset
         self.volume_filter = volume_filter
 
+    def detect_vectorized(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Vectorized Cup and Handle detection across all bars.
+
+        Returns np.int8 array: 0=no signal, 1=long, -1=short.
+        """
+        n = len(df)
+        signals = np.zeros(n, dtype=np.int8)
+        close = df["Close"].to_numpy(dtype=np.float64)
+        high = df["High"].to_numpy(dtype=np.float64)
+        low = df["Low"].to_numpy(dtype=np.float64)
+
+        swing_highs = find_swing_highs(df, 5)
+        swing_lows = find_swing_lows(df, 5)
+
+        sh_arr = swing_highs.to_numpy(dtype=np.float64)
+        sl_arr = swing_lows.to_numpy(dtype=np.float64)
+        n_sh = pd.notna(swing_highs).to_numpy()
+        n_sl = pd.notna(swing_lows).to_numpy()
+
+        min_bars = max(self.min_cup_bars, self.min_handle_bars)
+
+        for i in range(min_bars, n):
+            lookback = min(self.max_cup_bars, i)
+
+            highs: list = []
+            lows: list = []
+            for j in range(i - lookback, i + 1):
+                if j < 0:
+                    continue
+                if n_sh[j]:
+                    highs.append((j, float(sh_arr[j])))
+                if n_sl[j]:
+                    lows.append((j, float(sl_arr[j])))
+
+            if len(highs) < 2 or len(lows) < 1:
+                continue
+
+            # Find cup
+            cup_found = False
+            right_rim = None
+            cup_bottom = None
+            cup_depth_val = 0.0
+
+            for ridx in range(len(highs) - 1, 0, -1):
+                rr = highs[ridx]
+                for lidx in range(ridx - 1, -1, -1):
+                    lr = highs[lidx]
+                    rim_diff = abs(lr[1] - rr[1]) / lr[1]
+                    if rim_diff > 0.05:
+                        continue
+                    cb = None
+                    for li, lp in lows:
+                        if lr[0] < li < rr[0]:
+                            if cb is None or lp < cb[1]:
+                                cb = (li, lp)
+                    if cb is None:
+                        continue
+                    cup_d = min(lr[1], rr[1]) - cb[1]
+                    avg_rim = (lr[1] + rr[1]) / 2.0
+                    if cup_d <= 0 or cup_d > avg_rim * 0.5:
+                        continue
+                    duration = rr[0] - lr[0]
+                    if duration < self.min_cup_bars or duration > self.max_cup_bars:
+                        continue
+                    cup_found = True
+                    right_rim = rr
+                    cup_bottom = cb
+                    cup_depth_val = cup_d
+                    break
+                if cup_found:
+                    break
+
+            if not cup_found:
+                continue
+
+            # Find handle
+            h_start = right_rim[0]
+            if i - h_start < self.min_handle_bars or i - h_start > self.max_handle_bars:
+                continue
+
+            handle_high = right_rim[1]
+            handle_low = float("inf")
+            for j in range(h_start, i + 1):
+                h_val = float(high[j])
+                l_val = float(low[j])
+                if h_val > handle_high:
+                    handle_high = h_val
+                if l_val < handle_low:
+                    handle_low = l_val
+
+            if handle_low < cup_bottom[1]:
+                continue
+
+            h_retrace = (handle_high - handle_low) / cup_depth_val if cup_depth_val > 0 else 0.0
+            if not (self.handle_retracement_min <= h_retrace <= self.handle_retracement_max):
+                continue
+
+            # Breakout check
+            curr_close = float(close[i])
+            if curr_close > right_rim[1]:
+                signals[i] = 1
+
+        return signals
+
     def _find_cup_formation(self, df: pd.DataFrame, i: int) -> Optional[Dict]:
         """
         Find cup formation in price data.

@@ -15,10 +15,10 @@ import argparse
 import json
 import logging
 import sys
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Tuple
 
 import numpy as np
 import pandas as pd
@@ -26,10 +26,8 @@ import pandas as pd
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.indicators.regime_detector import RegimeDetector
 from src.ml.feature_engineering import FeatureExtractor
 from src.ml.pattern_classifier import PatternClassifier
-from src.ml.signal_scorer import SignalScorer
 from src.strategies.vwap_bounce import VWAPBounceStrategy
 from src.strategies.ema_ribbon import EMARibbonStrategy
 from src.strategies.sma_crossover import SMACrossoverStrategy
@@ -200,11 +198,11 @@ def train_classifier_on_signals(
     X = signal_features.dropna()
     y = y.reindex(X.index).dropna()
 
-    if len(X) < 100:
+    if len(X) < 50:
         raise ValueError(f"Insufficient signal samples: {len(X)}")
 
     classifier = PatternClassifier(
-        model_type="lightgbm",
+        model_type="catboost",
         n_estimators=200,
         max_depth=6,
         learning_rate=0.05,
@@ -517,7 +515,7 @@ def print_comparison_table(
         elif uplift_val < 0:
             print(f"v{uplift_val:.2f}{suffix} (worse)", end="")
         else:
-            print(f"= (same)", end="")
+            print("= (same)", end="")
         print()
 
     print("=" * 100)
@@ -540,7 +538,7 @@ def run_ml_backtest_comparison(
 
     signals, signal_features = generate_signal_features(df, strategy_class, feature_extractor)
 
-    if len(signals) < 100:
+    if len(signals) < 50:
         raise ValueError(f"Insufficient signals for ML training: {len(signals)}")
 
     classifier, _ = train_classifier_on_signals(df, signals, feature_extractor, horizon=5)

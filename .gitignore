@@ -87,6 +87,15 @@ useful_resources/useful_repos/marker/
 useful_resources/useful_repos/Deep-Learning-in-Quantitative-Trading/
 useful_resources/useful_repos/paper2md/
 
+# Kilo worktrees (copies of the repo, not source)
+.kilo/worktrees/
+
+# Marker PDF-to-MD output
+marker/
+
+# Logs directory
+logs/
+
 # Misc
 *.tmp
 *.log

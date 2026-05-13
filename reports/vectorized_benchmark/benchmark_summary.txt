@@ -1,5 +1,0 @@
-Vectorized Engine Benchmark Results
-Date Range: 2022-01-01 to 2023-12-31
-Data: SPY (501 bars)
-
-Speedup: 9.2x

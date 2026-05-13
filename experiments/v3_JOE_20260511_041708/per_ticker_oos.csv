@@ -1,2 +1,0 @@
-ticker,n_train,n_test,train_auc,test_auc,rank_ic,hit_rate,pct_positive,gap,test_start,test_end
-JOE,1858,797,0.6971,0.4741,-0.0405,0.716,0.284,0.2231,2023-03-07,2026-05-08

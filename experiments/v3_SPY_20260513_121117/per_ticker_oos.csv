@@ -1,3 +1,0 @@
-ticker,n_train,n_test,train_auc,test_auc,rank_ic,hit_rate,pct_positive,gap,test_start,test_end
-QQQ,1584,679,0.6216,0.6252,0.205,0.566,0.337,-0.0036,2022-04-19,2024-12-30
-SPY,1598,685,0.7744,0.6955,0.3234,0.574,0.352,0.0789,2022-05-09,2025-01-31

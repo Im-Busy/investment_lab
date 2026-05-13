@@ -1,2 +1,0 @@
-pattern_name,baseline_sharpe,ablated_sharpe,delta_sharpe,baseline_return,ablated_return,delta_return,contribution_rank,role,keep
-Floor Pivot Breakout,-0.49496431375304356,0.0,-0.49496431375304356,-2.2375303649368288,0.0,-2.2375303649368288,1,Noise Generator,False

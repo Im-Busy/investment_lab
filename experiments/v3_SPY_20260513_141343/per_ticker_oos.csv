@@ -1,2 +1,0 @@
-ticker,n_train,n_test,train_auc,test_auc,rank_ic,hit_rate,pct_positive,gap,test_start,test_end
-SPY,1963,842,0.6129,0.5739,0.1204,0.67,0.33,0.0391,2022-12-29,2026-05-11

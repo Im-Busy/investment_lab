@@ -1520,19 +1520,29 @@ git commit -m "feat: description"
 git push
 ```
 
-### Sync to Public Repo
-```bash
-# Dry run (preview what will be synced)
-uv run scripts/sync_to_public.py --dry-run
+### Repo Sync — Private → Public Curation
 
-# Push to public repo (requires PAT env var)
-set PAT=ghp_...   # Windows
-uv run scripts/sync_to_public.py
+# Full sync: merge main → public branch → verify → push to public repo
+# Uses /repo-sync slash command (invokes repo-syncer agent)
+/repo-sync
 
-# With custom author info
-set GIT_AUTHOR_NAME=Im-Busy
-set GIT_AUTHOR_EMAIL=your@email.com
-uv run scripts/sync_to_public.py
+# Safety check only (no push) — verify no private files on public branch
+/repo-sync check
+
+# Show current branch state and remote configuration
+/repo-sync status
+
+# Manual dual-remote workflow (if not using /repo-sync):
+# 1. Pull latest private changes
+git pull origin main
+# 2. Merge into public branch
+git checkout public && git merge main
+# 3. Safety check — ensure no private files leaked
+git diff --name-only public@{1}..public | findstr /R "^data\|^models\|^outputs\|^experiments\|^reports\|^notebooks\|^logs"
+# 4. If clean, push to public repo
+git push public public
+# 5. Return to main
+git checkout main
 ```
 
 ---

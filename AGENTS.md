@@ -248,7 +248,7 @@ When moving or renaming files, **never delete a file before the destination is v
 
 ## Agent-Centric Workflows — Slash Commands
 
-The project exposes three primary workflows as Kilo agents and slash commands. These agents know the project's conventions, pitfalls, and baselines — they should be used instead of manual CLI commands for consistency.
+The project exposes five primary workflows as Kilo agents and slash commands. These agents know the project's conventions, pitfalls, and baselines — they should be used instead of manual CLI commands for consistency.
 
 ### Agent Catalog
 
@@ -257,6 +257,8 @@ The project exposes three primary workflows as Kilo agents and slash commands. T
 | **model-doctor** | `.kilo/agent/model-doctor.md` | Runs calibration audit, regime shift investigation, WFO comparison. Produces health report with remediation playbook. |
 | **backtest-runner** | `.kilo/agent/backtest-runner.md` | Executes ML strategy backtests, updates BESTS.md leaderboard, interprets results against known baselines. |
 | **ml-trainer** | `.kilo/agent/ml-trainer.md` | Trains CatBoost models via 9-stage pipeline. Knows triple-barrier labels, PurgedKFold, ATR normalization, overfitting thresholds. |
+| **repo-syncer** | `.kilo/agent/repo-syncer.md` | Syncs curated files from private dev repo to public-facing repo. Merges main→public, strips private data, pushes only the clean public branch. |
+| **housekeeper** | `.kilo/agent/housekeeper.md` | Audits file system, flags misplaced files and duplicate dirs, produces safe migration plan. |
 
 ### Slash Commands
 
@@ -265,6 +267,8 @@ The project exposes three primary workflows as Kilo agents and slash commands. T
 | `/model-diagnose` | model-doctor | Full diagnostic suite. No arguments needed. |
 | `/backtest` | backtest-runner | Run backtests with `--entry-threshold --trail-stop` etc. |
 | `/train-ml` | ml-trainer | Train models with `--symbol / --basket / --fast / --walk-forward` |
+| `/repo-sync` | repo-syncer | Sync curated files to public repo. `/repo-sync check` for safety-only. |
+| `/housekeeper` | housekeeper | Audit file system, produce migration plan. |
 
 ### When to Use Slash Commands vs Direct CLI
 
@@ -273,6 +277,7 @@ The project exposes three primary workflows as Kilo agents and slash commands. T
 | Training a new model | `/train-ml` — agent knows overfitting thresholds and ATR fix |
 | Running a backtest | `/backtest` — agent auto-updates BESTS.md |
 | Checking model health | `/model-diagnose` — agent runs all 3 diagnostics + interprets |
+| Syncing to public repo | `/repo-sync` — agent handles merge, safety check, and push |
 | Quick one-off script | Direct CLI — e.g., `uv run scripts/sweep_entry_thresholds.py SPY` |
 
 ### Creating New Agents

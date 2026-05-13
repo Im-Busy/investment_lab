@@ -1,0 +1,78 @@
+{
+  "top_features": [
+    {
+      "feature": "rel_ret_TLT_5d",
+      "mean_abs_shap": 0.025068,
+      "mean_value": NaN,
+      "shap_volatility": 0.005538,
+      "explainable": true
+    },
+    {
+      "feature": "volatility_20",
+      "mean_abs_shap": 0.014894,
+      "mean_value": NaN,
+      "shap_volatility": 0.005448,
+      "explainable": true
+    },
+    {
+      "feature": "vol_regime",
+      "mean_abs_shap": 0.014812,
+      "mean_value": NaN,
+      "shap_volatility": 0.004675,
+      "explainable": true
+    },
+    {
+      "feature": "volatility_regime",
+      "mean_abs_shap": 0.012923,
+      "mean_value": NaN,
+      "shap_volatility": 0.004029,
+      "explainable": true
+    },
+    {
+      "feature": "resid_vol_SPY_20d",
+      "mean_abs_shap": 0.012914,
+      "mean_value": NaN,
+      "shap_volatility": 0.00879,
+      "explainable": true
+    },
+    {
+      "feature": "price_to_ma_10",
+      "mean_abs_shap": 0.01248,
+      "mean_value": NaN,
+      "shap_volatility": 0.005469,
+      "explainable": true
+    },
+    {
+      "feature": "bb_width_20",
+      "mean_abs_shap": 0.010838,
+      "mean_value": NaN,
+      "shap_volatility": 0.003773,
+      "explainable": true
+    },
+    {
+      "feature": "dist_to_low_50",
+      "mean_abs_shap": 0.008972,
+      "mean_value": NaN,
+      "shap_volatility": 0.003953,
+      "explainable": true
+    },
+    {
+      "feature": "std_return_10",
+      "mean_abs_shap": 0.008491,
+      "mean_value": NaN,
+      "shap_volatility": 0.005639,
+      "explainable": true
+    },
+    {
+      "feature": "roc_50",
+      "mean_abs_shap": 0.008217,
+      "mean_value": NaN,
+      "shap_volatility": 0.005473,
+      "explainable": false
+    }
+  ],
+  "n_features": 60,
+  "suspicious": [
+    "roc_50"
+  ]
+}

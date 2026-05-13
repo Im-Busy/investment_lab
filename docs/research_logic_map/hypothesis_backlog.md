@@ -1,8 +1,8 @@
 # Hypothesis Backlog
 
-**Last Updated:** 2026-04-25
-**Total Hypotheses:** 12
-**Ready for Testing:** 8
+**Last Updated:** 2026-05-08
+**Total Hypotheses:** 14
+**Ready for Testing:** 9
 
 ---
 
@@ -189,6 +189,36 @@ Each hypothesis includes:
 
 ---
 
+## H13: Inefficient Instruments Yield Higher ML Alpha
+
+- **Statement:** ML models trained on low-efficiency instruments (small-caps, low analyst coverage, high Amihud illiquidity) achieve ≥0.3 higher Sharpe than models trained on high-efficiency instruments (SPY, mega-caps), controlling for feature set and model architecture.
+- **Source:** DeMiguel et al. (2024), Bartram & Grinblatt (2019), Damodaran market efficiency propositions. Related: I14.1, I16.1, I16.2.
+- **Experiment:**
+  1. Select 10 "efficient" instruments (SPY, QQQ, AAPL, MSFT, NVDA, GOOGL, AMZN, META, EURUSD=X, BTC-USD) and 10 "inefficient" instruments (mid-caps with <5 analysts, emerging market ETFs, niche sector ETFs)
+  2. Train identical ML model (e.g., XGBoost with same feature set) on each instrument separately
+  3. Compare OOS Sharpe, profit factor, and prediction R² across the two groups
+  4. Statistical test: Mann-Whitney U on group-wise Sharpe distributions
+- **Metric:** ΔSharpe(efficient vs. inefficient) ≥ 0.3, p < 0.05
+- **Priority:** 🔴 High
+- **Status:** 🔬 Research phase — Phase 1 (2026-05-09) FAILED: severe overfitting. Artifacts deleted. See `ml_training_plan.md` Phase 0 for fix plan.
+- **Dependencies:** Need to fix overfitting first (IC filtering + regularization + better labels + PurgedKFold)
+
+## H14: Cross-Asset Features Improve SPY Predictability
+
+- **Statement:** Adding cross-asset features (TLT returns, GLD returns, VIX levels, USO returns) to SPY prediction model improves OOS R² by ≥50% and Sharpe by ≥0.2 vs. using SPY-only features.
+- **Source:** Cross-asset alpha engine research, TradeFM (2025) multi-asset training, Regime Aware Cross Asset Alpha (The Data Guy, 2026). Related: I16.3.
+- **Experiment:**
+  1. Train SPY prediction model with SPY-only features (price, volume, technical indicators)
+  2. Train same model with SPY features + cross-asset features (TLT, GLD, VIX, USO, EURUSD)
+  3. Compare OOS R² and trading strategy Sharpe on SPY
+  4. Ablate individual cross-asset features to identify which contribute most
+- **Metric:** ΔR² ≥ 50% relative improvement, ΔSharpe ≥ 0.2, p < 0.05 on Diebold-Mariano test
+- **Priority:** 🟠 High
+- **Status:** 🔬 Research phase
+- **Dependencies:** Cross-asset feature pipeline exists in `src/ml/cross_asset_features.py` — needs empirical validation
+
+---
+
 ## Hypothesis Priority Matrix
 
 | Hypothesis | Impact | Feasibility | Dependencies | Priority Score |
@@ -199,6 +229,8 @@ Each hypothesis includes:
 | H9 | 🟡 Medium | 🟡 Medium | KL divergence impl | 5/10 |
 | H11 | 🟡 Medium | 🟢 High | Performance tracking | 6/10 |
 | H12 | 🟡 Medium | 🟡 Medium | Cointegration infra | 5/10 |
+| H13 | 🔴 High | 🟡 Medium | Data pipeline expansion | 8/10 |
+| H14 | 🟠 High | 🟢 High | Cross-asset features exist | 8/10 |
 
 ---
 
@@ -216,6 +248,10 @@ Each hypothesis includes:
 - H10: Winner-fraction sizing ← needs historical win counting
 - H11: Strategy decay ← needs rolling performance tracker
 - H12: Pairs trading ← needs cointegration infrastructure
+
+**New (from market efficiency research):**
+- H13: Inefficient instruments yield higher ML alpha ← needs instrument expansion
+- H14: Cross-asset features improve SPY predictability ← ready (pipeline exists)
 
 ---
 

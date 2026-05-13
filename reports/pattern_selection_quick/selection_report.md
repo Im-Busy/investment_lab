@@ -6,43 +6,22 @@
 
 | Metric | Value |
 |--------|-------|
-| Total Patterns Tested | 5 |
-| Passed Phase 1 Filter | 1 |
-| Excluded (Phase 1) | 4 |
+| Total Patterns Tested | 10 |
+| Passed Phase 1 Filter | 5 |
+| Excluded (Phase 1) | 5 |
 | Redundant Pairs Found | 0 |
-| After Redundancy Removal | 1 |
-| **Final Selected Patterns** | **0** |
-| Execution Time | 1.0s |
-
-### Phase Timings
-
-| Phase | Duration |
-|-------|----------|
-| PHASE1 | 1.0s |
-| PHASE2 | 0.0s |
-| PHASE3 | 0.0s |
+| After Redundancy Removal | 5 |
+| **Final Selected Patterns** | **5** |
+| Execution Time | 0s |
 
 ## Phase 1: Isolated Performance Baseline
 
 ### Thresholds Applied
 
-| Metric | Threshold |
-|--------|-----------|
-| Minimum Trades | 5 |
-| Minimum Sharpe Ratio | -1.0 |
-| Minimum Profit Factor | 0.0 |
-| Minimum Win Rate | 0% |
-| Maximum Drawdown | 100% |
-
 ### Solo Backtest Results
 
 | Pattern | Trades | Win Rate | Sharpe | Profit Factor | Return | Max DD | Status |
 |---------|--------|----------|--------|---------------|--------|--------|--------|
-| n-Bar Decline | 1 | 0.0% | 1.682 | 0.00 | 1037.80% | -227.2% | [FAIL] |
-| Market Structure Low | 3 | 0.0% | 0.942 | 0.00 | 413.08% | -194.5% | [FAIL] |
-| Floor Pivot Breakout | 134 | 29.1% | -0.495 | 0.84 | -223.75% | -366.4% | [PASS] |
-| Matching Lows | 1 | 0.0% | -0.784 | 0.00 | -46.69% | -46.7% | [FAIL] |
-| NR7ID | 12 | 0.0% | -1.324 | 0.00 | -160.45% | -166.7% | [FAIL] |
 
 ## Phase 2: Statistical Correlation Analysis
 
@@ -54,7 +33,6 @@ No redundant pairs found.
 
 | Rank | Pattern | Delta Sharpe | Delta Return | Role | Keep |
 |------|---------|---------------|--------------|------|------|
-| 1 | Floor Pivot Breakout | -0.4950 | -223.75% | Noise Generator | [REMOVE] |
 
 ### Pattern Role Classification
 
@@ -63,39 +41,18 @@ No redundant pairs found.
 | Primary Signal | 0 | High solo edge, high marginal contribution |
 | Confirmation Filter | 0 | Low solo edge, positive marginal contribution |
 | Neutral | 0 | No significant impact |
-| Noise Generator | 1 | Negative marginal contribution (remove) |
+| Noise Generator | 0 | Negative marginal contribution (remove) |
 
 ## Final Selected Patterns
 
-**0 patterns selected for production:**
+**5 patterns selected for production:**
 
+1. **Floor Pivot Breakout**
+2. **Market Structure Low**
+3. **Matching Lows**
+4. **NR7ID**
+5. **n-Bar Decline**
 
 ## Recommendations
 
-### Patterns to Remove
-
-- **Floor Pivot Breakout** — Delta Sharpe: -0.4950
-
 ## Configuration Used
-
-```json
-{
-  "data_path": "data/raw/SPY_daily.csv",
-  "start_date": null,
-  "end_date": null,
-  "initial_equity": 100000.0,
-  "commission": 0.001,
-  "min_confluence_count": 2,
-  "min_trades": 5,
-  "min_sharpe": -1.0,
-  "min_profit_factor": 0.0,
-  "min_win_rate": 0.0,
-  "max_drawdown": 1.0,
-  "correlation_threshold": 0.8,
-  "positive_contribution_threshold": 0.0,
-  "noise_threshold": -0.05,
-  "primary_signal_threshold": 0.1,
-  "output_dir": "reports/pattern_selection_quick",
-  "cache_results": true
-}
-```

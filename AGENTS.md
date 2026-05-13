@@ -71,13 +71,15 @@ When completing tasks:
 
 ## Command Cheatsheet - Single Source of Truth
 
-This project maintains a centralized **Command Cheatsheet** at COMMAND_CHEATSHEET.md in the root directory.
+This project maintains a centralized **Command Cheatsheet** at `docs/COMMAND_CHEATSHEET.md`.
+
+**CRITICAL: See also `.kilo/project-rules.md#command-documentation-protocol` for the full protocol covering creation, modification, and deletion of commands.**
 
 ### Auto-Update Protocol for AI Assistants
 
 **When implementing new features that include CLI scripts, commands, or workflows:**
 
-1. **IMMEDIATELY UPDATE** COMMAND_CHEATSHEET.md as part of the same commit
+1. **IMMEDIATELY UPDATE** `docs/COMMAND_CHEATSHEET.md` as part of the same commit
 2. Add commands to the appropriate functional section
 3. Include a brief description explaining what the command does
 4. Group with related commands (ML, backtest, optimization, etc.)
@@ -153,6 +155,28 @@ Each paper summary includes:
 
 See `.useful_commands/paper_summarization.txt` for detailed commands and model options.
 
+### Knowledge Graph Auto-Linking (CRITICAL)
+
+**Whenever new papers are added to `useful_resources/papers/` or converted to `.md` in `papers_md/`, you MUST run the knowledge graph analysis to cross-reference findings with project modules:**
+
+```bash
+# Full pipeline: scan → convert → analyze → update plans
+uv run useful_resources/_knowledge_analysis.py
+```
+
+This produces:
+- `useful_resources/papers_md/KNOWLEDGE_GRAPH_INSIGHTS.md` — comprehensive cross-reference report
+- Updated `progress_docs/plans/full.md` with new action items
+- Updated `progress_docs/current.md` with session log entry
+
+**Load the knowledge-graph skill** (`.kilo/skills/knowledge-graph/SKILL.md`) whenever:
+1. New PDFs appear in `useful_resources/papers/`
+2. Papers are converted to `.md`
+3. User asks about paper insights, cross-references, or module gaps
+4. After implementing new modules (to re-evaluate paper alignment)
+
+**Use the `/knowledge-graph` command** for quick access to the full pipeline.
+
 ---
 
 ## Progress Documentation — CRITICAL FOR ALL SESSIONS
@@ -186,6 +210,7 @@ The current tool inventory is maintained in `docs/ML_TRAINING_GUIDE.md` Section 
 | Doc | Coverage |
 |-----|----------|
 | `docs/ML_TRAINING_GUIDE.md` | All ML components, optimizers, concepts, decision tree, data flow |
+| `docs/guide-ml-pipeline.md` | Standard 9-stage ML pipeline — every AI agent MUST read before training |
 | `COMMAND_CHEATSHEET.md` | CLI commands for every script |
 | `.useful_commands/` | Detailed command workflows by category |
 
@@ -218,6 +243,47 @@ When moving or renaming files, **never delete a file before the destination is v
 | `/W:5` | Wait 5s between retries |
 | `/NP` | No progress |
 | `/LOG:file` | Output to log |
+
+---
+
+## Agent-Centric Workflows — Slash Commands
+
+The project exposes three primary workflows as Kilo agents and slash commands. These agents know the project's conventions, pitfalls, and baselines — they should be used instead of manual CLI commands for consistency.
+
+### Agent Catalog
+
+| Agent | File | Purpose |
+|-------|------|---------|
+| **model-doctor** | `.kilo/agent/model-doctor.md` | Runs calibration audit, regime shift investigation, WFO comparison. Produces health report with remediation playbook. |
+| **backtest-runner** | `.kilo/agent/backtest-runner.md` | Executes ML strategy backtests, updates BESTS.md leaderboard, interprets results against known baselines. |
+| **ml-trainer** | `.kilo/agent/ml-trainer.md` | Trains CatBoost models via 9-stage pipeline. Knows triple-barrier labels, PurgedKFold, ATR normalization, overfitting thresholds. |
+
+### Slash Commands
+
+| Command | Agent | Usage |
+|---------|-------|-------|
+| `/model-diagnose` | model-doctor | Full diagnostic suite. No arguments needed. |
+| `/backtest` | backtest-runner | Run backtests with `--entry-threshold --trail-stop` etc. |
+| `/train-ml` | ml-trainer | Train models with `--symbol / --basket / --fast / --walk-forward` |
+
+### When to Use Slash Commands vs Direct CLI
+
+| Situation | Use |
+|-----------|-----|
+| Training a new model | `/train-ml` — agent knows overfitting thresholds and ATR fix |
+| Running a backtest | `/backtest` — agent auto-updates BESTS.md |
+| Checking model health | `/model-diagnose` — agent runs all 3 diagnostics + interprets |
+| Quick one-off script | Direct CLI — e.g., `uv run scripts/sweep_entry_thresholds.py SPY` |
+
+### Creating New Agents
+
+When adding new scripts or workflows, create a `.kilo/agent/*.md` file teaching future AIs how to use them. Include:
+- The exact CLI commands with realistic flags
+- Known baselines and thresholds for interpreting results
+- Pitfalls and anti-patterns to avoid
+- When to invoke vs when to use another agent
+
+Wrap in a `.kilo/command/*.md` for slash command access.
 
 ### Target Directory Conventions
 

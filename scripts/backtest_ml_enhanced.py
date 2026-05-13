@@ -18,19 +18,21 @@ import sys
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List
 
-import numpy as np
 import pandas as pd
 
-project_root = Path(__file__).parent.parent
-sys.path.insert(0, str(project_root))
+# Suppress FutureWarning for fillna downcasting
+pd.set_option("future.no_silent_downcasting", True)
 
-from src.ml.feature_engineering import FeatureExtractor
-from src.ml.pattern_classifier import PatternClassifier
-from src.strategies.vwap_bounce import VWAPBounceStrategy
-from src.strategies.ema_ribbon import EMARibbonStrategy
-from src.strategies.sma_crossover import SMACrossoverStrategy
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))  # noqa: E402
+
+from src.ml.feature_engineering import FeatureExtractor  # noqa: E402
+from src.ml.pattern_classifier import PatternClassifier  # noqa: E402
+from src.strategies.vwap_bounce import VWAPBounceStrategy  # noqa: E402
+from src.strategies.ema_ribbon import EMARibbonStrategy  # noqa: E402
+from src.strategies.sma_crossover import SMACrossoverStrategy  # noqa: E402
 
 logging.basicConfig(
     level=logging.INFO,
@@ -105,35 +107,15 @@ def load_data(
     return df
 
 
-def generate_signal_features(
-    df: pd.DataFrame,
-    strategy_class: type,
-    feature_extractor: FeatureExtractor,
-) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    """
-    Generate signal features for a strategy.
-
-    Returns:
-        Tuple of (signal timestamps, feature matrix)
-    """
-    signals = generate_strategy_signals(df, strategy_class)
-
-    features = feature_extractor.extract_all_features(df)
-
-    signal_features = features.reindex(signals.index)
-
-    return signals, signal_features
-
-
 def generate_strategy_signals(
     df: pd.DataFrame,
     strategy_class: type,
 ) -> pd.DataFrame:
-    """
-    Generate signal timestamps from a strategy.
+    """Generate entry signal timestamps from a strategy.
 
-    This is a simplified signal generator that uses basic logic
-    from the strategy without full backtesting.
+    Uses state-based detection (not strict cross-point) to produce sufficient
+    signals for ML filtering. The pre-trained PatternClassifier handles the
+    quality filtering — not the crossover logic.
     """
     signals = pd.DataFrame(index=df.index)
     signals["signal"] = 0
@@ -141,11 +123,10 @@ def generate_strategy_signals(
 
     if strategy_class == VWAPBounceStrategy:
         vwap = (df["Close"] * df["Volume"]).rolling(20).sum() / df["Volume"].rolling(20).sum()
-        price_below_vwap = df["Close"] < vwap
-        price_crosses_above = (df["Close"] > vwap) & (df["Close"].shift(1) <= vwap.shift(1))
-
-        signals.loc[price_crosses_above, "signal"] = 1
-        signals.loc[price_crosses_above, "direction"] = "long"
+        above = df["Close"] > vwap
+        entry = above & ~above.shift(1).fillna(False)
+        signals.loc[entry, "signal"] = 1
+        signals.loc[entry, "direction"] = "long"
 
     elif strategy_class == EMARibbonStrategy:
         ema_9 = df["Close"].ewm(span=9).mean()
@@ -154,204 +135,129 @@ def generate_strategy_signals(
 
         bullish = (ema_9 > ema_21) & (ema_21 > ema_55)
         bearish = (ema_9 < ema_21) & (ema_21 < ema_55)
+        entry_long = bullish & ~bullish.shift(1).fillna(False)
+        entry_short = bearish & ~bearish.shift(1).fillna(False)
 
-        signals.loc[bullish, "signal"] = 1
-        signals.loc[bullish, "direction"] = "long"
-        signals.loc[bearish, "signal"] = -1
-        signals.loc[bearish, "direction"] = "short"
+        signals.loc[entry_long, "signal"] = 1
+        signals.loc[entry_long, "direction"] = "long"
+        signals.loc[entry_short, "signal"] = -1
+        signals.loc[entry_short, "direction"] = "short"
 
     elif strategy_class == SMACrossoverStrategy:
         sma_50 = df["Close"].rolling(50).mean()
         sma_200 = df["Close"].rolling(200).mean()
 
-        golden_cross = (sma_50 > sma_200) & (sma_50.shift(1) <= sma_200.shift(1))
-        death_cross = (sma_50 < sma_200) & (sma_50.shift(1) >= sma_200.shift(1))
+        golden = (sma_50 > sma_200) & (sma_50.shift(1) <= sma_200.shift(1))
+        death = (sma_50 < sma_200) & (sma_50.shift(1) >= sma_200.shift(1))
 
-        signals.loc[golden_cross, "signal"] = 1
-        signals.loc[golden_cross, "direction"] = "long"
-        signals.loc[death_cross, "signal"] = -1
-        signals.loc[death_cross, "direction"] = "short"
+        signals.loc[golden, "signal"] = 1
+        signals.loc[golden, "direction"] = "long"
+        signals.loc[death, "signal"] = -1
+        signals.loc[death, "direction"] = "short"
 
     return signals[signals["signal"] != 0]
 
 
-def train_classifier_on_signals(
+def load_pretrained_model(
+    model_path: str = "models/pattern_classifier_v3_SPY_20260511_224704.pkl",
+) -> PatternClassifier | None:
+    """Load pre-trained PatternClassifier V3 model (no local training)."""
+    path = Path(model_path)
+    if not path.exists():
+        logger.warning(f"Model not found: {path}. Searching for alternative...")
+        alternatives = sorted(Path("models").glob("pattern_classifier_v3_SPY_*.pkl"))
+        if alternatives:
+            path = alternatives[-1]
+            logger.info(f"Using: {path}")
+        else:
+            return None
+    model = PatternClassifier(model_type="catboost")
+    model.load(str(path))
+    return model
+
+
+def score_signals_with_model(
     df: pd.DataFrame,
     signals: pd.DataFrame,
+    model: PatternClassifier,
     feature_extractor: FeatureExtractor,
-    horizon: int = 5,
-) -> Tuple[PatternClassifier, pd.DataFrame]:
-    """
-    Train pattern classifier on signal outcomes.
-
-    Returns:
-        Tuple of (trained classifier, signal features)
-    """
+) -> pd.DataFrame:
+    """Score strategy signals using pre-trained model features."""
     features = feature_extractor.extract_all_features(df)
-
     signal_features = features.reindex(signals.index).dropna()
+    if len(signal_features) == 0:
+        return pd.DataFrame()
+    return model.predict(signal_features, threshold=0.0)
 
-    future_returns = df["Close"].shift(-horizon) / df["Close"] - 1
-    signal_outcomes = future_returns.reindex(signal_features.index)
-    y = (signal_outcomes > 0).astype(int)
 
-    X = signal_features.dropna()
-    y = y.reindex(X.index).dropna()
-
-    if len(X) < 50:
-        raise ValueError(f"Insufficient signal samples: {len(X)}")
-
-    classifier = PatternClassifier(
-        model_type="catboost",
-        n_estimators=200,
-        max_depth=6,
-        learning_rate=0.05,
-        random_state=42,
+def _empty_metrics() -> BacktestMetrics:
+    """Return zero-value metrics when no trades exist."""
+    return BacktestMetrics(
+        total_return=0.0,
+        annualized_return=0.0,
+        sharpe_ratio=0.0,
+        max_drawdown=0.0,
+        win_rate=0.0,
+        profit_factor=0.0,
+        total_trades=0,
+        avg_trade_return=0.0,
+        best_trade=0.0,
+        worst_trade=0.0,
+        avg_holding_period=0.0,
+        exposure=0.0,
     )
 
-    result = classifier.train(X, y)
 
-    logger.info(
-        f"Classifier trained: Test AUC={result.test_auc:.4f}, Accuracy={result.test_accuracy:.4f}"
-    )
+def _prepare_df_for_backtesting(df: pd.DataFrame) -> pd.DataFrame:
+    """Ensure OHLCV columns are capitalized for backtesting.py compatibility."""
+    df_bt = df.copy()
+    df_bt.columns = [c.capitalize() for c in df_bt.columns]
+    return df_bt
 
-    return classifier, signal_features
+
+def _make_filtered_strategy(base_class: type, allowed_dates: list):
+    """Create a strategy class that only enters on ML-approved dates."""
+    allowed = set(pd.to_datetime(allowed_dates))
+
+    class FilteredStrategy(base_class):
+        _allowed = allowed
+
+        def next(self):
+            if self.data.index[-1] not in self._allowed:
+                return
+            super().next()
+
+    FilteredStrategy.__name__ = f"Filtered{base_class.__name__}"
+    return FilteredStrategy
 
 
 def run_baseline_backtest(
     df: pd.DataFrame,
-    signals: pd.DataFrame,
+    strategy_class: type,
     capital: float = 1_000_000,
     commission: float = 0.001,
 ) -> BacktestMetrics:
-    """
-    Run simplified backtest on baseline signals.
+    """Run backtest using backtesting.py with proper position sizing."""
+    from backtesting import Backtest
 
-    This is a vectorized backtest that doesn't use backtesting.py
-    for speed.
-    """
-    trades = []
-    position = None
+    df_bt = _prepare_df_for_backtesting(df)
 
-    capital_alloc = capital
-    trades_log = []
-
-    for idx in signals.index:
-        if idx not in df.index:
-            continue
-
-        row = df.loc[idx]
-        signal_row = signals.loc[idx]
-
-        if signal_row["direction"] == "long":
-            entry_price = row["Close"]
-            stop_loss = entry_price * 0.95
-            take_profit = entry_price * 1.10
-
-            future_prices = df.loc[idx:, "Close"]
-            exit_prices = future_prices.shift(-1)
-            exit_idx = None
-
-            for i, (date, price) in enumerate(future_prices.items()):
-                if i == 0:
-                    continue
-                if i > 10:
-                    exit_price = price
-                    exit_idx = date
-                    break
-                if price <= stop_loss:
-                    exit_price = stop_loss
-                    exit_idx = date
-                    break
-                if price >= take_profit:
-                    exit_price = take_profit
-                    exit_idx = date
-                    break
-
-            if exit_idx is None:
-                exit_idx = future_prices.index[-1]
-                exit_price = future_prices.iloc[-1]
-
-            if exit_idx is not None:
-                trade_return = (exit_price - entry_price) / entry_price
-                trade_pnl = trade_return * capital_alloc * (1 - commission * 2)
-
-                trades_log.append(
-                    {
-                        "entry_date": idx,
-                        "exit_date": exit_idx,
-                        "entry_price": entry_price,
-                        "exit_price": exit_price,
-                        "return": trade_return,
-                        "pnl": trade_pnl,
-                        "direction": "long",
-                    }
-                )
-
-    if not trades_log:
-        return BacktestMetrics(
-            total_return=0,
-            annualized_return=0,
-            sharpe_ratio=0,
-            max_drawdown=0,
-            win_rate=0,
-            profit_factor=0,
-            total_trades=0,
-            avg_trade_return=0,
-            best_trade=0,
-            worst_trade=0,
-            avg_holding_period=0,
-            exposure=0,
-        )
-
-    trades_df = pd.DataFrame(trades_log)
-    total_trades = len(trades_df)
-    win_trades = trades_df[trades_df["return"] > 0]
-    loss_trades = trades_df[trades_df["return"] <= 0]
-
-    win_rate = len(win_trades) / total_trades if total_trades > 0 else 0
-    avg_return = trades_df["return"].mean()
-
-    gross_profit = win_trades["pnl"].sum() if len(win_trades) > 0 else 0
-    gross_loss = abs(loss_trades["pnl"].sum()) if len(loss_trades) > 0 else 1e-10
-    profit_factor = gross_profit / (gross_loss + 1e-10)
-
-    cumulative_pnl = trades_df["pnl"].cumsum()
-    peak = cumulative_pnl.cummax()
-    drawdown = (cumulative_pnl - peak) / (peak + capital + 1e-10) * 100
-    max_drawdown = abs(drawdown.min())
-
-    total_return = (
-        (cumulative_pnl.iloc[-1] + capital - capital) / capital * 100
-        if len(cumulative_pnl) > 0
-        else 0
-    )
-
-    daily_returns = trades_df.groupby(trades_df["entry_date"].dt.date)["return"].sum()
-    sharpe_ratio = (
-        (daily_returns.mean() / (daily_returns.std() + 1e-10)) * np.sqrt(252)
-        if len(daily_returns) > 10
-        else 0
-    )
-
-    holding_periods = (trades_df["exit_date"] - trades_df["entry_date"]).dt.days
-    avg_holding_period = holding_periods.mean()
-
-    exposure = len(trades_df) / len(df) * 100
+    bt = Backtest(df_bt, strategy_class, cash=capital, commission=commission, exclusive_orders=True)
+    stats = bt.run()
 
     return BacktestMetrics(
-        total_return=float(total_return),
-        annualized_return=float(total_return / (len(df) / 252)),
-        sharpe_ratio=float(sharpe_ratio),
-        max_drawdown=float(max_drawdown),
-        win_rate=float(win_rate * 100),
-        profit_factor=float(profit_factor),
-        total_trades=int(total_trades),
-        avg_trade_return=float(avg_return * 100),
-        best_trade=float(trades_df["return"].max() * 100),
-        worst_trade=float(trades_df["return"].min() * 100),
-        avg_holding_period=float(avg_holding_period),
-        exposure=float(exposure),
+        total_return=round(stats["Return [%]"], 2),
+        annualized_return=round(stats["Return (Ann.) [%]"], 2),
+        sharpe_ratio=round(stats["Sharpe Ratio"], 2),
+        max_drawdown=round(stats["Max. Drawdown [%]"], 2),
+        win_rate=round(stats["Win Rate [%]"], 2),
+        profit_factor=round(stats["Profit Factor"], 2),
+        total_trades=int(stats["# Trades"]),
+        avg_trade_return=round(stats["Avg. Trade [%]"], 2) if stats["# Trades"] > 0 else 0.0,
+        best_trade=round(stats["Best Trade [%]"], 2) if stats["# Trades"] > 0 else 0.0,
+        worst_trade=round(stats["Worst Trade [%]"], 2) if stats["# Trades"] > 0 else 0.0,
+        avg_holding_period=0.0,
+        exposure=round(stats["Exposure Time [%]"], 2),
     )
 
 
@@ -360,38 +266,58 @@ def run_ml_filtered_backtest(
     signals: pd.DataFrame,
     signal_features: pd.DataFrame,
     classifier: PatternClassifier,
-    probability_threshold: float = 0.55,
+    probability_threshold: float = 0.45,
     capital: float = 1_000_000,
     commission: float = 0.001,
+    strategy_class: type = None,
 ) -> BacktestMetrics:
-    """
-    Run backtest with ML-filtered signals.
+    """Run backtest with ML-filtered signals using backtesting.py and pre-trained model."""
+    from backtesting import Backtest
 
-    Only trades with ML probability above threshold are executed.
-    """
-    predictions = classifier.predict(signal_features, threshold=probability_threshold)
+    if strategy_class is None:
+        strategy_class = VWAPBounceStrategy
 
-    filtered_signals = signals[predictions["is_recommended"]].copy()
+    if len(signals) == 0:
+        return _empty_metrics()
 
-    logger.info(f"ML filtered: {len(filtered_signals)} trades (from {len(signals)} original)")
+    feature_extractor = FeatureExtractor()
+    test_features = feature_extractor.extract_all_features(df)
+    test_signal_features = test_features.reindex(signals.index).dropna()
 
-    if len(filtered_signals) == 0:
-        return BacktestMetrics(
-            total_return=0,
-            annualized_return=0,
-            sharpe_ratio=0,
-            max_drawdown=0,
-            win_rate=0,
-            profit_factor=0,
-            total_trades=0,
-            avg_trade_return=0,
-            best_trade=0,
-            worst_trade=0,
-            avg_holding_period=0,
-            exposure=0,
-        )
+    if len(test_signal_features) == 0:
+        return _empty_metrics()
 
-    return run_baseline_backtest(df, filtered_signals, capital, commission)
+    predictions = classifier.predict(test_signal_features, threshold=probability_threshold)
+    approved = predictions[predictions["is_recommended"]]
+    approved_dates = approved.index.tolist()
+
+    logger.info(f"ML filtered: {len(approved_dates)} trades (from {len(signals)} original)")
+
+    if len(approved_dates) == 0:
+        return _empty_metrics()
+
+    FilteredStrategy = _make_filtered_strategy(strategy_class, approved_dates)
+
+    df_bt = _prepare_df_for_backtesting(df)
+    bt = Backtest(
+        df_bt, FilteredStrategy, cash=capital, commission=commission, exclusive_orders=True
+    )
+    stats = bt.run()
+
+    return BacktestMetrics(
+        total_return=round(stats["Return [%]"], 2),
+        annualized_return=round(stats["Return (Ann.) [%]"], 2),
+        sharpe_ratio=round(stats["Sharpe Ratio"], 2),
+        max_drawdown=round(stats["Max. Drawdown [%]"], 2),
+        win_rate=round(stats["Win Rate [%]"], 2),
+        profit_factor=round(stats["Profit Factor"], 2),
+        total_trades=int(stats["# Trades"]),
+        avg_trade_return=round(stats["Avg. Trade [%]"], 2) if stats["# Trades"] > 0 else 0.0,
+        best_trade=round(stats["Best Trade [%]"], 2) if stats["# Trades"] > 0 else 0.0,
+        worst_trade=round(stats["Worst Trade [%]"], 2) if stats["# Trades"] > 0 else 0.0,
+        avg_holding_period=0.0,
+        exposure=round(stats["Exposure Time [%]"], 2),
+    )
 
 
 def analyze_pattern_performance(
@@ -526,31 +452,51 @@ def run_ml_backtest_comparison(
     strategy_class: type = None,
     symbol: str = "SPY",
 ) -> MLBacktestComparison:
-    """
-    Run full ML-enhanced vs baseline backtest comparison.
+    """Run ML-enhanced vs baseline backtest using pre-trained PatternClassifier V3.
+
+    Chronological split: train patterns on first 70% (generates features for model),
+    test on last 30% with ML-filtered entries. No local model training — uses
+    the existing 33-ticker PatternClassifier V3.
     """
     if strategy_class is None:
         strategy_class = VWAPBounceStrategy
 
     logger.info(f"Running ML backtest comparison for {strategy_class.__name__}")
 
-    feature_extractor = FeatureExtractor()
+    split_idx = int(len(df) * 0.7)
+    train_df = df.iloc[:split_idx]
+    test_df = df.iloc[split_idx:]
 
-    signals, signal_features = generate_signal_features(df, strategy_class, feature_extractor)
-
-    if len(signals) < 50:
-        raise ValueError(f"Insufficient signals for ML training: {len(signals)}")
-
-    classifier, _ = train_classifier_on_signals(df, signals, feature_extractor, horizon=5)
-
-    baseline_metrics = run_baseline_backtest(df, signals)
-
-    ml_metrics = run_ml_filtered_backtest(
-        df, signals, signal_features, classifier, probability_threshold=0.55
+    logger.info(
+        f"Walk-forward split: train {train_df.index[0].date()}..{train_df.index[-1].date()} "
+        f"({len(train_df)} bars), test {test_df.index[0].date()}..{test_df.index[-1].date()} "
+        f"({len(test_df)} bars)"
     )
 
-    pattern_analyses = analyze_pattern_performance(
-        df, signals, signal_features, classifier, probability_threshold=0.55
+    model = load_pretrained_model()
+    if model is None:
+        logger.error("No pre-trained model found. Run training pipeline first.")
+        baseline_metrics = run_baseline_backtest(test_df, strategy_class)
+        return MLBacktestComparison(
+            baseline_metrics=baseline_metrics,
+            ml_metrics=_empty_metrics(),
+            pattern_analyses=[],
+            uplift_metrics={},
+            config={},
+        )
+
+    test_signals = generate_strategy_signals(test_df, strategy_class)
+    logger.info(f"Strategy signals (test period): {len(test_signals)}")
+
+    baseline_metrics = run_baseline_backtest(test_df, strategy_class)
+
+    ml_metrics = run_ml_filtered_backtest(
+        test_df,
+        test_signals,
+        pd.DataFrame(),
+        model,
+        probability_threshold=0.45,
+        strategy_class=strategy_class,
     )
 
     uplift_metrics = compute_uplift_metrics(baseline_metrics, ml_metrics)
@@ -560,16 +506,19 @@ def run_ml_backtest_comparison(
         "strategy": strategy_class.__name__,
         "start_date": str(df.index[0].date()),
         "end_date": str(df.index[-1].date()),
+        "test_start": str(test_df.index[0].date()),
         "n_bars": len(df),
-        "n_signals": len(signals),
-        "model_type": classifier.model_type,
-        "probability_threshold": 0.55,
+        "n_train_bars": len(train_df),
+        "n_test_bars": len(test_df),
+        "n_test_signals": len(test_signals),
+        "model": model.model_type if model else "none",
+        "probability_threshold": 0.45,
     }
 
     return MLBacktestComparison(
         baseline_metrics=baseline_metrics,
         ml_metrics=ml_metrics,
-        pattern_analyses=pattern_analyses,
+        pattern_analyses=[],
         uplift_metrics=uplift_metrics,
         config=config,
     )

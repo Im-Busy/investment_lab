@@ -1,0 +1,43 @@
+{
+  "run_id": "20260509_051651_v3_ca_SPY_catboost",
+  "symbol": "data/raw/SPY_daily.csv",
+  "model_type": "catboost",
+  "horizon": 5,
+  "n_samples": 2263,
+  "n_features": 100,
+  "feature_sample_ratio": 0.04,
+  "label_type": "triple_barrier",
+  "ic_filtered": true,
+  "cross_asset_enabled": true,
+  "final_metrics": {
+    "train_auc": 0.8880346987334748,
+    "test_auc": 0.5711322109630576,
+    "test_accuracy": 0.6175,
+    "calibration_error": 0.22185283185677704,
+    "overfit_gap": 0.3169024877704173
+  },
+  "cv_metrics": {
+    "mean_train_auc": 0.8155115724251095,
+    "mean_test_auc": 0.5839180177215295,
+    "std_test_auc": 0.0094351109462991,
+    "mean_overfit_gap": 0.23159355470357995
+  },
+  "top_features": {
+    "beta_QQQ_60d": 4.144546862198391,
+    "avg_cross_corr_20d": 3.6001057312192652,
+    "price_to_ma_100": 3.347361933946264,
+    "price_to_ma_10": 3.224475368388191,
+    "std_return_50": 3.051463781660854,
+    "corr_dispersion_20d": 2.881958795754823,
+    "beta_QQQ_20d": 2.768744475422299,
+    "bb_pct_10": 2.4554690066551164,
+    "std_return_100": 2.439660066365788,
+    "volatility_100": 2.342884825626832
+  },
+  "papers_referenced": [
+    "Vabalas et al. 2019 - ML validation with limited sample size",
+    "Sasse et al. 2025 - Overview of leakage scenarios in supervised ML",
+    "Ichwani et al. 2026 - Preventing data leakage via integrated pipelines",
+    "Li et al. 2024 - History-based approach to mitigate overfitting"
+  ]
+}

@@ -1,6 +1,6 @@
-"""Hyperparameter tuning and feature selection via nature-inspired metaheuristics.
+"""Hyperparameter tuning and feature selection via nature-inspired metaheuristics + Optuna.
 
-ARO → GWO → GA → WOA pipeline for end-to-end OHLCV model optimization.
+ARO → GWO → Optuna (TPE) → GA → WOA pipeline for end-to-end OHLCV model optimization.
 """
 
 from src.ml.tuning.base import (
@@ -12,6 +12,7 @@ from src.ml.tuning.base import (
 from src.ml.tuning.aro_selector import AROFeatureSelector
 from src.ml.tuning.ga_tuner import GARegimeOptimizer, RegimeDiscovery, REGIME_PARAM_SPACE
 from src.ml.tuning.gwo_tuner import CATBOOST_PARAM_SPACE, GWOTuner
+from src.ml.tuning.optuna_tuner import OptunaResult, OptunaTuner, compare_optimizers
 from src.ml.tuning.woa_tuner import WOATuner, build_threshold_search_space
 
 __all__ = [
@@ -22,9 +23,12 @@ __all__ = [
     "AROFeatureSelector",
     "GARegimeOptimizer",
     "GWOTuner",
+    "OptunaTuner",
+    "OptunaResult",
     "WOATuner",
     "RegimeDiscovery",
     "CATBOOST_PARAM_SPACE",
     "REGIME_PARAM_SPACE",
     "build_threshold_search_space",
+    "compare_optimizers",
 ]

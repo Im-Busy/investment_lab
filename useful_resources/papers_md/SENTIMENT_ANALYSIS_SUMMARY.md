@@ -2,7 +2,7 @@
 
 _Generated: 2026-04-25 03:28_
 
-_Summarized using Alibaba Cloud Bailian (Qwen models) via OpenAI-compatible API_
+_Summarized using Alibaba Cloud Bailian (Qwen models) via Open AI-compatible API_
 
 ## Index
 
@@ -10,7 +10,7 @@ _Summarized using Alibaba Cloud Bailian (Qwen models) via OpenAI-compatible API_
 - [10.21541 Apjes.939338 1776091](#10-21541-apjes-939338-1776091)
 - [2024 Sentimentanalysisoftwitterdatausingmachinelearningtechniques](#2024-sentimentanalysisoftwitterdatausingmachinelearningtechniques)
 - [S41598 025 09794 2](#s41598-025-09794-2)
-- [Sjeat 91 1 11 Auq6Tky](#sjeat-91-1-11-auq6tky)
+- [Sjeat 91 1 11 Auq6 Tky](#sjeat-91-1-11-auq6 tky)
 - [Twitter Sentiment Analysis Using Machine Learning](#twitter-sentiment-analysis-using-machine-learning)
 - [Twitterdistantsupervision09](#twitterdistantsupervision09)
 
@@ -22,21 +22,21 @@ _Summarized using Alibaba Cloud Bailian (Qwen models) via OpenAI-compatible API_
 
 ### TL;DR
 * The paper proposes an ensemble-based approach for sentiment analysis of tweets using machine learning methods, achieving an accuracy of 93.42% on Twitter API data.
-* The approach combines three machine learning classifiers (SVM, RF, and DT) using Adaptive Boosting (AdaBoost) and applies natural language processing (NLP) and data mining techniques.
-* The paper outperforms existing Convolutional Bidirectional - Long Short-Term Memory (ConvBiLSTM) and Hybrid LexiconNaïve Bayes Classifier (HL-NBC) models.
+* The approach combines three machine learning classifiers (SVM, RF, and DT) using Adaptive Boosting (Ada Boost) and applies natural language processing (NLP) and data mining techniques.
+* The paper outperforms existing Convolutional Bidirectional - Long Short-Term Memory (Conv Bi LSTM) and Hybrid Lexicon Naïve Bayes Classifier (HL-NBC) models.
 
 ### Problem & Motivation
 The paper aims to classify sentiment in tweets using an ensemble classifier, given the large volume of noisy and unstructured data on Twitter, and the importance of sentiment analysis in understanding public opinions.
 
 ### Data & Methodology
-The dataset used is Twitter API data, and Stanford Sentiment Treebank (SST-2). The paper proposes an ensemble approach combining Random Forest (RF), Decision Tree (DT), and Support Vector Machine (SVM) classifiers using the Adaptive Boosting (AdaBoost) technique.
+The dataset used is Twitter API data, and Stanford Sentiment Treebank (SST-2). The paper proposes an ensemble approach combining Random Forest (RF), Decision Tree (DT), and Support Vector Machine (SVM) classifiers using the Adaptive Boosting (Ada Boost) technique.
 
 ### Sentiment Analysis Approach
 The paper employs various sentiment analysis techniques, including tokenization, feature extraction, and dimensionality reduction using Latent Dirichlet Allocation (LDA).
 
 ### ML Models & Results
 * The proposed ensemble classifier achieves an accuracy of 93.42% for tweet sentiment classification, outperforming individual classifiers (RF, DT, SVM).
-* The ensemble classifier's performance is compared to existing ML classifiers (ConvBiLSTM, HL-NBC) and outperforms them.
+* The ensemble classifier's performance is compared to existing ML classifiers (Conv Bi LSTM, HL-NBC) and outperforms them.
 * The paper reports high classification accuracy rates using the proposed ensemble-based classifier, with an average accuracy of 87.3%.
 
 ### Trading Applications & Takeaways
@@ -56,7 +56,7 @@ The paper acknowledges that the proposed model may not be effective in classifyi
 
 ## 2024 Sentimentanalysisoftwitterdatausingmachinelearningtechniques
 
-- **Source**: `2024_SentimentAnalysisofTwitterDataUsingMachineLearningTechniques.md`
+- **Source**: `2024_Sentiment Analysisof Twitter Data Using Machine Learning Techniques.md`
 
 ### TL;DR
 * Analyze sentiment on Twitter data from the FIFA World Cup 2022 opening day using machine learning techniques.
@@ -67,7 +67,7 @@ The paper acknowledges that the proposed model may not be effective in classifyi
 The paper aims to perform sentiment analysis on Twitter data using various machine learning models to identify the most effective approach. Sentiment analysis is crucial for understanding public opinion and can be applied to real-time monitoring, audience engagement, and brand impression.
 
 ### Data & Methodology
-The study uses the Kaggle dataset "fifa_world_cup_2022_tweets", which contains tweets related to the 2022 FIFA World Cup. Tweets are preprocessed by removing usernames, URLs, stopwords, and applying lemmatization techniques. Six machine learning models are evaluated: Vader, XGBoost with CountVectorizer, XGBoost with Gensim, Random Forest with CountVectorizer, Random Forest with Gensim, Single LSTM, and Bidirectional LSTM.
+The study uses the Kaggle dataset "fifa_world_cup_2022_tweets", which contains tweets related to the 2022 FIFA World Cup. Tweets are preprocessed by removing usernames, URLs, stopwords, and applying lemmatization techniques. Six machine learning models are evaluated: Vader, XGBoost with Count Vectorizer, XGBoost with Gensim, Random Forest with Count Vectorizer, Random Forest with Gensim, Single LSTM, and Bidirectional LSTM.
 
 ### Sentiment Analysis Approach
 Sentiment techniques involve Vader and Gensim for preprocessing and tokenization, followed by machine learning algorithms to classify tweets as favorable, negative, or neutral. The models are used to calculate sentiment scores (positivity, negativity, and neutrality) for each tweet.
@@ -101,7 +101,7 @@ Here is a markdown summary for quantitative traders and ML engineers:
 The paper aims to enhance the accuracy of sentiment analysis on Twitter data, particularly in detecting sarcasm and improving performance on neutral tweets.
 
 ### Data & Methodology
-The study uses the widely recognized Sentiment140 dataset, which contains 1.6 million tweets labeled as positive, negative, or neutral. The authors employ a hybrid model consisting of data pre-processing, feature extraction using Bi-Directional Long Short-Term Memory (Bi-LSTM), and classification through Logistic Regression (LR) optimized with GridSearchCV.
+The study uses the widely recognized Sentiment140 dataset, which contains 1.6 million tweets labeled as positive, negative, or neutral. The authors employ a hybrid model consisting of data pre-processing, feature extraction using Bi-Directional Long Short-Term Memory (Bi-LSTM), and classification through Logistic Regression (LR) optimized with Grid Search CV.
 
 ### Sentiment Analysis Approach
 The study focuses on tokenization, stop-word removal, stemming and lemmatization, and embedding to extract meaningful features from Twitter data.
@@ -119,9 +119,9 @@ The study can be applied to sentiment analysis for quantitative trading purposes
 ### Limitations & Future Work
 The study highlights several research gaps, including the need for a hybrid framework that balances model interpretability, computational efficiency, and classification performance, particularly in sarcasm detection. The authors suggest investigating the application of the proposed model in actual trading scenarios, exploring the inclusion of additional features, and adapting the approach to other social media platforms or data sources.
 
-## Sjeat 91 1 11 Auq6Tky
+## Sjeat 91 1 11 Auq6 Tky
 
-- **Source**: `SJEAT_91_1-11_aUQ6TKy.md`
+- **Source**: `SJEAT_91_1-11_a UQ6 TKy.md`
 
 ### TL;DR
 * Accurately analyzing sentiment on Twitter is challenging due to its dynamic environment, noise, and nuances of language.
@@ -185,7 +185,7 @@ This study provides a framework for sentiment analysis on Twitter, which can be 
 
 ## Twitterdistantsupervision09
 
-- **Source**: `TwitterDistantSupervision09.md`
+- **Source**: `Twitter Distant Supervision09.md`
 
 ### TL;DR
 * Automate sentiment classification on Twitter messages without manual labeling to help consumers and businesses analyze customer feedback.

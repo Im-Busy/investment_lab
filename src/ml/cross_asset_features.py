@@ -337,3 +337,279 @@ def prepare_cross_asset_data(
             pass
 
     return data
+
+
+class CrossAssetFeatureExtractor:
+    """Extract instrument-specific cross-asset features.
+
+    Generates features that situate an individual instrument in its market context:
+    relative returns, rolling beta, residual volatility, market correlation,
+    market regime indicators, sector rotation, and cross-asset correlation.
+
+    All features are backward-looking only — no future information leakage.
+    Every rolling computation uses .shift(1) to ensure the last data point
+    in the window is t-1, never t.
+
+    Args:
+        market_data: Dict of {ticker: OHLCV_DataFrame} with compatible DatetimeIndex.
+    """
+
+    def __init__(self, market_data: Dict[str, pd.DataFrame]) -> None:
+        self._market = market_data
+        self._validate_market_data()
+
+    def _validate_market_data(self) -> None:
+        for ticker, df in self._market.items():
+            if "Close" not in df.columns:
+                raise ValueError(f"Market data for {ticker} missing 'Close' column")
+
+    # ── public API ──
+
+    def extract(self, instrument_df: pd.DataFrame) -> pd.DataFrame:
+        """Extract all cross-asset features for the instrument.
+
+        Args:
+            instrument_df: OHLCV DataFrame for the target instrument.
+
+        Returns:
+            DataFrame indexed by instrument_df.index with cross-asset features.
+        """
+        features = pd.DataFrame(index=instrument_df.index)
+        close = instrument_df["Close"]
+        returns = close.pct_change()
+
+        features = self._add_relative_returns(features, returns)
+        features = self._add_rolling_beta(features, returns)
+        features = self._add_residual_vol(features, returns)
+        features = self._add_market_correlation(features, returns)
+        features = self._add_market_regime(features)
+        features = self._add_sector_rotation(features)
+        features = self._add_cross_asset_corr(features)
+
+        return features
+
+    # ── Category 1: Relative Returns ──
+
+    def _add_relative_returns(
+        self,
+        features: pd.DataFrame,
+        returns: pd.Series,
+    ) -> pd.DataFrame:
+        """Instrument return minus benchmark return over 5d/20d windows."""
+        windows = [5, 20]
+        benchmarks = ["SPY", "QQQ", "TLT", "IWM"]
+
+        for bench in benchmarks:
+            if bench not in self._market:
+                continue
+            bench_ret = self._market[bench]["Close"].pct_change()
+            for w in windows:
+                inst_cum = returns.rolling(w).sum().shift(1)
+                bench_cum = bench_ret.rolling(w).sum().shift(1)
+                features[f"rel_ret_{bench}_{w}d"] = inst_cum - bench_cum
+
+        return features
+
+    # ── Category 2: Rolling Beta ──
+
+    def _add_rolling_beta(
+        self,
+        features: pd.DataFrame,
+        returns: pd.Series,
+    ) -> pd.DataFrame:
+        """Rolling beta of instrument returns vs market returns."""
+        windows = [20, 60]
+
+        for bench in ["SPY", "QQQ"]:
+            if bench not in self._market:
+                continue
+            bench_ret = self._market[bench]["Close"].pct_change()
+            for w in windows:
+                cov = returns.rolling(w).cov(bench_ret)
+                var = bench_ret.rolling(w).var()
+                features[f"beta_{bench}_{w}d"] = (cov / var).shift(1)
+
+        return features
+
+    # ── Category 3: Residual Volatility ──
+
+    def _add_residual_vol(
+        self,
+        features: pd.DataFrame,
+        returns: pd.Series,
+    ) -> pd.DataFrame:
+        """Volatility of the component the market cannot explain."""
+        if "SPY" not in self._market:
+            return features
+
+        spy_ret = self._market["SPY"]["Close"].pct_change()
+
+        for w in [20, 60]:
+            cov = returns.rolling(w).cov(spy_ret)
+            var = spy_ret.rolling(w).var()
+            beta = cov / var
+            residual = returns - beta * spy_ret
+            features[f"resid_vol_SPY_{w}d"] = residual.rolling(w).std().shift(1)
+
+        return features
+
+    # ── Category 4: Market Correlation ──
+
+    def _add_market_correlation(
+        self,
+        features: pd.DataFrame,
+        returns: pd.Series,
+    ) -> pd.DataFrame:
+        """Rolling Pearson correlation of instrument returns with SPY."""
+        if "SPY" not in self._market:
+            return features
+
+        spy_ret = self._market["SPY"]["Close"].pct_change()
+
+        for w in [20, 60]:
+            features[f"corr_SPY_{w}d"] = returns.rolling(w).corr(spy_ret).shift(1)
+
+        return features
+
+    # ── Category 5: Market Regime ──
+
+    def _add_market_regime(self, features: pd.DataFrame) -> pd.DataFrame:
+        """Broad market state indicators computed from SPY."""
+        if "SPY" not in self._market:
+            return features
+
+        spy_close = self._market["SPY"]["Close"]
+        spy_ret = spy_close.pct_change()
+
+        # Trend indicators
+        ma_50 = spy_close.rolling(50).mean()
+        ma_200 = spy_close.rolling(200).mean()
+        features["SPY_trend_50d"] = (spy_close / ma_50 - 1).shift(1)
+        features["SPY_trend_200d"] = (spy_close / ma_200 - 1).shift(1)
+
+        # Volatility regime percentile
+        vol_rank = (
+            spy_ret.rolling(20)
+            .std()
+            .rolling(60)
+            .apply(lambda x: (x > x.iloc[-1]).mean(), raw=False)
+            .shift(1)
+        )
+        features["SPY_vol_percentile_60d"] = vol_rank
+
+        # VIX proxy (SPY ATR / SPY close)
+        if "High" in self._market["SPY"] and "Low" in self._market["SPY"]:
+            spy_high = self._market["SPY"]["High"]
+            spy_low = self._market["SPY"]["Low"]
+            tr = pd.concat(
+                [
+                    spy_high - spy_low,
+                    (spy_high - spy_close.shift(1)).abs(),
+                    (spy_low - spy_close.shift(1)).abs(),
+                ],
+                axis=1,
+            ).max(axis=1)
+            atr_20 = tr.rolling(20).mean()
+            features["SPY_atr_ratio"] = (atr_20 / spy_close).shift(1)
+
+        # Breadth: fraction of days above 50d MA in past 5 days
+        above_ma = (spy_close > ma_50).astype(float)
+        features["SPY_breadth_5d"] = above_ma.rolling(5).mean().shift(1)
+
+        return features
+
+    # ── Category 6: Sector Rotation ──
+
+    def _add_sector_rotation(self, features: pd.DataFrame) -> pd.DataFrame:
+        """Sector ETF relative performance vs SPY."""
+        if "SPY" not in self._market:
+            return features
+
+        spy_ret = self._market["SPY"]["Close"].pct_change()
+
+        for sector in ["XLF", "XLK"]:
+            if sector not in self._market:
+                continue
+            sector_ret = self._market[sector]["Close"].pct_change()
+            relative = (sector_ret.rolling(5).sum() - spy_ret.rolling(5).sum()).shift(1)
+            features[f"{sector}_relative_5d"] = relative
+
+        # Value vs growth spread
+        if "XLF" in self._market and "XLK" in self._market:
+            xlf_ret = self._market["XLF"]["Close"].pct_change().rolling(5).sum()
+            xlk_ret = self._market["XLK"]["Close"].pct_change().rolling(5).sum()
+            features["value_growth_spread_5d"] = (xlf_ret - xlk_ret).shift(1)
+
+        return features
+
+    # ── Category 7: Cross-Asset Correlation Matrix ──
+
+    def _add_cross_asset_corr(self, features: pd.DataFrame) -> pd.DataFrame:
+        """Average pairwise correlation across SPY, QQQ, TLT, GLD."""
+        tickers = ["SPY", "QQQ", "TLT", "GLD"]
+        available = [t for t in tickers if t in self._market]
+        if len(available) < 2:
+            return features
+
+        returns_dict = {t: self._market[t]["Close"].pct_change() for t in available}
+        returns_df = pd.DataFrame(returns_dict)
+
+        w = 20
+        n = len(available)
+        corr_series_list = []
+        for i in range(n):
+            for j in range(i + 1, n):
+                pair_corr = returns_df.iloc[:, i].rolling(w).corr(returns_df.iloc[:, j])
+                corr_series_list.append(pair_corr)
+
+        if corr_series_list:
+            avg_corr = pd.concat(corr_series_list, axis=1).mean(axis=1)
+            disp_corr = pd.concat(corr_series_list, axis=1).std(axis=1)
+            features["avg_cross_corr_20d"] = avg_corr.shift(1)
+            features["corr_dispersion_20d"] = disp_corr.shift(1)
+
+        return features
+
+
+def load_market_data(
+    instrument_df: pd.DataFrame,
+    market_tickers: Optional[List[str]] = None,
+) -> Dict[str, pd.DataFrame]:
+    """Load market data from CSV, aligned to instrument's index.
+
+    Args:
+        instrument_df: The instrument's OHLCV DataFrame (for index alignment).
+        market_tickers: List of tickers to load. Defaults to SPY, QQQ, TLT, GLD,
+            IWM, XLF, XLK.
+
+    Returns:
+        Dict of {ticker: DataFrame} aligned to instrument_df.index.
+    """
+    from pathlib import Path as _Path
+
+    if market_tickers is None:
+        market_tickers = ["SPY", "QQQ", "TLT", "GLD", "IWM", "XLF", "XLK"]
+
+    market_data: Dict[str, pd.DataFrame] = {}
+    for ticker in market_tickers:
+        path = _Path(f"data/raw/{ticker}_daily.csv")
+        if path.exists():
+            df = pd.read_csv(path, parse_dates=True, index_col=0)
+            aligned = df.reindex(instrument_df.index, method="ffill")
+            aligned = aligned.dropna(subset=["Close"])
+            if len(aligned) > 0:
+                market_data[ticker] = aligned
+            else:
+                from logging import getLogger
+
+                _log = getLogger(__name__)
+                _log.warning(
+                    f"Market data for {ticker} has no overlap with instrument index, skipping"
+                )
+        else:
+            from logging import getLogger
+
+            _log = getLogger(__name__)
+            _log.warning(f"Market data not found for {ticker} ({path}), skipping")
+
+    return market_data

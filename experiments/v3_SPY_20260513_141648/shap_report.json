@@ -1,0 +1,76 @@
+{
+  "top_features": [
+    {
+      "feature": "vol_regime",
+      "mean_abs_shap": 0.023912,
+      "mean_value": NaN,
+      "shap_volatility": 0.009602,
+      "explainable": true
+    },
+    {
+      "feature": "macd_histogram",
+      "mean_abs_shap": 0.021448,
+      "mean_value": 0.0098,
+      "shap_volatility": 0.008866,
+      "explainable": true
+    },
+    {
+      "feature": "price_to_ma_10",
+      "mean_abs_shap": 0.021372,
+      "mean_value": 0.0027,
+      "shap_volatility": 0.009127,
+      "explainable": true
+    },
+    {
+      "feature": "std_return_50",
+      "mean_abs_shap": 0.019606,
+      "mean_value": NaN,
+      "shap_volatility": 0.008091,
+      "explainable": true
+    },
+    {
+      "feature": "vol_regime_state",
+      "mean_abs_shap": 0.018948,
+      "mean_value": NaN,
+      "shap_volatility": 0.00822,
+      "explainable": true
+    },
+    {
+      "feature": "close_percentile_10",
+      "mean_abs_shap": 0.01804,
+      "mean_value": 0.6321,
+      "shap_volatility": 0.010641,
+      "explainable": true
+    },
+    {
+      "feature": "atr_20",
+      "mean_abs_shap": 0.017371,
+      "mean_value": NaN,
+      "shap_volatility": 0.009534,
+      "explainable": true
+    },
+    {
+      "feature": "macd_signal",
+      "mean_abs_shap": 0.017152,
+      "mean_value": 1.2233,
+      "shap_volatility": 0.010122,
+      "explainable": true
+    },
+    {
+      "feature": "dist_to_high_10",
+      "mean_abs_shap": 0.016227,
+      "mean_value": -0.0168,
+      "shap_volatility": 0.008305,
+      "explainable": true
+    },
+    {
+      "feature": "momentum_50",
+      "mean_abs_shap": 0.016125,
+      "mean_value": NaN,
+      "shap_volatility": 0.015407,
+      "explainable": true
+    }
+  ],
+  "n_features": 88,
+  "suspicious": []
+}

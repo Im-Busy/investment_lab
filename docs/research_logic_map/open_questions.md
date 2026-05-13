@@ -1,8 +1,8 @@
 # Open Questions
 
-**Last Updated:** 2026-04-25
-**Total Questions:** 8
-**Unassigned:** 6
+**Last Updated:** 2026-05-08
+**Total Questions:** 9
+**Unassigned:** 7
 **Target Resolution:** 2026-05-15 to 2026-12-31
 
 ---
@@ -140,6 +140,25 @@
 
 ---
 
+## Q9: What Optimal Instrument Universe Should We Trade?
+
+- **Question:** Given our current universe is dominated by highly efficient instruments (SPY, QQQ, mega-cap tech), what is the optimal mix of efficient and inefficient instruments that maximizes risk-adjusted returns while maintaining tradability?
+- **Context:** Research (Bartram 2019, DeMiguel 2024, Damodaran) shows alpha is inversely proportional to trading activity. Our current 10-instrument active universe is exclusively the most efficient, most arbitraged instruments. We need a data-driven answer on what to add and in what proportion.
+- **Related Insights:** I14.1, I14.2, I16.1, I16.2, I17.1, I17.2
+- **Related Hypotheses:** H13 (inefficient instruments yield higher ML alpha), H14 (cross-asset features improve SPY)
+- **Research Needed:**
+  - Quantify efficiency scores for all 85+ instruments referenced in the project
+  - Rank by efficiency proxies (dollar volume, analyst coverage, institutional ownership, Amihud illiquidity)
+  - Run H13 experiment (ML model on efficient vs. inefficient groups)
+  - Determine minimum liquidity threshold for execution feasibility
+  - Propose target universe with efficiency diversification (e.g., 30% efficient, 40% moderate, 30% inefficient)
+- **Owner:** Unassigned
+- **Target Date:** 2026-07-31
+- **Priority:** 🔴 High
+- **Discussion Document:** `docs/research_logic_map/market_efficiency_and_instrument_selection.md`
+
+---
+
 ## Question Backlog by Priority
 
 | Priority | Question | Impact | Target Date | Status |
@@ -152,6 +171,7 @@
 | 🟡 Medium | Q5: Divergence-in-bits vs. Sharpe | Metrics | 2026-08-31 | Unassigned |
 | 🟡 Medium | Q6: Pairs trading category | Strategy | 2026-09-30 | Unassigned |
 | 🟢 Low | Q8: Network-derived factors | Research | 2026-12-31 | Unassigned |
+| 🔴 High | Q9: Optimal instrument universe | Market.Efficiency | 2026-07-31 | Unassigned |
 
 ---
 

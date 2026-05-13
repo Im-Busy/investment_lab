@@ -294,6 +294,43 @@ def ic_summary(
     return summary
 
 
+def evaluate_predictions(
+    predictions: pd.Series,
+    actuals: pd.Series,
+) -> dict[str, float]:
+    """Evaluate predictions against actual forward returns.
+
+    Computes rank IC, hit rate, and mean error between predictions and
+    actual forward returns. No internal shifting is done — both inputs
+    must already be aligned.
+
+    Args:
+        predictions: Model predictions (scores or probabilities).
+        actuals: Actual forward returns (pre-shifted, aligned by index).
+
+    Returns:
+        Dict with rank_ic, ic, hit_rate, mean_error, n_samples.
+    """
+    common = predictions.dropna().index.intersection(actuals.dropna().index)
+    if len(common) < 5:
+        return {"rank_ic": 0.0, "ic": 0.0, "hit_rate": 0.0, "mean_error": 0.0, "n_samples": 0}
+
+    pred_aligned = predictions.loc[common]
+    actual_aligned = actuals.loc[common]
+
+    rank_ic, _ = stats.spearmanr(pred_aligned, actual_aligned)
+    ic, _ = stats.pearsonr(pred_aligned, actual_aligned)
+    hit_rate = compute_hit_rate(pred_aligned, actual_aligned)
+
+    return {
+        "rank_ic": float(rank_ic) if not np.isnan(rank_ic) else 0.0,
+        "ic": float(ic) if not np.isnan(ic) else 0.0,
+        "hit_rate": hit_rate,
+        "mean_error": float((pred_aligned - actual_aligned).abs().mean()),
+        "n_samples": len(common),
+    }
+
+
 def filter_features_by_ic(
     values: pd.DataFrame,
     forward_returns: pd.Series,

@@ -98,6 +98,7 @@ import sys
 import warnings
 from pathlib import Path
 
+sys.stdout.reconfigure(encoding='utf-8')
 warnings.filterwarnings("ignore")
 
 # Setup project root FIRST (before any src imports)
@@ -155,6 +156,8 @@ print("For proper SMC backtesting, please provide 5-minute OHLCV data.")
 fallback_config = CONFIG.copy()
 fallback_config["data"] = CONFIG["data"].copy()
 fallback_config["data"]["file"] = "SPY_daily.csv"
+fallback_config["data"]["start_date"] = "2024-01-01"
+fallback_config["data"]["end_date"] = "2024-12-31"
 df = load_price_data(fallback_config, project_root)
 data_freq = "daily"
 

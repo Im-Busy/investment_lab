@@ -11,4 +11,18 @@
 # # uv run scripts/train_ml_model.py --symbol SPY
 #
 # Category: ML Training / Pattern Classification
-# Last Updated: 2026-04-21
+# Last Updated: 2026-05-13
+
+### Stability Selection (B9 — replaces ARO selector)
+
+# Run stability selection standalone (full bootstrap)
+uv run python -c "from src.ml.tuning.stability_selector import StabilitySelector; print('OK')"
+
+# Train with stability selection at default threshold (0.6)
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --stability-threshold 0.6
+
+# Train with stricter threshold (fewer but more stable features)
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --stability-threshold 0.7
+
+# Train with permissive threshold (more features, wider pool)
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --stability-threshold 0.5

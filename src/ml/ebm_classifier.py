@@ -498,7 +498,7 @@ class EBMRegimeClassifier:
             raise FileNotFoundError(f"Model file not found: {path}")
 
         with open(path, "rb") as f:
-            data = pickle.load(f)
+            data = pickle.load(f)  # nosec B301
 
         self.model_ = data["model"]
         self.feature_names_ = data["feature_names"]

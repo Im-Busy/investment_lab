@@ -1,0 +1,550 @@
+{
+  "single_split": {
+    "trades": [
+      {
+        "entry_date": "2025-01-02 00:00:00",
+        "exit_date": "2025-01-10 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 0.9929016540000892,
+        "return": -0.0070983459999108215,
+        "exit_reason": "time",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2025-01-13 00:00:00",
+        "exit_date": "2025-01-21 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 1.0372554221612686,
+        "return": 0.03725542216126862,
+        "exit_reason": "time",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2025-02-03 00:00:00",
+        "exit_date": "2025-02-10 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 1.0118439076577324,
+        "return": 0.011843907657732314,
+        "exit_reason": "time",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2025-02-11 00:00:00",
+        "exit_date": "2025-02-19 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 0.989149593435751,
+        "return": -0.010850406564248946,
+        "exit_reason": "sl",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2025-02-21 00:00:00",
+        "exit_date": "2025-02-28 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 0.9903252465972806,
+        "return": -0.009674753402719397,
+        "exit_reason": "sl",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2025-03-03 00:00:00",
+        "exit_date": "2025-03-10 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 0.9867646116136666,
+        "return": -0.013235388386333386,
+        "exit_reason": "sl",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2025-03-11 00:00:00",
+        "exit_date": "2025-03-18 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 1.009174025802755,
+        "return": 0.009174025802755104,
+        "exit_reason": "time",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2025-04-03 00:00:00",
+        "exit_date": "2025-04-10 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 0.9807500736174812,
+        "return": -0.019249926382518736,
+        "exit_reason": "sl",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2025-05-28 00:00:00",
+        "exit_date": "2025-06-04 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 1.0139519694528485,
+        "return": 0.013951969452848476,
+        "exit_reason": "time",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2025-06-13 00:00:00",
+        "exit_date": "2025-06-23 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 1.0082480627465773,
+        "return": 0.008248062746577387,
+        "exit_reason": "time",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2025-07-15 00:00:00",
+        "exit_date": "2025-07-22 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 1.0108324043051515,
+        "return": 0.01083240430515156,
+        "exit_reason": "tp",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2025-07-30 00:00:00",
+        "exit_date": "2025-08-06 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 0.993413966959747,
+        "return": -0.006586033040252941,
+        "exit_reason": "sl",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2025-08-07 00:00:00",
+        "exit_date": "2025-08-14 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 1.0137976818599086,
+        "return": 0.01379768185990856,
+        "exit_reason": "tp",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2025-08-20 00:00:00",
+        "exit_date": "2025-08-27 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 1.013850633762298,
+        "return": 0.013850633762297991,
+        "exit_reason": "tp",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2025-08-29 00:00:00",
+        "exit_date": "2025-09-08 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 0.992622951608401,
+        "return": -0.007377048391599064,
+        "exit_reason": "sl",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2025-09-24 00:00:00",
+        "exit_date": "2025-10-01 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 0.9928171597807154,
+        "return": -0.007182840219284609,
+        "exit_reason": "sl",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2025-10-03 00:00:00",
+        "exit_date": "2025-10-10 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 0.9925758282167031,
+        "return": -0.007424171783296941,
+        "exit_reason": "sl",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2025-10-13 00:00:00",
+        "exit_date": "2025-10-20 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 0.9903151709043194,
+        "return": -0.009684829095680542,
+        "exit_reason": "sl",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2025-11-06 00:00:00",
+        "exit_date": "2025-11-13 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 0.9899918365821366,
+        "return": -0.010008163417863335,
+        "exit_reason": "sl",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2025-11-14 00:00:00",
+        "exit_date": "2025-11-21 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 0.9883427495018161,
+        "return": -0.01165725049818388,
+        "exit_reason": "sl",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2025-12-12 00:00:00",
+        "exit_date": "2025-12-19 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 0.9907351245222424,
+        "return": -0.009264875477757608,
+        "exit_reason": "sl",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2025-12-22 00:00:00",
+        "exit_date": "2025-12-30 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 1.0031832857657617,
+        "return": 0.0031832857657616434,
+        "exit_reason": "time",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2025-12-31 00:00:00",
+        "exit_date": "2026-01-08 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 1.0127472160343995,
+        "return": 0.01274721603439964,
+        "exit_reason": "tp",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2026-01-14 00:00:00",
+        "exit_date": "2026-01-22 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 0.9930646887613656,
+        "return": -0.0069353112386344356,
+        "exit_reason": "sl",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2026-01-23 00:00:00",
+        "exit_date": "2026-01-30 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 1.0039754606543945,
+        "return": 0.0039754606543943895,
+        "exit_reason": "time",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2026-02-02 00:00:00",
+        "exit_date": "2026-02-09 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 0.990044895084464,
+        "return": -0.009955104915535943,
+        "exit_reason": "sl",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2026-02-12 00:00:00",
+        "exit_date": "2026-02-20 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 1.0119776009187598,
+        "return": 0.01197760091875976,
+        "exit_reason": "time",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2026-02-23 00:00:00",
+        "exit_date": "2026-03-02 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 1.0058470857128916,
+        "return": 0.0058470857128917145,
+        "exit_reason": "time",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2026-03-03 00:00:00",
+        "exit_date": "2026-03-10 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 0.9865096916715903,
+        "return": -0.013490308328409714,
+        "exit_reason": "sl",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2026-03-11 00:00:00",
+        "exit_date": "2026-03-18 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 0.9853854032470837,
+        "return": -0.014614596752916363,
+        "exit_reason": "sl",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2026-03-19 00:00:00",
+        "exit_date": "2026-03-26 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 0.9845007116913056,
+        "return": -0.015499288308694441,
+        "exit_reason": "sl",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2026-03-27 00:00:00",
+        "exit_date": "2026-04-06 00:00:00",
+        "entry_price": 1.0,
+        "exit_price": 1.0228726128784946,
+        "return": 0.02287261287849466,
+        "exit_reason": "tp",
+        "bars_held": 5
+      }
+    ],
+    "return": -0.01286849628083353,
+    "sharpe": -0.13832013662533066,
+    "win_rate": 0.4375,
+    "n_trades": 32,
+    "max_dd": -0.0826169362615577,
+    "profit_factor": 0.946091228791181,
+    "exposure": 0.471976401179941,
+    "bh_return": 0.2828825548411067,
+    "label": "Single-Split"
+  },
+  "wfo": {
+    "label": "WFO",
+    "return": 0.22492188486272213,
+    "sharpe": 1.762069177474281,
+    "win_rate": 0.5915492957746479,
+    "n_trades": 71,
+    "max_dd": -0.08625574870827797,
+    "profit_factor": 1.606380232747493,
+    "exposure": 0.2224310776942356,
+    "retrain_history": [
+      {
+        "chunk": 1,
+        "start": "2020-01-02",
+        "end": "2020-04-02",
+        "train_bars": 1006,
+        "test_bars": 63,
+        "n_trades": 0,
+        "win_rate": 0.0
+      },
+      {
+        "chunk": 2,
+        "start": "2020-04-02",
+        "end": "2020-07-02",
+        "train_bars": 1069,
+        "test_bars": 63,
+        "n_trades": 0,
+        "win_rate": 0.0
+      },
+      {
+        "chunk": 3,
+        "start": "2020-07-02",
+        "end": "2020-10-02",
+        "train_bars": 1132,
+        "test_bars": 64,
+        "n_trades": 0,
+        "win_rate": 0.0
+      },
+      {
+        "chunk": 4,
+        "start": "2020-10-02",
+        "end": "2021-01-02",
+        "train_bars": 1196,
+        "test_bars": 63,
+        "n_trades": 1,
+        "win_rate": 0.0
+      },
+      {
+        "chunk": 5,
+        "start": "2021-01-02",
+        "end": "2021-04-02",
+        "train_bars": 1259,
+        "test_bars": 62,
+        "n_trades": 0,
+        "win_rate": 0.0
+      },
+      {
+        "chunk": 6,
+        "start": "2021-04-02",
+        "end": "2021-07-02",
+        "train_bars": 1321,
+        "test_bars": 63,
+        "n_trades": 4,
+        "win_rate": 0.75
+      },
+      {
+        "chunk": 7,
+        "start": "2021-07-02",
+        "end": "2021-10-02",
+        "train_bars": 1384,
+        "test_bars": 64,
+        "n_trades": 5,
+        "win_rate": 0.4
+      },
+      {
+        "chunk": 8,
+        "start": "2021-10-02",
+        "end": "2022-01-02",
+        "train_bars": 1448,
+        "test_bars": 63,
+        "n_trades": 1,
+        "win_rate": 1.0
+      },
+      {
+        "chunk": 9,
+        "start": "2022-01-02",
+        "end": "2022-04-02",
+        "train_bars": 1511,
+        "test_bars": 63,
+        "n_trades": 0,
+        "win_rate": 0.0
+      },
+      {
+        "chunk": 10,
+        "start": "2022-04-02",
+        "end": "2022-07-02",
+        "train_bars": 1574,
+        "test_bars": 62,
+        "n_trades": 1,
+        "win_rate": 0.0
+      },
+      {
+        "chunk": 11,
+        "start": "2022-07-02",
+        "end": "2022-10-02",
+        "train_bars": 1636,
+        "test_bars": 63,
+        "n_trades": 1,
+        "win_rate": 0.0
+      },
+      {
+        "chunk": 12,
+        "start": "2022-10-02",
+        "end": "2023-01-02",
+        "train_bars": 1699,
+        "test_bars": 63,
+        "n_trades": 0,
+        "win_rate": 0.0
+      },
+      {
+        "chunk": 13,
+        "start": "2023-01-02",
+        "end": "2023-04-02",
+        "train_bars": 1762,
+        "test_bars": 62,
+        "n_trades": 2,
+        "win_rate": 0.5
+      },
+      {
+        "chunk": 14,
+        "start": "2023-04-02",
+        "end": "2023-07-02",
+        "train_bars": 1824,
+        "test_bars": 62,
+        "n_trades": 6,
+        "win_rate": 0.8333333333333334
+      },
+      {
+        "chunk": 15,
+        "start": "2023-07-02",
+        "end": "2023-10-02",
+        "train_bars": 1886,
+        "test_bars": 63,
+        "n_trades": 7,
+        "win_rate": 0.5714285714285714
+      },
+      {
+        "chunk": 16,
+        "start": "2023-10-02",
+        "end": "2024-01-02",
+        "train_bars": 1949,
+        "test_bars": 63,
+        "n_trades": 3,
+        "win_rate": 0.6666666666666666
+      },
+      {
+        "chunk": 17,
+        "start": "2024-01-02",
+        "end": "2024-04-02",
+        "train_bars": 2012,
+        "test_bars": 62,
+        "n_trades": 4,
+        "win_rate": 1.0
+      },
+      {
+        "chunk": 18,
+        "start": "2024-04-02",
+        "end": "2024-07-02",
+        "train_bars": 2074,
+        "test_bars": 63,
+        "n_trades": 5,
+        "win_rate": 0.6
+      },
+      {
+        "chunk": 19,
+        "start": "2024-07-02",
+        "end": "2024-10-02",
+        "train_bars": 2137,
+        "test_bars": 64,
+        "n_trades": 3,
+        "win_rate": 0.6666666666666666
+      },
+      {
+        "chunk": 20,
+        "start": "2024-10-02",
+        "end": "2025-01-02",
+        "train_bars": 2201,
+        "test_bars": 62,
+        "n_trades": 3,
+        "win_rate": 0.6666666666666666
+      },
+      {
+        "chunk": 21,
+        "start": "2025-01-02",
+        "end": "2025-04-02",
+        "train_bars": 2263,
+        "test_bars": 61,
+        "n_trades": 7,
+        "win_rate": 0.42857142857142855
+      },
+      {
+        "chunk": 22,
+        "start": "2025-04-02",
+        "end": "2025-07-02",
+        "train_bars": 2324,
+        "test_bars": 62,
+        "n_trades": 1,
+        "win_rate": 1.0
+      },
+      {
+        "chunk": 23,
+        "start": "2025-07-02",
+        "end": "2025-10-02",
+        "train_bars": 2386,
+        "test_bars": 64,
+        "n_trades": 4,
+        "win_rate": 1.0
+      },
+      {
+        "chunk": 24,
+        "start": "2025-10-02",
+        "end": "2026-01-02",
+        "train_bars": 2450,
+        "test_bars": 63,
+        "n_trades": 4,
+        "win_rate": 0.5
+      },
+      {
+        "chunk": 25,
+        "start": "2026-01-02",
+        "end": "2026-04-02",
+        "train_bars": 2513,
+        "test_bars": 62,
+        "n_trades": 9,
+        "win_rate": 0.3333333333333333
+      },
+      {
+        "chunk": 26,
+        "start": "2026-04-02",
+        "end": "2026-07-02",
+        "train_bars": 2575,
+        "test_bars": 27,
+        "n_trades": 0,
+        "win_rate": 0.0
+      }
+    ],
+    "bh_return": 1.4901635721282882
+  }
+}

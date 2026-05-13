@@ -1,0 +1,50 @@
+{
+  "baseline_metrics": {
+    "total_return": 692.6540716370052,
+    "annualized_return": 80.32619698689614,
+    "sharpe_ratio": 3.103153567716329,
+    "max_drawdown": 27.399379235309716,
+    "win_rate": 66.46382691007437,
+    "profit_factor": 1.6371285910035374,
+    "total_trades": 1479,
+    "avg_trade_return": 0.46926447325821746
+  },
+  "ml_metrics": {
+    "total_return": 692.6540716370052,
+    "annualized_return": 80.32619698689614,
+    "sharpe_ratio": 3.103153567716329,
+    "max_drawdown": 27.399379235309716,
+    "win_rate": 66.46382691007437,
+    "profit_factor": 1.6371285910035374,
+    "total_trades": 1479,
+    "avg_trade_return": 0.46926447325821746
+  },
+  "uplift_metrics": {
+    "return_uplift": 0.0,
+    "sharpe_uplift": 0.0,
+    "win_rate_uplift": 0.0,
+    "drawdown_reduction": 0.0,
+    "profit_factor_uplift": 0.0,
+    "trade_count_change": 0,
+    "avg_return_improvement": 0.0
+  },
+  "pattern_analyses": [
+    {
+      "pattern": "all",
+      "baseline_trades": 1479,
+      "ml_filtered_trades": 1479,
+      "win_rate_improvement": 0.0,
+      "return_improvement": 0.0
+    }
+  ],
+  "config": {
+    "symbol": "SPY",
+    "strategy": "EMARibbonStrategy",
+    "start_date": "2016-05-12",
+    "end_date": "2024-12-30",
+    "n_bars": 2173,
+    "n_signals": 1809,
+    "model_type": "catboost",
+    "probability_threshold": 0.55
+  }
+}

@@ -1,8 +1,8 @@
 # Insight Registry
 
-**Last Updated:** 2026-04-25
-**Total Insights:** 42
-**Papers Analyzed:** 13
+**Last Updated:** 2026-05-08
+**Total Insights:** 50
+**Papers Analyzed:** 17
 
 ---
 
@@ -17,6 +17,9 @@
 - **Position.Sizing**: Capital allocation, Kelly criterion
 - **Portfolio**: Portfolio construction, diversity, correlation
 - **Strategy.Lifecycle**: Strategy decay, retirement, validation
+- **Market.Efficiency**: Alpha decay, arbitrage dynamics, instrument selection
+- **Instrument.Selection**: Universe construction, efficiency screening, asset class choice
+- **ML.Training**: Training data strategy, transfer learning, multi-asset generalization
 
 ### Impact Levels
 - 🔴 **Critical**: Must implement; alpha-destroying if ignored
@@ -129,6 +132,38 @@
 | I13.3 | CMRS scoring for signal ranking | Signal.Quality | 🟡 Medium | ⏳ | Backlog #28 |
 | I13.4 | Momentum crash survivability via crash-factor adjustment | Regime | 🟠 High | ⏳ | Backlog #29 |
 
+### P14: Global Market Inefficiencies (Bartram & Grinblatt, 2019)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| I14.1 | Alpha 40-70 bps/month higher in emerging vs. developed markets | Market.Efficiency | 🟠 High | 🔬 | Research note: market_efficiency_and_instrument_selection.md |
+| I14.2 | Country's pre-cost alpha positively correlated with trading costs | Market.Efficiency | 🟠 High | 🔬 | Friction deters arbitrageurs → alpha persists |
+| I14.3 | Global equity markets are inefficient, especially where frictions exist | Market.Efficiency | 🟡 Medium | 🔬 | Justifies instrument universe expansion |
+
+### P15: When Systematic Strategies Decay (Falck, Rej, Thesmar, 2021)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| I15.1 | Published anomalies lose ~5ppt Sharpe per year post-publication | Strategy.Lifecycle | 🔴 Critical | 🔬 | Applies to our pattern catalog — need decay monitoring |
+| I15.2 | Year of publication alone explains 30% of Sharpe decay variance | Strategy.Lifecycle | 🟠 High | 🔬 | Newer signals decay faster |
+| I15.3 | Formula complexity and sensitivity to outliers predict decay | Signal.Quality | 🟠 High | ⏳ | Simpler signals may be more robust |
+
+### P16: ML on Trades & Holdings (DeMiguel, Sang, Zhang, 2024)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| I16.1 | ML predictability stronger for smaller/illiquid stocks | Market.Efficiency | 🔴 Critical | 🔬 | Directly supports expanding to mid/small-caps |
+| I16.2 | Predictability stronger with lower analyst coverage | Market.Efficiency | 🟠 High | 🔬 | Use analyst coverage as universe filter |
+| I16.3 | Nonlinear interactions in participant trades reveal price discovery info | ML.Training | 🟡 Medium | 🔬 | Use nonlinear models (XGBoost, NNs) to capture interactions |
+
+### P17: Factor Investing with Delays (Dickerson, Robotti, Nozawa, 2024)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| I17.1 | ML strategies beat corporate bonds before costs, fail after delay costs | Friction | 🔴 Critical | 🔬 | Illiquidity is double-edged — signal exists but execution kills it |
+| I17.2 | Transaction delays in illiquid securities can fully erase alpha | Friction | 🟠 High | 🔬 | Need delay-aware backtesting for illiquid instruments |
+| I17.3 | Large number of bond factors outperform before costs, not after | Strategy.Lifecycle | 🟡 Medium | 🔬 | Cost adjustment is essential for strategy evaluation |
+
 ---
 
 ## Cross-Cutting Themes
@@ -136,10 +171,12 @@
 | Theme | Related Insights | Implementation Status |
 |-------|------------------|----------------------|
 | **No Free Lunch** (every strategy has failure set) | I4.1, I4.2, I4.3, I5.3 | ✅ Partially implemented (regime detector, adaptive router) |
-| **Friction > Signal Strength at Scale** | I1.1, I1.2, I8.1, I13.2 | ✅ Implemented (friction_scoring.py) |
+| **Friction > Signal Strength at Scale** | I1.1, I1.2, I8.1, I13.2, I17.1, I17.2 | ✅ Implemented (friction_scoring.py) |
 | **Event Granularity Beats Aggregation** | I6.1, I6.2, I6.3, I9.1 | ⏳ Deferred (needs event taxonomy) |
 | **Position-Level Risk > Portfolio Metrics** | I3.1, I3.2, I3.4, I13.1 | ✅ Implemented (position_sizing.py, daily_limits.py) |
 | **Crash Factors + Timing > Risk Filters Alone** | I13.1, I13.3, I13.4 | ⏳ Partially implemented |
+| **Market Efficiency Inversion** (less traded = more alpha) | I14.1, I14.2, I14.3, I16.1, I16.2, I17.1 | 🔬 Research phase — instrument universe expansion |
+| **Alpha Decay Is Universal** (all signals decay post-discovery) | I15.1, I15.2, I15.3, I4.3 | 🔬 Research phase — needs decay monitoring |
 
 ---
 
@@ -148,14 +185,14 @@
 ### Risk (16 insights)
 I1.1, I1.3, I3.1, I3.4, I4.2, I4.4, I4.5, I8.1, I8.3, I13.1, I13.2, I3.3, I3.5, I4.3, I13.3, I13.4
 
-### Friction (4 insights)
-I1.1, I1.4, I8.1, I13.2
+### Friction (6 insights)
+I1.1, I1.4, I8.1, I13.2, I17.1, I17.2
 
 ### Regime (7 insights)
 I3.3, I4.1, I8.2, I10.3, I13.4, I5.3, I8.2
 
-### Signal.Quality (11 insights)
-I2.1, I2.3, I5.2, I5.3, I7.1, I7.2, I9.2, I13.2, I13.3, I6.2, I6.3
+### Signal.Quality (12 insights)
+I2.1, I2.3, I5.2, I5.3, I7.1, I7.2, I9.2, I13.2, I13.3, I6.2, I6.3, I15.3
 
 ### Event.Type (5 insights)
 I6.1, I6.2, I6.3, I9.1, I9.3
@@ -166,8 +203,14 @@ I3.2, I3.5, I7.3, I10.1, I10.2, I10.3
 ### Position.Sizing (3 insights)
 I2.2, I3.1, I3.4
 
-### Strategy.Lifecycle (4 insights)
-I1.5, I4.3, I5.1, I13.4
+### Strategy.Lifecycle (7 insights)
+I1.5, I4.3, I5.1, I13.4, I15.1, I15.2, I17.3
+
+### Market.Efficiency (5 insights)
+I14.1, I14.2, I14.3, I16.1, I16.2
+
+### ML.Training (1 insight)
+I16.3
 
 ---
 
@@ -175,19 +218,19 @@ I1.5, I4.3, I5.1, I13.4
 
 | Status | Count | Percentage |
 |--------|-------|------------|
-| ✅ Implemented | 15 | 36% |
+| ✅ Implemented | 15 | 30% |
 | 🔄 In-Progress | 0 | 0% |
-| ⏳ Deferred/Backlog | 23 | 55% |
-| ❌ Rejected | 2 | 5% |
-| 📊 Research Phase | 2 | 5% |
+| ⏳ Deferred/Backlog | 24 | 48% |
+| ❌ Rejected | 2 | 4% |
+| 🔬 Research Phase | 9 | 18% |
 
 | Impact | Count | Percentage |
 |--------|-------|------------|
-| 🔴 Critical | 7 | 17% |
-| 🟠 High | 15 | 36% |
-| 🟡 Medium | 17 | 40% |
-| 🟢 Low | 3 | 7% |
+| 🔴 Critical | 10 | 20% |
+| 🟠 High | 18 | 36% |
+| 🟡 Medium | 19 | 38% |
+| 🟢 Low | 3 | 6% |
 
 ---
 
-*Registry generated from 13 research papers. Insights extracted from research_synthesis_report.md and SENTIMENT_ANALYSIS_SUMMARY.md.*
+*Registry generated from 17 research papers. Insights extracted from research_synthesis_report.md, SENTIMENT_ANALYSIS_SUMMARY.md, and market_efficiency_and_instrument_selection.md.*

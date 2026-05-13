@@ -116,6 +116,7 @@ class SynergyAnalyzer:
         self,
         include_patterns_only: Optional[List[str]] = None,
         min_confluence_count: Optional[int] = None,
+        min_confidence: Optional[float] = None,
     ) -> Dict[str, Any]:
         """
         Run a single backtest with specified pattern configuration.
@@ -123,6 +124,7 @@ class SynergyAnalyzer:
         Args:
             include_patterns_only: Patterns to include exclusively
             min_confluence_count: Override min_confluence_count
+            min_confidence: Override min_confidence (relaxed for solo/duo testing)
 
         Returns:
             Dictionary with backtest results
@@ -138,6 +140,9 @@ class SynergyAnalyzer:
         if min_confluence_count is not None:
             params["min_confluence_count"] = min_confluence_count
 
+        if min_confidence is not None:
+            params["min_confidence"] = min_confidence
+
         # Run backtest
         start_time = time.time()
         runner = BacktestPyRunner(
@@ -151,16 +156,19 @@ class SynergyAnalyzer:
         results = runner.run(strategy_class=self.strategy_class, **params)
         duration = time.time() - start_time
 
-        # Extract metrics
+        # Extract metrics from nested stats dict
+        # runner.run() returns {"stats": {...}, "equity_curve": ..., "trades": ...}
+        # stats keys use backtesting.py native names: "# Trades", "Return [%]", etc.
+        stats = results.get("stats", {})
         return {
-            "total_trades": results.get("total_trades", 0),
-            "win_rate": results.get("win_rate", 0.0),
-            "total_return_pct": results.get("total_return", 0.0),
-            "sharpe_ratio": results.get("sharpe_ratio", 0.0),
-            "sortino_ratio": results.get("sortino_ratio", 0.0),
-            "max_drawdown_pct": results.get("max_drawdown", 0.0),
-            "profit_factor": results.get("profit_factor", 0.0),
-            "equity_final": results.get("equity_final", self.cash),
+            "total_trades": stats.get("# Trades", 0),
+            "win_rate": stats.get("Win Rate [%]", 0.0),
+            "total_return_pct": stats.get("Return [%]", 0.0),
+            "sharpe_ratio": stats.get("Sharpe Ratio", 0.0),
+            "sortino_ratio": stats.get("Sortino Ratio", 0.0),
+            "max_drawdown_pct": stats.get("Max. Drawdown [%]", 0.0),
+            "profit_factor": stats.get("Profit Factor", 0.0),
+            "equity_final": stats.get("Equity Final [$]", self.cash),
             "duration_seconds": duration,
         }
 
@@ -178,6 +186,7 @@ class SynergyAnalyzer:
         results = self._run_backtest(
             include_patterns_only=[pattern_name],
             min_confluence_count=1,  # Solo runs need threshold=1
+            min_confidence=self.base_params.get("min_confidence", 0.0),
         )
 
         self.solo_results[pattern_name] = results

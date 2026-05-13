@@ -1,0 +1,26 @@
+{
+  "SPY": {
+    "ticker": "SPY",
+    "n_signals": 547,
+    "n_trades": 165,
+    "total_return_pct": 32.61,
+    "sharpe": 1.42,
+    "max_drawdown_pct": -5.65,
+    "win_rate": 0.527,
+    "profit_factor": 1.66,
+    "avg_return_pct": 0.35,
+    "avg_bars_held": 2.8
+  },
+  "__benchmark__": {
+    "ticker": "SPY B&H",
+    "n_signals": 0,
+    "n_trades": 0,
+    "total_return_pct": 68.88,
+    "sharpe": 0.88,
+    "max_drawdown_pct": -24.5,
+    "win_rate": 0,
+    "profit_factor": 0,
+    "avg_return_pct": 0,
+    "avg_bars_held": 0
+  }
+}

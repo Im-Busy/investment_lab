@@ -184,6 +184,8 @@ class PatternSelector:
         config: Optional[SelectionConfig] = None,
         metric_backtest_fn: Optional[Callable[[List[str]], Dict[str, float]]] = None,
         wf_metric_fn: Optional[Callable[[List[str], pd.DataFrame], Dict[str, float]]] = None,
+        strategy_class: Optional[type] = None,
+        data: Optional[pd.DataFrame] = None,
     ):
         # Handle PatternSelectionConfig from notebook_helpers (backward compat)
         if config is not None and not isinstance(config, SelectionConfig):
@@ -197,6 +199,8 @@ class PatternSelector:
             )
 
         self.config = config or SelectionConfig()
+        self.strategy_class = strategy_class
+        self.data = data
         self.stat_filter = StatisticalSignificanceFilter(
             p_value_threshold=self.config.p_value_threshold,
             min_sharpe=self.config.min_sharpe,
@@ -221,7 +225,32 @@ class PatternSelector:
         )
 
         # Expose all_patterns for notebook compatibility
-        self.all_patterns: List[str] = []
+        self.all_patterns: List[str] = self._discover_patterns()
+
+    def _discover_patterns(self) -> List[str]:
+        """Discover all available pattern names from the strategy class.
+
+        Creates a mock strategy instance and calls _init_patterns() to get
+        the full list of pattern detector names, matching the approach used
+        by AblationEngine._get_all_pattern_names().
+
+        Returns:
+            List of pattern names (e.g., "DoubleBottom", "HeadAndShoulders")
+        """
+        if self.strategy_class is None:
+            from src.strategies.backtest_py.multi_pattern_strategy_optimized import (
+                MultiPatternStrategyOptimized,
+            )
+
+            strategy_cls = MultiPatternStrategyOptimized
+        else:
+            strategy_cls = self.strategy_class
+
+        temp_strategy = object.__new__(strategy_cls)
+        temp_strategy.include_patterns_only = ""
+        temp_strategy.exclude_patterns = ""
+        patterns = temp_strategy._init_patterns()
+        return [p.name for p in patterns]
 
     @classmethod
     def from_config(cls, config: Any) -> "PatternSelector":
@@ -237,6 +266,21 @@ class PatternSelector:
             )
             return cls(config=sel_config)
         return cls()
+
+    def run_full_selection(self) -> SelectionResult:
+        """Run full pattern selection pipeline using stored data and all_patterns.
+
+        Convenience wrapper around run_full_pipeline() for notebook/test compatibility.
+
+        Returns:
+            SelectionResult with full pipeline output
+        """
+        if self.data is None:
+            raise ValueError(
+                "No data provided. Pass data=df to PatternSelector constructor "
+                "or call run_full_pipeline(patterns, data) directly."
+            )
+        return self.run_full_pipeline(self.all_patterns, self.data)
 
     def select_best_patterns(
         self,

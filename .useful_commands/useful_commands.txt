@@ -34,3 +34,27 @@ uv run python -c "from src.ml.hmm_regime import HMMRegimeDetector; print('HMM OK
 uv run python -c "from src.ml.pca_kmeans_regime import PCAKMeansRegimeDetector; print('PCA-kmeans OK')"
 
 ================================================================================
+                         REPO SYNC COMMANDS
+================================================================================
+
+# Dry run sync to public repo (preview what will be synced)
+uv run scripts/sync_to_public.py --dry-run
+
+# Push to public repo (requires PAT env var)
+set PAT=ghp_...
+uv run scripts/sync_to_public.py
+
+================================================================================
+                    AUTONOMOUS TRAINING LOOP (ORCHESTRATION)
+================================================================================
+
+# Full autonomous loop: Phase 1-5 with independence clustering + consecutive confirmation
+uv run scripts/autonomous_train_loop.py --tickers "AAPL,MSFT,GOOGL,AMZN,META,NVDA,TSLA" --max-iterations 20 --confirmations 3 --timeout-hours 8
+
+# Phase 4 only: refinement loop with existing model
+uv run scripts/autonomous_train_loop.py --tickers "SPY,QQQ,XLK" --phase 4 --fast --model models/pattern_classifier_v3_SPY.pkl --trail-stop
+
+# Phase 1 only: ticker independence clustering report
+uv run scripts/autonomous_train_loop.py --tickers "SPY,QQQ,XLK,XLF,XLE,XLV" --phase 1 --max-corr 0.60
+
+================================================================================

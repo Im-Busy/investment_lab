@@ -342,7 +342,8 @@ class GapFillPredictor:
         Returns:
             GapDetection or None if no gap at this bar.
         """
-        if bar_index < 1 or bar_index >= len(df):
+        n = len(df)
+        if bar_index < 1 or bar_index >= n:
             return None
 
         prev_close = float(df["Close"].iloc[bar_index - 1])
@@ -352,13 +353,38 @@ class GapFillPredictor:
         if abs(gap_pct) < self.gap_threshold_pct:
             return None
 
-        return (
-            self.detect_gaps(df)[0]
-            if False
-            else next(
-                (g for g in self.detect_gaps(df) if g.bar_index == bar_index),
-                None,
-            )
+        is_gap_up = curr_open > prev_close
+        fill_level = prev_close
+        gap_type = "up" if is_gap_up else "down"
+
+        low_arr = df["Low"].values
+        high_arr = df["High"].values
+
+        filled = False
+        fill_bar_idx = -1
+        end = min(bar_index + self.look_forward, n)
+        for j in range(bar_index, end):
+            if gap_type == "up" and low_arr[j] <= fill_level:
+                filled = True
+                fill_bar_idx = j
+                break
+            elif gap_type == "down" and high_arr[j] >= fill_level:
+                filled = True
+                fill_bar_idx = j
+                break
+
+        day_of_week = int(df.index[bar_index].dayofweek) if hasattr(df.index, "dayofweek") else 0
+
+        return GapDetection(
+            bar_index=bar_index,
+            gap_pct=gap_pct,
+            gap_type=gap_type,
+            pre_close=prev_close,
+            gap_open=curr_open,
+            fill_level=fill_level,
+            filled=filled,
+            fill_bar_idx=fill_bar_idx,
+            day_of_week=day_of_week,
         )
 
     @staticmethod
@@ -413,6 +439,8 @@ class GapFillPredictor:
         high_50 = high.rolling(50).max()
         low_50 = low.rolling(50).min()
 
+        gap_indices_set = {g.bar_index for g in gaps}
+
         rows = []
         labels = []
         gaps_passed = []
@@ -422,6 +450,9 @@ class GapFillPredictor:
                 continue
 
             prev_c = close.iloc[i - 1]
+
+            # Count gaps in recent 10 bars (excluding current bar)
+            consecutive_gaps = sum(1 for j in range(max(0, i - 10), i) if j in gap_indices_set)
 
             rows.append(
                 {
@@ -455,7 +486,7 @@ class GapFillPredictor:
                     "pre_gap_range": float((high.iloc[i - 1] - low.iloc[i - 1]) / prev_c)
                     if prev_c > 0
                     else 0.0,
-                    "consecutive_gaps": 0.0,
+                    "consecutive_gaps": float(consecutive_gaps),
                 }
             )
             labels.append(1.0 if gap.filled else 0.0)
@@ -611,7 +642,7 @@ class GapFillPredictor:
             raise FileNotFoundError(f"Model file not found: {path}")
 
         with open(path, "rb") as f:
-            model_data = pickle.load(f)
+            model_data = pickle.load(f)  # nosec B301
 
         self.model = model_data["model"]
         self.feature_names_ = model_data["feature_names"]

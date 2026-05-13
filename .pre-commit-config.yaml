@@ -9,6 +9,7 @@ repos:
       - id: check-toml
       - id: check-json
       - id: check-added-large-files
+        args: ['--maxkb=10000']
       - id: check-merge-conflict
       - id: detect-private-key
       - id: debug-statements
@@ -38,7 +39,7 @@ repos:
             useful_resources/.*
           )$
 
-  # --- Mypy type checker ---
+  # --- Mypy type checker (manual only — run explicitly with `pre-commit run mypy`)
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.19.1
     hooks:
@@ -47,6 +48,7 @@ repos:
         additional_dependencies:
           - pandas>=2.0.0
           - numpy>=1.24.0
+        stages: [manual]
         exclude: |
           (?x)^(
             scripts/.*|

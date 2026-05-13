@@ -1,5 +1,11 @@
 """
-Gap Pattern (Explosion Gap Pivot)
+Gap Pattern (Explosion Gap Pivot) with 4-type hierarchy classification.
+
+Gap Classification (adapted from Duddella, NCFE):
+  - Common Gap: Small gap within range, low volume change. Low reliability → skip.
+  - Breakaway Gap: Gap from consolidation, high volume. Trade direction → almost never fills.
+  - Continuation Gap: Mid-trend gap, moderate volume. Trade direction.
+  - Exhaustion Gap: End of trend, high volume then reversal. Fade (counter-trend).
 
 Detection Logic:
 - Gap Up: open > prior high (gap zone between prior high and current open)
@@ -8,8 +14,8 @@ Detection Logic:
   1. Wait for gap to occur
   2. Monitor for throwback/pullback toward gap
   3. If price retraces and STOPS (does not fill gap) -> Pivot Point identified
-     - Pivot Low (for gap up): lowest point of retracement that holds above gap
-     - Pivot High (for gap down): highest point of retracement that holds below gap
+      - Pivot Low (for gap up): lowest point of retracement that holds above gap
+      - Pivot High (for gap down): highest point of retracement that holds below gap
   4. Entry: Buy stop above high of gap candle (for gap up)
   5. Protective Stop: Initially at gap low, then move to below pivot low
 
@@ -17,6 +23,8 @@ Entry Rules:
 - Long Entry: Buy Stop = high[breakout_bar] + filter (for gap up with pivot confirmation)
 - Short Entry: Sell Stop = low[breakdown_bar] - filter (for gap down with pivot confirmation)
 - Signal only if pivot confirmation occurs (gap not filled during retracement)
+- Common gaps → NOT traded (filtered out)
+- Exhaustion gaps → faded (reversal trade)
 
 Stop Loss Rules:
 - Long Stop: Below gap zone or pivot low
@@ -71,6 +79,66 @@ class GapPattern(BasePattern):
         self.entry_offset = entry_offset
         self.stop_offset = stop_offset
         self.confirmation_filter = confirmation_filter
+        self._atr_gap_skip: float = 2.5
+        self._atr_lookback: int = 10
+
+    def _classify_gap(self, gap: dict, arrays: dict, i: int) -> str:
+        """Classify gap type: common, breakaway, continuation, exhaustion."""
+        if i < self._atr_lookback:
+            return "breakaway"
+
+        close_arr = arrays["close"]
+        high_arr = arrays["high"]
+        low_arr = arrays["low"]
+
+        recent_close = [
+            float(close_arr[j])
+            for j in range(max(0, i - self._atr_lookback), i)
+            if j < len(close_arr)
+        ]
+        if not recent_close:
+            return "breakaway"
+
+        recent_high = max(
+            float(high_arr[j])
+            for j in range(max(0, i - self._atr_lookback), i)
+            if j < len(high_arr)
+        )
+        recent_low = min(
+            float(low_arr[j]) for j in range(max(0, i - self._atr_lookback), i) if j < len(low_arr)
+        )
+        avg_range = recent_high - recent_low
+
+        gap_size = gap["gap_size"]
+        gap_type = gap["type"]
+
+        # Size filter: gaps > 2.5x range are noise/event-driven → skip
+        if avg_range > 0 and gap_size > self._atr_gap_skip * avg_range:
+            return "skip"
+
+        # Common gap: small gap within normal range
+        if avg_range > 0 and gap_size < 0.25 * avg_range:
+            return "common"
+
+        # Trend context: check directional bias over lookback
+        price_change = (
+            (recent_close[-1] - recent_close[0]) / recent_close[0] if recent_close[0] > 0 else 0
+        )
+
+        if gap_type == "gap_up":
+            if price_change > 0.02:
+                return "continuation"
+            elif price_change < -0.02:
+                return "exhaustion"
+            else:
+                return "breakaway"
+        else:
+            if price_change < -0.02:
+                return "continuation"
+            elif price_change > 0.02:
+                return "exhaustion"
+            else:
+                return "breakaway"
 
     def _detect_gap(self, arrays: dict, i: int) -> Optional[Dict]:
         """
@@ -269,6 +337,7 @@ class GapPattern(BasePattern):
                 **pivot,
                 "pattern_start": gap_bar,
                 "pattern_end": i,
+                "gap_class": self._classify_gap(gap, arrays, gap_bar),
             }
 
         return None
@@ -294,6 +363,7 @@ class GapPattern(BasePattern):
         lookback = min(self.max_lookback, n - 1)
         pivot_bars = self.pivot_bars
         confirm = self.confirmation_filter
+        atr_skip = self._atr_gap_skip
 
         for i in range(10, n):
             gap_start_idx = max(1, i - lookback)
@@ -308,6 +378,7 @@ class GapPattern(BasePattern):
                 gap_end = 0.0
                 gap_high = 0.0
                 gap_low = 0.0
+                gap_size = 0.0
 
                 if current_open > prior_high:
                     gap_size = current_open - prior_high
@@ -328,6 +399,14 @@ class GapPattern(BasePattern):
 
                 if gap_type is None:
                     continue
+
+                # Size filter: skip oversized gaps
+                if gap_bar >= 10:
+                    recent_high = max(high_a[max(0, gap_bar - 10) : gap_bar])
+                    recent_low = min(low_a[max(0, gap_bar - 10) : gap_bar])
+                    avg_range = recent_high - recent_low
+                    if avg_range > 0 and gap_size > atr_skip * avg_range:
+                        continue
 
                 # Scan ahead for pivot confirmation
                 start_bar = gap_bar + 1
@@ -402,6 +481,7 @@ class GapPattern(BasePattern):
             signal=signal,
             pivot_points={
                 "gap_type": pattern["type"],
+                "gap_class": pattern.get("gap_class", "breakaway"),
                 "gap_size": pattern["gap_size"],
                 "gap_pct": pattern["gap_pct"],
                 "gap_start": pattern["gap_start"],
@@ -430,7 +510,53 @@ class GapPattern(BasePattern):
         current_low = float(low_arr[i])
         gap_size = pattern["gap_size"]
         gap_type = pattern["type"]
+        gap_class = pattern.get("gap_class", "breakaway")
         pivot_price = pattern["pivot_price"]
+
+        # Common gaps and oversized gaps → no signal
+        if gap_class in ("common", "skip"):
+            return None
+
+        # Exhaustion gap: fade (trade opposite direction)
+        if gap_class == "exhaustion":
+            if gap_type == "gap_up":
+                # Exhaustion gap up → short the reversal
+                entry_price = current_low - self.entry_offset
+                stop_loss = current_high + self.stop_offset
+                take_profit_1 = entry_price - (gap_size * 1.0)
+                confidence = 0.50
+                return TradeSignal(
+                    pattern_name="Exhaustion Gap Up",
+                    direction=SignalDirection.SHORT,
+                    entry_price=entry_price,
+                    stop_loss=stop_loss,
+                    take_profit_1=take_profit_1,
+                    confidence=confidence,
+                    metadata={
+                        "gap_type": "gap_up",
+                        "gap_class": "exhaustion",
+                        "gap_size": gap_size,
+                    },
+                )
+            else:
+                # Exhaustion gap down → long the reversal
+                entry_price = current_high + self.entry_offset
+                stop_loss = current_low - self.stop_offset
+                take_profit_1 = entry_price + (gap_size * 1.0)
+                confidence = 0.50
+                return TradeSignal(
+                    pattern_name="Exhaustion Gap Down",
+                    direction=SignalDirection.LONG,
+                    entry_price=entry_price,
+                    stop_loss=stop_loss,
+                    take_profit_1=take_profit_1,
+                    confidence=confidence,
+                    metadata={
+                        "gap_type": "gap_down",
+                        "gap_class": "exhaustion",
+                        "gap_size": gap_size,
+                    },
+                )
 
         if gap_type == "gap_up":
             # Gap up with pivot low confirmation - LONG signal
@@ -454,6 +580,7 @@ class GapPattern(BasePattern):
                 timestamp=df.index[i] if hasattr(df, "index") else None,
                 metadata={
                     "gap_type": "gap_up",
+                    "gap_class": gap_class,
                     "gap_size": gap_size,
                     "pivot_price": pivot_price,
                     "entry_type": "buy_stop",
@@ -481,6 +608,7 @@ class GapPattern(BasePattern):
                 timestamp=df.index[i] if hasattr(df, "index") else None,
                 metadata={
                     "gap_type": "gap_down",
+                    "gap_class": gap_class,
                     "gap_size": gap_size,
                     "pivot_price": pivot_price,
                     "entry_type": "sell_stop",

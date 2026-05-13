@@ -518,7 +518,7 @@ class StopLossOptimizer:
             raise FileNotFoundError(f"Model not found: {p}")
 
         with open(p, "rb") as f:
-            data = pickle.load(f)
+            data = pickle.load(f)  # nosec B301
 
         self._model = data["model"]
         self._feature_names = data["feature_names"]

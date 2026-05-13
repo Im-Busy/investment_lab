@@ -1,0 +1,11 @@
+{
+  "threshold": 0.5270407447733928,
+  "feature_names": [
+    "beta_SPY_20d",
+    "volatility_regime",
+    "vol_regime_state",
+    "std_return_20",
+    "volatility_50",
+    "_primary_prob"
+  ]
+}

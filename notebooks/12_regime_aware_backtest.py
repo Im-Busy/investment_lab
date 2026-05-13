@@ -15,6 +15,10 @@
 # ## Configuration
 
 # %%
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import yfinance as yf
@@ -338,3 +342,130 @@ if not trades_df_copy.empty and len(trades_df_copy) > 0 and pnl_col:
     print("significantly different performance across regimes.")
     print("Consider adjusting confluence thresholds or position sizing")
     print("based on detected regime to improve risk-adjusted returns.")
+
+# %% [markdown]
+# # ═══════════════════════════════════════════════════════════
+# # 8. ML REGIME GATE — One-Click Market Environment Filter
+# # ═══════════════════════════════════════════════════════════
+# #
+# # Uses the project's trained RegimeGate model to predict whether
+# # current market conditions are favorable for trading.
+# #
+# # The model was trained on 5 REITs (JOE+O+PLD+AMT+SPG) across
+# # 10,000+ market days. It uses only market-level features:
+# #   - SPY trend, volatility, drawdown
+# #   - Bond yields (TLT), Gold (GLD), Small-caps (IWM)
+# #   - Cross-asset correlation, value/growth spread
+# #
+# # **Just change TICKER below and run all cells in this section.**
+
+# %%
+# ╔══════════════════════════════════════════════════════════╗
+# ║ CONFIG — Change these                                    ║
+# ╚══════════════════════════════════════════════════════════╝
+GATE_CONFIG = {
+    "ticker": "SPY",           # <-- Change this to your ticker
+    "gate_threshold": 0.6,     # Higher = stricter filtering (0.5-0.7)
+    "csv_file": "SPY_daily.csv",
+    "data_dir": "data/raw",
+}
+
+# %%
+import sys
+from pathlib import Path
+_project = Path().absolute().parent if Path().absolute().name == "notebooks" else Path().absolute()
+if str(_project) not in sys.path:
+    sys.path.insert(0, str(_project))
+
+from src.ml.regime_gate import RegimeGate
+
+print("[OK] Loaded RegimeGate module")
+
+# %%
+gate = RegimeGate.load(f"{GATE_CONFIG['data_dir']}/../models/regime_gate_reit_basket.pkl")
+# If model doesn't exist, train it
+if gate.model_ is None:
+    print("Training RegimeGate (one-time, ~15s)...")
+    gate.train(["JOE", "O", "PLD", "AMT", "SPG"], data_dir=GATE_CONFIG["data_dir"])
+    gate.save("models/regime_gate_reit_basket.pkl")
+
+print(f"RegimeGate: Test AUC={gate.test_auc_:.3f}, {gate.feature_names_} features")
+print("\nTop regime features:")
+print(gate.get_feature_importance(10).to_string())
+
+# %%
+import pandas as pd
+import yfinance as yf
+
+# Load ticker data
+ticker = GATE_CONFIG["ticker"]
+csv_path = Path(GATE_CONFIG["data_dir"]) / GATE_CONFIG["csv_file"]
+if csv_path.exists():
+    ticker_df = pd.read_csv(csv_path, parse_dates=True, index_col=0).sort_index()
+else:
+    ticker_df = yf.download(ticker, start="2017-01-01", end="2024-12-31", progress=False)
+    if isinstance(ticker_df.columns, pd.MultiIndex):
+        ticker_df.columns = ticker_df.columns.get_level_values(0)
+
+# Get regime gate predictions for every bar
+trade_mask, confidence = gate.should_trade(
+    ticker_df.index, market_data_dir=GATE_CONFIG["data_dir"],
+    threshold=GATE_CONFIG["gate_threshold"],
+)
+
+good_bars = trade_mask.sum()
+total_bars = len(trade_mask)
+print(f"\n{ticker}: {good_bars}/{total_bars} bars favorable ({good_bars/total_bars*100:.0f}%)")
+print(f"Confidence mean: {confidence.mean():.3f}, std: {confidence.std():.3f}")
+
+# %%
+# ── Visualize: show when the gate says trade vs skip ──
+import matplotlib.pyplot as plt
+import numpy as np
+
+fig, axes = plt.subplots(3, 1, figsize=(16, 10), sharex=True)
+
+close = ticker_df["Close"]
+axes[0].plot(close.index, close, color="black", linewidth=0.7, alpha=0.7)
+in_favor = trade_mask[trade_mask].index
+axes[0].scatter(in_favor, close.loc[in_favor], color="green", s=3, alpha=0.4, label="Favorable")
+unfav = trade_mask[~trade_mask].index
+axes[0].scatter(unfav, close.loc[unfav], color="red", s=3, alpha=0.4, label="Unfavorable")
+axes[0].set_ylabel("Price")
+axes[0].legend(loc="upper left", fontsize=8)
+axes[0].set_title(f"{ticker} — Regime Gate Favorable vs Unfavorable ({GATE_CONFIG['gate_threshold']*100:.0f}% threshold)")
+
+axes[1].fill_between(confidence.index, confidence, GATE_CONFIG["gate_threshold"],
+                     where=(confidence >= GATE_CONFIG["gate_threshold"]),
+                     color="green", alpha=0.3, label="Above threshold")
+axes[1].fill_between(confidence.index, confidence, GATE_CONFIG["gate_threshold"],
+                     where=(confidence < GATE_CONFIG["gate_threshold"]),
+                     color="red", alpha=0.3, label="Below threshold")
+axes[1].axhline(y=GATE_CONFIG["gate_threshold"], color="black", linestyle="--", alpha=0.5)
+axes[1].set_ylabel("Gate Confidence")
+axes[1].legend(loc="upper left", fontsize=8)
+
+# Show yearly pass rate
+yearly = trade_mask.groupby(trade_mask.index.year).mean() * 100
+axes[2].bar(yearly.index.astype(str), yearly.values, color="steelblue")
+axes[2].axhline(y=yearly.mean(), color="orange", linestyle="--", linewidth=1.5,
+                label=f"Avg: {yearly.mean():.0f}%")
+axes[2].set_ylabel("% Favorable")
+axes[2].set_xlabel("Year")
+axes[2].legend(fontsize=8)
+
+plt.tight_layout()
+plt.show()
+
+# %%
+# ── Gate Summary ──
+print("=" * 60)
+print("REGIME GATE SUMMARY")
+print("=" * 60)
+print(f"  Ticker:        {ticker}")
+print(f"  Threshold:     {GATE_CONFIG['gate_threshold']}")
+print(f"  Favorable:     {good_bars}/{total_bars} days ({good_bars/total_bars*100:.0f}%)")
+print(f"  Confidence:    mean={confidence.mean():.3f}, std={confidence.std():.3f}")
+print(f"\n  Use this to gate signals: only trade on green dots above.")
+print(f"  Adjust gate_threshold to be more/less selective.")
+print("=" * 60)

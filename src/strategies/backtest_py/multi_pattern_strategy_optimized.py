@@ -382,7 +382,9 @@ class MultiPatternStrategyOptimized(Strategy):
                         "pattern_type": result.pattern_type.value,
                     }
         except Exception:
-            _logger.debug("Pattern detection failed for %s", pattern_name, exc_info=True)
+            _logger.debug(
+                "Pattern detection failed for %s", getattr(pattern, "name", pattern), exc_info=True
+            )
             pass
         return None
 

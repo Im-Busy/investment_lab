@@ -291,16 +291,23 @@ class MultiPatternStrategy(Strategy):
         # Use weighted average of signal levels
         total_confidence = sum(s["confidence"] for s in active_signals)
         if total_confidence > 0:
-            stop_loss = (
+            signal_stop = (
                 sum(s["stop_loss"] * s["confidence"] for s in active_signals) / total_confidence
             )
         else:
-            stop_loss = active_signals[0]["stop_loss"]
+            signal_stop = active_signals[0]["stop_loss"]
+
+        stop_distance = abs(entry_price - signal_stop)
+
+        # For short orders, stop_loss must be above entry (backtesting.py constraint)
+        if direction == "SHORT":
+            stop_loss = entry_price + stop_distance
+        else:
+            stop_loss = signal_stop
 
         # Calculate position size based on risk
         equity = self.equity
         risk_amount = equity * self.risk_per_trade
-        stop_distance = abs(entry_price - stop_loss)
 
         if stop_distance <= 0:
             return

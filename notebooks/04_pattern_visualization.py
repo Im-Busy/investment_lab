@@ -56,6 +56,8 @@ CONFIG = {
 import sys
 from pathlib import Path
 
+sys.stdout.reconfigure(encoding='utf-8')
+
 # Setup project root
 project_root = Path(".").resolve()
 if str(project_root) not in sys.path:

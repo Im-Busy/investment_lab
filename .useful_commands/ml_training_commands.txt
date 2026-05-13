@@ -70,3 +70,72 @@ uv run -c "from src.ml.ensemble_models import EnsembleBuilder; b = EnsembleBuild
 # T8: SHAP Dashboard — Waterfall/beeswarm/force plots
 # Model explainability and debugging
 uv run -c "from src.ml.shap_dashboard import quick_shap_analysis; quick_shap_analysis(model, X_test)"
+
+### V3 Honest Pipeline (Triple-Barrier + Basket + Stability Selection + SHAP + Regime)
+
+# V3 single ticker, all stages (default)
+uv run scripts/train_ml_pipeline_v3.py --symbol JOE
+
+# V3 single ticker with walk-forward validation
+uv run scripts/train_ml_pipeline_v3.py --symbol JOE --walk-forward
+
+# V3 basket training (5 tickers, cross-asset features)
+uv run scripts/train_ml_pipeline_v3.py --basket JOE,SPY,QQQ,TLT,GLD
+
+# V3 fast mode (skip stability selection/GWO for quick iterations)
+uv run scripts/train_ml_pipeline_v3.py --symbol JOE --fast
+
+# V3 with custom stability threshold (0.6 default, 0.5 for wider pool, 0.7 for strict)
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --stability-threshold 0.7
+
+# V3 with custom date range
+uv run scripts/train_ml_pipeline_v3.py --symbol JOE --start 2018-01-01 --end 2024-12-31 --walk-forward
+
+# V3 with 10-day horizon
+uv run scripts/train_ml_pipeline_v3.py --symbol JOE --horizon 10
+
+# V3 without cross-asset features (baseline comparison)
+uv run scripts/train_ml_pipeline_v3.py --symbol JOE --skip-cross-asset
+
+## Optuna Hyperparameter Optimization (NEW — Phase 10a)
+
+# Optuna tune PatternClassifier (Bayesian TPE sampler, PurgedKFold CV)
+# Use when: need principled HP tuning replacing GWO/GA/WOA metaheuristics
+uv run scripts/tune_model.py --symbol SPY --target pattern_classifier --algo optuna --trials 50
+
+# Optuna tune LightGBM (LGBM-first principle)
+uv run scripts/tune_model.py --symbol SPY --target signal_regressor --algo optuna --model lgbm --trials 30
+
+# Resume interrupted Optuna study
+uv run scripts/tune_model.py --symbol SPY --target pattern_classifier --algo optuna --study-name SPY_pc_20260512 --trials 50
+
+# Optuna tune with median pruner (stop unpromising trials early, faster)
+uv run scripts/tune_model.py --symbol SPY --target pattern_classifier --algo optuna --trials 100 --prune --patience 10
+
+# Compare Optuna vs GWO on same target
+uv run scripts/tune_model.py --symbol SPY --target pattern_classifier --algo compare --trials 30
+
+# Optuna strategy parameter tuning (replaces optimize_rsi.py / optimize_macd.py)
+uv run scripts/tune_model.py --symbol SPY --target strategy_params --algo optuna --strategy rsi --trials 50
+uv run scripts/tune_model.py --symbol SPY --target strategy_params --algo optuna --strategy macd --trials 50
+
+### Autonomous Training Loop (Orchestration)
+
+# Full autonomous loop: independence clustering → tuning → cross-group test → refinement → param sweep
+# Use this for hands-off multi-ticker model optimization with guardrails.
+uv run scripts/autonomous_train_loop.py --tickers "AAPL,MSFT,GOOGL,AMZN,META,NVDA,TSLA" --max-iterations 20 --confirmations 3 --timeout-hours 8
+
+# Quick loop with existing model, trailing stop, skip tuning
+uv run scripts/autonomous_train_loop.py --tickers "SPY,QQQ,XLK,XLF" --phase 4 --fast --model models/pattern_classifier_v3_SPY_20260511.pkl --trail-stop
+
+# Basket deployment: train on diverse instruments, 10d horizon, 3 confirmations needed
+uv run scripts/autonomous_train_loop.py --tickers "SPY,QQQ,IWM,TLT,GLD" --horizon 10 --trail-stop --entry-threshold 0.45 --fast
+
+# Phase 1 only: test ticker independence clustering
+uv run scripts/autonomous_train_loop.py --tickers "SPY,QQQ,XLK,XLF,XLE,XLV,XLI,IWM,TLT,GLD" --phase 1 --max-corr 0.60
+
+# Phase 5 only: parameter sweep with existing model
+uv run scripts/autonomous_train_loop.py --tickers "SPY,QQQ,TLT" --phase 5 --fast --model models/pattern_classifier_v3_SPY.pkl
+
+# Conservative settings for OOS validation focus (no phase 4 refinement)
+uv run scripts/autonomous_train_loop.py --tickers "SPY,QQQ,XLK" --skip-phase-4 --max-corr 0.50

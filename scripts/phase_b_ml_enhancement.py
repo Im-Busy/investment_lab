@@ -1,14 +1,15 @@
 """
-Phase B: ML Enhancement Implementation Script
+Phase B: ML Enhancement Implementation Script (DEPRECATED)
 
-Implements Phase B from ml_reset_plan.md:
-- B1: Proper feature engineering with IC analysis
-- B2: Regime classification with PurgedKFold + embargo
-- B3: Signal generation as regression with rank IC metrics
-- B4: Sequential Feature Importance (SFI) selection
-- B7: Full ML-enhanced backtest
+WARNING: This pipeline is deprecated. The regime classification (B2) trains on
+rule-based ADX/ATR labels — a deterministic formula that produces fake 0.95+ ICs.
+The signal scorer (B3) had a circular IC computation bug: corr(score×return, return).
 
-Run with: uv run scripts/phase_b_ml_enhancement.py
+Use the V3 pipeline instead:
+    uv run scripts/train_ml_pipeline_v3.py --basket JOE,KODK,SPY,QQQ,IWM,TLT,GLD,XLF,XLK,XLE,XLV,EEM
+
+Triple-barrier labels from src/ml/triple_barrier.py are the correct training targets.
+The bugs discovered are documented in plans/session_handover_20260511.md.
 """
 
 from __future__ import annotations
@@ -108,7 +109,7 @@ def phase_b_b2_regime_classification(
     logger.info("B2: Regime Classification with PurgedKFold")
     logger.info("=" * 60)
 
-    purged_cv = PurgedKFold(n_splits=5, pct_embargo=0.02)
+    purged_cv = PurgedKFold(n_splits=5, pct_embargo=0.02, label_span=5)
 
     clf = RegimeClassifier(
         model_type="random_forest", n_estimators=100, max_depth=3, random_state=42
@@ -197,7 +198,7 @@ def phase_b_b3_signal_scorer(
 
     y_binary = (y > 0).astype(int)
 
-    purged_cv = PurgedKFold(n_splits=5, pct_embargo=0.02)
+    purged_cv = PurgedKFold(n_splits=5, pct_embargo=0.02, label_span=5)
 
     fold_metrics = []
     for fold_idx, (train_idx, test_idx) in enumerate(purged_cv.split(X, y)):
@@ -212,9 +213,9 @@ def phase_b_b3_signal_scorer(
         scored = scorer.score(pd.DataFrame(X_test))
         y_pred = scored["ml_score"].values
 
-        pred_returns = y_pred * y_test_continuous
-        rank_ic = pd.Series(pred_returns).corr(pd.Series(y_test_continuous), method="spearman")
-        pearson_ic = pd.Series(pred_returns).corr(pd.Series(y_test_continuous), method="pearson")
+        # Fixed: corr(y_pred, returns) not corr(y_pred * returns, returns)
+        rank_ic = pd.Series(y_pred).corr(pd.Series(y_test_continuous), method="spearman")
+        pearson_ic = pd.Series(y_pred).corr(pd.Series(y_test_continuous), method="pearson")
         rank_ic = float(rank_ic) if not pd.isna(rank_ic) else 0.0
         pearson_ic = float(pearson_ic) if not pd.isna(pearson_ic) else 0.0
         y_pred_binary = (y_pred >= 0.5).astype(int)

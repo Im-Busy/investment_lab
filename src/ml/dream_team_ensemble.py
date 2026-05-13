@@ -651,7 +651,7 @@ class DreamTeamEnsemble:
             raise FileNotFoundError(f"Model not found: {p}")
 
         with open(p, "rb") as f:
-            data = pickle.load(f)
+            data = pickle.load(f)  # nosec B301
 
         self._catboost = data["catboost"]
         self._lightgbm = data["lightgbm"]

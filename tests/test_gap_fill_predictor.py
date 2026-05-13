@@ -208,6 +208,7 @@ class TestGapFillPredictorFeatures:
                 "day_of_week",
                 "is_monday",
                 "pre_gap_range",
+                "consecutive_gaps",
             ]
             for col in expected:
                 assert col in X.columns, f"Missing column: {col}"

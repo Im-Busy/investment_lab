@@ -147,6 +147,7 @@ class PatternClassifier:
                     random_state=self.random_state,
                     verbose=False,
                     loss_function="Logloss",
+                    allow_writing_files=False,
                     task_type="GPU" if self._has_gpu() else "CPU",
                 )
             except ImportError:
@@ -262,6 +263,10 @@ class PatternClassifier:
             X_cal, y_cal = calibration_data
             X_cal = X_cal.dropna()
             y_cal = y_cal.reindex(X_cal.index).dropna()
+            # Align X_cal and y_cal after independent NaN removal
+            common_idx = X_cal.index.intersection(y_cal.index)
+            X_cal = X_cal.loc[common_idx]
+            y_cal = y_cal.loc[common_idx]
 
             if len(X_cal) > 50:
                 cal_proba = self.model.predict_proba(X_cal)[:, 1]
@@ -544,7 +549,7 @@ class PatternClassifier:
             raise FileNotFoundError(f"Model file not found: {path}")
 
         with open(path, "rb") as f:
-            model_data = pickle.load(f)
+            model_data = pickle.load(f)  # nosec B301
 
         self.model = model_data["model"]
         self.feature_names_ = model_data["feature_names"]

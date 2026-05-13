@@ -647,7 +647,7 @@ class MetaLabeler:
             raise FileNotFoundError(f"Model file not found: {path}")
 
         with open(path, "rb") as f:
-            model_data = pickle.load(f)
+            model_data = pickle.load(f)  # nosec B301
 
         self.model = model_data["model"]
         self.feature_names_ = model_data["feature_names"]

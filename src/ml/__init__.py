@@ -60,7 +60,12 @@ from src.ml.pattern_classifier import PatternClassifier
 from src.ml.feature_engineering import FeatureExtractor, FeatureConfig
 from src.ml.feature_selector import FeatureSelector, SelectionResult
 from src.ml.ensemble_regime import EnsembleRegimeDetector, EnsembleStrategy
-from src.ml.cross_asset_features import CrossAssetFeatures, prepare_cross_asset_data
+from src.ml.cross_asset_features import (
+    CrossAssetFeatures,
+    prepare_cross_asset_data,
+    CrossAssetFeatureExtractor,
+    load_market_data,
+)
 from src.ml.triple_barrier import TripleBarrierLabeler, BarrierLabel
 from src.ml.combinatorial_purged_cv import CombinatorialPurgedCV
 from src.ml.gmm_regime import GMMRegimeDetector
@@ -173,6 +178,8 @@ __all__ = [
     "EnsembleStrategy",
     "CrossAssetFeatures",
     "prepare_cross_asset_data",
+    "CrossAssetFeatureExtractor",
+    "load_market_data",
     # Triple barrier + combinatorial purged CV
     "TripleBarrierLabeler",
     "BarrierLabel",

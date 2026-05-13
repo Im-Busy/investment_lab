@@ -1,0 +1,78 @@
+{
+  "top_features": [
+    {
+      "feature": "price_to_ma_10",
+      "mean_abs_shap": 0.220535,
+      "mean_value": NaN,
+      "shap_volatility": 0.210073,
+      "explainable": true
+    },
+    {
+      "feature": "vol_regime",
+      "mean_abs_shap": 0.202298,
+      "mean_value": NaN,
+      "shap_volatility": 0.224324,
+      "explainable": true
+    },
+    {
+      "feature": "resid_vol_SPY_20d",
+      "mean_abs_shap": 0.162563,
+      "mean_value": NaN,
+      "shap_volatility": 0.205786,
+      "explainable": true
+    },
+    {
+      "feature": "macd_histogram",
+      "mean_abs_shap": 0.157169,
+      "mean_value": -0.043,
+      "shap_volatility": 0.21019,
+      "explainable": true
+    },
+    {
+      "feature": "lowest_50",
+      "mean_abs_shap": 0.154523,
+      "mean_value": NaN,
+      "shap_volatility": 0.152266,
+      "explainable": true
+    },
+    {
+      "feature": "adx_trend",
+      "mean_abs_shap": 0.148884,
+      "mean_value": NaN,
+      "shap_volatility": 0.210215,
+      "explainable": true
+    },
+    {
+      "feature": "XLK_relative_5d",
+      "mean_abs_shap": 0.120213,
+      "mean_value": NaN,
+      "shap_volatility": 0.185515,
+      "explainable": false
+    },
+    {
+      "feature": "dist_to_high_50",
+      "mean_abs_shap": 0.114092,
+      "mean_value": NaN,
+      "shap_volatility": 0.156237,
+      "explainable": true
+    },
+    {
+      "feature": "bb_squeeze_10",
+      "mean_abs_shap": 0.097324,
+      "mean_value": 0.52,
+      "shap_volatility": 0.107077,
+      "explainable": true
+    },
+    {
+      "feature": "rel_ret_QQQ_20d",
+      "mean_abs_shap": 0.09658,
+      "mean_value": NaN,
+      "shap_volatility": 0.131815,
+      "explainable": true
+    }
+  ],
+  "n_features": 15,
+  "suspicious": [
+    "XLK_relative_5d"
+  ]
+}

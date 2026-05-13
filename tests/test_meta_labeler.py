@@ -236,6 +236,7 @@ class TestMetaLabelerFeatureBuilding:
             "volume_ratio",
             "relative_position",
             "day_of_week",
+            "hour_of_day",
             "is_reversal",
             "is_breakout",
         ]

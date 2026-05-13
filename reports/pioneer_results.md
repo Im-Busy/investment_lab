@@ -9,43 +9,55 @@ Each task follows a **prove-or-discard** model.
 
 ### P1.1 — Meta-Labeling (T9)
 
-**Status:** Pending
-**Model:** TBD (LGBM / CatBoost)
-**PurgedKFold AUC:** TBD
-**Verdict:** TBD
+**Status:** Implemented
+**Model:** LGBMClassifier (CatBoost substitution if AUC >= 1.10x)
+**Files:** `src/ml/meta_labeler.py`, `tests/test_meta_labeler.py` (16 tests)
+**Verdict:** Pending evaluation on real data
 
 | Metric | Value |
 |--------|-------|
-| LGBM AUC (CV mean) | — |
-| CatBoost AUC (CV mean) | — |
-| Model Selected | — |
-| Baseline Win Rate | — |
-| Threshold | — |
-| N Signals | — |
+| LGBM AUC (CV mean) | TBD — requires real historical signals |
+| CatBoost AUC (CV mean) | TBD |
+| Model Selected | TBD |
+| Baseline Win Rate | TBD |
+| Threshold | TBD (Youden's J optimal) |
+| N Signals | TBD |
+
+**Implementation:** 12 context features, LGBM/CatBoost with PurgedKFold CV,
+model selection (1.10x rule), probability threshold via Youden's J,
+save/load persistence. TripleBarrierLabeler integration for target generation.
 
 ### P1.2 — Gap-Fill Prediction (FS19)
 
-**Status:** Pending
+**Status:** Implemented
 **Model:** LGBMClassifier
-**PurgedKFold AUC:** TBD
-**Verdict:** TBD
+**Files:** `src/ml/gap_fill_predictor.py`, `tests/test_gap_fill_predictor.py` (18 tests)
+**Verdict:** Pending evaluation on real data
 
 | Metric | Value |
 |--------|-------|
-| AUC | — |
-| Accuracy | — |
-| F1 Score | — |
-| Baseline Fill Rate | — |
-| N Gaps | — |
+| AUC | TBD — requires real OHLCV gap data |
+| Accuracy | TBD |
+| F1 Score | TBD |
+| Baseline Fill Rate | TBD |
+| N Gaps | TBD |
+
+**Implementation:** 12 context features (including consecutive_gaps), gap
+detection with fill verification, PurgedKFold CV, save/load persistence.
+Configurable per market (equities/crypto/forex).
 
 ### P1.3 — Pattern Detector Ablation
 
-**Status:** Pending
-**Verdict:** TBD
+**Status:** Implemented
+**Files:** `scripts/ablate_patterns.py`
+**Verdict:** Pending execution
 
 | Pattern | Category | Trades | Win% | PF | Sharpe | DD% | Rec |
 |---------|----------|--------|------|-----|--------|-----|-----|
 | — | — | — | — | — | — | — | — |
+
+**To run:** `uv run scripts/ablate_patterns.py --symbol SPY --start 2019-01-01 --end 2024-12-31`
+(requires yfinance data access).
 
 ---
 
@@ -81,9 +93,9 @@ Each task follows a **prove-or-discard** model.
 
 | Task | Status | Effort | Outcome |
 |------|--------|--------|---------|
-| P1.1 Meta-Labeling | Pending | 3-4h | TBD |
-| P1.2 Gap-Fill | Pending | 2h | TBD |
-| P1.3 Ablation | Pending | 1-2h | TBD |
+| P1.1 Meta-Labeling | Implemented | 3-4h | Pending eval on live data |
+| P1.2 Gap-Fill | Implemented | 2h | Pending eval on live data |
+| P1.3 Ablation | Implemented | 1-2h | Pending execution |
 | P2.1 Shapelets | Not started | 3-4h | TBD |
 | P2.2 VAE | Not started | 4-5h | TBD |
 | P2.3 Heikin-Ashi | Not started | 1h | TBD |

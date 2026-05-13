@@ -80,23 +80,24 @@ class FeatureExtractor:
         Returns:
             DataFrame with all features
         """
-        features = pd.DataFrame(index=df.index)
+        col_map: dict[str, pd.Series] = {}
 
-        features = self._add_price_features(features, df)
-        features = self._add_momentum_features(features, df)
-        features = self._add_volatility_features(features, df)
-        features = self._add_volume_features(features, df)
-        features = self._add_pattern_shape_features(features, df)
-        features = self._add_regime_features(features, df)
+        self._add_price_features(col_map, df)
+        self._add_momentum_features(col_map, df)
+        self._add_volatility_features(col_map, df)
+        self._add_volume_features(col_map, df)
+        self._add_pattern_shape_features(col_map, df)
+        self._add_regime_features(col_map, df)
 
         if include_forward_returns:
-            features = self._add_forward_returns(features, df)
+            self._add_forward_returns(col_map, df)
 
+        features = pd.DataFrame(col_map, index=df.index)
         features = features.dropna(axis=1, how="all")
 
         return features
 
-    def _add_price_features(self, features: pd.DataFrame, df: pd.DataFrame) -> pd.DataFrame:
+    def _add_price_features(self, col_map: dict[str, pd.Series], df: pd.DataFrame) -> None:
         """Add price-based features."""
         close = df["Close"]
         high = df["High"]
@@ -104,39 +105,37 @@ class FeatureExtractor:
         open_price = df["Open"]
 
         for w in self.config.price_windows:
-            features[f"return_{w}"] = close.pct_change(w)
-            features[f"log_return_{w}"] = np.log(close / close.shift(w))
-            features[f"highest_{w}"] = high.rolling(w).max()
-            features[f"lowest_{w}"] = low.rolling(w).min()
+            col_map[f"return_{w}"] = close.pct_change(w)
+            col_map[f"log_return_{w}"] = np.log(close / close.shift(w))
+            col_map[f"highest_{w}"] = high.rolling(w).max()
+            col_map[f"lowest_{w}"] = low.rolling(w).min()
 
         for w in self.config.price_windows:
             ma = close.rolling(w).mean()
-            features[f"price_to_ma_{w}"] = (close - ma) / ma
-            features[f"ma_slope_{w}"] = ma.diff(w) / ma.shift(w)
+            col_map[f"price_to_ma_{w}"] = (close - ma) / ma
+            col_map[f"ma_slope_{w}"] = ma.diff(w) / ma.shift(w)
 
         ema_8 = close.ewm(span=8).mean()
         ema_21 = close.ewm(span=21).mean()
         ema_55 = close.ewm(span=55).mean()
-        features["ema_8"] = ema_8
-        features["ema_21"] = ema_21
-        features["ema_55"] = ema_55
-        features["ema_8_21_spread"] = ema_8 - ema_21
-        features["ema_21_55_spread"] = ema_21 - ema_55
+        col_map["ema_8"] = ema_8
+        col_map["ema_21"] = ema_21
+        col_map["ema_55"] = ema_55
+        col_map["ema_8_21_spread"] = ema_8 - ema_21
+        col_map["ema_21_55_spread"] = ema_21 - ema_55
 
-        features["hl_range"] = (high - low) / close
-        features["oc_range"] = (close - open_price) / open_price
-        features["gap"] = (open_price - close.shift(1)) / close.shift(1)
+        col_map["hl_range"] = (high - low) / close
+        col_map["oc_range"] = (close - open_price) / open_price
+        col_map["gap"] = (open_price - close.shift(1)) / close.shift(1)
 
         for w in [10, 20, 50]:
             high_n = high.rolling(w).max()
             low_n = low.rolling(w).min()
-            features[f"price_position_{w}"] = (close - low_n) / (high_n - low_n + 1e-10)
-            features[f"dist_to_high_{w}"] = (close - high_n) / high_n
-            features[f"dist_to_low_{w}"] = (close - low_n) / low_n
+            col_map[f"price_position_{w}"] = (close - low_n) / (high_n - low_n + 1e-10)
+            col_map[f"dist_to_high_{w}"] = (close - high_n) / high_n
+            col_map[f"dist_to_low_{w}"] = (close - low_n) / low_n
 
-        return features
-
-    def _add_momentum_features(self, features: pd.DataFrame, df: pd.DataFrame) -> pd.DataFrame:
+    def _add_momentum_features(self, col_map: dict[str, pd.Series], df: pd.DataFrame) -> None:
         """Add momentum-based features."""
         close = df["Close"]
         high = df["High"]
@@ -149,34 +148,33 @@ class FeatureExtractor:
             avg_gain = gain.rolling(w).mean()
             avg_loss = loss.rolling(w).mean()
             rs = avg_gain / (avg_loss + 1e-10)
-            features[f"rsi_{w}"] = 100 - (100 / (1 + rs))
+            col_map[f"rsi_{w}"] = 100 - (100 / (1 + rs))
 
         for w in self.config.momentum_windows:
-            features[f"roc_{w}"] = close.pct_change(w) * 100
-            features[f"momentum_{w}"] = close.diff(w)
+            col_map[f"roc_{w}"] = close.pct_change(w) * 100
+            col_map[f"momentum_{w}"] = close.diff(w)
 
         ema_12 = close.ewm(span=12).mean()
         ema_26 = close.ewm(span=26).mean()
         macd_line = ema_12 - ema_26
         signal_line = macd_line.ewm(span=9).mean()
-        features["macd"] = macd_line
-        features["macd_signal"] = signal_line
-        features["macd_histogram"] = macd_line - signal_line
-        features["macd_cross"] = (macd_line - signal_line).diff() > 0
+        col_map["macd"] = macd_line
+        col_map["macd_signal"] = signal_line
+        col_map["macd_histogram"] = macd_line - signal_line
+        col_map["macd_cross"] = (macd_line - signal_line).diff() > 0
 
         for w in [14, 21]:
             low_n = low.rolling(w).min()
             high_n = high.rolling(w).max()
             stoch_k = 100 * (close - low_n) / (high_n - low_n + 1e-10)
-            features[f"stoch_k_{w}"] = stoch_k
-            features[f"stoch_d_{w}"] = stoch_k.rolling(3).mean()
+            col_map[f"stoch_k_{w}"] = stoch_k
+            col_map[f"stoch_d_{w}"] = stoch_k.rolling(3).mean()
 
-        features["atr_14"] = self._compute_atr(df, 14)
-        features["atr_20"] = self._compute_atr(df, 20)
+        close_pos = df["Close"].replace(0, np.nan)
+        col_map["atr_14"] = self._compute_atr(df, 14) / close_pos
+        col_map["atr_20"] = self._compute_atr(df, 20) / close_pos
 
-        return features
-
-    def _add_volatility_features(self, features: pd.DataFrame, df: pd.DataFrame) -> pd.DataFrame:
+    def _add_volatility_features(self, col_map: dict[str, pd.Series], df: pd.DataFrame) -> None:
         """Add volatility-based features."""
         close = df["Close"]
         high = df["High"]
@@ -185,31 +183,34 @@ class FeatureExtractor:
         returns = close.pct_change()
 
         for w in self.config.volatility_windows:
-            features[f"volatility_{w}"] = returns.rolling(w).std() * np.sqrt(252)
-            features[f"std_return_{w}"] = returns.rolling(w).std()
+            col_map[f"volatility_{w}"] = returns.rolling(w).std() * np.sqrt(252)
+            col_map[f"std_return_{w}"] = returns.rolling(w).std()
 
         for w in [10, 20]:
             ma = close.rolling(w).mean()
             std = close.rolling(w).std()
             bb_upper = ma + 2 * std
             bb_lower = ma - 2 * std
-            features[f"bb_pct_{w}"] = (close - bb_lower) / (bb_upper - bb_lower + 1e-10)
-            features[f"bb_width_{w}"] = (bb_upper - bb_lower) / ma
-            features[f"bb_squeeze_{w}"] = (
-                features[f"bb_width_{w}"] < features[f"bb_width_{w}"].rolling(20).mean()
+            col_map[f"bb_pct_{w}"] = (close - bb_lower) / (bb_upper - bb_lower + 1e-10)
+            col_map[f"bb_width_{w}"] = (bb_upper - bb_lower) / ma
+            col_map[f"bb_squeeze_{w}"] = False
+
+        # Compute bb_squeeze after bb_width is available in col_map
+        for w in [10, 20]:
+            bb_width_key = f"bb_width_{w}"
+            col_map[f"bb_squeeze_{w}"] = (
+                col_map[bb_width_key] < col_map[bb_width_key].rolling(20).mean()
             )
 
-        features["volatility_regime"] = features["volatility_20"] / features[
-            "volatility_100"
-        ].replace(0, np.nan)
+        col_map["volatility_regime"] = col_map["volatility_20"] / col_map["volatility_100"].replace(
+            0, np.nan
+        )
 
-        features["volatility_zscore"] = (returns - rolling_mean(returns, 252)) / (
+        col_map["volatility_zscore"] = (returns - rolling_mean(returns, 252)) / (
             rolling_std(returns, 252) + 1e-10
         )
 
-        return features
-
-    def _add_volume_features(self, features: pd.DataFrame, df: pd.DataFrame) -> pd.DataFrame:
+    def _add_volume_features(self, col_map: dict[str, pd.Series], df: pd.DataFrame) -> None:
         """Add volume-based features."""
         volume = df["Volume"]
         close = df["Close"]
@@ -218,26 +219,24 @@ class FeatureExtractor:
 
         for w in self.config.volume_windows:
             vol_ma = volume.rolling(w).mean()
-            features[f"volume_ratio_{w}"] = volume / (vol_ma + 1e-10)
-            features[f"volume_zscore_{w}"] = (volume - vol_ma) / (volume.rolling(w).std() + 1e-10)
+            col_map[f"volume_ratio_{w}"] = volume / (vol_ma + 1e-10)
+            col_map[f"volume_zscore_{w}"] = (volume - vol_ma) / (volume.rolling(w).std() + 1e-10)
 
         obv = (np.sign(close.diff()) * volume).cumsum()
-        features["obv"] = obv
-        features["obv_change"] = obv.diff(5) / (obv.abs() + 1e-10)
+        col_map["obv"] = obv
+        col_map["obv_change"] = obv.diff(5) / (obv.abs() + 1e-10)
 
         for w in [10, 20]:
             vwap = (close * volume).rolling(w).sum() / (volume.rolling(w).sum() + 1e-10)
-            features[f"vwap_{w}"] = vwap
-            features[f"close_to_vwap_{w}"] = (close - vwap) / (vwap + 1e-10)
+            col_map[f"vwap_{w}"] = vwap
+            col_map[f"close_to_vwap_{w}"] = (close - vwap) / (vwap + 1e-10)
 
         cmf = self._compute_chaikin_money_flow(df, window=20)
-        features["cmf"] = cmf
+        col_map["cmf"] = cmf
 
-        features["volume_trend"] = volume.rolling(10).mean() / volume.rolling(50).mean()
+        col_map["volume_trend"] = volume.rolling(10).mean() / volume.rolling(50).mean()
 
-        return features
-
-    def _add_pattern_shape_features(self, features: pd.DataFrame, df: pd.DataFrame) -> pd.DataFrame:
+    def _add_pattern_shape_features(self, col_map: dict[str, pd.Series], df: pd.DataFrame) -> None:
         """Add pattern shape and magnitude features."""
         close = df["Close"]
         high = df["High"]
@@ -246,38 +245,36 @@ class FeatureExtractor:
 
         body = (close - open_price).abs()
         hl_range = high - low
-        features["body_ratio"] = body / (hl_range + 1e-10)
-        features["upper_shadow"] = (high - close.clip(lower=open_price)) / (hl_range + 1e-10)
-        features["lower_shadow"] = (close.clip(lower=open_price) - low) / (hl_range + 1e-10)
+        col_map["body_ratio"] = body / (hl_range + 1e-10)
+        col_map["upper_shadow"] = (high - close.clip(lower=open_price)) / (hl_range + 1e-10)
+        col_map["lower_shadow"] = (close.clip(lower=open_price) - low) / (hl_range + 1e-10)
 
-        features["doji"] = (body / (hl_range + 1e-10) < 0.1).astype(float)
-        features["long_body"] = (body / hl_range > 0.7).astype(float)
+        col_map["doji"] = (body / (hl_range + 1e-10) < 0.1).astype(float)
+        col_map["long_body"] = (body / hl_range > 0.7).astype(float)
 
         prev_body = body.shift(1)
-        features["engulfing"] = ((body > prev_body) & (close.diff() != 0)).astype(float)
+        col_map["engulfing"] = ((body > prev_body) & (close.diff() != 0)).astype(float)
 
-        features["higher_high"] = (high > high.shift(1)).astype(float)
-        features["lower_low"] = (low < low.shift(1)).astype(float)
-        features["higher_close"] = (close > close.shift(1)).astype(float)
+        col_map["higher_high"] = (high > high.shift(1)).astype(float)
+        col_map["lower_low"] = (low < low.shift(1)).astype(float)
+        col_map["higher_close"] = (close > close.shift(1)).astype(float)
 
         direction = close.diff().apply(lambda x: 1 if x > 0 else -1 if x < 0 else 0)
-        features["consecutive_dir"] = direction.rolling(5).sum() / 5
+        col_map["consecutive_dir"] = direction.rolling(5).sum() / 5
 
         for w in [7, 14, 21]:
             rank = hl_range.rolling(w).rank()
-            features[f"narrow_range_{w}"] = (rank == 1).astype(float)
+            col_map[f"narrow_range_{w}"] = (rank == 1).astype(float)
 
-        features["inside_bar"] = ((high < high.shift(1)) & (low > low.shift(1))).astype(float)
-        features["outside_bar"] = ((high > high.shift(1)) & (low < low.shift(1))).astype(float)
+        col_map["inside_bar"] = ((high < high.shift(1)) & (low > low.shift(1))).astype(float)
+        col_map["outside_bar"] = ((high > high.shift(1)) & (low < low.shift(1))).astype(float)
 
         for w in [5, 10, 20]:
-            features[f"close_percentile_{w}"] = close.rolling(w).apply(
+            col_map[f"close_percentile_{w}"] = close.rolling(w).apply(
                 lambda x: (x.iloc[-1] - x.min()) / (x.max() - x.min() + 1e-10)
             )
 
-        return features
-
-    def _add_regime_features(self, features: pd.DataFrame, df: pd.DataFrame) -> pd.DataFrame:
+    def _add_regime_features(self, col_map: dict[str, pd.Series], df: pd.DataFrame) -> None:
         """Add regime and trend state features."""
         close = df["Close"]
         high = df["High"]
@@ -308,25 +305,25 @@ class FeatureExtractor:
         dx = 100 * (plus_di - minus_di).abs() / (plus_di + minus_di + 1e-10)
         adx = dx.rolling(period).mean()
 
-        features["adx"] = adx
-        features["plus_di"] = plus_di
-        features["minus_di"] = minus_di
-        features["di_diff"] = plus_di - minus_di
-        features["adx_trend"] = adx.diff()
+        col_map["adx"] = adx
+        col_map["plus_di"] = plus_di
+        col_map["minus_di"] = minus_di
+        col_map["di_diff"] = plus_di - minus_di
+        col_map["adx_trend"] = adx.diff()
 
         for w in [20, 50]:
             ma = close.rolling(w).mean()
             slope = ma.diff(5) / (ma.shift(5) + 1e-10)
-            features[f"ma_slope_{w}"] = slope
-            features[f"price_vs_ma_{w}"] = (close - ma) / (ma + 1e-10)
+            col_map[f"ma_slope_{w}"] = slope
+            col_map[f"price_vs_ma_{w}"] = (close - ma) / (ma + 1e-10)
 
-        features["vol_regime"] = features.get("atr_20", tr.rolling(20).mean()) / (
-            features.get("atr_100", tr.rolling(100).mean()) + 1e-10
-        )
+        _atr_20 = col_map.get("atr_20", tr.rolling(20).mean())
+        _atr_100 = col_map.get("atr_100", tr.rolling(100).mean())
+        col_map["vol_regime"] = _atr_20 / (_atr_100 + 1e-10)
 
-        features["trend_strength"] = adx / 100
+        col_map["trend_strength"] = adx / 100
 
-        vix = features.get("volatility_20", close.pct_change().rolling(20).std())
+        vix = col_map.get("volatility_20", close.pct_change().rolling(20).std())
         vix = vix.dropna()
 
         if len(vix) > 0 and not vix.isna().all():
@@ -334,18 +331,16 @@ class FeatureExtractor:
             q67 = vix.quantile(0.67)
             if not np.isnan(q33) and not np.isnan(q67) and q33 < q67:
                 bins = [-np.inf, q33, q67, np.inf]
-                features["vol_regime_state"] = pd.cut(
+                col_map["vol_regime_state"] = pd.cut(
                     vix,
                     bins=bins,
                     labels=[0, 1, 2],
                     include_lowest=True,
                 ).astype(float)
             else:
-                features["vol_regime_state"] = 1.0
+                col_map["vol_regime_state"] = 1.0
         else:
-            features["vol_regime_state"] = 1.0
-
-        return features
+            col_map["vol_regime_state"] = 1.0
 
     def extract_labels(
         self,
@@ -367,23 +362,21 @@ class FeatureExtractor:
         labels = pd.DataFrame(index=df.index)
         return self._add_forward_returns(labels, df)
 
-    def _add_forward_returns(self, features: pd.DataFrame, df: pd.DataFrame) -> pd.DataFrame:
+    def _add_forward_returns(self, col_map: dict[str, pd.Series], df: pd.DataFrame) -> None:
         """Add forward returns for label generation."""
         close = df["Close"]
 
         for horizon in [1, 3, 5, 10, 20]:
             future_return = close.shift(-horizon) / close - 1
-            features[f"forward_return_{horizon}"] = future_return
+            col_map[f"forward_return_{horizon}"] = future_return
 
-            features[f"forward_binary_{horizon}"] = (future_return > 0).astype(int)
+            col_map[f"forward_binary_{horizon}"] = (future_return > 0).astype(int)
 
             max_dd = close.shift(-horizon).rolling(horizon).min() / close - 1
-            features[f"max_drawdown_{horizon}"] = max_dd
+            col_map[f"max_drawdown_{horizon}"] = max_dd
 
             max_runup = close.shift(-horizon).rolling(horizon).max() / close - 1
-            features[f"max_runup_{horizon}"] = max_runup
-
-        return features
+            col_map[f"max_runup_{horizon}"] = max_runup
 
     def _compute_atr(self, df: pd.DataFrame, period: int) -> pd.Series:
         """Compute Average True Range."""

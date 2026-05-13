@@ -83,6 +83,7 @@ import sys
 import warnings
 from pathlib import Path
 
+sys.stdout.reconfigure(encoding='utf-8')
 warnings.filterwarnings("ignore")
 
 # Setup project root FIRST (before any src imports)
@@ -291,7 +292,7 @@ print_metrics_comparison(metrics_comparison, title="Strategy Performance Compari
 # Create comparison DataFrame
 comparison_df = pd.DataFrame(metrics_comparison).T
 print("\n📊 Detailed Metrics Comparison:")
-display(comparison_df.round(2))
+print(comparison_df.round(2))
 
 # %% [markdown]
 # ---

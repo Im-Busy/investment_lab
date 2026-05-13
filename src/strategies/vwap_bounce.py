@@ -9,6 +9,7 @@ Pine Script source: strategies/trend-following/vwap-bounce/strategy.pine
 from EternaHybridExchange/tradingview-strategies repo.
 """
 
+import pandas as pd
 from backtesting import Strategy
 
 from src.indicators.vwap import compute_vwap
@@ -31,14 +32,16 @@ class VWAPBounceStrategy(Strategy):
     Parameters:
         vwap_deviation_pct: Band width as percentage of VWAP (default 0.5%)
         trend_ema: EMA period for trend filter (default 50)
+        risk_pct: Risk per trade as percentage of equity (0=use full equity)
+        sl_atr_mult: Stop-loss distance in ATR multiples
     """
 
     vwap_deviation_pct = 0.5
     trend_ema = 50
+    risk_pct = 2.0
+    sl_atr_mult = 1.5
 
     def init(self) -> None:
-        """Initialize indicators."""
-        # Compute VWAP with bands
         vwap_df = compute_vwap(self.data.df, deviation_pct=self.vwap_deviation_pct)
         self.vwap = self.I(lambda: vwap_df["vwap"].values, name="VWAP", color="blue")
         self.vwap_upper = self.I(
@@ -48,56 +51,65 @@ class VWAPBounceStrategy(Strategy):
             lambda: vwap_df["vwap_lower"].values, name="VWAP Lower", color="lightblue"
         )
 
-        # Trend EMA
         self.ema_trend = self.I(
             lambda: self.data.Close.s.ewm(span=self.trend_ema, adjust=False).mean().values,
             name=f"EMA{self.trend_ema}",
             color="orange",
         )
 
+        high = self.data.df.High
+        low = self.data.df.Low
+        close = self.data.df.Close
+        tr1 = high - low
+        tr2 = (high - close.shift(1)).abs()
+        tr3 = (low - close.shift(1)).abs()
+        tr = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)
+        self.atr14 = self.I(lambda: tr.rolling(14).mean().values, name="ATR(14)")
+
+    def _position_size(self) -> float:
+        if self.risk_pct <= 0:
+            return 1.0  # full position
+        risk_amount = self.equity * (self.risk_pct / 100)
+        stop_distance = self.atr14[-1] * self.sl_atr_mult
+        if stop_distance <= 0:
+            return 1.0
+        size = risk_amount / stop_distance
+        return max(1, int(size))
+
     def next(self) -> None:
-        """Execute strategy logic on each bar."""
+        if self.position:
+            close = self.data.Close[-1]
+            vwap_val = self.vwap[-1]
+            exit_long = close < vwap_val
+            exit_short = close > vwap_val
+            if exit_long and self.position.is_long:
+                self.position.close()
+            if exit_short and self.position.is_short:
+                self.position.close()
+            return
+
         close = self.data.Close[-1]
         close_prev = self.data.Close[-2]
         low = self.data.Low[-1]
         high = self.data.High[-1]
 
         vwap_val = self.vwap[-1]
-        vwap_upper_val = self.vwap_upper[-1]
         vwap_lower_val = self.vwap_lower[-1]
         vwap_lower_prev = self.vwap_lower[-2]
+        vwap_upper_val = self.vwap_upper[-1]
         vwap_upper_prev = self.vwap_upper[-2]
         ema_val = self.ema_trend[-1]
 
-        # Trend filter
         uptrend = close > ema_val
         downtrend = close < ema_val
 
-        # Long entry: uptrend + crossover(close, vwapLower) + low <= vwapLower
-        # ta.crossover(close, vwapLower) = close[-1] > vwap_lower[-1] AND close[-2] <= vwap_lower[-2]
         long_crossover = close > vwap_lower_val and close_prev <= vwap_lower_prev
-        long_bounce = long_crossover and low <= vwap_lower_val
-        long_condition = uptrend and long_bounce
+        long_condition = uptrend and long_crossover and low <= vwap_lower_val
 
-        # Short entry: downtrend + crossunder(close, vwapUpper) + high >= vwapUpper
-        # ta.crossunder(close, vwapUpper) = close[-1] < vwap_upper[-1] AND close[-2] >= vwap_upper[-2]
         short_crossover = close < vwap_upper_val and close_prev >= vwap_upper_prev
-        short_reject = short_crossover and high >= vwap_upper_val
-        short_condition = downtrend and short_reject
+        short_condition = downtrend and short_crossover and high >= vwap_upper_val
 
-        # Exit conditions
-        exit_long = close < vwap_val
-        exit_short = close > vwap_val
-
-        # Execute trades
-        if long_condition and not self.position:
-            self.buy()
-
-        if short_condition and not self.position:
-            self.sell()
-
-        if exit_long and self.position.is_long:
-            self.position.close()
-
-        if exit_short and self.position.is_short:
-            self.position.close()
+        if long_condition:
+            self.buy(size=self._position_size())
+        elif short_condition:
+            self.sell(size=self._position_size())

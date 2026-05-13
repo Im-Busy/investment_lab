@@ -394,7 +394,7 @@ class PatternScorer:
             raise FileNotFoundError(f"Scorer file not found: {path}")
 
         with open(path, "rb") as f:
-            data = pickle.load(f)
+            data = pickle.load(f)  # nosec B301
 
         self._model = data["model"]
         self._feature_names = data["feature_names"]

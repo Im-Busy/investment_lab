@@ -22,10 +22,8 @@ if str(project_root) not in sys.path:
 
 import pandas as pd
 
-from src.analysis.pattern_selector import (
-    PatternSelectionConfig,
-    PatternSelector,
-)
+from src.utils.notebook_helpers import PatternSelectionConfig
+from src.analysis.pattern_selector import PatternSelector
 from src.analysis.pattern_selector_viz import generate_all_visualizations
 
 
@@ -78,7 +76,7 @@ def test_pattern_selector():
 
     # Initialize selector
     print("\n[INIT] Initializing Pattern Selector...")
-    selector = PatternSelector(config)
+    selector = PatternSelector(config, data=df)
     print(f"   Found {len(selector.all_patterns)} patterns to test")
 
     # Run full selection

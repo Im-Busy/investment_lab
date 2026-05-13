@@ -1,0 +1,80 @@
+{
+  "top_features": [
+    {
+      "feature": "ma_slope_100",
+      "mean_abs_shap": 0.085804,
+      "mean_value": NaN,
+      "shap_volatility": 0.085654,
+      "explainable": true
+    },
+    {
+      "feature": "cmf",
+      "mean_abs_shap": 0.055792,
+      "mean_value": NaN,
+      "shap_volatility": 0.023352,
+      "explainable": false
+    },
+    {
+      "feature": "std_return_50",
+      "mean_abs_shap": 0.053714,
+      "mean_value": NaN,
+      "shap_volatility": 0.029311,
+      "explainable": true
+    },
+    {
+      "feature": "log_return_20",
+      "mean_abs_shap": 0.032182,
+      "mean_value": NaN,
+      "shap_volatility": 0.01866,
+      "explainable": true
+    },
+    {
+      "feature": "dist_to_high_20",
+      "mean_abs_shap": 0.028569,
+      "mean_value": NaN,
+      "shap_volatility": 0.018679,
+      "explainable": true
+    },
+    {
+      "feature": "adx",
+      "mean_abs_shap": 0.023829,
+      "mean_value": NaN,
+      "shap_volatility": 0.017856,
+      "explainable": false
+    },
+    {
+      "feature": "close_to_vwap_10",
+      "mean_abs_shap": 0.022139,
+      "mean_value": 0.0023,
+      "shap_volatility": 0.013124,
+      "explainable": true
+    },
+    {
+      "feature": "trend_strength",
+      "mean_abs_shap": 0.020501,
+      "mean_value": NaN,
+      "shap_volatility": 0.012321,
+      "explainable": true
+    },
+    {
+      "feature": "close_to_vwap_20",
+      "mean_abs_shap": 0.018914,
+      "mean_value": NaN,
+      "shap_volatility": 0.021486,
+      "explainable": true
+    },
+    {
+      "feature": "stoch_k_14",
+      "mean_abs_shap": 0.018453,
+      "mean_value": NaN,
+      "shap_volatility": 0.013768,
+      "explainable": false
+    }
+  ],
+  "n_features": 15,
+  "suspicious": [
+    "cmf",
+    "adx",
+    "stoch_k_14"
+  ]
+}

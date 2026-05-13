@@ -1,12 +1,15 @@
-"""Metaheuristic Hyperparameter Tuning for ML Models.
+"""Hyperparameter Tuning for ML Models.
 
 Tunes PatternClassifier, SignalRegressor, or RegimeClassifier using
-Grey Wolf Optimizer (GWO), Genetic Algorithm (GA), or Whale Optimization (WOA).
+Optuna (TPE Bayesian), Grey Wolf Optimizer (GWO), Genetic Algorithm (GA),
+or Whale Optimization (WOA).
 
 Usage:
+    uv run scripts/tune_model.py --symbol SPY --algo optuna --trials 50
     uv run scripts/tune_model.py --symbol SPY --wolves 20 --iterations 50
-    uv run scripts/tune_model.py --symbol SPY --target signal_regressor --wolves 30
-    uv run scripts/tune_model.py --symbol SPY --target regime --iterations 30
+    uv run scripts/tune_model.py --symbol SPY --target signal_regressor --algo optuna --model lgbm
+    uv run scripts/tune_model.py --symbol SPY --target regime --algo optuna --trials 30
+    uv run scripts/tune_model.py --symbol SPY --algo compare --trials 30
     uv run scripts/tune_model.py --symbol SPY --algo ga --target regime_discovery
     uv run scripts/tune_model.py --symbol SPY --algo woa --target pattern_threshold
 """
@@ -34,6 +37,8 @@ from src.ml.regime_model import RegimeClassifier
 from src.ml.tuning.gwo_tuner import CATBOOST_PARAM_SPACE, GWOTuner
 from src.ml.tuning.woa_tuner import WOATuner, build_threshold_search_space
 from src.ml.tuning.base import SearchSpace, map_params
+
+AVAILABLE_STRATEGIES = ["rsi", "macd", "ema_ribbon", "keltner", "sma_crossover"]
 
 logging.basicConfig(
     level=logging.INFO,
@@ -66,6 +71,11 @@ TARGET_CONFIGS = {
         "class": None,
         "model_type": None,
         "description": "Pattern Confidence Threshold Tuning (WOA)",
+    },
+    "strategy_params": {
+        "class": None,
+        "model_type": None,
+        "description": "Strategy Parameter Optimization (Optuna + backtesting)",
     },
 }
 
@@ -305,7 +315,6 @@ def run_woa_threshold(
     y = y.loc[aligned]
 
     def fitness_fn(params: Dict[str, float]) -> float:
-        """Simulate threshold impact: higher thresholds = fewer signals, lower thresholds = more."""
         mean_threshold = float(np.mean(list(params.values())))
         n_signals = max(1, int(len(X) * (1.0 - mean_threshold)))
         selected = np.random.default_rng(42).choice(
@@ -356,8 +365,194 @@ def run_woa_threshold(
     return results
 
 
+def run_optuna(
+    symbol: str = "SPY",
+    start: str = "2020-01-01",
+    end: str = "2024-12-31",
+    target: str = "pattern_classifier",
+    model_type: str = "catboost",
+    n_trials: int = 50,
+    n_splits: int = 5,
+    label_span: int = 5,
+    prune: bool = False,
+    pruner_patience: int = 10,
+    study_name: str = "",
+    output_dir: str = "reports/ml_tuning",
+) -> Dict[str, Any]:
+    """Run Optuna TPE hyperparameter tuning."""
+    from src.ml.tuning.optuna_tuner import OptunaTuner
+
+    config = TARGET_CONFIGS[target]
+    logger.info(f"Optuna tuning: {config['description']}")
+    logger.info(f"Model: {model_type}, Trials: {n_trials}, CV folds: {n_splits}")
+    logger.info(f"Pruner: {'MedianPruner' if prune else 'None'}, Patience: {pruner_patience}")
+
+    df = load_data(symbol, start, end)
+    X, y = prepare_training_data(df, horizon=label_span)
+
+    if len(X) < 100:
+        logger.error(f"Only {len(X)} training samples — need at least 100")
+        sys.exit(1)
+
+    tuner = OptunaTuner(
+        model_type=model_type,
+        n_trials=n_trials,
+        n_splits=n_splits,
+        label_span=label_span,
+        pruner_patience=pruner_patience if prune else 0,
+        study_name=study_name,
+    )
+    result = tuner.optimize(X, y, target=target, model_class=config["class"])
+
+    logger.info("=" * 60)
+    logger.info("Optuna Results")
+    logger.info("=" * 60)
+    logger.info(f"Best AUC: {result.best_score:.4f}")
+    logger.info(f"Trials: {result.n_trials}")
+    logger.info(f"Best trial: #{result.best_trial_number}")
+    logger.info("Best hyperparameters:")
+    for k, v in sorted(result.best_params.items()):
+        logger.info(f"  {k}: {v}")
+
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+
+    run_id = f"{datetime.now():%Y%m%d_%H%M%S}_{target}_optuna"
+    results_data = {
+        "run_id": run_id,
+        "symbol": symbol,
+        "target": target,
+        "algo": "optuna",
+        "model_type": model_type,
+        "best_score": result.best_score,
+        "best_params": result.best_params,
+        "n_trials": result.n_trials,
+        "best_trial": result.best_trial_number,
+        "trial_scores": result.trial_scores,
+        "study_name": result.study_name,
+    }
+
+    results_path = output_path / f"optuna_tuning_{run_id}.json"
+    with open(results_path, "w") as f:
+        json.dump(results_data, f, indent=2, default=str)
+
+    logger.info(f"Results saved to {results_path}")
+
+    try:
+        tuner.log_to_mlflow(result)
+    except Exception:
+        logger.debug("MLflow logging skipped")
+
+    return results_data
+
+
+def run_compare(
+    symbol: str = "SPY",
+    start: str = "2020-01-01",
+    end: str = "2024-12-31",
+    target: str = "pattern_classifier",
+    model_type: str = "catboost",
+    n_trials: int = 30,
+    label_span: int = 5,
+    output_dir: str = "reports/ml_tuning",
+) -> Dict[str, Any]:
+    """Compare Optuna TPE vs GWO on same data."""
+    from src.ml.tuning.optuna_tuner import compare_optimizers
+
+    logger.info(f"Comparing Optuna TPE vs GWO on {target}")
+    logger.info(f"Model: {model_type}, Trials/Iterations: {n_trials}")
+
+    df = load_data(symbol, start, end)
+    X, y = prepare_training_data(df, horizon=label_span)
+
+    results_data = compare_optimizers(
+        X,
+        y,
+        target=target,
+        model_type=model_type,
+        n_trials=n_trials,
+        label_span=label_span,
+    )
+
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+
+    run_id = f"{datetime.now():%Y%m%d_%H%M%S}_{target}_compare"
+    results_path = output_path / f"compare_{run_id}.json"
+    with open(results_path, "w") as f:
+        json.dump(
+            {k: v for k, v in results_data.items() if k not in ("gwo", "optuna") or True},
+            f,
+            indent=2,
+            default=str,
+        )
+
+    logger.info(f"Comparison saved to {results_path}")
+    return results_data
+
+
+def run_strategy_tuning(
+    symbol: str = "SPY",
+    start: str = "2020-01-01",
+    end: str = "2024-12-31",
+    strategy: str = "rsi",
+    n_trials: int = 50,
+    metric: str = "sharpe_ratio",
+    output_dir: str = "reports/ml_tuning",
+) -> Dict[str, Any]:
+    """Run Optuna strategy parameter tuning."""
+    from src.ml.tuning.optuna_strategy_tuner import OptunaStrategyTuner
+
+    logger.info(f"Optuna strategy tuning: {strategy} (metric={metric}, trials={n_trials})")
+
+    df = load_data(symbol, start, end)
+    if len(df) < 100:
+        logger.error(f"Only {len(df)} bars — need at least 100")
+        sys.exit(1)
+
+    tuner = OptunaStrategyTuner(
+        strategy=strategy,
+        n_trials=n_trials,
+        metric=metric,
+    )
+    result = tuner.optimize(df)
+
+    logger.info("=" * 60)
+    logger.info(f"Strategy Tuning Results — {strategy}")
+    logger.info("=" * 60)
+    logger.info(f"Best {metric}: {result.best_score:.4f}")
+    logger.info(f"Trials: {result.n_trials}")
+    logger.info("Best parameters:")
+    for k, v in sorted(result.best_params.items()):
+        logger.info(f"  {k}: {v}")
+
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+
+    run_id = f"{datetime.now():%Y%m%d_%H%M%S}_strategy_{strategy}"
+    results_data = {
+        "run_id": run_id,
+        "symbol": symbol,
+        "target": "strategy_params",
+        "strategy": strategy,
+        "algo": "optuna",
+        "best_score": result.best_score,
+        "metric": metric,
+        "best_params": result.best_params,
+        "n_trials": result.n_trials,
+        "trial_scores": result.trial_scores,
+    }
+
+    results_path = output_path / f"strategy_tune_{run_id}.json"
+    with open(results_path, "w") as f:
+        json.dump(results_data, f, indent=2, default=str)
+
+    logger.info(f"Results saved to {results_path}")
+    return results_data
+
+
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Metaheuristic Tuning for ML Models (GWO/GA/WOA)")
+    parser = argparse.ArgumentParser(description="Hyperparameter Tuning (Optuna/GWO/GA/WOA)")
     parser.add_argument("--symbol", default="SPY")
     parser.add_argument("--start", default="2020-01-01")
     parser.add_argument("--end", default="2024-12-31")
@@ -369,18 +564,83 @@ def main() -> None:
     parser.add_argument(
         "--algo",
         default="gwo",
-        choices=["gwo", "ga", "woa"],
-        help="Algorithm: gwo (Grey Wolf), ga (Genetic Algorithm), woa (Whale Optimization)",
+        choices=["gwo", "ga", "woa", "optuna", "compare"],
+        help="Algorithm: optuna (TPE Bayesian), gwo (Grey Wolf), ga (Genetic), woa (Whale), compare (Optuna vs GWO)",
     )
     parser.add_argument("--wolves", type=int, default=20, help="Population size (GWO/WOA)")
     parser.add_argument("--population", type=int, default=20, help="Population size (GA)")
-    parser.add_argument("--iterations", type=int, default=50, help="Max iterations/generations")
-    parser.add_argument("--horizon", type=int, default=5)
+    parser.add_argument(
+        "--iterations", type=int, default=50, help="Max iterations/generations (GWO/GA/WOA)"
+    )
+    parser.add_argument("--trials", type=int, default=50, help="Number of Optuna trials")
+    parser.add_argument(
+        "--horizon", type=int, default=5, help="Forward return horizon (label_span)"
+    )
+    parser.add_argument(
+        "--model",
+        default="catboost",
+        choices=["catboost", "lightgbm"],
+        help="Model type for Optuna",
+    )
+    parser.add_argument("--prune", action="store_true", help="Enable Optuna MedianPruner")
+    parser.add_argument("--patience", type=int, default=10, help="Pruner patience steps")
+    parser.add_argument("--study-name", default="", help="Resume or name Optuna study")
+    parser.add_argument(
+        "--strategy",
+        default="rsi",
+        choices=AVAILABLE_STRATEGIES,
+        help="Strategy name for strategy_params target",
+    )
     parser.add_argument("--output-dir", default="reports/ml_tuning")
 
     args = parser.parse_args()
 
-    if args.algo == "ga" and args.target == "regime_discovery":
+    if args.algo == "optuna":
+        if args.target == "strategy_params":
+            run_strategy_tuning(
+                symbol=args.symbol,
+                start=args.start,
+                end=args.end,
+                strategy=args.strategy,
+                n_trials=args.trials,
+                output_dir=args.output_dir,
+            )
+        elif args.target in ("regime_discovery", "pattern_threshold"):
+            parser.error(
+                f"Target '{args.target}' requires --algo ga (regime_discovery) "
+                f"or --algo woa (pattern_threshold)"
+            )
+        else:
+            run_optuna(
+                symbol=args.symbol,
+                start=args.start,
+                end=args.end,
+                target=args.target,
+                model_type=args.model,
+                n_trials=args.trials,
+                label_span=args.horizon,
+                prune=args.prune,
+                pruner_patience=args.patience,
+                study_name=args.study_name,
+                output_dir=args.output_dir,
+            )
+    elif args.algo == "compare":
+        if args.target in ("regime_discovery", "pattern_threshold"):
+            parser.error(
+                f"Compare not supported for '{args.target}'. Use pattern_classifier, "
+                f"signal_regressor, or regime."
+            )
+        run_compare(
+            symbol=args.symbol,
+            start=args.start,
+            end=args.end,
+            target=args.target,
+            model_type=args.model,
+            n_trials=args.trials,
+            label_span=args.horizon,
+            output_dir=args.output_dir,
+        )
+    elif args.algo == "ga" and args.target == "regime_discovery":
         run_ga_regime(
             symbol=args.symbol,
             start=args.start,

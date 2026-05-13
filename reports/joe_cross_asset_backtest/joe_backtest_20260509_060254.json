@@ -1,0 +1,404 @@
+{
+  "config": {
+    "date_range": "2017-01-01 to 2024-12-31",
+    "capital": 100000.0,
+    "commission": 0.001,
+    "risk_per_trade": 0.02,
+    "signal_method": "rank_based",
+    "top_pct": 3.25,
+    "horizon": 5,
+    "atr_mult_tp": 1.5,
+    "atr_mult_sl": 1.0
+  },
+  "run_id": "20260509_060254",
+  "baseline": {
+    "total_return": 45.24968656948587,
+    "sharpe_ratio": 17.939183191735104,
+    "max_drawdown": 1.7503785549056645,
+    "win_rate": 86.36363636363636,
+    "profit_factor": 7.961601821942511,
+    "num_trades": 22,
+    "avg_trade_return": 2.833054591611897,
+    "best_trade": 6.123348901604819,
+    "worst_trade": -3.470583614763133,
+    "avg_bars_held": 3.227272727272727,
+    "signal_rate": 3.230616302186879,
+    "trades": [
+      {
+        "entry_date": "2017-02-01",
+        "exit_date": "2017-02-06",
+        "return_pct": 3.1983,
+        "pnl": 2812.23,
+        "exit_reason": "TP",
+        "bars_held": 3
+      },
+      {
+        "entry_date": "2017-03-02",
+        "exit_date": "2017-03-03",
+        "return_pct": 3.2307,
+        "pnl": 2813.82,
+        "exit_reason": "TP",
+        "bars_held": 1
+      },
+      {
+        "entry_date": "2017-06-19",
+        "exit_date": "2017-06-22",
+        "return_pct": 2.9545,
+        "pnl": 2796.66,
+        "exit_reason": "TP",
+        "bars_held": 3
+      },
+      {
+        "entry_date": "2018-07-27",
+        "exit_date": "2018-07-30",
+        "return_pct": 1.9679,
+        "pnl": 2695.06,
+        "exit_reason": "TP",
+        "bars_held": 1
+      },
+      {
+        "entry_date": "2018-07-31",
+        "exit_date": "2018-08-02",
+        "return_pct": 2.0457,
+        "pnl": 2706.42,
+        "exit_reason": "TP",
+        "bars_held": 2
+      },
+      {
+        "entry_date": "2018-11-20",
+        "exit_date": "2018-11-28",
+        "return_pct": 4.9525,
+        "pnl": 2878.32,
+        "exit_reason": "TP",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2018-12-28",
+        "exit_date": "2019-01-07",
+        "return_pct": 5.1814,
+        "pnl": 2883.82,
+        "exit_reason": "TP",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2019-01-09",
+        "exit_date": "2019-01-16",
+        "return_pct": 4.5657,
+        "pnl": 2868.12,
+        "exit_reason": "TP",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2019-01-23",
+        "exit_date": "2019-01-30",
+        "return_pct": 4.2756,
+        "pnl": 2859.25,
+        "exit_reason": "TP",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2019-03-05",
+        "exit_date": "2019-03-06",
+        "return_pct": -2.0652,
+        "pnl": -2193.46,
+        "exit_reason": "SL",
+        "bars_held": 1
+      },
+      {
+        "entry_date": "2019-03-07",
+        "exit_date": "2019-03-11",
+        "return_pct": 3.424,
+        "pnl": 2824.42,
+        "exit_reason": "TP",
+        "bars_held": 2
+      },
+      {
+        "entry_date": "2019-03-12",
+        "exit_date": "2019-03-18",
+        "return_pct": 3.4792,
+        "pnl": 2827.43,
+        "exit_reason": "TP",
+        "bars_held": 4
+      },
+      {
+        "entry_date": "2019-03-19",
+        "exit_date": "2019-03-25",
+        "return_pct": -2.0837,
+        "pnl": -2191.71,
+        "exit_reason": "SL",
+        "bars_held": 4
+      },
+      {
+        "entry_date": "2019-04-04",
+        "exit_date": "2019-04-10",
+        "return_pct": 3.0766,
+        "pnl": 2804.72,
+        "exit_reason": "TP",
+        "bars_held": 4
+      },
+      {
+        "entry_date": "2019-05-31",
+        "exit_date": "2019-06-07",
+        "return_pct": 2.845,
+        "pnl": 2788.94,
+        "exit_reason": "TP",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2019-06-18",
+        "exit_date": "2019-06-20",
+        "return_pct": 2.7108,
+        "pnl": 2778.39,
+        "exit_reason": "TP",
+        "bars_held": 2
+      },
+      {
+        "entry_date": "2019-11-25",
+        "exit_date": "2019-11-29",
+        "return_pct": 3.0813,
+        "pnl": 2805.25,
+        "exit_reason": "TP",
+        "bars_held": 3
+      },
+      {
+        "entry_date": "2020-05-13",
+        "exit_date": "2020-05-18",
+        "return_pct": 6.1233,
+        "pnl": 2901.41,
+        "exit_reason": "TP",
+        "bars_held": 3
+      },
+      {
+        "entry_date": "2020-05-19",
+        "exit_date": "2020-05-27",
+        "return_pct": 5.9912,
+        "pnl": 2898.93,
+        "exit_reason": "TP",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2020-05-28",
+        "exit_date": "2020-06-04",
+        "return_pct": 1.8528,
+        "pnl": 926.76,
+        "exit_reason": "Time",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2020-06-05",
+        "exit_date": "2020-06-08",
+        "return_pct": 4.9902,
+        "pnl": 2879.62,
+        "exit_reason": "TP",
+        "bars_held": 1
+      },
+      {
+        "entry_date": "2020-07-07",
+        "exit_date": "2020-07-09",
+        "return_pct": -3.4706,
+        "pnl": -2114.72,
+        "exit_reason": "SL",
+        "bars_held": 2
+      }
+    ]
+  },
+  "cross_asset": {
+    "total_return": 22.0230131179053,
+    "sharpe_ratio": 7.73877370210697,
+    "max_drawdown": 5.192319216138028,
+    "win_rate": 60.86956521739131,
+    "profit_factor": 2.2806155321587194,
+    "num_trades": 23,
+    "avg_trade_return": 1.2449501639740108,
+    "best_trade": 4.5657467541818155,
+    "worst_trade": -2.9212222448098184,
+    "avg_bars_held": 3.0869565217391304,
+    "signal_rate": 3.230616302186879,
+    "trades": [
+      {
+        "entry_date": "2017-01-31",
+        "exit_date": "2017-02-06",
+        "return_pct": 3.2111,
+        "pnl": 2813.13,
+        "exit_reason": "TP",
+        "bars_held": 4
+      },
+      {
+        "entry_date": "2017-03-02",
+        "exit_date": "2017-03-03",
+        "return_pct": 3.2307,
+        "pnl": 2813.82,
+        "exit_reason": "TP",
+        "bars_held": 1
+      },
+      {
+        "entry_date": "2018-07-27",
+        "exit_date": "2018-07-30",
+        "return_pct": 1.9679,
+        "pnl": 2695.06,
+        "exit_reason": "TP",
+        "bars_held": 1
+      },
+      {
+        "entry_date": "2018-07-31",
+        "exit_date": "2018-08-02",
+        "return_pct": 2.0457,
+        "pnl": 2706.42,
+        "exit_reason": "TP",
+        "bars_held": 2
+      },
+      {
+        "entry_date": "2018-09-06",
+        "exit_date": "2018-09-10",
+        "return_pct": -1.6688,
+        "pnl": -2239.43,
+        "exit_reason": "SL",
+        "bars_held": 2
+      },
+      {
+        "entry_date": "2018-09-11",
+        "exit_date": "2018-09-17",
+        "return_pct": 2.6606,
+        "pnl": 2774.14,
+        "exit_reason": "TP",
+        "bars_held": 4
+      },
+      {
+        "entry_date": "2018-10-09",
+        "exit_date": "2018-10-10",
+        "return_pct": -1.8136,
+        "pnl": -2220.27,
+        "exit_reason": "SL",
+        "bars_held": 1
+      },
+      {
+        "entry_date": "2018-10-11",
+        "exit_date": "2018-10-16",
+        "return_pct": 3.5071,
+        "pnl": 2828.77,
+        "exit_reason": "TP",
+        "bars_held": 3
+      },
+      {
+        "entry_date": "2018-10-26",
+        "exit_date": "2018-11-01",
+        "return_pct": -2.9212,
+        "pnl": -2136.71,
+        "exit_reason": "SL",
+        "bars_held": 4
+      },
+      {
+        "entry_date": "2018-11-23",
+        "exit_date": "2018-11-28",
+        "return_pct": 3.6252,
+        "pnl": 2834.07,
+        "exit_reason": "TP",
+        "bars_held": 3
+      },
+      {
+        "entry_date": "2018-11-30",
+        "exit_date": "2018-12-07",
+        "return_pct": -2.3619,
+        "pnl": -2169.04,
+        "exit_reason": "SL",
+        "bars_held": 4
+      },
+      {
+        "entry_date": "2019-01-09",
+        "exit_date": "2019-01-16",
+        "return_pct": 4.5657,
+        "pnl": 2868.12,
+        "exit_reason": "TP",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2019-01-28",
+        "exit_date": "2019-02-01",
+        "return_pct": 3.6229,
+        "pnl": 2834.02,
+        "exit_reason": "TP",
+        "bars_held": 4
+      },
+      {
+        "entry_date": "2019-02-28",
+        "exit_date": "2019-03-06",
+        "return_pct": -1.9121,
+        "pnl": -2209.02,
+        "exit_reason": "SL",
+        "bars_held": 4
+      },
+      {
+        "entry_date": "2019-03-07",
+        "exit_date": "2019-03-11",
+        "return_pct": 3.424,
+        "pnl": 2824.42,
+        "exit_reason": "TP",
+        "bars_held": 2
+      },
+      {
+        "entry_date": "2019-03-12",
+        "exit_date": "2019-03-18",
+        "return_pct": 3.4792,
+        "pnl": 2827.43,
+        "exit_reason": "TP",
+        "bars_held": 4
+      },
+      {
+        "entry_date": "2019-03-20",
+        "exit_date": "2019-03-25",
+        "return_pct": -1.995,
+        "pnl": -2200.18,
+        "exit_reason": "SL",
+        "bars_held": 3
+      },
+      {
+        "entry_date": "2019-05-29",
+        "exit_date": "2019-06-05",
+        "return_pct": -0.1244,
+        "pnl": -359.67,
+        "exit_reason": "Time",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2019-06-06",
+        "exit_date": "2019-06-13",
+        "return_pct": -1.1023,
+        "pnl": -1448.65,
+        "exit_reason": "Time",
+        "bars_held": 5
+      },
+      {
+        "entry_date": "2019-06-14",
+        "exit_date": "2019-06-19",
+        "return_pct": -1.8655,
+        "pnl": -2214.23,
+        "exit_reason": "SL",
+        "bars_held": 3
+      },
+      {
+        "entry_date": "2019-06-20",
+        "exit_date": "2019-06-24",
+        "return_pct": 2.7575,
+        "pnl": 2782.07,
+        "exit_reason": "TP",
+        "bars_held": 2
+      },
+      {
+        "entry_date": "2019-06-25",
+        "exit_date": "2019-06-27",
+        "return_pct": 3.2196,
+        "pnl": 2813.51,
+        "exit_reason": "TP",
+        "bars_held": 2
+      },
+      {
+        "entry_date": "2019-11-25",
+        "exit_date": "2019-11-29",
+        "return_pct": 3.0813,
+        "pnl": 2805.25,
+        "exit_reason": "TP",
+        "bars_held": 3
+      }
+    ]
+  }
+}

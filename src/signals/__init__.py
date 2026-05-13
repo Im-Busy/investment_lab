@@ -15,6 +15,7 @@ from .event_weighting import (
     EVENT_TYPE_WEIGHTS,
     DEFAULT_PATTERN_EVENT_MAPPING,
 )
+from .pattern_boost import PatternBoostFilter, PatternBoost, PATTERN_RELIABILITY
 
 __all__ = [
     "SignalGenerator",
@@ -26,4 +27,7 @@ __all__ = [
     "PatternEventMapping",
     "EVENT_TYPE_WEIGHTS",
     "DEFAULT_PATTERN_EVENT_MAPPING",
+    "PatternBoostFilter",
+    "PatternBoost",
+    "PATTERN_RELIABILITY",
 ]

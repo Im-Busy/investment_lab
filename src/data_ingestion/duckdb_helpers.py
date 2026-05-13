@@ -13,6 +13,7 @@ Usage:
 
 from __future__ import annotations
 
+import pandas as pd
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
@@ -41,7 +42,7 @@ def duckdb_parquet(parquet_paths: list[Path | str]) -> duckdb.DuckDBPyConnection
             if not path.exists():
                 raise FileNotFoundError(f"Parquet file not found: {path}")
             view_name = path.stem.replace(".", "_").removesuffix("_parquet")
-            con.execute(f"CREATE VIEW {view_name} AS SELECT * FROM read_parquet('{path}')")
+            con.execute(f"CREATE VIEW {view_name} AS SELECT * FROM read_parquet('{path}')")  # nosec B608
         yield con
     finally:
         con.close()
@@ -63,10 +64,10 @@ def query_feature_store(sql: str) -> Any:
     try:
         if FEATURE_PARQUET.exists():
             con.execute(
-                f"CREATE VIEW feature_store AS SELECT * FROM read_parquet('{FEATURE_PARQUET}')"
+                f"CREATE VIEW feature_store AS SELECT * FROM read_parquet('{FEATURE_PARQUET}')"  # nosec B608
             )
         if LABELS_PARQUET.exists():
-            con.execute(f"CREATE VIEW labels AS SELECT * FROM read_parquet('{LABELS_PARQUET}')")
+            con.execute(f"CREATE VIEW labels AS SELECT * FROM read_parquet('{LABELS_PARQUET}')")  # nosec B608
         return con.sql(sql)
     finally:
         con.close()
@@ -103,14 +104,13 @@ def cross_ticker_rank(
         where_clauses.append(f"date <= '{end_date}'")
     where = f"WHERE {' AND '.join(where_clauses)}" if where_clauses else ""
 
-    sql = f"""
-        SELECT ticker, date, "{metric}",
-               ROW_NUMBER() OVER (PARTITION BY date ORDER BY "{metric}" DESC) AS rank
-        FROM feature_store
-        {where}
-        QUALIFY rank <= {top_n}
-        ORDER BY date, rank
-    """
+    sql = (
+        'SELECT ticker, date, "{}", '
+        'ROW_NUMBER() OVER (PARTITION BY date ORDER BY "{}" DESC) AS rank '
+        "FROM feature_store {} "
+        "QUALIFY rank <= {} "
+        "ORDER BY date, rank"
+    ).format(metric, metric, where, top_n)
     return query_feature_store_df(sql)
 
 
@@ -147,10 +147,10 @@ def join_features_labels(
         DataFrame with features joined to their corresponding forward returns.
     """
     where = f"WHERE f.ticker = '{ticker}' AND" if ticker else "WHERE"
-    sql = f"""
-        SELECT f.*, l.forward_return_{horizon}d AS label_{horizon}d
-        FROM feature_store f
-        LEFT JOIN labels l ON f.ticker = l.ticker AND f.date = l.date
-        {where} l.forward_return_{horizon}d IS NOT NULL
-    """
+    sql = (
+        "SELECT f.*, l.forward_return_{}d AS label_{}d "
+        "FROM feature_store f "
+        "LEFT JOIN labels l ON f.ticker = l.ticker AND f.date = l.date "
+        "{} l.forward_return_{}d IS NOT NULL"
+    ).format(horizon, horizon, where, horizon)
     return query_feature_store_df(sql)

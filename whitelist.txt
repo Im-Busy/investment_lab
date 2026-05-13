@@ -1,6 +1,6 @@
 # Whitelist for public repo sync
 # Lines starting with # are ignored. Directories must end with /.
-# Only these paths are copied from private → public repo.
+# Only these paths are copied from private -> public repo.
 
 # === Source Code ===
 src/
@@ -14,34 +14,12 @@ scripts/
 # === Pipeline Definitions ===
 pipeline/
 
-# === Documentation ===
-docs/
-AGENTS.md
-README.md
-
-# === Notebooks (.ipynb is gitignored, only .py paired files track) ===
+# === Notebooks (paired .py files only; .ipynb is gitignored) ===
 notebooks/
 
-# === Analysis Reports ===
-reports/
-
-# === Experiment Configs ===
-experiments/
-
-# === Plans & Progress ===
-plans_misc/
-progress_docs/
-
-# === Data ===
-data/
-
-# === Command References ===
-.useful_commands/
-
-# === User-Authored Paper Summaries ===
-useful_resources/papers_md/SENTIMENT_ANALYSIS_SUMMARY.md
-useful_resources/papers_md/REPOS_ARCHITECTURE_ANALYSIS.md
-useful_resources/papers_md/research_synthesis_report.md
+# === Public Documentation ===
+README.md
+AGENTS.md
 
 # === Project Config ===
 pyproject.toml
@@ -50,4 +28,3 @@ uv.lock
 .gitignore
 .pre-commit-config.yaml
 .jupytext.toml
-investment_trying.code-workspace

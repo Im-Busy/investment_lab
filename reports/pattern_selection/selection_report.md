@@ -6,9 +6,9 @@
 
 | Metric | Value |
 |--------|-------|
-| Total Patterns Tested | 0 |
+| Total Patterns Tested | 34 |
 | Passed Phase 1 Filter | 0 |
-| Excluded (Phase 1) | 0 |
+| Excluded (Phase 1) | 34 |
 | Redundant Pairs Found | 0 |
 | After Redundancy Removal | 0 |
 | **Final Selected Patterns** | **0** |

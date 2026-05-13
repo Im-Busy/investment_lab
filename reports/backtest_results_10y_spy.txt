@@ -1,0 +1,110 @@
+=== RUN 1: ML Strategy + Trail Stop + Latest Model ===
+
+
+Backtest.run:   0%|          | 0/2159 [00:00<?, ?bar/s]
+
+
+================================================================================
+ML Strategy Backtest: SPY
+C7 features: vol_gate=None confirm=1 trail=True conviction=False
+================================================================================
+  symbol: SPY
+  start: 2016-05-12 00:00:00
+  end: 2024-12-30 00:00:00
+  duration: 3154 days 00:00:00
+  exposure: 14.35803037275656
+  equity_final: 143518.15
+  equity_peak: 143518.15
+  return_pct: 43.52
+  buy_hold_return: 224.56
+  return_annual: 4.28
+  volatility_annual: 5.95
+  sharpe: 0.72
+  sortino: 1.12
+  calmar: 0.48
+  max_drawdown: -8.84
+  avg_drawdown: -1.8
+  win_rate: 55.56
+  best_trade: 14.61
+  worst_trade: -14.48
+  avg_trade: 1.14
+  num_trades: 36
+  profit_factor: 1.96
+  expectancy: 1.26
+
+
+=== RUN 2: ML Strategy Baseline (no extras) ===
+
+
+Backtest.run:   0%|          | 0/2159 [00:00<?, ?bar/s]
+
+
+================================================================================
+ML Strategy Backtest: SPY
+C7 features: vol_gate=None confirm=1 trail=False conviction=False
+================================================================================
+  symbol: SPY
+  start: 2016-05-12 00:00:00
+  end: 2024-12-30 00:00:00
+  duration: 3154 days 00:00:00
+  exposure: 5.614358030372756
+  equity_final: 119007.76
+  equity_peak: 119007.76
+  return_pct: 19.01
+  buy_hold_return: 224.56
+  return_annual: 2.04
+  volatility_annual: 4.18
+  sharpe: 0.49
+  sortino: 0.74
+  calmar: 0.27
+  max_drawdown: -7.67
+  avg_drawdown: -1.91
+  win_rate: 60.0
+  best_trade: 5.54
+  worst_trade: -3.27
+  avg_trade: 1.06
+  num_trades: 20
+  profit_factor: 2.17
+  expectancy: 1.1
+
+
+=== RUN 3: ML-Enhanced EMA Strategy ===
+
+2026-05-12 19:03:05,513 | INFO     | Run ID: 20260512_190305
+2026-05-12 19:03:05,513 | INFO     | Loading SPY data from 2016-05-12 to 2024-12-31
+2026-05-12 19:03:10,234 | INFO     | Loaded 2173 bars
+2026-05-12 19:03:10,234 | INFO     | ============================================================
+2026-05-12 19:03:10,234 | INFO     | ML-Enhanced Backtest Comparison
+2026-05-12 19:03:10,234 | INFO     | ============================================================
+2026-05-12 19:03:10,234 | INFO     | Running ML backtest comparison for EMARibbonStrategy
+2026-05-12 19:03:21,333 | INFO     | Classifier trained: Test AUC=0.5094, Accuracy=0.4927
+2026-05-12 19:03:24,685 | INFO     | ML filtered: 1809 trades (from 1809 original)
+2026-05-12 19:03:32,044 | INFO     |
+============================================================
+2026-05-12 19:03:32,044 | INFO     | Results Summary
+2026-05-12 19:03:32,044 | INFO     | ============================================================
+2026-05-12 19:03:32,044 | INFO     |
+Pattern Performance Analysis:
+2026-05-12 19:03:32,044 | INFO     |   all: Win rate 66.5% -> 66.5% (+0.0%)
+2026-05-12 19:03:32,046 | INFO     | Results saved to reports\ml_backtest\ml_backtest_comparison_20260512_190305.json
+2026-05-12 19:03:32,046 | INFO     |
+============================================================
+2026-05-12 19:03:32,046 | INFO     | Backtest Comparison Complete
+2026-05-12 19:03:32,046 | INFO     | ============================================================
+
+====================================================================================================
+Metric                    Baseline           ML-Enhanced        Uplift
+====================================================================================================
+Total Return [%]                     692.65              692.65   = (same)
+Annualized Return [%]                 80.33               80.33   = (same)
+Sharpe Ratio                           3.10                3.10   = (same)
+Max Drawdown [%]                       27.4%                27.4%   ^0.0% (worse)
+Win Rate [%]                          66.46               66.46   = (same)
+Profit Factor                          1.64                1.64   = (same)
+Total Trades                           1479                1479   = (same)
+Avg Trade Return [%]                   0.47                0.47   = (same)
+Best Trade [%]                         9.60                9.60   = (same)
+Worst Trade [%]                       -7.03               -7.03   = (same)
+Avg Holding Period [days]                16                  16   = (same)
+Exposure [%]                          68.06               68.06   = (same)
+====================================================================================================

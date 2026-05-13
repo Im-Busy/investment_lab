@@ -1,0 +1,90 @@
+{
+  "run_id": "v3_SPY_20260511_042235",
+  "config": {
+    "tickers": [
+      "SPY",
+      "KODK",
+      "QQQ"
+    ],
+    "start": "2015-01-01",
+    "end": "2024-12-31",
+    "horizon": 5,
+    "use_cross_asset": true,
+    "n_samples": 7884,
+    "n_features": 15,
+    "fast": false,
+    "label_type": "triple_barrier"
+  },
+  "n_samples": 7884,
+  "n_features": 15,
+  "n_selected_features": 15,
+  "feature_names": [
+    "macd_histogram",
+    "vol_regime",
+    "volume_ratio_10",
+    "resid_vol_SPY_20d",
+    "highest_5",
+    "lowest_50",
+    "ema_21",
+    "ema_55",
+    "dist_to_high_50",
+    "bb_squeeze_10",
+    "adx_trend",
+    "rel_ret_QQQ_20d",
+    "XLK_relative_5d",
+    "price_to_ma_10",
+    "rel_ret_SPY_20d"
+  ],
+  "selected_features": [
+    "macd_histogram",
+    "vol_regime",
+    "volume_ratio_10",
+    "resid_vol_SPY_20d",
+    "highest_5",
+    "lowest_50",
+    "ema_21",
+    "ema_55",
+    "dist_to_high_50",
+    "bb_squeeze_10",
+    "adx_trend",
+    "rel_ret_QQQ_20d",
+    "XLK_relative_5d",
+    "price_to_ma_10",
+    "rel_ret_SPY_20d"
+  ],
+  "gwo_params": {
+    "learning_rate": 0.25495174950825583,
+    "l2_leaf_reg": 2.6191609283728914,
+    "random_strength": 0.9717515442980319,
+    "bagging_temperature": 0.023915381836480586,
+    "border_count": 54.0,
+    "min_data_in_leaf": 29.0,
+    "max_depth": 7
+  },
+  "final_metrics": {
+    "train_auc": 0.9739977994612812,
+    "test_auc": 0.5561959191904378,
+    "test_accuracy": 0.6737201365187714,
+    "calibration_error": 0.21547355594049974,
+    "overfit_gap": 0.4178018802708434,
+    "top_features": {
+      "vol_regime": 12.405387705430064,
+      "macd_histogram": 11.29438031490501,
+      "adx_trend": 11.059168724696477,
+      "price_to_ma_10": 9.606901430658269,
+      "resid_vol_SPY_20d": 9.431987925156095,
+      "XLK_relative_5d": 8.248690356807133,
+      "dist_to_high_50": 6.9279771010534725,
+      "rel_ret_QQQ_20d": 6.376314522827272,
+      "volume_ratio_10": 5.12238024835377,
+      "lowest_50": 4.767981205130428
+    }
+  },
+  "cv_summary": {
+    "mean_train_auc": 0.6759930250459565,
+    "mean_test_auc": 0.5747529344186297,
+    "std_test_auc": 0.016584721412338556,
+    "mean_overfit_gap": 0.10124009062732682
+  },
+  "walk_forward": null
+}

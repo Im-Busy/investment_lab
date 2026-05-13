@@ -28,6 +28,7 @@ import numpy as np
 import pandas as pd
 
 from ...indicators.pivots import find_swing_highs, find_swing_lows
+from ...indicators.technical import volume_sma
 from ..base import BasePattern, PatternResult, PatternType, SignalDirection, TradeSignal
 
 
@@ -406,6 +407,22 @@ class AscendingTriangle(BasePattern):
         lowest_trough = pattern["lowest_trough"]
         pattern_depth = pattern["pattern_depth"]
         direction = pattern["direction"]
+        pattern_start = pattern["pattern_start"]
+        pattern_end = pattern["pattern_end"]
+
+        # Volume validation: high volume on breakout confirms pattern
+        vol_arr = arrays.get("volume", None)
+        volume_confirmed = False
+        if vol_arr is not None and i < len(vol_arr):
+            vol_sma20 = volume_sma(pd.Series(vol_arr[: i + 1], index=range(i + 1)), 20)
+            current_vol = float(vol_arr[i]) if vol_arr[i] is not None else 0.0
+            avg_vol = (
+                float(vol_sma20.iloc[-1])
+                if len(vol_sma20) > 0 and not pd.isna(vol_sma20.iloc[-1])
+                else 0.0
+            )
+            if avg_vol > 0:
+                volume_confirmed = current_vol > avg_vol
 
         if direction == "bullish":
             # Upside breakout - LONG signal
@@ -415,7 +432,9 @@ class AscendingTriangle(BasePattern):
             take_profit_2 = entry_price + pattern_depth
             take_profit_3 = entry_price + (pattern_depth * 1.27)
 
-            confidence = 0.65  # Higher confidence for upside breakout in ascending triangle
+            confidence = 0.65
+            if volume_confirmed:
+                confidence += 0.10
 
             return TradeSignal(
                 pattern_name=self.name,
@@ -425,7 +444,7 @@ class AscendingTriangle(BasePattern):
                 take_profit_1=take_profit_1,
                 take_profit_2=take_profit_2,
                 take_profit_3=take_profit_3,
-                confidence=confidence,
+                confidence=min(confidence, 1.0),
                 timestamp=df.index[i] if hasattr(df, "index") else None,
                 metadata={
                     "breakout_direction": "up",
@@ -442,7 +461,9 @@ class AscendingTriangle(BasePattern):
             take_profit_2 = entry_price - pattern_depth
             take_profit_3 = entry_price - (pattern_depth * 1.27)
 
-            confidence = 0.50  # Lower confidence for downside breakout in ascending triangle
+            confidence = 0.50
+            if volume_confirmed:
+                confidence += 0.10
 
             return TradeSignal(
                 pattern_name=self.name,
@@ -452,7 +473,7 @@ class AscendingTriangle(BasePattern):
                 take_profit_1=take_profit_1,
                 take_profit_2=take_profit_2,
                 take_profit_3=take_profit_3,
-                confidence=confidence,
+                confidence=min(confidence, 1.0),
                 timestamp=df.index[i] if hasattr(df, "index") else None,
                 metadata={
                     "breakout_direction": "down",

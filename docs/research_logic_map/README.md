@@ -1,10 +1,10 @@
 # Research Logic Map: Navigation Guide
 
-**Last Updated:** 2026-04-25
-**Version:** 1.0
-**Synthesized Papers:** 13
-**Tracked Insights:** 42
-**Hypotheses:** 12
+**Last Updated:** 2026-05-08
+**Version:** 1.1
+**Synthesized Papers:** 17
+**Tracked Insights:** 50
+**Hypotheses:** 14
 
 ---
 
@@ -24,11 +24,12 @@ It solves:
 
 | Document | Purpose | Lines | Key Sections |
 |----------|---------|-------|--------------|
-| [`insight_registry.md`](insight_registry.md) | Catalog all research insights with tags | ~200 | 42 insights from 13 papers, tagged by topic/impact/status |
+| [`insight_registry.md`](insight_registry.md) | Catalog all research insights with tags | ~240 | 50 insights from 17 papers, tagged by topic/impact/status |
 | [`implementation_status.md`](implementation_status.md) | Track implementation progress | ~150 | 29 recommendations, 52% implemented, priority queue |
-| [`hypothesis_backlog.md`](hypothesis_backlog.md) | Testable hypotheses from research | ~180 | 12 hypotheses, 8 ready for testing |
+| [`hypothesis_backlog.md`](hypothesis_backlog.md) | Testable hypotheses from research | ~230 | 14 hypotheses, 9 ready for testing |
 | [`decision_log.md`](decision_log.md) | Architectural decisions and rationale | ~120 | 8 key decisions with context |
-| [`open_questions.md`](open_questions.md) | Unresolved research questions | ~160 | 8 open questions, 4 high priority |
+| [`open_questions.md`](open_questions.md) | Unresolved research questions | ~200 | 9 open questions, 5 high priority |
+| [`market_efficiency_and_instrument_selection.md`](market_efficiency_and_instrument_selection.md) | Deep-dive on alpha decay, instrument selection, and universe construction | ~200 | Efficiency hierarchy, screening criteria, ML training strategy, current universe assessment |
 
 ---
 
@@ -67,6 +68,7 @@ It solves:
 | Q2 | Portfolio diversity score (ρ) | 🟠 High | 2026-05-01 |
 | Q4 | Failure-set analyzer efficacy | 🟠 High | 2026-07-31 |
 | Q7 | 34 vs. 10 patterns ablation | 🟠 High | 2026-06-15 |
+| Q9 | Optimal instrument universe | 🔴 High | 2026-07-31 |
 
 ### Top Priority Hypotheses (Ready for Testing)
 
@@ -76,6 +78,8 @@ It solves:
 | H6 | Fixed take-profit > RSI exits | ΔWinRate ≥ 10% | 🟠 High |
 | H7 | Friction scoring predicts failure | High-friction Sharpe < Low-friction by 1.0 | 🟡 Medium |
 | H8 | Regime-adaptive strategies win | ΔSharpe ≥ 0.3 | 🟠 High |
+| H13 | Inefficient instruments → higher ML alpha | ΔSharpe ≥ 0.3 | 🔴 High |
+| H14 | Cross-asset features → better SPY predictions | ΔR² ≥ 50%, ΔSharpe ≥ 0.2 | 🟠 High |
 
 ### Implemented (Key Recommendations)
 
@@ -153,7 +157,7 @@ It solves:
 ## Tag System
 
 ### Topics (12 tags)
-`Risk` `Friction` `Regime` `Signal.Quality` `Event.Type` `Position.Sizing` `Portfolio` `Strategy.Lifecycle` `Pattern.Detection` `ML.Model` `Backtest` `Data.Infrastructure`
+`Risk` `Friction` `Regime` `Signal.Quality` `Event.Type` `Position.Sizing` `Portfolio` `Strategy.Lifecycle` `Pattern.Detection` `ML.Model` `Backtest` `Data.Infrastructure` `Market.Efficiency` `Instrument.Selection` `ML.Training`
 
 ### Impact Levels (4 levels)
 - 🔴 **Critical**: Must implement; alpha-destroying if ignored

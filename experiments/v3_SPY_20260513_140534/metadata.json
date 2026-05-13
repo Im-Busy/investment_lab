@@ -1,0 +1,68 @@
+{
+  "run_id": "v3_SPY_20260513_140534",
+  "config": {
+    "tickers": [
+      "SPY",
+      "QQQ",
+      "TLT",
+      "GLD",
+      "IWM",
+      "JOE"
+    ],
+    "start": "2015-01-01",
+    "end": "2024-12-31",
+    "horizon": 5,
+    "use_cross_asset": true,
+    "n_samples": 16019,
+    "n_features": 5,
+    "fast": false,
+    "label_type": "triple_barrier"
+  },
+  "n_samples": 16019,
+  "n_features": 5,
+  "n_selected_features": 5,
+  "feature_names": [
+    "bb_width_10",
+    "narrow_range_7",
+    "resid_vol_SPY_60d",
+    "macd_signal",
+    "beta_QQQ_60d"
+  ],
+  "selected_features": [
+    "bb_width_10",
+    "narrow_range_7",
+    "resid_vol_SPY_60d",
+    "macd_signal",
+    "beta_QQQ_60d"
+  ],
+  "gwo_params": {
+    "learning_rate": 0.01641558558372488,
+    "l2_leaf_reg": 6.2430219671190095,
+    "random_strength": 4.60310248940505,
+    "bagging_temperature": 0.005524176222306188,
+    "border_count": 65.0,
+    "min_data_in_leaf": 35.0,
+    "max_depth": 6
+  },
+  "final_metrics": {
+    "train_auc": 0.6075573798656303,
+    "test_auc": 0.5111203101930427,
+    "test_accuracy": 0.654627539503386,
+    "calibration_error": 0.2035375548180798,
+    "overfit_gap": 0.09643706967258758,
+    "top_features": {
+      "resid_vol_SPY_60d": 25.735571524923014,
+      "bb_width_10": 22.657943756375868,
+      "beta_QQQ_60d": 21.745477026047755,
+      "macd_signal": 18.229678241130767,
+      "narrow_range_7": 11.63132945152261
+    }
+  },
+  "cv_summary": {
+    "mean_train_auc": 0.5790945539040582,
+    "mean_test_auc": 0.5182583144677843,
+    "std_test_auc": 0.008364268766836143,
+    "mean_overfit_gap": 0.06083623943627396
+  },
+  "walk_forward": null
+}

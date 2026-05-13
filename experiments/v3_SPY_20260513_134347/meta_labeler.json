@@ -1,0 +1,11 @@
+{
+  "threshold": 0.5400479352464633,
+  "feature_names": [
+    "SPY_vol_percentile_60d",
+    "rel_ret_TLT_5d",
+    "price_to_ma_10",
+    "beta_QQQ_20d",
+    "std_return_20",
+    "_primary_prob"
+  ]
+}

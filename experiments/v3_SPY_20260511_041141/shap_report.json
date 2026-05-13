@@ -1,0 +1,76 @@
+{
+  "top_features": [
+    {
+      "feature": "beta_SPY_20d",
+      "mean_abs_shap": 0.0195,
+      "mean_value": NaN,
+      "shap_volatility": 0.010394,
+      "explainable": true
+    },
+    {
+      "feature": "volatility_regime",
+      "mean_abs_shap": 0.018196,
+      "mean_value": NaN,
+      "shap_volatility": 0.003834,
+      "explainable": true
+    },
+    {
+      "feature": "vol_regime_state",
+      "mean_abs_shap": 0.014617,
+      "mean_value": NaN,
+      "shap_volatility": 0.006234,
+      "explainable": true
+    },
+    {
+      "feature": "std_return_20",
+      "mean_abs_shap": 0.013781,
+      "mean_value": NaN,
+      "shap_volatility": 0.00538,
+      "explainable": true
+    },
+    {
+      "feature": "volatility_50",
+      "mean_abs_shap": 0.013404,
+      "mean_value": NaN,
+      "shap_volatility": 0.004818,
+      "explainable": true
+    },
+    {
+      "feature": "lowest_10",
+      "mean_abs_shap": 0.012298,
+      "mean_value": NaN,
+      "shap_volatility": 0.003731,
+      "explainable": true
+    },
+    {
+      "feature": "lowest_50",
+      "mean_abs_shap": 0.012294,
+      "mean_value": NaN,
+      "shap_volatility": 0.006305,
+      "explainable": true
+    },
+    {
+      "feature": "momentum_5",
+      "mean_abs_shap": 0.011838,
+      "mean_value": NaN,
+      "shap_volatility": 0.004059,
+      "explainable": true
+    },
+    {
+      "feature": "highest_100",
+      "mean_abs_shap": 0.01096,
+      "mean_value": NaN,
+      "shap_volatility": 0.003306,
+      "explainable": true
+    },
+    {
+      "feature": "std_return_50",
+      "mean_abs_shap": 0.010704,
+      "mean_value": NaN,
+      "shap_volatility": 0.004126,
+      "explainable": true
+    }
+  ],
+  "n_features": 77,
+  "suspicious": []
+}

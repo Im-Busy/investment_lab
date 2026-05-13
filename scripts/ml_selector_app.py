@@ -8,6 +8,8 @@ Run: uv run streamlit run scripts/ml_selector_app.py
 
 from __future__ import annotations
 
+import json
+
 import sys
 from datetime import datetime
 from pathlib import Path

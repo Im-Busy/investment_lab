@@ -10,6 +10,9 @@ uv run scripts/train_ml_model.py --symbol SPY --model-type xgboost
 
 # Different horizon (5-day prediction)
 uv run scripts/train_ml_model.py --symbol SPY --horizon 5
+
+# Autonomous training loop (orchestrates training + backtest + tuning)
+uv run scripts/autonomous_train_loop.py --tickers "SPY,QQQ,IWM,TLT,GLD" --max-iterations 20 --confirmations 3 --timeout-hours 8
 ```
 
 ## Backtesting

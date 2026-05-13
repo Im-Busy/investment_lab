@@ -86,7 +86,135 @@ uv run streamlit run scripts/ml_selector_app.py --server.port=8501
 uv run python scripts/ml_selector_gradio.py
 ```
 
-### ML Hyperparameter Tuning (GWO)
+### ML Model V3 — Honest Foundation Pipeline (Recommended)
+
+Full 9-stage pipeline: features → triple-barrier labels → IC filter → Stability Selection (>=0.6) → GWO HP tuning → Nested PurgedKFold CV → final model → walk-forward → SHAP + regime analysis.
+
+```bash
+# Single ticker, full pipeline with walk-forward
+uv run scripts/train_ml_pipeline_v3.py --symbol JOE --walk-forward
+
+# Basket training (5 tickers for better generalization)
+uv run scripts/train_ml_pipeline_v3.py --basket JOE,SPY,QQQ,TLT,GLD
+
+# Fast mode (skip stability selection + GWO for quick iterations)
+uv run scripts/train_ml_pipeline_v3.py --symbol JOE --fast
+
+# Custom stability threshold (lower = more features, higher = stricter)
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --stability-threshold 0.7
+
+# Custom horizon and dates
+uv run scripts/train_ml_pipeline_v3.py --symbol JOE --horizon 10 --start 2018-01-01 --end 2024-12-31
+
+# Without cross-asset features (baseline comparison)
+uv run scripts/train_ml_pipeline_v3.py --symbol JOE --skip-cross-asset
+
+# Per-sector model (B10): train with only intra-sector features, no cross-asset leakage
+# Filters tickers to sector only, names model with sector prefix
+uv run scripts/train_ml_pipeline_v3.py --sector tech --fast
+
+# Train all 7 sectors in one run
+uv run scripts/train_ml_pipeline_v3.py --sector all --fast
+```
+
+### Autonomous Training Loop (Orchestration Layer)
+
+Wraps V3 pipeline + backtest + tuning into an iterative refinement loop with guardrails:
+independence clustering, consecutive confirmation, cross-group generalization testing, timeout, and BESTS.md integration.
+
+```bash
+# Full autonomous loop on 7 tech tickers with 3 consecutive confirmations required
+uv run scripts/autonomous_train_loop.py --tickers "AAPL,MSFT,GOOGL,AMZN,META,NVDA,TSLA" --max-iterations 20 --confirmations 3 --timeout-hours 8
+
+# Run only Phase 4 (refinement loop) with existing model, trailing stop
+uv run scripts/autonomous_train_loop.py --tickers "SPY,QQQ,XLK,XLF" --phase 4 --fast --model models/pattern_classifier_v3_SPY_20260511.pkl --trail-stop
+
+# Full loop with custom horizon, fast mode (skip tuning)
+uv run scripts/autonomous_train_loop.py --tickers "SPY,QQQ,IWM,TLT,GLD" --horizon 10 --trail-stop --entry-threshold 0.45 --fast
+
+# Phase 1 only: ticker independence clustering
+uv run scripts/autonomous_train_loop.py --tickers "SPY,QQQ,XLK,XLF,XLE,XLV,XLI,IWM,TLT,GLD" --phase 1
+
+# Phase 5 only: parameter space sweep with existing model
+uv run scripts/autonomous_train_loop.py --tickers "SPY,QQQ,TLT" --phase 5 --fast --model models/pattern_classifier_v3_SPY.pkl
+
+# Skip Phase 4 (no refinement, just clustering + tuning + cross-group test)
+uv run scripts/autonomous_train_loop.py --tickers "AAPL,MSFT,GOOGL,AMZN" --skip-phase-4 --max-corr 0.60
+```
+
+Key flags:
+| Flag | Default | Purpose |
+|------|---------|---------|
+| `--tickers` | *required* | Comma-separated ticker symbols |
+| `--max-iterations` | 20 | Maximum refinement loop iterations |
+| `--confirmations` | 3 | Consecutive improvements needed to lock best |
+| `--timeout-hours` | 0 | Max runtime (0 = no limit) |
+| `--max-corr` | 0.70 | Max absolute correlation within a group |
+| `--phase` | all | Run specific phase(s): 1-5 or all |
+| `--fast` | False | Skip ARO+GWO tuning |
+| `--model` | "" | Existing model path (use instead of training) |
+| `--trail-stop` | False | Enable ATR trailing stop for backtests |
+| `--conviction` | False | Scale position size by conviction |
+| `--entry-threshold` | 0.50 | ML probability threshold |
+| `--label-type` | triple_barrier | Label type: `triple_barrier` (forward horizon) or `next_bar` (zero look-ahead) |
+| `--no-trail-stop` | False | Disable trailing stop (fixed TP/SL) |
+| `--skip-phase-4` | False | Skip the autonomous refinement loop |
+| `--resume` | False | Resume Phase 4 from last checkpoint (crash/timeout recovery) |
+| `--optuna-trials` | 30 | Number of Optuna trials for Phase 5 Bayesian sweep (0 = grid fallback) |
+| `--pareto` | False | Use multi-objective Pareto optimization (Sharpe + MaxDD + WinRate) |
+
+### Loop Hardening Features (Phase 10b — 2026-05-13)
+
+```bash
+# Checkpoint + resume: crash-proof long-running loops
+uv run scripts/autonomous_train_loop.py --tickers "SPY,QQQ" --phase 4 --fast --max-iterations 20 --trail-stop
+# Ctrl+C mid-run, then resume from checkpoint:
+uv run scripts/autonomous_train_loop.py --tickers "SPY,QQQ" --phase 4 --resume --fast --max-iterations 20 --trail-stop
+
+# Pareto multi-objective optimization (Sharpe + MaxDD + WinRate frontier)
+uv run scripts/autonomous_train_loop.py --tickers "SPY,QQQ" --phase 5 --fast --model models/pattern_classifier_v3_SPY.pkl --pareto --optuna-trials 30
+
+# Next-bar-direction labels (zero look-ahead baseline vs triple-barrier)
+uv run scripts/autonomous_train_loop.py --tickers "SPY,QQQ" --phase 4 --fast --max-iterations 1 --trail-stop --label-type next_bar
+
+# ETF-component auto-exclusion (automatic — no CLI flag needed)
+# Detects SPY+MSFT, QQQ+AAPL pairs in Phase 1 and removes leaky cross-asset features
+uv run scripts/autonomous_train_loop.py --tickers "SPY,MSFT,QQQ,AAPL" --phase 1
+```
+
+### ML Model V2 (Overfitting-Fixed with Cross-Asset Features) — Legacy
+```bash
+# Train with cross-asset features (default)
+uv run scripts/train_ml_model_v2.py --symbol data/raw/CRVL_daily.csv --horizon 5 --suffix with_ca_features
+
+# Train without cross-asset (baseline comparison)
+uv run scripts/train_ml_model_v2.py --symbol data/raw/CRVL_daily.csv --horizon 5 --suffix baseline_no_ca --no-cross-asset
+
+# Skip IC filtering (not recommended)
+uv run scripts/train_ml_model_v2.py --symbol data/raw/SPY_daily.csv --horizon 5 --no-ic-filter
+
+# Use thresholded binary labels instead of triple-barrier
+uv run scripts/train_ml_model_v2.py --symbol data/raw/SPY_daily.csv --horizon 5 --no-triple-barrier --threshold 0.02
+
+# Train all 6 instruments (experiment batch)
+for sym in CRVL KODK HIFS JOE SPY QQQ; do
+    uv run scripts/train_ml_model_v2.py --symbol data/raw/${sym}_daily.csv --horizon 5 --suffix v3_ca
+done
+```
+
+### Download Cross-Asset Market Data
+```bash
+# Download missing market index data (IWM, XLF, XLE, XLK, XLV, EEM)
+uv run python -c "
+import yfinance as yf
+for sym in ['IWM', 'XLF', 'XLE', 'XLK', 'XLV', 'EEM']:
+    df = yf.download(sym, start='2015-01-01', end='2025-12-31', progress=False, auto_adjust=True)
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = df.columns.get_level_values(0)
+    df.to_csv(f'data/raw/{sym}_daily.csv')
+    print(f'{sym}: {len(df)} bars')
+"
+```
 ```bash
 # GWO tune PatternClassifier on SPY
 uv run scripts/tune_model.py --symbol SPY --target pattern_classifier --wolves 20 --iterations 50
@@ -268,6 +396,50 @@ uv run scripts/test_multi_asset.py
 uv run scripts/run_pair_trading_backtests.py
 ```
 
+### ML Strategy Backtesting (CatBoost Pattern Classifier V3)
+
+```bash
+# Single ticker backtest
+uv run scripts/run_ml_backtest.py SPY
+
+# 9-ticker comparison (SO,SPY,D,KO,XLK,PEG,QQQ,AVB,XLV)
+uv run scripts/run_ml_backtest.py "SO,SPY,D,KO,XLK,PEG,QQQ,AVB,XLV" --compare
+
+# Full 33-ticker comparison
+uv run scripts/run_ml_backtest.py "SO,SPY,D,KO,XLK,PEG,QQQ,AVB,XLV,WMT,UNP,JNJ,PG,AAPL,MSFT,GLD,TLT,AMGN,ICE,PFE,GE,CL,MMM,OXY,FDX,SCHW,ORCL,UL,ALL,CTAS,CAT,KODK" --compare
+
+# With specific model
+uv run scripts/run_ml_backtest.py SPY --model models/pattern_classifier_v3_SPY_20260511_224704.pkl
+
+# ── C7 Refinement Options ──
+
+# Trailing stop (BEST: +31% Sharpe improvement)
+uv run scripts/run_ml_backtest.py "SO,SPY,D,KO,XLK,PEG,QQQ,AVB,XLV" --compare --trail-stop
+
+# Volatility gate (skip entries when vol_regime > 1.5)
+uv run scripts/run_ml_backtest.py SPY --vol-gate 1.5
+
+# Consecutive confirmation (require 2 bars above entry threshold)
+uv run scripts/run_ml_backtest.py SPY --confirm 2
+
+# Conviction-based position scaling
+uv run scripts/run_ml_backtest.py SPY --conviction
+
+# Combined: trail stop + conviction scaling
+uv run scripts/run_ml_backtest.py "SO,SPY,D,KO,XLK,PEG,QQQ,AVB,XLV" --compare --trail-stop --conviction
+
+# Custom entry threshold (default 0.50). Lower = more trades, higher = more selective.
+# Optimal for SPY 2016-2024: 0.45
+uv run scripts/run_ml_backtest.py SPY --start 2016-05-12 --trail-stop --entry-threshold 0.45
+
+# ── Parameter Sweeps ──
+
+# Sweep entry thresholds across trail/conviction combos
+uv run scripts/sweep_entry_thresholds.py
+
+# Results: BESTS.md (leaderboard)
+```
+
 ### Benchmarking
 ```bash
 # Benchmark vectorized engine
@@ -317,8 +489,25 @@ uv run scripts/backtest_23_untested_patterns.py
 ---
 
 ## Feature Extraction
+
+### Qlib Alpha158 Factor Extraction & Evaluation
 ```bash
-# Extract all features
+# Extract Alpha158 factors from Qlib for single-ticker
+uv run scripts/extract_alpha158.py
+# Output: data/qlib_alpha158_raw.parquet (2515 rows x 158 features)
+
+# Compare Alpha158 factors vs V3 features (nested PurgedKFold CV)
+uv run scripts/compare_alpha158.py
+# Output: experiments/alpha158_comparison.json
+
+# VERDICT (May 2026): Alpha158 cross-sectional factors add zero value
+# for single-ticker prediction (rank IC 0.1501 vs V3 baseline 0.1556).
+# Abandon Qlib — focus on V3 pipeline improvements.
+```
+
+### V3 Feature Engineering
+```bash
+# Extract all V3 features
 uv run -c "from src.features import extract_all; extract_all('SPY', output='data/features')"
 
 # Technical indicators
@@ -356,6 +545,46 @@ uv run scripts/optimize_rsi.py
 
 # 5+ parameter optimization
 uv run scripts/test_5_plus_optimize.py
+```
+
+### Optuna Hyperparameter Optimization (NEW — Phase 10a)
+```bash
+# Tune CatBoost PatternClassifier with Optuna (TPE sampler, 50 trials, PurgedKFold CV)
+uv run scripts/tune_model.py --symbol SPY --target pattern_classifier --algo optuna --trials 50
+
+# Tune LightGBM RegimeClassifier (LGBM-first principle)
+uv run scripts/tune_model.py --symbol SPY --target regime --algo optuna --model lgbm --trials 30
+
+# Tune SignalRegressor with pruning (stop unpromising trials early)
+uv run scripts/tune_model.py --symbol SPY --target signal_regressor --algo optuna --trials 100 --prune
+
+# Tune strategy parameters (RSI, MACD, etc.) — replaces manual grid search scripts
+uv run scripts/tune_model.py --symbol SPY --target strategy_params --algo optuna --strategy rsi --trials 50
+
+# Resume interrupted Optuna study
+uv run scripts/tune_model.py --symbol SPY --target pattern_classifier --algo optuna --study-name SPY_pc_20260512 --trials 50
+
+# Compare Optuna vs GWO results
+uv run scripts/tune_model.py --symbol SPY --target pattern_classifier --algo compare --trials 30
+```
+
+### PyPortfolioOpt Integration (NEW — Phase 10a)
+```bash
+# Hierarchical Risk Parity (HRP) on 33-ticker basket
+# Use when: want risk-parity allocation that respects correlation structure
+uv run scripts/portfolio_backtest.py --basket 33t --method hrp
+
+# Mean-variance efficient frontier with max Sharpe
+uv run scripts/portfolio_backtest.py --basket 33t --method ef --objective max_sharpe
+
+# CVaR (Conditional Value-at-Risk) optimization for tail-risk management
+uv run scripts/portfolio_backtest.py --basket 33t --method cvar --beta 0.95
+
+# Black-Litterman with PyPortfolioOpt posterior + views from ML predictions
+uv run scripts/portfolio_backtest.py --basket 33t --method bl --views ml_predictions
+
+# Compare allocation methods: equal-weight vs HRP vs EF vs CVaR
+uv run scripts/portfolio_backtest.py --basket 33t --method compare
 ```
 
 ---
@@ -492,6 +721,7 @@ uv run scripts/run_nb_02.py
 - `13_ml_validation.ipynb` - ML validation
 - `14_regime_comparison.ipynb` - Regime detector comparison
 - `15_phase2_validation.ipynb` - Phase 2 validation
+- `16_cross_asset_experiment.ipynb` - H14 cross-asset feature experiment (Start/Stop dashboard)
 - `ML_Training_Colab.ipynb` - Google Colab training notebook
 
 ---
@@ -626,6 +856,29 @@ uv run mypy src/
 # Check with strict mode
 uv run mypy --strict src/
 ```
+
+### Bandit Security Linting (NEW — Phase 10b)
+```bash
+# Run security scan on source code
+# Use when: want to catch pickle deserialization, hardcoded keys, subprocess injection
+uv run bandit -r src/ -c pyproject.toml
+
+# Scan with severity filter (skip low-severity findings)
+uv run bandit -r src/ -ll -c pyproject.toml
+
+# Scan tests directory
+uv run bandit -r tests/ -c pyproject.toml
+
+# Output results as JSON for CI integration
+uv run bandit -r src/ -f json -o bandit_report.json
+```
+
+**Bandit checks enabled** (`[tool.bandit]` in `pyproject.toml`):
+- B301-B303 (pickle, marshal, shelve deserialization)
+- B104-B107 (hardcoded bind, password, secret key)
+- B602-B611 (subprocess, exec, eval, sql injection)
+- B701-B703 (jinja2 autoescape, requests without timeout)
+- Exclusions: `tests/`, `notebooks/`, `useful_resources/`
 
 ---
 
@@ -878,6 +1131,45 @@ uv run pytest tests/ --tb=short -p no:warnings -q
 | Walk-forward AUC | Near 0.5 (weak signal) | Avg 0.518 |
 | Pattern signals | Generated on correct bars | No look-ahead bias |
 | Purge window | Default 5 bars | Active in 3 train() methods |
+
+---
+
+## Model Diagnostics & OOS Analysis
+
+### Model Calibration Audit (Reliability Diagram)
+```bash
+# Check if P=0.45 actually means 45% win rate (triple-barrier labels)
+# Output: reports/calibration/reliability_diagram_triple_barrier.png
+uv run scripts/model_calibration.py
+```
+
+### Regime Shift Investigation (KS Tests)
+```bash
+# Compare feature distributions IS (2015-2024) vs OOS (2025-2026)
+# Identifies which features broke in OOS period
+# Output: reports/calibration/regime_shift_features.png
+uv run scripts/investigate_regime_shift.py
+```
+
+### Walk-Forward Optimization Comparison
+```bash
+# Compare WFO (retraining quarterly) vs single-split on OOS 2025-2026
+# Uses normalized ATR features (ATR/Close) to fix scale-dependence
+# Output: reports/wfo/wfo_comparison.json
+uv run scripts/backtest_wfo.py
+```
+
+### ML Backtest (Trailing Stop)
+```bash
+# Run ML strategy backtest with CatBoost V3 model
+uv run scripts/run_ml_backtest.py SPY --entry-threshold 0.45 --trail-stop
+
+# OOS test on 2025-2026 data
+uv run scripts/run_ml_backtest.py SPY --entry-threshold 0.45 --trail-stop --start 2025-01-01
+
+# Sweep entry thresholds (0.35, 0.40, 0.45, 0.50) with all C7 options
+uv run scripts/sweep_entry_thresholds.py SPY
+```
 
 ---
 
@@ -1228,6 +1520,21 @@ git commit -m "feat: description"
 git push
 ```
 
+### Sync to Public Repo
+```bash
+# Dry run (preview what will be synced)
+uv run scripts/sync_to_public.py --dry-run
+
+# Push to public repo (requires PAT env var)
+set PAT=ghp_...   # Windows
+uv run scripts/sync_to_public.py
+
+# With custom author info
+set GIT_AUTHOR_NAME=Im-Busy
+set GIT_AUTHOR_EMAIL=your@email.com
+uv run scripts/sync_to_public.py
+```
+
 ---
 
 ## Quick Command Reference by Task
@@ -1316,6 +1623,6 @@ investment_trying/
 
 ---
 
-*Last Updated: 2026-05-05*
+*Last Updated: 2026-05-13*
 *Total Scripts: 65+*
 *Categories: 22+*

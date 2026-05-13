@@ -150,6 +150,15 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 
+try:
+    from IPython.display import display
+except ImportError:
+    display = print
+
+import sys
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
+
 # Configure display
 pd.set_option("display.max_columns", None)
 pd.set_option("display.width", None)

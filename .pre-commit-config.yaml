@@ -55,3 +55,19 @@ repos:
             .kilo/skills/.*|
             useful_resources/.*
           )$
+
+  # --- Bandit security linter ---
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.9.4
+    hooks:
+      - id: bandit
+        args: ["-c", "pyproject.toml", "-ll"]
+        exclude: |
+          (?x)^(
+            tests/.*|
+            notebooks/.*|
+            scripts/.*|
+            .kilo/.*|
+            useful_resources/.*|
+            experiments/.*
+          )$

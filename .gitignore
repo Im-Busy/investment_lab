@@ -78,6 +78,9 @@ CMakeFiles/
 cmake-build-*/
 .cmake/
 
+# MLflow
+mlruns/
+
 # Autogluon
 AutogluonModels/
 
@@ -92,6 +95,9 @@ useful_resources/useful_repos/paper2md/
 
 # Marker PDF-to-MD output
 marker/
+
+# Personal IDE/editor workspace files
+*.code-workspace
 
 # Logs directory
 logs/

@@ -28,6 +28,24 @@ from src.ml.hmm_regime import HMMRegimeDetector
 from src.ml.pca_kmeans_regime import PCAKMeansRegimeDetector
 
 # Quick test of HMM detector
+
+================================================================================
+                        PAPER PROCESSING PIPELINE
+================================================================================
+
+# Full pipeline: PDF extraction → merge → knowledge graph
+# 1. Re-extract all PDFs and merge with existing .md files
+uv run scripts/re_extract_pdfs.py
+
+# 2. Run knowledge graph to cross-reference paper findings with project modules
+uv run useful_resources/_knowledge_analysis.py
+
+# 3. (Optional) Re-summarize papers with LLM
+cd useful_resources\useful_repos\paper2md
+uv run python summarize_md_papers.py --papers-dir ..\..\papers_md --out output\SENTIMENT_ANALYSIS_SUMMARY.md
+
+# Extract single PDF
+uv run markitdown input.pdf -o output.md
 uv run python -c "from src.ml.hmm_regime import HMMRegimeDetector; print('HMM OK')"
 
 # Quick test of PCA-kmeans detector
@@ -58,3 +76,77 @@ uv run scripts/autonomous_train_loop.py --tickers "SPY,QQQ,XLK" --phase 4 --fast
 uv run scripts/autonomous_train_loop.py --tickers "SPY,QQQ,XLK,XLF,XLE,XLV" --phase 1 --max-corr 0.60
 
 ================================================================================
+                     OVERFITTING DETECTION COMMANDS (C1)
+================================================================================
+
+# Smoke test both overfitting detectors (TrainingHistoryOverfitDetector + SyntheticOOSComparator)
+# Use when: verifying overfitting detectors are working after code changes
+uv run python -c "from src.ml.overfitting_detectors import TrainingHistoryOverfitDetector, SyntheticOOSComparator; import numpy as np; np.random.seed(42); epochs = 200; train_losses = 1.0 / (1 + 0.1 * np.arange(epochs)) + 0.01 * np.random.randn(epochs); val_losses = np.concatenate([1.2 / (1 + 0.1 * np.arange(100)) + 0.01 * np.random.randn(100), 0.3 + 0.002 * np.arange(100) + 0.02 * np.random.randn(100)]); detector = TrainingHistoryOverfitDetector(); is_overfit, score, optimal = detector.is_overfit(train_losses.tolist(), val_losses.tolist()); print('TrainingHistoryOverfitDetector: is_overfit=%s, divergence=%.3f, optimal_epoch=%s' % (is_overfit, score, optimal)); comparator = SyntheticOOSComparator(n_synthetic_runs=100, seed=42); result = comparator.compute_generalization_score(real_oos_sharpe=-1.24, real_is_sharpe=0.85, n_oos_days=252); print('SyntheticOOS: PBO=%.3f, generalization=%.3f' % (result['pbo'], result['generalization_score']))"
+
+# Run model health check with new C1 overfitting checks
+# Use when: checking production model for overfitting, drift, stability
+uv run scripts/model_health.py SPY --model models/pattern_classifier_v3_SPY_20260514_195235.pkl --json
+
+# Run model health check and save report
+uv run scripts/model_health.py SPY --model models/pattern_classifier_v3_SPY_20260514_195235.pkl --output reports/health/health_report.json
+
+================================================================================
+                   CHRONOS-2 FOUNDATION MODEL (E1)
+================================================================================
+
+# Smoke test Chronos-2 on SPY data
+uv run scripts/smoke_chronos_spy.py
+
+# Quick forecast: 5-day Chronos-2 prediction on SPY
+uv run python -c "
+from src.ml.models.chronos import ChronosForecaster
+import pandas as pd
+df = pd.read_csv('data/raw/SPY_daily.csv', parse_dates=True, index_col=0).dropna()
+fc = ChronosForecaster(model_size='chronos-2', device='cpu', prediction_length=5)
+result = fc.predict(df['Close'])
+print(f'5d expected return: {(result[\"mean\"].iloc[-1] / df[\"Close\"].iloc[-1] - 1) * 100:.2f}%')
+"
+
+# Use bolt-tiny (9M) for fast inference
+uv run python -c "
+from src.ml.models.chronos import ChronosForecaster
+import pandas as pd
+df = pd.read_csv('data/raw/SPY_daily.csv', parse_dates=True, index_col=0).dropna()
+fc = ChronosForecaster(model_size='bolt-tiny', device='cpu', prediction_length=21)
+result = fc.predict(df['Close'])
+print(f'Q10={result[\"q10\"].iloc[-1]:.2f} Q50={result[\"q50\"].iloc[-1]:.2f} Q90={result[\"q90\"].iloc[-1]:.2f}')
+"
+
+=================================================================================
+                    FMZ STRATEGY CONVERSIONS (PineScript/JS → Python)
+=================================================================================
+
+# Test all 7 FMZ conversions (6 detectors + 1 signal module)
+uv run python -c "from src.patterns.fmz import AlphaBeast, MultiFactorTrend, MomentumZigZag, EMAMACDHF, AdaptiveBollinger, AIVolatilityBreakout; from src.signals.order_flow import OrderFlowAccumulator; print('OK')"
+
+# Test PineScript helper functions
+uv run python -c "from src.indicators.pinescript_helpers import crossover, crossunder, supertrend, sar, dmi, macd, qqe, vwap_simple, highest, lowest, barssince; print('OK')"
+
+# Integration test - detect patterns on random data
+uv run python -c "
+import numpy as np, pandas as pd
+np.random.seed(42)
+n = 300
+close = 100 + np.cumsum(np.random.randn(n) * 0.5)
+high = close + np.abs(np.random.randn(n))
+low = close - np.abs(np.random.randn(n))
+df = pd.DataFrame({'Open': np.roll(close,1), 'High': high, 'Low': low, 'Close': close, 'Volume': np.random.randint(5000,20000,n).astype(float)})
+from src.patterns.fmz import AlphaBeast, MultiFactorTrend, EMAMACDHF, AdaptiveBollinger, AIVolatilityBreakout, MomentumZigZag
+for d in [AlphaBeast(), MultiFactorTrend(), EMAMACDHF(), AdaptiveBollinger(), AIVolatilityBreakout(), MomentumZigZag()]:
+    found = any(d.detect(df, i).detected for i in range(200, n))
+    print(f'{d.name}: {\"detected\" if found else \"no detection (random data)\"}')
+"
+
+# Test order flow signal module
+uv run python -c "
+from src.signals.order_flow import OrderFlowAccumulator, TradeTick
+acc = OrderFlowAccumulator(q_size=20)
+for i in range(30):
+    sig = acc.add_trade(TradeTick(side='buy' if i%3!=0 else 'sell', qty=1.0, price=100.0+i))
+print(f'Alpha={sig.alpha}, BuyRatio={sig.buy_ratio}, SellRatio={sig.sell_ratio}')
+"

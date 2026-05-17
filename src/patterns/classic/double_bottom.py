@@ -49,7 +49,7 @@ class DoubleBottom(BasePattern):
         max_pattern_bars: int = 120,
         entry_offset: float = 0.01,
         stop_offset: float = 0.01,
-        volume_filter: bool = False,
+        volume_filter: bool = True,
     ):
         """
         Initialize Double Bottom pattern detector.

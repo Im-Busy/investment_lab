@@ -650,7 +650,7 @@ def run_backtest(
     conviction: bool = False,
     vol_gate: float | None = None,
     confirm: int = 1,
-    multi_tp: bool = False,
+    multi_tp: bool = True,
 ) -> list[dict[str, Any]]:
     """Run backtest on multiple tickers and return aggregated results."""
     from run_ml_backtest import run_single

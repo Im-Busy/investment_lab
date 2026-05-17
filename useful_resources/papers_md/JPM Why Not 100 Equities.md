@@ -1,3 +1,10 @@
+# JPM Why Not 100 Equities
+
+> *Source PDF: JPM Why Not 100 Equities.pdf*
+> *Extraction method: Manual/AI extraction from image-heavy PDF (markitdown could not extract text)*
+
+---
+
 # Why Not 100% Equities
 
 **The Journal of Portfolio Management**
@@ -229,3 +236,16 @@ Thaler, Richard H., and J. Peter Williamson. "College and University Endowment F
 ---
 
 *The author thanks Fischer Black, Kent Clark, Tom Dunn, Ken French, Brian Hurst, Bob Jones, Larry Kohn, Bob Krail, John Liew, Paul Samuelson, Jeremy Siegel, Larry Siegel, Ross Stevens, Steve Strongin, and Richard Thaler.*
+
+
+---
+
+## Raw OCR Text (markitdown — limited extraction)
+
+VOLUME 22 NUMBER 2
+
+www.iijpm.com
+
+WINTER 1996
+
+The Voices of Influence | iijournals.com

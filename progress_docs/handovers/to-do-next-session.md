@@ -1,287 +1,124 @@
-# Handover Prompt: Overfitting Fixes (B11-B14)
+# Handover -- 2026-05-16 (Phase 16 CONCLUDED. Next: Phase 6d pattern work + Phase 12c cleanup.)
 
-## Current State (2026-05-13 21:44)
+> **State:** Phase 16 formally concluded (ACCEPT LIMITS). All 3 directions (C/E/A+B) previously concluded.
+> **GPU:** None (nvidia-smi not found). **Paid data:** None. T+U permanently gated.
+> **Production system:** Rules-First (OOS Sharpe +0.76). Pairs (CVX-XOM Sharpe 0.40) as orthogonal alpha.
+> **Next target:** Unblock pattern improvements (C9-C17) now that B9-B14 dependency gates are met.
 
-**B9 (Stability Selection) COMPLETE.** Replaced ARO collapse (5 features) with Meinshausen & Buehlmann stability selection.
-**B10 (Per-Sector Models) COMPLETE.** 4 sub-steps done:
-- `src/ml/sector_map.py` — SECTOR_MAP (44 tickers → 7 sectors) + SECTOR_NAMES
-- `scripts/train_ml_pipeline_v3.py` — `--sector` CLI flag (`choices=SECTOR_NAMES + ["all"]`), filters tickers, disables cross-asset, names model `pattern_classifier_v3_{sector}_{timestamp}.pkl`
-- `src/strategies/ml_strategy.py` — added `ticker: str = ""` param, `init()` resolves sector model via `glob("models/pattern_classifier_v3_{sector}_*.pkl")`, falls back to `model_path`
-- `scripts/run_ml_backtest.py` — passes `ticker=symbol` to `bt.run()`
-- `docs/COMMAND_CHEATSHEET.md` — added `--sector` and `--sector all` examples
+---
 
-**Problem:** ML model is overfit. Train Sharpe 0.73 → OOS Sharpe -0.27. Three root causes diagnosed:
+## Remaining Open Work (all dependencies satisfied)
 
-| Root Cause | Evidence | Status |
-|------------|----------|--------|
-| Feature Selection Collapse | ARO selects only 5 features from 88+ pool | **FIXED (B9)** |
-| Cross-Asset Feature Gap | 2 of 5 selected features are cross-asset (unavailable at single-ticker inference → filled with 0.0) | **FIXED (B10)** |
-| Regime Shift / No Adaptation | 18/57 features shift distribution OOS (ATR doubled, KS=0.62 p=10^-109) | B12 |
+### Tier P1 — Pattern Signal Quality (C11-C13)
 
-**Remaining** (implementation graph):
+| Item | What | Files to touch | Est. lines |
+|------|------|----------------|-----------|
+| **C11** | Volume/OI validation layer | `src/patterns/complex/head_shoulders.py`, `src/patterns/classic/double_top.py`, `src/patterns/classic/ascending_triangle.py` | ~100 |
+| **C12** | Multi-TP exit logic (partial take-profit) | `src/strategies/rules_first_strategy.py` or `src/strategies/ml_strategy.py` | ~80 |
+| **C13** | Gap pattern hierarchy + size filter (4-type classification) | `src/patterns/breakout/gap.py` | ~120 |
+
+**C11 details:** 4 rules from 4 independent sources (NCFE, Fidelity, Duddella, Warrior Trading):
+1. High volume on breakout = confirm (+0.02 bonus already in C8)
+2. Declining volume during formation = normal (no penalty)
+3. **Volume dissipating on Right Shoulder (H&S)** = required validation
+4. **OI declining at Head (H&S)** = required validation for signal generation
+
+**C12 details:** Add partial TP to strategy:
+- TP1 at 50% of ATR target (exit 50% position)
+- TP2 at 100% target (exit remainder)
+- Move SL to breakeven after TP1 hit
+- Estimated +0.05–0.15 Sharpe from volatility drag reduction
+- backtesting.py supports partial exits via `self.position.close(portion=0.5)`
+
+**C13 details:** Enhance gap detector with 4-type classification from Duddella:
+1. **Breakaway** → trade direction (almost never fills)
+2. **Continuation** → trade direction
+3. **Exhaustion** → fade (reversal)
+4. **Common** → skip entirely (low reliability)
+- Gap size > 2.5× ATR(10) → skip bar (noise filter)
+
+### Tier P2 — Production Readiness + Missing Detectors (C9-C10, C14-C16)
+
+| Item | What | Files | Notes |
+|------|------|-------|-------|
+| **C9** | Walk-forward paper trading | `scripts/paper_trade_v3.py` | Re-run with stability-selected + per-sector model. Expanding window only. |
+| **C10** | Portfolio-level backtest | New `scripts/backtest_portfolio.py` | Equal-weight portfolio of profitable tickers, monthly rebalance. Threshold: Sharpe > 0.5, DD < 15%, 50+ trades. |
+| **C14** | 5 missing harmonic detectors | `src/patterns/harmonic/` (butterfly.py, bat.py, crab.py, cypher.py, shark.py) | Follow `gartley.py` structure. Fibonacci tables in `CHART_PATTERN_KNOWLEDGE_BASE.md` Parts 2, 9. |
+| **C15** | Pipe pattern detector | `src/patterns/complex/pipe.py` | Two-bar, zero-param. L=max(pipe1,pipe2), T1=±L, T2=±2L |
+| **C16** | Dead Cat Bounce ≥15% threshold fix | `src/patterns/classic/dead_cat_bounce.py` | Enforce 15% event-day move, 50-62% bounce retracement |
+
+### Tier P2/P3 — Phase 12c/d Cleanup
+
+| Item | What | Notes |
+|------|------|-------|
+| **P2-3** | Dynamic Ensemble Collapse | Investigate why DEL produced Sharpe 0.26 vs expected 0.91 |
+| **P2-4** | Walk-Forward Cadence | Simulate retraining at 6mo/12mo/24mo intervals |
+| **P3-1** | Paper-Trading Harness | Daily signal generation for 2026-05-15 onward |
+| **P3-2** | Kelly Position Sizing | Compute Kelly fraction, half-Kelly, min capital estimate |
+| **P3-3** | Survival Analysis | scikit-survival Cox/RandomSurvivalForest |
+| **P3-4** | Regression Labels | Predict 5-day forward return via CatBoostRegressor |
+| **P3-5** | HMM Regime Detection | hmmlearn GaussianHMM vs rule-based ADX/ATR |
+
+**Note:** Phase 10a (T10a-2 through T10a-5) is functionally DONE per 2026-05-12 session (`src/ml/tuning/optuna_tuner.py`, `src/optimizer/pypfopt_integration.py` exist). Only T10a-6 (documentation) may remain — check `docs/COMMAND_CHEATSHEET.md` for Optuna/PyPortfolioOpt sections.
+
+---
+
+## Recommended Execution Order
+
 ```
-B9 (done) ──→ B10 (done) ──→ B11 (CPCV) ──→ B12 (Dynamic Ensemble)
-                                                    │
-B13 (Meta-Labeling) ←───────────────────────────────┘
-                                                    │
-B14 (Production Hardening) ←────────────────────────┘
+Session 1: C11 (Volume/OI) → C12 (Multi-TP) → C13 (Gap hierarchy)
+  Rationale: Highest impact-to-effort. All 3 are isolated changes to pattern detectors.
+  Estimate: ~300 lines, 3 files touched. Free Sharpe improvement.
+
+Session 2: C9 (WF paper trade) → C10 (Portfolio backtest)
+  Rationale: Production readiness. Requires C9+C10 to complete the pattern line.
+  Estimate: ~400 lines, 2 scripts.
+
+Session 3: C14-C17 (Harmonic detectors, Pipe, DCB, calibration)
+  Rationale: Coverage expansion. More alpha sources.
+  Estimate: ~500 lines, 5 files.
+
+Optional: Phase 12c/d items (P2-3, P3-1, etc.) — lower priority, marginal gains.
 ```
 
 ---
 
-## What To Do: B11 — Combinatorial Purged Cross-Validation (CPCV)
+## Key Files Reference
 
-### Why This Matters
+| File | Purpose |
+|------|---------|
+| `src/strategies/rules_first_strategy.py` | PRIMARY — 34 pattern detectors, ATR trail. C12/C13 target. |
+| `src/patterns/harmonic/gartley.py` | Template for C14 (Butterfly/Bat/Crab/Cypher/Shark) |
+| `src/patterns/breakout/gap.py` | C13 target — gap hierarchy + size filter |
+| `src/patterns/complex/head_shoulders.py` | C11 target — volume validation on Right Shoulder |
+| `src/patterns/classic/dead_cat_bounce.py` | C16 target — ≥15% threshold fix |
+| `src/signals/pattern_boost.py` | C8 — PatternBoostFilter with reliability weights |
+| `src/analysis/ablation_engine.py` | Used by C17 for empirical calibration |
+| `useful_resources/CHART_PATTERN_KNOWLEDGE_BASE.md` | Fibonacci tables, pattern rules (12 parts) |
+| `docs/COMMAND_CHEATSHEET.md` | Check for T10a-6 (Optuna/PyPortfolioOpt docs) |
 
-PurgedKFold tests only a **single chronological path**. CPCV generates φ(N,k) backtest path combinations — each path tests the model against different regime sequences. Paper evidence (ScienceDirect 2024):
+---
 
-- CPCV has **lower PBO** (Probability of Backtest Overfitting) than both PurgedKFold and Walk-Forward
-- CPCV has **higher DSR** (Deflated Sharpe Ratio)
-- Bagged CPCV (aggregating predictions across paths) outperforms single-path CV
+## Verification Checklist (before next handover)
 
-### Reference Implementations
+- [ ] C11 volume/OI validation builds and imports
+- [ ] C12 multi-TP logic tested on SPY 2016-2024 (Sharpe should improve)
+- [ ] C13 gap hierarchy classifies gaps into 4 types
+- [ ] All new files ruff clean
+- [ ] `BESTS.md` updated if any backtests produce new bests
+- [ ] `docs/COMMAND_CHEATSHEET.md` updated for new commands
 
-- **mlfinlab**: `github.com/hudson-and-thames/mlfinlab` — canonical López de Prado implementation (complex, heavy dependency)
-- **markmipt/fast_combinatorial_cv**: `github.com/markmipt/fast_combinatorial_cv` — NumPy-based, scikit-learn compatible, simpler
+---
 
-**Recommendation:** Implement from scratch using the combinatorial math directly (no external dependency). The algorithm is straightforward:
+## Quick Reference
 
-1. Partition N time periods into k groups
-2. Select k-1 groups for training, 1 for testing — this gives k combinations
-3. Repeat for all k=1..N → generates φ(N,k) = N! / (k!·(N-k)!) paths
-4. Purge overlapping labels between train/test (same logic as existing PurgedKFold)
-5. Add embargo buffer after test period
-6. Aggregate metrics across all paths
-
-### Implementation Plan (4 sub-steps)
-
-#### B11.1: Implement `src/ml/cross_validation/cpcv.py`
-
-Create a standalone CPCV module. The class should mirror PurgedKFold's API so it can drop in:
-
-```python
-class CombinatorialPurgedCV:
-    """Combinatorial Purged Cross-Validation for financial time series.
-
-    Generates phi(N,k) = N! / (k! * (N-k)!) backtest paths. Each path:
-    - Partitions total samples into N groups (chronological)
-    - Combines N-k groups for training, k groups for testing
-    - Purges train samples whose label window overlaps with test
-    - Applies embargo buffer between test and next train
-
-    Key difference from PurgedKFold: PurgedKFold splits into k folds and
-    tests each sequentially (single path). CPCV tests ALL possible
-    combinations of k test groups from N total groups (multiple paths).
-    This generates many regime-conditional paths and reduces PBO.
-
-    Args:
-        n_groups: Number of chronological groups to partition data into.
-        n_test_groups: Number of groups to hold out for testing each path.
-        pct_embargo: Fraction of test span to embargo.
-        label_span: Forward return horizon.
-    """
-
-    def __init__(
-        self,
-        n_groups: int = 6,
-        n_test_groups: int = 2,
-        pct_embargo: float = 0.05,
-        label_span: int = 5,
-    ) -> None: ...
-
-    def split(self, X) -> Iterator[tuple[np.ndarray, np.ndarray]]:
-        """Yield (train_idx, test_idx) for each combinatorial path."""
-        ...
-
-    def get_n_splits(self) -> int:
-        """Return total number of combinatorial paths: C(n_groups, n_test_groups)."""
-        from math import comb
-        return comb(self.n_groups, self.n_test_groups)
-```
-
-**Algorithm** (3 steps):
-1. Partition indices chronologically into `n_groups` equal-sized groups
-2. Generate all combinations of `n_test_groups` groups: `itertools.combinations(range(n_groups), n_test_groups)`
-3. For each combination: train = all groups NOT in test combo, test = groups in test combo. Purge train samples within `label_span` of test window. Apply embargo.
-
-**Helper functions** (same as purged_cv.py):
-- `_purge_train_indices(train_idx, test_idx, label_span, embargo)` — removes train indices that leak into test period
-- `_compute_embargo(test_span, pct_embargo)` — embargo buffer size
-
-#### B11.2: Integrate into `train_ml_pipeline_v3.py`
-
-**Files/lines to modify:**
-
-| File | Line(s) | Change |
-|------|---------|--------|
-| `scripts/train_ml_pipeline_v3.py:48` | import | Add `from src.ml.cross_validation.cpcv import CombinatorialPurgedCV` |
-| `scripts/train_ml_pipeline_v3.py:192-300` | `train_with_nested_purged_cv()` | Add `--cv-method cpcv` CLI flag. When `cpcv`, replace inner/outer PurgedKFold calls with CPCV. |
-| `scripts/train_ml_pipeline_v3.py:1206-1210` | CLI | Add `--cv-method` argument (choices: `purged`, `cpcv`, default: `cpcv`) |
-
-**Integration strategy:**
-
-The `train_with_nested_purged_cv()` function should be refactored to accept a `cv_method` parameter:
-
-```python
-def train_with_cv(
-    X: pd.DataFrame,
-    y: pd.Series,
-    horizon: int = DEFAULT_HORIZON,
-    model_type: str = "catboost",
-    cv_method: str = "cpcv",
-) -> dict[str, Any]:
-```
-
-When `cv_method == "cpcv"`:
-- Replace `cv_outer = PurgedKFold(...)` with `cv_outer = CombinatorialPurgedCV(n_groups=6, n_test_groups=2, ...)`
-- Replace `cv_inner = PurgedKFold(...)` with `cv_inner = CombinatorialPurgedCV(n_groups=5, n_test_groups=1, ...)`
-- Log total paths: `C(6,2)=15 outer paths, C(5,1)=5 inner paths`
-
-For the inner loop: CPCV with `n_test_groups=1` is equivalent to standard PurgedKFold (each group tested once). So inner can stay as PurgedKFold for simplicity — or replace both.
-
-**Simplest approach:** Only replace the outer CV loop with CPCV. Inner loop stays as PurgedKFold. This gives us 15 OOS paths (C(6,2)) with 5-fold inner CV for each path.
-
-Add `--cv-method` to CLI in `main()`:
-```python
-parser.add_argument("--cv-method", type=str, default="purged", choices=["purged", "cpcv"],
-                    help="CV method (default: purged). Use 'cpcv' for lower PBO.")
-```
-
-#### B11.3: Add Bagged CPCV variant
-
-Bagged CPCV: train one model per CPCV path, then ensemble predictions via mean.
-
-Add to `train_ml_pipeline_v3.py`:
-- After CPCV completes, train a **final model for each path**
-- Save all models with path index: `pattern_classifier_v3_{sector}_path{i}_{run_id}.pkl`
-- Add `model_paths` list to metadata
-
-Add to `src/strategies/ml_strategy.py`:
-- When `model_paths` is provided (list of paths instead of single path), load all models
-- `predict()` returns mean probability across all path models
-- This gives the Bagged CPCV behavior at inference time
-
-```python
-# In MLStrategy.init():
-if isinstance(self.model_path, list):
-    self._models = []
-    for mp in self.model_path:
-        model = PatternClassifier()
-        model.load(mp)
-        self._models.append(model)
-elif self.model_path:
-    self._model = PatternClassifier()
-    self._model.load(self.model_path)
-```
-
-#### B11.4: Validate CPCV vs PurgedKFold
-
-**Validation workflow:**
-1. Train SPY model with `--cv-method purged` (baseline)
-2. Train SPY model with `--cv-method cpcv` (CPCV, 15 paths)
-3. Compare metrics:
-
-```bash
-# Baseline
-uv run scripts/train_ml_pipeline_v3.py --symbol SPY --fast --cv-method purged
-
-# CPCV
-uv run scripts/train_ml_pipeline_v3.py --symbol SPY --fast --cv-method cpcv
-```
-
-**Success criteria:**
-
-| Metric | PurgedKFold | CPCV Target |
-|--------|-------------|-------------|
-| CV stability (coefficient of variation across paths) | ~0.3 | < 0.2 |
-| Train AUC mean | ? | lower than PurgedKFold (less overfit) |
-| Test AUC mean | ? | same or better |
-| Overfit gap | > 0.15 | < 0.10 |
-| Number of CV paths | 5 | 15 (or φ(N,k)) |
-
-### Key Files (B11 Context)
-
-| File | Line(s) | Purpose | Change |
-|------|---------|---------|--------|
-| `src/ml/cross_validation/cpcv.py` | — | **NEW** — CombinatorialPurgedCV class | Implement CPCV math + split() |
-| `src/ml/purged_cv.py` | 1-194 | Existing PurgedKFold | Refactor _purge helpers into shared utils |
-| `scripts/train_ml_pipeline_v3.py` | 48 | Import PurgedKFold | Add CPCV import |
-| `scripts/train_ml_pipeline_v3.py` | 192-300 | `train_with_nested_purged_cv()` | Add cv_method param, CPCV logic |
-| `scripts/train_ml_pipeline_v3.py` | 943-947 | Stage 6 call site | Pass `cv_method` |
-| `scripts/train_ml_pipeline_v3.py` | 1206-1210 | CLI args | Add `--cv-method` |
-| `src/strategies/ml_strategy.py` | 113-116 | Model loading in `init()` | Handle `model_paths` list for bagged CPCV |
-
-### Validation Commands
-
-```bash
-# Unit test: CPCV split integrity (no overlap)
-uv run python -c "
-from src.ml.cross_validation.cpcv import CombinatorialPurgedCV
-import numpy as np
-cv = CombinatorialPurgedCV(n_groups=6, n_test_groups=2, pct_embargo=0.05, label_span=5)
-print(f'Total paths: {cv.get_n_splits()}')  # Should be C(6,2) = 15
-X = np.arange(1000)
-paths = list(cv.split(X))
-print(f'Generated {len(paths)} paths')
-for train, test in paths[:3]:
-    overlap = len(set(train) & set(test))
-    print(f'  train={len(train)}, test={len(test)}, overlap={overlap}')
-"
-
-# Train with CPCV (fast mode)
-uv run scripts/train_ml_pipeline_v3.py --symbol SPY --fast --cv-method cpcv
-
-# Compare CPCV vs PurgedKFold
-uv run scripts/train_ml_pipeline_v3.py --symbol SPY --fast --cv-method purged
-uv run scripts/train_ml_pipeline_v3.py --symbol SPY --fast --cv-method cpcv
-
-# With sector model training
-uv run scripts/train_ml_pipeline_v3.py --sector tech --fast --cv-method cpcv
-```
-
-### Anti-Patterns (B11-specific)
-
-1. **Don't shuffle/randomize group boundaries** — groups must be chronological. CPCV is NOT random CV.
-2. **Don't use CPCV as a hyperparameter tuner** — it evaluates CV methodology stability. Inner CV still handles HP selection.
-3. **Don't aggregate predictions across all paths naively** — bagged CPCV requires per-path models, not just per-path metrics.
-4. **Don't delete PurgedKFold** — keep it as a `--cv-method purged` baseline for comparison.
-
-### CPCV Math Reference
-
-```
-Given N chronological groups and k test groups per path:
-
-φ(N,k) = C(N,k) = N! / (k! · (N-k)!)
-
-Example: N=6, k=2 → 15 paths
-Each path: train on 4 groups, test on 2 groups
-
-Purging:
-- For test group spanning indices [t1, t2]:
-  - Train sample at index i uses forward return over [i, i+label_span]
-  - If i+label_span >= t1, sample i leaks test info → purge from training
-  - Embargo: skip t2+1 through t2+embargo_days after test period
-
-Compared to PurgedKFold (N=5 folds):
-- PurgedKFold: 5 paths (each fold tested exactly once, 4 train + 1 test)
-- CPCV: 15 paths (each group of 2 tested once, 4 train + 2 test)
-- More paths → lower variance in CV metric estimates
-```
-
-### B11.4 Backtest Validation (After B11.1-11.3 Complete)
-
-```bash
-# Run with bagged CPCV model (after training with --cv-method cpcv)
-uv run scripts/run_ml_backtest.py SPY --trail-stop \
-    --model models/pattern_classifier_v3_SPY_bagged_cpcv.pkl
-
-# Compare against PurgedKFold baseline
-uv run scripts/run_ml_backtest.py SPY --trail-stop \
-    --model models/pattern_classifier_v3_SPY_20260511_224704.pkl
-```
-
-### Expected Outcome
-
-- CPCV OOS Sharpe should be **closer to train Sharpe** (less overfit)
-- CV metric standard deviation should be **lower** (more stable)
-- Single-ticker backtests should show **fewer false positives** (trades only in regime-conditions that passed more test paths)
+| Resource | Location |
+|----------|----------|
+| MEMORY.md | project root |
+| Master plan | `progress_docs/plans/full.md` |
+| Phase 6d detail | `progress_docs/plans/full.md#phase-6d-pdf-insight-integration` |
+| Pattern knowledge base | `useful_resources/CHART_PATTERN_KNOWLEDGE_BASE.md` |
+| Commands | `docs/COMMAND_CHEATSHEET.md` |
+| Leaderboard | `BESTS.md` |
+| Agent catalog | `AGENTS.md` § Agent-Centric Workflows |
+| Project loop | `.kilo/project-loop.md` |

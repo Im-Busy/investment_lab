@@ -9,12 +9,14 @@
 - For equities: check market hours before executing trades. Use `get_market_hours` tool.
 
 ## Trading System Context
-- This is a rule-based multi-pattern trading system with 34+ chart pattern detectors.
-- Pattern detectors live in `src/patterns/` across 7 categories.
+- This is a rule-based multi-pattern trading system with 45+ chart pattern detectors (34 original + 6 FMZ PineScript/JS conversions + expansion in Phase 17).
+- Pattern detectors live in `src/patterns/` across 8 categories (7 original + `fmz/`).
 - Strategy wrappers for `backtesting.py` live in `src/strategies/`.
 - The custom event-driven backtest engine is in `src/backtest/engine.py`.
 - Signal aggregation and confluence scoring is in `src/signals/`.
 - Risk management (position sizing, loss limits, circuit breakers) is in `src/risk/`.
+- PineScript→Python conversion helpers in `src/indicators/pinescript_helpers.py` (17 functions: supertrend, sar, dmi, macd, qqe, vwap_simple, etc.).
+- Research insights tracked in `docs/research_logic_map/insight_registry.md` (65 insights from 20 sources).
 
 ## Backtesting Standards
 - Every strategy must produce valid signal logs before being considered complete.

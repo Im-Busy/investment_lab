@@ -9,6 +9,8 @@ from typing import Any, Callable, Dict, List, Optional
 
 import pandas as pd
 
+import numpy as np
+
 from ..patterns.base import BasePattern, SignalDirection
 from ..signals.position_manager import PositionManager, PositionStatus
 from ..signals.signal_generator import SignalGenerator, AggregatedSignal
@@ -758,6 +760,205 @@ class BacktestEngine:
             start_idx += out_sample_periods
 
         return results
+
+    def run_defensive(
+        self,
+        df: pd.DataFrame,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        progress_callback: Optional[Callable[[int, int], None]] = None,
+    ) -> dict[str, Any]:
+        """Run defensive backtest with time-reversal checks (C6).
+
+        Based on "Against a Universal Trading Strategy" (Svozil, 2026):
+        A strategy that is profitable on both forward and time-reversed
+        price data is likely overfit. The time-reversal heuristic states
+        that momentum/trend-following strategies should fail on reversed
+        data (where trends become mean-reverting).
+
+        This method:
+        1. Runs normal (forward) backtest
+        2. Runs backtest on time-reversed data
+        3. Computes time-reversal score and defensive metrics
+
+        Returns:
+            Dict with forward_result, reversed_result, time_reversal_score,
+            is_overfit_defensive, and interpretation.
+        """
+        forward_result = self.run(
+            df,
+            start_date=start_date,
+            end_date=end_date,
+            progress_callback=progress_callback,
+        )
+
+        reversed_df = df.iloc[::-1].copy()
+        reversed_df.index = df.index
+
+        engine_reversed = BacktestEngine(
+            patterns=self.patterns,
+            config=self.config,
+        )
+        reversed_result = engine_reversed.run(
+            reversed_df,
+            start_date=start_date,
+            end_date=end_date,
+            progress_callback=progress_callback,
+        )
+
+        fwd_metrics = forward_result.metrics or {}
+        rev_metrics = reversed_result.metrics or {}
+
+        fwd_return = fwd_metrics.get("total_return_pct", 0) or 0.0
+        rev_return = rev_metrics.get("total_return_pct", 0) or 0.0
+        fwd_sharpe = fwd_metrics.get("sharpe_ratio", 0) or 0.0
+        rev_sharpe = rev_metrics.get("sharpe_ratio", 0) or 0.0
+        fwd_trades = fwd_metrics.get("total_trades", 0) or 0
+        rev_trades = rev_metrics.get("total_trades", 0) or 0
+
+        if fwd_return > 0 and rev_return > 0:
+            reversed_ratio = rev_return / (fwd_return + 1e-8)
+            if reversed_ratio > 1.0:
+                overfit = True
+                level = "HIGH"
+                interpretation = (
+                    f"Strategy performs BETTER on time-reversed data "
+                    f"({rev_return:.1f}% vs {fwd_return:.1f}%). "
+                    f"Strong signal of overfitting — strategy exploits "
+                    f"statistical artifacts, not real market structure."
+                )
+            elif reversed_ratio > 0.5:
+                overfit = True
+                level = "MEDIUM"
+                interpretation = (
+                    f"Strategy retains {reversed_ratio:.0%} of forward return "
+                    f"on time-reversed data. Overfit likely — too much "
+                    f"performance persists under reversal."
+                )
+            else:
+                overfit = False
+                level = "LOW"
+                interpretation = (
+                    f"Strategy shows some return on reversed data "
+                    f"({rev_return:.1f}%) but much less than forward. "
+                    f"Mostly directional edge, not pure overfit."
+                )
+        elif fwd_return > 0 and rev_return <= 0:
+            overfit = False
+            level = "LOW"
+            reversed_ratio = rev_return / (fwd_return + 1e-8)
+            interpretation = (
+                f"Strategy loses on time-reversed data "
+                f"({rev_return:.1f}% vs {fwd_return:.1f}%). "
+                f"DIRECTIONAL EDGE CONFIRMED — strategy captures "
+                f"genuine market direction, not artifacts."
+            )
+        elif fwd_return <= 0 and rev_return > 0:
+            overfit = True
+            level = "HIGH"
+            reversed_ratio = 999.0
+            interpretation = (
+                f"Strategy only profitable on REVERSED data "
+                f"({rev_return:.1f}%). Forward return negative "
+                f"({fwd_return:.1f}%). Strategy appears to trade "
+                f"AGAINST the market — structural flaw or overfit."
+            )
+        else:
+            overfit = False
+            level = "LOW"
+            reversed_ratio = 0.0 if fwd_return == 0 else rev_return / (fwd_return + 1e-8)
+            interpretation = (
+                "Strategy unprofitable on both forward and reversed data. "
+                "Inconclusive for overfit assessment."
+            )
+
+        time_reversal_score = (
+            1.0 - (1.0 / (1.0 + max(0.0, reversed_ratio))) if reversed_ratio > 0 else 0.0
+        )
+
+        sharpe_ratio = rev_sharpe / (fwd_sharpe + 1e-8) if fwd_sharpe > 0 else 0.0
+        if sharpe_ratio > 1.0:
+            overfit = True
+
+        return {
+            "forward_result": forward_result,
+            "reversed_result": reversed_result,
+            "forward_return_pct": float(round(fwd_return, 2)),
+            "reversed_return_pct": float(round(rev_return, 2)),
+            "forward_sharpe": float(round(fwd_sharpe, 4)),
+            "reversed_sharpe": float(round(rev_sharpe, 4)),
+            "forward_trades": fwd_trades,
+            "reversed_trades": rev_trades,
+            "reversed_return_ratio": float(round(reversed_ratio, 4)),
+            "time_reversal_score": float(round(time_reversal_score, 4)),
+            "is_overfit_defensive": overfit,
+            "overfit_level": level,
+            "interpretation": interpretation,
+        }
+
+    def time_reversal_check(
+        self,
+        df: pd.DataFrame,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+    ) -> dict[str, Any]:
+        """Run time-reversal heuristic check (C6, Svozil 2026 paper).
+
+        Lighter-weight than run_defensive — only compares forward and
+        reversed backtest returns. Does not run the full defensive
+        pipeline (no second BacktestEngine instance).
+
+        The time-reversal heuristic: a strategy that makes money on a
+        path should not make money on the time-reversed path. If it does,
+        it's exploiting statistical artifacts, not real market edges.
+
+        Returns:
+            Dict with is_suspicious, time_reversal_score, and interpretation.
+        """
+        forward_result = self.run(
+            df,
+            start_date=start_date,
+            end_date=end_date,
+        )
+
+        reversed_df = df.iloc[::-1].copy()
+        reversed_df.index = df.index
+
+        engine_check = BacktestEngine(
+            patterns=self.patterns,
+            config=self.config,
+        )
+        reversed_result = engine_check.run(
+            reversed_df,
+            start_date=start_date,
+            end_date=end_date,
+        )
+
+        fwd_ret = (forward_result.metrics or {}).get("total_return_pct", 0) or 0.0
+        rev_ret = (reversed_result.metrics or {}).get("total_return_pct", 0) or 0.0
+
+        is_suspicious = fwd_ret > 0 and rev_ret > 0
+        score = float(np.tanh((rev_ret - (-fwd_ret * 0.3)) / (abs(fwd_ret) + 1e-8)))
+
+        if is_suspicious:
+            interpretation = (
+                f"TIME-REVERSAL FLAG: Strategy profitable on both forward "
+                f"({fwd_ret:.1f}%) and reversed ({rev_ret:.1f}%) data. "
+                f"Overfit likely."
+            )
+        else:
+            interpretation = (
+                f"Time-reversal PASS: Forward {fwd_ret:.1f}%, "
+                f"Reversed {rev_ret:.1f}%. Directional edge confirmed."
+            )
+
+        return {
+            "is_suspicious": is_suspicious,
+            "time_reversal_score": float(round(score, 4)),
+            "forward_return_pct": float(round(fwd_ret, 2)),
+            "reversed_return_pct": float(round(rev_ret, 2)),
+            "interpretation": interpretation,
+        }
 
     def get_pattern_performance(self) -> Dict[str, Dict[str, Any]]:
         """

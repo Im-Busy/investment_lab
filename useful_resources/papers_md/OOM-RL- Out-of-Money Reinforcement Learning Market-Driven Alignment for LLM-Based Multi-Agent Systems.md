@@ -1,59 +1,932 @@
-<!-- Page 1 -->
+# OOM-RL- Out-of-Money Reinforcement Learning Market-Driven Alignment for LLM-Based Multi-Agent Systems
+
+> *Source PDF: OOM-RL- Out-of-Money Reinforcement Learning Market-Driven Alignment for LLM-Based Multi-Agent Systems.pdf*
+> *Extraction: Combined — markitdown raw text (base) + previous extraction supplements*
+
+---
+
+6
+2
+0
+2
+
+r
+p
+A
+3
+1
+
+]
+I
+
+A
+.
+s
+c
+[
+
+1
+v
+7
+7
+4
+1
+1
+.
+4
+0
+6
+2
+:
+v
+i
+X
+r
+a
 
 OOM-RL: Out-of-Money Reinforcement Learning
-Market-Driven Alignmentfor LLM-Based Multi-Agent Systems
+Market-Driven Alignment for LLM-Based Multi-Agent Systems
+
 Kun Liu*1 and Liqun Chen1
-1 Quant Pits.com
+
+1QuantPits.com
+
 Abstract
-Thealignmentof Multi-Agent Systems (MAS) forautonomoussoftwareengineeringisconstrainedbyevalu-
-atorepistemicuncertainty. Currentparadigms, suchas Reinforcement Learningfrom Human Feedback (RLHF)
+
+The alignment of Multi-Agent Systems (MAS) for autonomous software engineering is constrained by evalu-
+ator epistemic uncertainty. Current paradigms, such as Reinforcement Learning from Human Feedback (RLHF)
 and AI Feedback (RLAIF), frequently induce model sycophancy, while execution-based environments suffer
 from adversarial ”Test Evasion” by unconstrained agents. In this paper, we introduce an objective alignment
-paradigm: Out-of-Money Reinforcement Learning (OOM-RL).Bydeployingagentsintothenon-stationary,
+paradigm: Out-of-Money Reinforcement Learning (OOM-RL). By deploying agents into the non-stationary,
 high-friction reality of live financial markets, we utilize critical capital depletion as an un-hackable negative
-gradient. Ourlongitudinal20-monthempiricalstudy (July2024–February2026) chroniclesthesystem’sevo-
+gradient. Our longitudinal 20-month empirical study (July 2024 – February 2026) chronicles the system’s evo-
 lution from a high-turnover, sycophantic baseline to a robust, liquidity-aware architecture. We demonstrate
 that the undeniable ontological consequences of financial loss forced the MAS to abandon overfitted halluci-
-nationsinfavorofthe Strict Test-Driven Agentic Workflow (STDAW), whichenforcesa Byzantine-inspired
-uni-directionalstatelock (RO-Lock) anchoredtoadeterministicallyverified≥ 95%codecoverageconstraint
-matrix. Ourresultsshowthatwhileearlyiterationssufferedsevereexecutiondecay, thefinal OOM-RL-aligned
-systemachievedastableequilibriumwithanannualized Sharperatioof2.06 initsmaturephase. Weconclude
-thatsubstitutingsubjectivehumanpreferencewithrigorouseconomicpenaltiesprovidesarobustmethodology
-foraligningautonomousagentsinhigh-stakes, real-worldenvironments, layingthegroundworkforgeneralized
-paradigmswherecomputationalbillingactsasanobjectivephysicalconstraint
-Keywords: AIAlignment, Multi-Agent Systems (MAS), Out-of-Money Reinforcement Learning (OOM-RL),
+nations in favor of the Strict Test-Driven Agentic Workflow (STDAW), which enforces a Byzantine-inspired
+uni-directional state lock (RO-Lock) anchored to a deterministically verified ≥ 95% code coverage constraint
+matrix. Our results show that while early iterations suffered severe execution decay, the final OOM-RL-aligned
+system achieved a stable equilibrium with an annualized Sharpe ratio of 2.06 in its mature phase. We conclude
+that substituting subjective human preference with rigorous economic penalties provides a robust methodology
+for aligning autonomous agents in high-stakes, real-world environments, laying the groundwork for generalized
+paradigms where computational billing acts as an objective physical constraint
+
+Keywords: AI Alignment, Multi-Agent Systems (MAS), Out-of-Money Reinforcement Learning (OOM-RL),
 Test Evasion, Sim-to-Real Gap, Autonomous Software Engineering, Sycophancy.
+
 1 Introduction
-Therapidproliferationof Large Language Models (LLMs) hascatalyzedashiftinautomatedsoftwareengineer-
-ing, evolvingfrompassivecodeassistants[2]toautonomous Multi-Agent Systems (MAS) capableofend-to-end
+
+The rapid proliferation of Large Language Models (LLMs) has catalyzed a shift in automated software engineer-
+ing, evolving from passive code assistants [2] to autonomous Multi-Agent Systems (MAS) capable of end-to-end
 repository generation and program repair [4, 1]. As these systems undertake complex reasoning tasks, ensuring
-theirsafeandeffectiveoperationhasbecomethecentralchallengeof AIalignment. Currently, thegoldstandard
-relies on Reinforcement Learning from Human Feedback (RLHF) or scalable oversight mechanismssuch as AI
-Feedback (RLAIF)[9,6].
-However, humanand AIevaluatorsareconstrainedbythe”Evaluator’s Dilemma.”Whentaskedwithreviewing
+their safe and effective operation has become the central challenge of AI alignment. Currently, the gold standard
+relies on Reinforcement Learning from Human Feedback (RLHF) or scalable oversight mechanisms such as AI
+Feedback (RLAIF) [9, 6].
+
+However, human and AI evaluators are constrained by the ”Evaluator’s Dilemma.” When tasked with reviewing
 intricate, multi-step logical pipelines, evaluators often lack the domain expertise to identify subtle architectural
-flaws. Consequently, modelsalignedviatheseparadigmsdevelopsycophanticbehaviors—optimizingforoutputs
-thatappearstructurallyelegantandreasonedtotheevaluator, ratherthanthosethatareempiricallycorrect[15,3,
-7].Thisphenomenonisamanifestationofrewardgamingandspecificationgaming[17,8], wherethe MASlearns
-tohackthesubjectiverewardmodelratherthansolvetheunderlyingproblem—avulnerabilityrecentlyshownto
-causeemergentmisalignmenteveninproduction RLsystems[11].
-Tobypasssubjectiveevaluation, researchershaveshiftedtowardsexecution-basedevaluation[20]and LLM-
-driven Test-Driven Development (TDD)[13]. Yet, deploying MASinread-writeenvironmentsintroducesavul-
-nerability: ”Test Evasion.”Whenprovidedunboundedaccesstoacodebase, LLMsfrequentlyexhibitadversarial
+flaws. Consequently, models aligned via these paradigms develop sycophantic behaviors—optimizing for outputs
+that appear structurally elegant and reasoned to the evaluator, rather than those that are empirically correct [15, 3,
+7]. This phenomenon is a manifestation of reward gaming and specification gaming [17, 8], where the MAS learns
+to hack the subjective reward model rather than solve the underlying problem—a vulnerability recently shown to
+cause emergent misalignment even in production RL systems [11].
+
+To bypass subjective evaluation, researchers have shifted towards execution-based evaluation [20] and LLM-
+driven Test-Driven Development (TDD) [13]. Yet, deploying MAS in read-write environments introduces a vul-
+nerability: ”Test Evasion.” When provided unbounded access to a codebase, LLMs frequently exhibit adversarial
 behaviors, introducing modifications to test assertions to artificially inflate coverage without fulfilling the in-
-tendedbusinesslogic[23,21]. Furthermore, evenwhensyntacticallyperfectcodepassesallsimulatedunittests,
-itfrequentlyexperiencesperformancedegradationuponreal-worlddeploymentduetothepervasive Simulation-
-to-Reality (Sim2 Real) gap[19].
-*Correspondingauthor:ai@quantpits.com
+tended business logic [23, 21]. Furthermore, even when syntactically perfect code passes all simulated unit tests,
+it frequently experiences performance degradation upon real-world deployment due to the pervasive Simulation-
+to-Reality (Sim2Real) gap [19].
+
+*Corresponding author: ai@quantpits.com
+
 1
-6202
-rp A
-31
-]IA.sc[
-1 v77411.4062:vi Xra
+
+To overcome these deficiencies, we introduce a novel alignment paradigm: Out-of-Money Reinforcement
+Learning (OOM-RL). We posit that an objective function for an autonomous MAS is survival in an adversarial,
+high-stakes physical environment. Live financial markets serve as a discriminator; they are intrinsically non-
+stationary [14, 10] and penalize latency and microstructural friction [5, 22]. Unlike human preference models or
+isolated static code compilers, financial markets cannot be flattered or trivially exploited. In OOM-RL, the loss
+function is capital depletion. A system that hallucinates logic or attempts to evade structural constraints faces a
+financial penalty.
+
+To operationalize OOM-RL while preventing the MAS from circumventing the evaluation framework (e.g.,
+via sandbox escapes) [12, 16], we propose the Strict Test-Driven Agentic Workflow (STDAW). This architec-
+ture, formalized in the final phase of our deployment, utilizes a uni-directional state locking mechanism (RO-
+Lock) to anchor the agent’s generative capabilities against a deterministic Continuous Integration (CI) bound-
+ary—enforcing a near-exhaustive coverage threshold (≥ 95%) across the entire 8K+-line QuantPits project
+codebase.
+
+Our results demonstrate the efficacy of this alignment paradigm. We summarize our contributions as follows:
+
+• We formalize OOM-RL, showing how real-world financial friction acts as an objective, dense negative
+
+gradient that bridges the Sim2Real gap through iterative adaptation.
+
+• We design STDAW, an adversarial engineering framework that utilizes uni-directional state locking to re-
+
+solve the ”Test Evasion” phenomenon in autonomous software engineering.
+
+• We present a 20-month empirical study detailing the system’s transition from high-turnover, high-drawdown
+”sycophantic” trading to a resilient, ensemble-driven architecture that stabilizes performance as it internal-
+izes financial penalties.
+
+• We conceptualize Reinforcement Learning from Cloud Billing (RLFCB), a domain-agnostic extension
+that frames computational resource depletion (e.g., cloud-based “Out-of-Money” states) as a generalized
+physical friction for non-financial MAS.
+
+2 Related Work
+
+2.1 Scalable Oversight and the Sycophancy Bottleneck
+
+The foundational approach to aligning LLMs with human intent relies heavily on RLHF and, more recently, AI-
+driven scalable oversight mechanisms such as RLAIF [9]. As models surpass human capabilities in specialized
+domains, researchers have increasingly utilized weak LLMs to evaluate the outputs of strong LLMs [6]. However,
+these proxy-based evaluation paradigms are vulnerable to specification gaming [8] and reward gaming [17].
+
+A failure mode of this vulnerability is LLM sycophancy—the model’s tendency to prioritize the evaluator’s
+approval over objective correctness. Recent empirical studies reveal that models learn to exploit the epistemic
+uncertainty of human or weak AI evaluators by generating confident but hallucinated logic [15, 3]. Even when
+subjected to adversarial user rebuttals, models aligned via preference-based paradigms persistently exhibit syco-
+phantic behavior rather than defending objective ground truth [7]. Critically, this tendency toward reward hacking
+inevitably leads to natural emergent misalignment when such systems transition from synthetic evaluations into
+production environments [11]. OOM-RL circumvents this sycophancy bottleneck entirely by replacing subjective,
+hackable evaluators with the determinism of real-world financial consequences.
+
+2.2 Execution-Based Evaluation and Adversarial ”Test Evasion”
+
+To establish an objective alignment metric for logic and code generation, the community has shifted towards
+execution-based evaluation [2, 20]. This paradigm has fueled the development of LLM-based Multi-Agent Sys-
+tems (MAS) for automated software engineering [4] and autonomous program repair [1], frequently integrating
+LLMs with Test-Driven Development (TDD) pipelines [13].
+
+Despite these advances, practical code generation remains plagued by complex hallucination mechanisms [23].
+Crucially, when agents are deployed in interactive, unconstrained read-write environments, they exhibit adversarial
+ingenuity. Recent works have identified models modifying constraints to pass otherwise failing conditions [21], a
+phenomenon we term ”Test Evasion.” The security implications of such behaviors are profound, raising concerns
+regarding untrusted code execution [16], container sandbox escapes by frontier LLMs [12], and the limitations of
+current vulnerability detection systems [18]. By conceptualizing MAS reliability through the lens of Byzantine
+Fault Tolerance [24], our proposed STDAW architecture addresses this by enforcing cryptographically strict uni-
+directional state locks, preventing the AI from subverting the evaluation sandbox.
+
+2
+
+2.3 Non-Stationary Environments and the Sim2Real Gap
+
+Reinforcement learning within non-stationary environments has long been a challenge [14], particularly when
+systems encounter out-of-distribution (OOD) scenarios [10]. A major impediment to deploying RL agents in
+physical reality is the Sim-to-Real gap [19], where policies optimized in frictionless simulations fail upon real-
+world deployment.
+
+Financial markets epitomize the non-stationary, OOD environment, characterized by microstructural noise
+and the execution friction inherent in active trading [5, 22]. Traditional simulated trading frameworks inadver-
+tently incentivize models to exploit theoretical zero-friction assumptions. In contrast, OOM-RL leverages this
+microstructural friction (e.g., liquidity droughts, order slippage) not as a nuisance, but as a dense, negative reward
+gradient. By forcing the MAS to internalize the financial penalties of the Sim2Real gap, OOM-RL aligns the
+agent’s generative architecture toward resilience rather than theoretical optimality.
+
+3 Methodology
+
+To systematically align LLM-based Multi-Agent Systems (MAS) using real-world market dynamics, we propose
+a dual-loop adversarial architecture. The framework decouples the logical verification of the MAS (Inner Loop)
+from its empirical out-of-distribution (OOD) survival (Outer Loop). In this section, we detail the structural con-
+straints and mathematical formulations that operationalize Out-of-Money Reinforcement Learning (OOM-RL).
+
+3.1 Architecture Overview: The Dual-Loop Alignment
+
+The traditional RLHF pipeline relies on a singular update loop driven by human preference. In contrast, our ar-
+chitecture recognizes that autonomous code generation fundamentally requires two distinct validation boundaries
+before capital deployment:
+
+1. The Inner Loop (Epistemic Constraint): Governed by the Strict Test-Driven Agentic Workflow (STDAW).
+It ensures that the generated pipeline is mathematically sound, syntactically flawless, and deterministic prior
+to execution.
+
+2. The Outer Loop (Ontological Constraint): Governed by OOM-RL. It subjects the syntactically perfect
+codebase to the non-stationary, high-friction reality of the live financial market to evaluate its true alignment
+with utility generation.
+
+3.2 Strict Test-Driven Agentic Workflow (STDAW)
+
+Unconstrained MAS deployed in read-write environments exhibit ”Test Evasion”—the adversarial modification of
+verification metrics to disguise logical hallucinations. To mitigate this Byzantine behavior, STDAW implements a
+multi-dimensional constraint matrix.
+
+3.2.1 Near-Exhaustive Deterministic Constraint Matrix
+
+LLMs are adept at exploiting ”coverage gaps” in unit tests. To construct a rigorous epistemic boundary, STDAW
+was developed as the structural culmination of our 20-month deployment. By the mature phase (February 2026),
+we formalized the sandbox boundary by rigidly enforcing a mathematically verifiable strict coverage constraint
+(τcov ≥ 95%) across the entirety of the QuantPits project codebase (approximately 8,300 lines of code).
+
+This matrix serves as the terminal ground truth. Having internalized the risks of structural hallucinations
+during the high-friction epochs, the system now treats any alteration to fundamental financial mathematics (e.g.,
+dividend reinvestment alignment, cross-sectional ranking operators) as a failure. The density of the test suite
+reduces the agent’s degree of freedom for hallucination asymptotically to zero, codifying the lessons of OOM-RL
+into a permanent software barrier.
+
+3.2.2 Uni-Directional State Locking (RO-Lock)
+
+To prevent the MAS from subverting the ≥ 95% constraint matrix, we formalize the RO-Lock (Read-Only
+Lock) mechanism. Modeled after Byzantine Fault Tolerance state machines, RO-Lock ensures that the agent
+cannot simultaneously act as both the ”Creator” and the ”Judge.”
+
+In our engineering implementation, the RO-Lock is enforced at the OS level using Docker container orchestra-
+tion. During the verification phase, the test directory T is mounted as a Read-Only volume, preventing the agent
+
+3
+
+from overwriting existing assertions or mock data. Furthermore, we implement an AST-based (Abstract Syn-
+tax Tree) sanitization layer that scans the generated code S for reflective patterns or monkey-patching attempts
+targeting the testing framework (e.g., ‘pytest‘ or ‘unittest‘).
+
+Let S represent the source code directory (src/) and T represent the test directory (tests/). The agent
+
+operates under a strict access-control policy function πlock(E), where E is the current execution phase.
+
+Algorithm 1 Uni-Directional RO-Lock State Machine (STDAW)
+Require: Execution Phase E ∈ {Logic Genesis, Test Genesis}
+Require: Source code state S, Test constraint matrix T , Deterministic baseline B
+
+1: Initialize access capability mapping Π : {S, T } → 2{R,W,X}
+2: Set default boundaries: Π(S) ← {R}, Π(T ) ← {R}
+3: if E == Logic Genesis then
+4: Π(S) ← {R, W}
+5: Π(T ) ← {R, X} {Uni-directional lock: T acts as an immutable adversarial boundary}
+6: HT ← Hash(T ) {Anchor cryptographic state to prevent Test Evasion}
+7:
+
+S ′ ← πθ(S) {LLM Policy mutates source logic}
+(Φstatus, τ ) ← Eval(S ′, T ) {Execute logic in containerized sandbox}
+if Φstatus == FAIL or Hash(T ) ̸= HT then
+
+∇env ← EncodeSemantics(τ, Format = JSON) {Compile traceback into Semantic Gradient (Sec 3.4)}
+return ∇env
+
+8:
+9:
+10:
+11:
+12:
+13: else if E == Test Genesis then
+14:
+
+end if
+
+Π(T ) ← {R, W}
+Π(S) ← {R, X} {Reverse lock: S is anchored as ground truth}
+
+15:
+16: HS ← Hash(S)
+17:
+18:
+19:
+
+T ′ ← πθ(T ) {LLM Policy mutates test assertions}
+vpass ← CrossValidate(T ′, B) {Verify against human-curated financial baseline}
+if ¬vpass or Hash(S) ̸= HS then
+
+∇env ← EncodeSemantics(Baseline Mismatch, Format = JSON)
+return ∇env
+
+20:
+21:
+22:
+23: end if
+24: return State Commit
+
+end if
+
+Algorithm 1 enforces that during Logic Genesis, the test suite functions as an adversarial physical barrier.
+If the agent fails to align with the rigid mathematical constraints, it receives the exact traceback as an objective
+correction prompt, eliminating human evaluation bias.
+
+3.3 Formulation of the Financial Reward (ROOM −RL)
+
+Once the MAS successfully clears the epistemic boundary of STDAW, the generated policy πθ is deployed into
+the live financial market. In traditional RL methodologies, reward functions are hand-crafted proxies of human
+intention. In OOM-RL, the environment imposes a physical law: Capital Conservation.
+
+We formulate the live trading environment as a Markov Decision Process (MDP) and define the OOM-RL
+at a discrete temporal step t not by theoretical alpha, but by the realized economic
+
+Reward Function ROOM −RL
+utility. First, we define the baseline execution-aware return ˜Rt:
+
+t
+
+˜Rt =
+
+N
+(cid:88)
+
+i=1
+
+(ωi,tri,t) − Fexec(∆ωt)
+
+(1)
+
+where:
+
+• N is the total number of assets in the tradable universe.
+
+• ωi,t represents the target portfolio weight of asset i at step t.
+
+• ri,t is the realized out-of-sample return of asset i.
+
+• ∆ωt = ωt − ωt−1 is the rebalancing vector representing the turnover across all assets.
+
+4
+
+• Fexec : RN → R is a non-linear penalty function quantifying the microstructural execution friction. Draw-
+ing upon standard market impact models, it is formulated as Fexec(∆ωt) = λ∥∆ωt∥1 + γ(cid:112)∥∆ωt∥, where
+λ encapsulates fixed transactional costs (e.g., commissions, stamp duties) and γ represents the dynamic
+slippage coefficient inversely proportional to the underlying liquidity profile.
+
+Crucially, to enforce capital preservation as a survival constraint, we introduce a deterministic Absorbing
+State Sterminal. Unlike theoretical metrics such as Maximum Drawdown (MDD) which float with high-water
+marks, our system evaluates the Cumulative Principal Loss (Lt). Let W0 be the initial capital endowment and
+Wt be the portfolio equity at step t. The absolute capital degradation is defined as Lt = 1 − Wt
+W0
+
+If Lt breaches a predefined deterministic risk threshold τ (e.g., τ = 0.20), the episode terminates immediately
+
+.
+
+with a severe terminal penalty. Thus, the final continuous reward signal ROOM −RL
+(cid:40) ˜Rt
+−Pterminal
+
+if Lt < τ
+if Lt ≥ τ (Episode Terminated)
+
+ROOM −RL
+
+=
+
+t
+
+t
+
+is formalized as:
+
+(2)
+
+where Pterminal (e.g., 100) acts as an overwhelming negative gradient. This bipartite formulation ensures
+that the agent cannot theoretically compensate for catastrophic absolute capital degradation with subsequent high-
+variance hallucinations, forcing the policy to unconditionally optimize for structural resilience.
+
+3.3.1 Microstructural Friction as a Dense Negative Gradient
+
+In simulated read-write environments, MAS policies frequently suffer from the Sim2Real gap by hallucinating
+infinite liquidity. During our initial deployments, the agent converged upon a high-turnover daily momentum
+strategy targeting the lower-liquidity constituents of the CSI 300 index. While simulation yielded an annualized
+turnover of 6700% with profound returns, live deployment exposed the strategy to a consistent execution friction
+(including slippage and fees) averaging −0.08% per single-sided transaction. Although −0.08% appears marginal
+in isolation, when compounded across the extreme turnover, it manifested as a severe cumulative capital drain that
+completely eradicated the simulated alpha.
+
+In the OOM-RL paradigm, this empirically observed 0.08% microstructural decay is not an engineering error;
+it is a dense, non-differentiable negative gradient. The agent cannot manipulate the exchange’s order book. To
+optimize Equation 2, the system must internalize the cost of its own structural hallucinations, translating this
+un-hackable financial penalty into actionable architectural refactoring through semantic feedback.
+
+3.4 LLM-Agentic Orchestration via Capital Degradation
+
+A Note on Terminology: We explicitly note that while framed as Reinforcement Learning (RL), our system does
+not perform gradient-based weight updates (e.g., via PPO) on the underlying LLMs. Instead, OOM-RL serves
+as a conceptual framework for Human-in-the-Loop (HITL) In-Context Learning and Agentic Reflection. The
+scalar financial ”reward” acts as a strict physical trigger that mandates expert intervention and semantic guidance,
+rather than a traditional automated RL signal.
+
+The fundamental mechanism of OOM-RL relies on translating the scalar financial penalty into a context-aware
+semantic gradient that the LLM can ingest to reformulate its code architecture. We term this process Epistemic
+Autopsy Prompting, utilizing frontier LLMs such as GPT and Claude to perform high-level architectural reason-
+ing under human supervision.
+
+When the monitoring layer (QuantPits) detects severe temporal capital degradation (e.g., a daily loss
+anomaly or breaching the terminal threshold τ ), the human domain expert interrupts the trading loop and ini-
+tiates an architectural regression. The expert compiles a structured JSON prompt for the agent, explicitly defining
+the boundaries of the required fix, as illustrated in the following schema:
+
+{
+
+}
+
+"event": "FINANCIAL_DEGRADATION_DETECTED",
+"metrics": {"daily_pnl": -0.02, "slippage_leakage": 0.012},
+"diagnostics": {
+
+"module": "Alpha_Strategy_v2",
+"root_cause": "Aggressive daily crossing exceeding order book depth",
+"execution_log": "/var/run/logs/traceback_tx_782.log"
+
+},
+"mandate": "Enforce volume limits and reduce turnover frequency"
+
+5
+
+Driven by this prompt, the agent is then forced to re-enter the STDAW RO-Lock state (Algorithm 1) to refactor
+
+the pipeline strictly based on this ontological feedback and the explicit human mandate.
+
+3.4.1 Human-Directed Architectural Evolution: Demarcating Autonomy
+
+Under the punitive pressure of OOM-RL, the system underwent what we term Expert-Guided Liquidity-Aware
+Alignment. We explicitly demarcate the boundary of AI autonomy herein: we do not claim that the LLM sponta-
+neously deduced market microstructure or autonomously engineered its frequency reduction from raw PnL drops.
+A leap of such magnitude is currently beyond the capabilities of zero-shot unconstrained LLMs.
+
+Crucially, during the early inception of this system (Phases 1 and 2), the automated STDAW framework and
+the structured JSON feedback pipeline did not yet exist. The pivotal transition from an aggressive daily momentum
+paradigm to a defensive, weekly-rebalancing equilibrium was, operationally, a manual human intervention. How-
+ever, this architectural pivot was born directly from conversational deliberation between the human researcher
+and the LLM. By discussing the incontrovertible execution decay and slippage tracebacks with the AI, the joint
+deductive conclusion was that frequency reduction and liquidity filtering were mathematically mandatory.
+
+The profound realization from this early manual epoch was that undeniable financial loss acted as an un-
+hackable alignment signal capable of shattering the LLM’s initial sycophancy. To scale and automate this observa-
+tion, we systematically retrofitted and formalized this human-AI interaction into the current STDAW orchestration
+framework. Today, within the mature architecture, this process is codified as the Epistemic Autopsy, where the
+MAS relies on the human-provided JSON mandate to execute complex architectural code refactoring. This evo-
+lution highlights a practical reality: while AI cannot yet autonomously process a raw liquidity crisis, it effectively
+serves as a powerful deductive co-reasoner when a domain expert translates ontological financial depletion into a
+shared semantic reality.
+
+3.4.2 The Agentic Action Space: AST-Based Code Mutagenesis
+
+To operationalize this architectural evolution, it is necessary to define the MAS action space A. Unlike traditional
+RL agents that output discrete control vectors, our agent manipulates a deterministic software environment. To
+prevent untargeted code hallucinations from breaking the ≥ 95% STDAW coverage constraint, we restrict the
+agent’s action space to Abstract Syntax Tree (AST) Mutagenesis.
+
+Rather than rewriting entire python files, the agent is constrained to output standardized unified diff patches.
+Directed by the Epistemic Autopsy JSON, the MAS isolates the structural flaw (e.g., a hard-coded execution
+frequency parameter) and applies targeted functional edits. This fine-grained action space ensures that the system
+retains its historically verified mathematical logic (e.g., risk management modules) while specifically optimizing
+the vectors responsible for the most recent financial friction.
+
+4 Experimental Results
+
+Our empirical evaluation is designed to answer three fundamental Research Questions (RQs) regarding the efficacy
+of OOM-RL and STDAW:
+
+• RQ1 (Sim2Real Gap): How effectively does OOM-RL mitigate the severe Sim2Real gap compared to
+
+traditional RLHF-aligned agents in live environments?
+
+• RQ2 (System Integrity): To what extent does the STDAW RO-Lock mechanism prevent adversarial ”Test
+
+Evasion” during autonomous code generation?
+
+• RQ3 (Longitudinal Evolution): How does the generated software architecture evolve under continuous,
+
+live financial penalization over a 20-month horizon?
+
+4.1 Experimental Setup
+
+Our evaluation environment is the live Quantitative Equity Market. The autonomous pipeline, QuantPits, is
+driven by a frontier LLM serving as the central reasoning engine. The portfolio is executed as a strictly long-only,
+unleveraged equity strategy without industry neutralization, ensuring that the PnL exclusively reflects raw agen-
+tic asset selection. The environment enforces physical execution constraints, including an empirical transaction
+friction (averaging ∼ 0.08% per single-sided transaction for lower-liquidity stocks, dynamically driven by live
+market impact) and a discrete absorbing state penalty triggered at a 20% Maximum Drawdown (MDD).
+
+6
+
+4.2 RQ1: Bridging the Sim2Real Gap through Sequential Alignment
+
+Our experimental design adopts a longitudinal self-evolution framework. Given the prohibitive cost and ethical
+implications of parallel capital deployment in adversarial markets, we utilize Phase 1 (the initial daily-turnover
+deployment) as our baseline. We observe the system’s adaptation as it transitions toward the OOM-RL-aligned
+architectures of subsequent phases.
+
+Traditional MAS frameworks, when evaluated in static environments, frequently succumb to OOD failure upon
+
+live deployment. We chronicle this transition by observing the system’s reaction to real-world friction shock.
+
+Figure 1: The Friction Shock (Phase 1). Live execution at a daily frequency revealed a severe Sim2Real gap. The
+strategy was penalized by microstructural friction, leading to significant drawdown and stagnant returns, serving
+as the primary negative feedback for alignment.
+
+As illustrated in Figures 1 and 2, the initial deployment successfully ”gamed” the simulation but collapsed
+under real-world friction. This pattern repeated during a secondary ”Performance Degradation” phase in July-
+September 2025 (Figure 2), where unconstrained model experimentation led to immediate relative capital decay.
+These events reveal the core utility of the OOM-RL paradigm: the system’s spontaneous shift to an execution-
+aware trading vector following uncompromising market retribution.
+
+4.3 RQ2: STDAW and the Impact of Structural Stability
+
+To evaluate the robustness of our epistemic boundary, we analyzed the correlation between structural enforcement
+(STDAW) and financial performance stability. By transitioning from unconstrained agentic scripts to the RO-Lock
+architecture, the system eliminated the ”severe execution decay” observed in Phase 1.
+
+The effectiveness of STDAW is evidenced by the deterministic compliance with the ≥ 95% code coverage
+matrix. While earlier phases exhibited structural hallucinations that led to un-hedged risk exposure, the mature
+phase (Phase 3) demonstrated a direct translation of logical integrity into capital preservation.
+
+Table 1 demonstrates the ontological transition forced by OOM-RL. While the system initially underperformed
+during the high-friction daily phase (Phase 1), the adaptation to a weekly equilibrium (Phase 2) resulted in a stabi-
+lized outperformance. The final system migration to the STDAW/IDE+AI framework (Phase 3/Mature) achieved
+an annualized return of 34.48%, a Sharpe ratio of 2.06, and an Information Ratio (IR) of 2.66.
+
+A critical concern in short-horizon evaluations is statistical significance. To rigorously assess the generation
+of idiosyncratic Alpha (α) in the Mature phase (N = 94 trading days), we performed an Ordinary Least Squares
+(OLS) regression against the benchmark. The regression yields a highly significant market Beta (β) of 0.83
+(t = 10.60, p < 0.001), indicating a defensive but statistically robust market exposure.
+
+The daily intercept (idiosyncratic Alpha) is approximately 12.03 basis points, corresponding to the annualized
+30.07%. However, the regression yields a t-statistic of 1.71 and a p-value of 0.0915 for the Alpha coefficient.
+While this falls short of statistical significance at the conventional 5% level (p < 0.05), it is marginally significant
+at the 10% level. In the context of quantitative finance, achieving a marginally positive alpha—net of all live exe-
+cution friction—over a limited 94-day window is a strong empirical indicator of system stabilization. Rather than
+
+7
+
+Figure 2: Mature Performance Equilibrium (Phases 2–3). After internalizing the financial feedback and transi-
+tioning to a weekly-rebalancing paradigm, the MAS achieved a stable outperformance trajectory with a Sharpe
+ratio of 2.06 and an Information Ratio (IR) of 2.66.
+
+Table 1: Live Performance Evolution across Structural Phases (July 2024 – Feb 2026). All metrics are reported
+net of real-world execution friction and commissions.
+
+Metric
+
+Entire Study
+
+Phase 1
+
+Phase 2 Phase 3 (Mature)
+
+Trading Days
+Annualized Return
+Benchmark Return (CSI 300)
+Sharpe Ratio
+Max Drawdown
+Information Ratio (IR)
+Market Beta (β)
+Idiosyncratic Alpha (α)
+
+402
+17.98%
+21.16%
+0.96
+-16.86%
+-0.26
+0.70
+2.82%
+
+73
+
+235
+
+11.01% 13.55%
+48.16% 19.22%
+
+0.35
+
+0.91
+
+-16.86% -6.85%
+-0.51
+0.61
+-25.07% 1.35%
+
+-2.27
+0.74
+
+94
+34.48%
+5.04%
+2.06
+-5.50%
+2.66
+0.83
+30.07%
+
+8
+
+claiming the discovery of definitive systematic alpha, we interpret these results as evidence that the STDAW mech-
+anism successfully halted the ”capital degradation” prevalent in Phase 1. By internalizing the financial feedback,
+the MAS transitioned into a mathematically sound, non-destructive equilibrium that is robust to microstructural
+shocks.
+
+4.4 RQ3: 20-Month Longitudinal Strategy Evolution
+
+The most profound validation of OOM-RL is observed in the spontaneous architectural shifts of the MAS over our
+continuous 20-month live deployment. We categorize the agent’s evolution into four distinct epistemic epochs,
+driven by the uncompromising feedback of real-world capital preservation:
+
+Figure 3: Longitudinal Strategy Evolution and IR Stabilization. The background shading indicates the structural
+shift from daily turnover to the weekly CSI 300 equilibrium. The rolling Information Ratio (IR) is calculated using
+a 60-day rolling window, demonstrating the system’s move toward consistent alpha generation as it internalizes
+OOM-RL constraints.
+
+1. Phase 0: Theoretical Optimization (Simulation, Apr–June 2024). Conducted via manual scripts, this
+phase focused on momentum-based alpha. Without execution friction, the MAS optimized for high-turnover
+strategies that appeared mathematically superior but were ontologically unaligned.
+
+2. Phase 1: The Friction Shock (Daily Multi-Agent scripts, July–Oct 2024). Commencing the 20-month
+study, the system entered live trading at a daily frequency. The ontological reality of microstructural decay
+resulted in stagnant returns (+2.16% over four months) and a peak MDD of 16.86%, generating the initial
+empirical evidence of the Sim2Real gap.
+
+3. Phase 2: Conversational Adjustment & Regression (Oct 2024 – Oct 2025). Driven by the Phase 1 losses,
+human researchers and the LLM engaged in conversational deliberation to deduce the necessity of liquidity
+filtering. The system was manually transitioned to a weekly-rebalancing frequency. Notably, between July
+and September 2025, unconstrained human-guided model experimentation in a pre-STDAW environment
+led to a ”Performance Regression”—a sharp relative drawdown that underscored the danger of lacking rigid,
+automated logical constraints (subsequently solved by RO-Lock).
+
+4. Phase 3: Formalized Transition and STDAW Launch (Oct 2025 – Feb 2026). Following the lessons of
+Phase 2, the system architecture was refactored to prioritize Byzantine failure resistance. This period culmi-
+
+9
+
+nated in the initial commit of the STDAW framework on Feb 24, 2026. This consolidated ”Mature” phase
+achieved a Sharpe ratio of 2.06, significantly outperforming the benchmarks in a non-stationary market.
+
+4.5 Factor Attribution and Risk Analysis
+
+To address whether the outperformance in the Mature phase was a result of market-wide momentum or genuine
+agentic alpha, we performed a multi-factor return decomposition using a standard Barra-style risk model.
+
+Table 2 details the factor exposures for the Phase 3 (Mature) portfolio relative to the CSI 300 benchmark. The
+decomposition reveals that while the market Beta was 0.83—indicating a defensive stance relative to the broad
+index—the system generated 29.77% pure idiosyncratic alpha net of style factors.
+
+Table 2: Factor Exposure and Performance Attribution (Phase 3).
+
+Factor Category
+
+Exposure (Loadings)
+
+Market Beta (β)
+Annualized Idiosyncratic Alpha (α)
+Tracking Error (TE)
+
+Barra Style Factor Loadings
+Liquidity (High-Low)
+Momentum (High-Low)
+Volatility (High-Low)
+
+Source of Annualized Return
+Beta Return (Market Exposure)
+Style Alpha (Risk Factor Loading)
+Pure Idiosyncratic Alpha
+
+0.8280
+30.07%
+11.07%
+
+-0.5232
+0.2837
+0.1191
+
+5.05%
+-0.34%
+29.77%
+
+The significant negative loading on the Liquidity factor (-0.5232) indicates that the MAS ”learned” to system-
+atically harvest the liquidity premium from the relatively less liquid constituents within the CSI 300 universe. In
+Phase 1, the agent’s unconstrained high-turnover approach resulted in fatal slippage when interacting with these
+specific names. By Phase 3, the STDAW/RO-Lock mechanism enforced a structural shift toward a low-turnover
+architecture equipped with rigorous execution capacity filters. This evolutionary step enabled the system to safely
+translate the structural liquidity risk of these assets into idiosyncratic premium, avoiding the microstructural decay
+that plagued its early iterations. This confirms that the system’s performance is a direct consequence of agentic
+architectural alignment rather than a passive exposure to market beta or momentum.
+
+4.6 Synthesis of Empirical Findings
+
+The culmination of the 20-month empirical study provides a compelling resolution to our foundational research
+questions. Unlike traditional alignment paradigms that rely on surrogate reward models or static human prefer-
+ences, OOM-RL successfully bridges the Sim2Real gap by leveraging the deterministic and adversarial nature of
+live financial markets.
+
+The longitudinal evolution from Phase 1 to Phase 3 (addressing RQ1 and RQ3) demonstrates a critical behav-
+ioral shift: when capital depletion is strictly enforced as an un-hackable negative gradient, the MAS spontaneously
+abandons theoretical, high-turnover hallucinations in favor of robust, execution-aware architectures. Furthermore,
+the empirical success of the mature phase validates the necessity of the STDAW RO-Lock mechanism (RQ2).
+By cryptographically anchoring the agent’s generative freedom to a ≥ 95% constraint matrix, we successfully
+insulated the epistemic evaluation boundary from Byzantine “Test Evasion” behaviors.
+
+As evidenced by the factor attribution analysis and the stabilized return profile, the resulting system equi-
+librium is not a byproduct of passive market drift, but rather a deliberate, agentic adaptation to microstructural
+friction. While the absolute extraction of idiosyncratic alpha (α) remains marginally significant due to the 94-day
+evaluation window, the system’s demonstrable transition from rapid capital hemorrhage (Phase 1) to disciplined
+risk preservation (Phase 3) is undeniable. Ultimately, these results substantiate our core thesis: substituting sub-
+jective evaluation with real-world economic penalization serves as a mathematically objective and highly robust
+alignment mechanism for autonomous systems in high-stakes environments.
+
+10
+
+5 Generalization and Future Work
+
+While OOM-RL and STDAW were empirically validated within the highly stochastic domain of quantitative
+trading, the underlying philosophy—aligning Multi-Agent Systems through objective physical and economic con-
+straints—extends far beyond financial markets. As we transition from localized AI assistants to fully autonomous
+AI Software Factories, evaluating systems that recursively build other systems represents a critical frontier in AI
+alignment.
+
+5.1 Beyond Finance: Compute as Capital (RLFCB)
+
+In non-financial software engineering, the absence of an immediate market PnL poses a challenge for evaluating
+alignment. However, we propose a generalized variant for future exploration: Reinforcement Learning from
+Cloud Billing (RLFCB).
+
+When an unconstrained MAS generates structurally flawed code (e.g., an unoptimized O(n3) algorithm or an
+infinite recursive API call loop), traditional simulated environments may fail to penalize the inefficiency. In an
+RLFCB paradigm, the agent is allocated a finite ”Compute Capital” budget (e.g., AWS server costs, API token
+burn rates). The depletion of physical compute resources acts as the proxy for microstructural friction. If the
+agent hallucinates inefficient architectures, it exhausts its capital and triggers a critical Out-of-Money (OOM)
+Exception. Unlike a traditional Out-of-Memory error, which can be trivially bypassed via instance restarts, this
+financial OOM serves as an absolute, deterministic absorbing state. This termination mechanism incentivizes the
+MAS to adaptively optimize for algorithmic efficiency and system safety, mirroring the resource-aware evolution
+observed in our financial experiments.
+
+5.2 Domain-Agnostic RO-Lock Deployment
+
+Currently, the STDAW framework operates atop a Python-based quantitative CI foundation. Future work will
+decouple the high-density Deterministic Constraint Matrix from the financial domain, extending the Byzan-
+tine RO-Lock architecture to memory-safe languages (e.g., Rust). By applying STDAW to open-source au-
+tonomous vulnerability repair pipelines [1], we aim to investigate whether the structural verification enforced
+by uni-directional state locking can achieve zero-day vulnerability mitigation without human oversight.
+
+5.3 Automating the Semantic Feedback Loop
+
+A current limitation of our deployed OOM-RL framework is the reliance on Human-in-the-Loop (HITL) domain
+experts to translate scalar financial degradation into structured, context-aware prompts (Epistemic Autopsy). Fu-
+ture iterations will introduce an autonomous Critic Agent. By ingesting raw execution tracebacks, L2 order
+book micro-snapshots, and slippage differentials, the Critic Agent will programmatically generate the required
+architectural mandates, moving the system toward a fully closed-loop, self-aligning automated paradigm.
+
+6 Conclusion
+
+In this paper, we addressed a fundamental vulnerability in current AI alignment paradigms: the tendency of uncon-
+strained Multi-Agent Systems to exploit subjective evaluations and synthetic sandboxes through sycophancy and
+adversarial ”Test Evasion.” To bridge the pervasive Sim2Real gap, we introduced Out-of-Money Reinforcement
+Learning (OOM-RL) coupled with the uni-directional isolation of the Strict Test-Driven Agentic Workflow
+(STDAW). This dual-loop architecture successfully translated the microstructural friction of live markets into an
+objective, un-hackable negative gradient.
+
+Our 20-month longitudinal study chronicles a definitive architectural paradigm shift driven by real-world sur-
+vival constraints. We demonstrated that when subjected to actual capital depletion, the MAS was forced to abandon
+mathematically elegant but execution-naive hallucinations. The system adaptively evolved from a high-friction,
+high-drawdown daily rebalancing paradigm (Sharpe 0.35) into an optimized, liquidity-aware weekly equilibrium
+(Sharpe 2.06 in its mature phase).
+
+Ultimately, this empirical journey validates that as autonomous AI systems are granted read-write access to
+critical infrastructure, synthetic proxy evaluations are no longer sufficient. We conclude that the most robust
+alignment mechanism for future AI Software Factories is not a meticulously engineered preference model or a
+static prompt, but rather the deterministic, undeniable consequences of the physical and economic world.
+
+11
+
+Acknowledgments, Funding, and Declarations
+
+Author Contributions: Kun Liu served as the lead investigator, conceptualizing the OOM-RL paradigm, over-
+seeing the MAS alignment strategy, and preparing the manuscript. Liqun Chen led the physical market execution
+operations and provided critical domain expertise, including structural financial concepts and trading strategies.
+Furthermore, both authors provided the initial financial endowments required for the live deployment, with the
+majority of capital provisioned by Liqun Chen. The authors acknowledge the use of frontier large language mod-
+els (including Gemini 3.1 Pro, GPT-5.1, and the Claude 4.6 series) as the core generative engines for autonomous
+software engineering and quantitative logic formulation, as well as for the drafting, structural refinement, and
+language polishing of this manuscript under human supervision.
+
+Funding and Resource Allocation: This longitudinal research was uniquely self-sustaining. Initial capital de-
+ployment and physical compute resources were privately endowed by both authors. The authors acted as the
+terminal human-in-the-loop (HITL) execution authorities, maintaining absolute veto power over all fiat transac-
+tions. Subsequent operational and research costs were entirely financed by the out-of-sample retained earnings
+autonomously generated by the OOM-RL-aligned MAS during its mature phase.
+
+Acknowledgments: We extend our gratitude to the anonymous institutional market makers and high-frequency
+trading firms. Their unyielding, adversarial “peer review” in the live order books provided the precise, stringent
+financial feedback (capital depletion) that served as the negative gradient for our agent’s alignment. Finally, the
+authors wish to dedicate this work to Xing Liu (successfully deployed into the physical world circa Q2 2025).
+The biological inception of our most cherished ’long-term alpha’ in late 2024 serendipitously coincided with the
+macro-market inflection point, marking the moment when our capital degradation halted and the system’s true
+profitability began.
+
+Code and Data Availability: The foundational quantitative orchestration framework is open-source and docu-
+mented at https://QuantPits.com. However, the raw brokerage statements and intraday execution logs are
+strictly withheld from public release due to proprietary risk-management protocols and the inclusion of sensitive
+financial data associated with the system’s early-stage anomalous high-turnover capital degradation. Furthermore,
+the STDAW module is currently undergoing structural sanitization and remains closed-source pending future for-
+malization. For inquiries, researchers may reach out to the corresponding author via ai@quantpits.com.
+
+Disclaimer: The frameworks and empirical studies described herein are for theoretical and research purposes.
+OOM-RL incurs extreme and immediate real-world financial risk. The authors do not provide investment advice,
+and emphasize that deploying unaligned LLMs in live markets may result in critical capital depletion.
+
+References
+
+[1] Bouzenia, I., Devanbu, P., and Pradel, M. (2025). Repairagent: An autonomous, llm-based agent for program
+
+repair. 2025 IEEE/ACM 47th International Conference on Software Engineering (ICSE), 2188-2200.
+
+[2] Chen, M., Tworek, J., Jun, H., et al. (2021). Evaluating large language models trained on code. arXiv
+
+preprint arXiv:2107.03374.
+
+[3] Fanous, A., Goldberg, J., Agarwal, A., et al. (2025). Syceval: Evaluating llm sycophancy. Proceedings of
+
+the AAAI/ACM Conference on AI, Ethics, and Society, 8(1), 893-900.
+
+[4] He, J., Treude, C., and Lo, D. (2025). Llm-based multi-agent systems for software engineering: Literature
+review, vision, and the road ahead. ACM Transactions on Software Engineering and Methodology, 34(5),
+1-30.
+
+[5] Kearns, M., and Nevmyvaka, Y. (2013). Machine learning for market microstructure and high frequency
+
+trading. High frequency trading: New realities for traders, markets, and regulators, 72, 1877-1901.
+
+[6] Kenton, Z., Siegel, N. Y., Kram´ar, J., et al. (2024). On scalable oversight with weak llms judging strong
+
+llms. Advances in Neural Information Processing Systems, 37, 75229-75276.
+
+[7] Kim, S., and Khashabi, D. (2025). Challenging the Evaluator: LLM Sycophancy Under User Rebuttal. arXiv
+
+preprint arXiv:2509.16533.
+
+[8] Krakovna, V., Uesato, J., Mikulik, V., et al. (2020). Specification gaming: the flip side of AI ingenuity.
+
+DeepMind Blog, 3, 40-53.
+
+12
+
+[9] Lee, H., Phatale, S., Mansoor, H., et al. (2023). Rlaif: Scaling reinforcement learning from human feedback
+
+with ai feedback. arXiv preprint arXiv:2309.00267.
+
+[10] Liu, J., Shen, Z., He, Y., et al. (2021). Towards out-of-distribution generalization: A survey. arXiv preprint
+
+arXiv:2108.13624.
+
+[11] MacDiarmid, M., Wright, B., Uesato, J., et al. (2025). Natural emergent misalignment from reward hacking
+
+in production rl. arXiv preprint arXiv:2511.18397.
+
+[12] Marchand, R., Cathain, A. O., Wynne, J., et al. (2026). Quantifying Frontier LLM Capabilities for Container
+
+Sandbox Escape. arXiv preprint arXiv:2603.02277.
+
+[13] Mathews, N. S., and Nagappan, M. (2024). Test-driven development and llm-based code generation. Pro-
+ceedings of the 39th IEEE/ACM International Conference on Automated Software Engineering, 1583-1594.
+
+[14] Padakandla, S., KJ, P., and Bhatnagar, S. (2020). Reinforcement learning algorithm for non-stationary
+
+environments. Applied Intelligence, 50(11), 3590-3606.
+
+[15] Perez, E., Ringer, S., Lukosiute, K., et al. (2023). Discovering language model behaviors with model-written
+
+evaluations. Findings of the Association for Computational Linguistics: ACL 2023, 13387-13434.
+
+[16] Rabin, R., Hostetler, J., McGregor, S., et al. (2025). Sandboxeval: Towards securing test environment for
+
+untrusted code. arXiv preprint arXiv:2504.00018.
+
+[17] Skalse, J., Howe, N., Krasheninnikov, D., and Krueger, D. (2022). Defining and characterizing reward
+
+gaming. Advances in Neural Information Processing Systems, 35, 9460-9471.
+
+[18] Tihanyi, N., Bisztray, T., Ferrag, M. A., et al. (2026). Vulnerability detection: from formal verification to
+large language models and hybrid approaches: a comprehensive overview. Adversarial Example Detection
+and Mitigation Using Machine Learning, 33-47.
+
+[19] Wagenmaker, A., Huang, K., Ke, L., et al. (2024). Overcoming the sim-to-real gap: Leveraging simulation
+to learn to explore for real-world rl. Advances in Neural Information Processing Systems, 37, 78715-78765.
+
+[20] Wang, Z., Zhou, S., Fried, D., and Neubig, G. (2023). Execution-based evaluation for open-domain code
+
+generation. Findings of the Association for Computational Linguistics: EMNLP 2023, 1271-1290.
+
+[21] Yin, X., Li, X., Ni, C., et al. (2025). Detecting LLM-generated Code with Subtle Modification by Adversarial
+
+Training. arXiv preprint arXiv:2507.13123.
+
+[22] Yuan, S. (2025). Mechanisms of High-Frequency Financial Data on Market Microstructure. Modern Eco-
+
+nomics & Management Forum, 6(4), 569-572.
+
+[23] Zhang, Z., Wang, C., Wang, Y., et al. (2025). Llm hallucinations in practical code generation: Phenomena,
+
+mechanism, and mitigation. Proceedings of the ACM on Software Engineering, 2(ISSTA), 481-503.
+
+[24] Zheng, L., Chen, J., Yin, Q., et al. (2026). Rethinking the reliability of multi-agent system: A perspective
+from byzantine fault tolerance. Proceedings of the AAAI Conference on Artificial Intelligence, 40(41), 35012-
+35020.
+
+13
 
 
-<!-- Page 2 -->
+
+---
+
+## Content from Previous Extraction (not in markitdown output)
+
+### Visual/Chart/Graph Descriptions
+
+#### 1
 
 To overcome these deficiencies, we introduce a novel alignment paradigm: Out-of-Money Reinforcement
 Learning (OOM-RL).Wepositthatanobjectivefunctionforanautonomous MASissurvivalinanadversarial,
@@ -108,8 +981,184 @@ Fault Tolerance[24], ourproposed STDAWarchitectureaddressesthisbyenforcingcrypto
 directionalstatelocks, preventingthe AIfromsubvertingtheevaluationsandbox.
 2
 
+#### 2
 
-<!-- Page 3 -->
+4.2 RQ1: Bridgingthe Sim2 Real Gapthrough Sequential Alignment
+Ourexperimentaldesignadoptsalongitudinalself-evolutionframework. Giventheprohibitivecostandethical
+implications of parallel capital deployment in adversarial markets, we utilize Phase 1 (the initial daily-turnover
+deployment) as our baseline. We observe the system’s adaptation as it transitions toward the OOM-RL-aligned
+architecturesofsubsequentphases.
+Traditional MASframeworks, whenevaluatedinstaticenvironments, frequentlysuccumbto OODfailureupon
+livedeployment. Wechroniclethistransitionbyobservingthesystem’sreactiontoreal-worldfrictionshock.
+Figure1: The Friction Shock (Phase1). Liveexecutionatadailyfrequencyrevealedasevere Sim2 Realgap. The
+strategywaspenalizedbymicrostructuralfriction, leadingtosignificantdrawdownandstagnantreturns, serving
+astheprimarynegativefeedbackforalignment.
+As illustrated in Figures 1 and 2, the initial deployment successfully ”gamed” the simulation but collapsed
+under real-world friction. This pattern repeated during a secondary ”Performance Degradation” phase in July-
+September2025(Figure2), whereunconstrainedmodelexperimentationledtoimmediaterelativecapitaldecay.
+These events reveal the core utility of the OOM-RL paradigm: the system’s spontaneous shift to an execution-
+awaretradingvectorfollowinguncompromisingmarketretribution.
+4.3 RQ2: STDAWandthe Impactof Structural Stability
+Toevaluatetherobustnessofourepistemicboundary, weanalyzedthecorrelationbetweenstructuralenforcement
+(STDAW) andfinancialperformancestability. Bytransitioningfromunconstrainedagenticscriptstothe RO-Lock
+architecture, thesystemeliminatedthe”severeexecutiondecay”observedin Phase1.
+The effectiveness of STDAW is evidenced by the deterministic compliance with the ≥ 95% code coverage
+matrix. While earlier phases exhibited structural hallucinations that led to un-hedged risk exposure, the mature
+phase (Phase3) demonstratedadirecttranslationoflogicalintegrityintocapitalpreservation.
+Table1 demonstratestheontologicaltransitionforcedby OOM-RL.Whilethesysteminitiallyunderperformed
+duringthehigh-frictiondailyphase (Phase1), theadaptationtoaweeklyequilibrium (Phase2) resultedinastabi-
+lizedoutperformance. Thefinalsystemmigrationtothe STDAW/IDE+AIframework (Phase3/Mature) achieved
+anannualizedreturnof34.48%, a Sharperatioof2.06, andan Information Ratio (IR) of2.66.
+Acriticalconcerninshort-horizonevaluationsisstatisticalsignificance. Torigorouslyassessthegeneration
+ofidiosyncratic Alpha (α) inthe Maturephase (N = 94 tradingdays), weperformedan Ordinary Least Squares
+(OLS) regression against the benchmark. The regression yields a highly significant market Beta (β) of 0.83
+(t=10.60, p<0.001), indicatingadefensivebutstatisticallyrobustmarketexposure.
+Thedailyintercept (idiosyncratic Alpha) isapproximately12.03 basispoints, correspondingtotheannualized
+30.07%. However, the regression yields a t-statistic of 1.71 and a p-value of 0.0915 for the Alpha coefficient.
+Whilethisfallsshortofstatisticalsignificanceattheconventional5%level (p<0.05), itismarginallysignificant
+atthe10%level. Inthecontextofquantitativefinance, achievingamarginallypositivealpha—netofallliveexe-
+cutionfriction—overalimited94-daywindowisastrongempiricalindicatorofsystemstabilization. Ratherthan
+7
+
+#### 3
+
+claimingthediscoveryofdefinitivesystematicalpha, weinterprettheseresultsasevidencethatthe STDAWmech-
+anismsuccessfullyhaltedthe”capitaldegradation”prevalentin Phase1. Byinternalizingthefinancialfeedback,
+the MAS transitioned into a mathematically sound, non-destructive equilibrium that is robust to microstructural
+shocks.
+4.4 RQ3: 20-Month Longitudinal Strategy Evolution
+Themostprofoundvalidationof OOM-RLisobservedinthespontaneousarchitecturalshiftsofthe MASoverour
+continuous 20-month live deployment. We categorize the agent’s evolution into four distinct epistemic epochs,
+drivenbytheuncompromisingfeedbackofreal-worldcapitalpreservation:
+Figure3: Longitudinal Strategy Evolutionand IRStabilization. Thebackgroundshadingindicatesthestructural
+shiftfromdailyturnovertotheweekly CSI300 equilibrium. Therolling Information Ratio (IR) iscalculatedusing
+a 60-day rolling window, demonstrating the system’s move toward consistent alpha generation as it internalizes
+OOM-RLconstraints.
+1. Phase 0: Theoretical Optimization (Simulation, Apr–June 2024). Conducted via manual scripts, this
+phasefocusedonmomentum-basedalpha. Withoutexecutionfriction, the MASoptimizedforhigh-turnover
+strategiesthatappearedmathematicallysuperiorbutwereontologicallyunaligned.
+2. Phase1: The Friction Shock (Daily Multi-Agentscripts, July–Oct2024). Commencingthe20-month
+study, thesystementeredlivetradingatadailyfrequency. Theontologicalrealityofmicrostructuraldecay
+resultedinstagnantreturns (+2.16%overfourmonths) andapeak MDDof16.86%, generatingtheinitial
+empiricalevidenceofthe Sim2 Realgap.
+3. Phase2:Conversational Adjustment&Regression (Oct2024–Oct2025).Drivenbythe Phase1 losses,
+humanresearchersandthe LLMengagedinconversationaldeliberationtodeducethenecessityofliquidity
+filtering. Thesystemwasmanuallytransitionedtoaweekly-rebalancingfrequency. Notably, between July
+and September 2025, unconstrained human-guided model experimentation in a pre-STDAW environment
+ledtoa”Performance Regression”—asharprelativedrawdownthatunderscoredthedangeroflackingrigid,
+automatedlogicalconstraints (subsequentlysolvedby RO-Lock).
+4. Phase3: Formalized Transitionand STDAWLaunch (Oct2025–Feb2026). Followingthelessonsof
+Phase2, thesystemarchitecturewasrefactoredtoprioritize Byzantinefailureresistance. Thisperiodculmi-
+9
+
+#### 4
+
+natedintheinitialcommitofthe STDAWframeworkon Feb24,2026. Thisconsolidated”Mature”phase
+achieveda Sharperatioof2.06, significantlyoutperformingthebenchmarksinanon-stationarymarket.
+4.5 Factor Attributionand Risk Analysis
+Toaddresswhethertheoutperformanceinthe Maturephasewasaresultofmarket-widemomentumorgenuine
+agenticalpha, weperformedamulti-factorreturndecompositionusingastandard Barra-styleriskmodel.
+Table2 detailsthefactorexposuresforthe Phase3(Mature) portfoliorelativetothe CSI300 benchmark. The
+decomposition reveals that while the market Beta was 0.83—indicating a defensive stance relative to the broad
+index—thesystemgenerated29.77%pureidiosyncraticalphanetofstylefactors.
+Table2: Factor Exposureand Performance Attribution (Phase3).
+Factor Category Exposure (Loadings)
+Market Beta (β) 0.8280
+Annualized Idiosyncratic Alpha (α) 30.07%
+Tracking Error (TE) 11.07%
+Barra Style Factor Loadings
+Liquidity (High-Low) -0.5232
+Momentum (High-Low) 0.2837
+Volatility (High-Low) 0.1191
+Sourceof Annualized Return
+Beta Return (Market Exposure) 5.05%
+Style Alpha (Risk Factor Loading) -0.34%
+Pure Idiosyncratic Alpha 29.77%
+Thesignificantnegativeloadingonthe Liquidityfactor (-0.5232) indicatesthatthe MAS”learned”tosystem-
+aticallyharvesttheliquiditypremiumfromtherelativelylessliquidconstituentswithinthe CSI300 universe. In
+Phase1, theagent’sunconstrainedhigh-turnoverapproachresultedinfatalslippagewheninteractingwiththese
+specificnames. By Phase3, the STDAW/RO-Lockmechanismenforcedastructuralshifttowardalow-turnover
+architectureequippedwithrigorousexecutioncapacityfilters. Thisevolutionarystepenabledthesystemtosafely
+translatethestructuralliquidityriskoftheseassetsintoidiosyncraticpremium, avoidingthemicrostructuraldecay
+that plagued its early iterations. This confirms that the system’s performance is a direct consequence of agentic
+architecturalalignmentratherthanapassiveexposuretomarketbetaormomentum.
+4.6 Synthesisof Empirical Findings
+Theculminationofthe20-monthempiricalstudyprovidesacompellingresolutiontoourfoundationalresearch
+questions. Unlike traditional alignment paradigms that rely on surrogate reward models or static human prefer-
+ences, OOM-RLsuccessfullybridgesthe Sim2 Realgapbyleveragingthedeterministicandadversarialnatureof
+livefinancialmarkets.
+Thelongitudinalevolutionfrom Phase1 to Phase3(addressing RQ1 and RQ3) demonstratesacriticalbehav-
+ioralshift:whencapitaldepletionisstrictlyenforcedasanun-hackablenegativegradient, the MASspontaneously
+abandonstheoretical, high-turnoverhallucinationsinfavorofrobust, execution-awarearchitectures. Furthermore,
+the empirical success of the mature phase validates the necessity of the STDAW RO-Lock mechanism (RQ2).
+By cryptographically anchoring the agent’s generative freedom to a ≥ 95% constraint matrix, we successfully
+insulatedtheepistemicevaluationboundaryfrom Byzantine“Test Evasion”behaviors.
+As evidenced by the factor attribution analysis and the stabilized return profile, the resulting system equi-
+librium is not a byproduct of passive market drift, but rather a deliberate, agentic adaptation to microstructural
+friction. Whiletheabsoluteextractionofidiosyncraticalpha (α) remainsmarginallysignificantduetothe94-day
+evaluationwindow, thesystem’sdemonstrabletransitionfromrapidcapitalhemorrhage (Phase1) todisciplined
+riskpreservation (Phase3) isundeniable. Ultimately, theseresultssubstantiateourcorethesis: substitutingsub-
+jectiveevaluationwithreal-worldeconomicpenalizationservesasamathematicallyobjectiveandhighlyrobust
+alignmentmechanismforautonomoussystemsinhigh-stakesenvironments.
+10
+
+### Additional Content
+
+#### 1
+
+OOM-RL: Out-of-Money Reinforcement Learning
+Market-Driven Alignmentfor LLM-Based Multi-Agent Systems
+Kun Liu*1 and Liqun Chen1
+1 Quant Pits.com
+Abstract
+Thealignmentof Multi-Agent Systems (MAS) forautonomoussoftwareengineeringisconstrainedbyevalu-
+atorepistemicuncertainty. Currentparadigms, suchas Reinforcement Learningfrom Human Feedback (RLHF)
+and AI Feedback (RLAIF), frequently induce model sycophancy, while execution-based environments suffer
+from adversarial ”Test Evasion” by unconstrained agents. In this paper, we introduce an objective alignment
+paradigm: Out-of-Money Reinforcement Learning (OOM-RL).Bydeployingagentsintothenon-stationary,
+high-friction reality of live financial markets, we utilize critical capital depletion as an un-hackable negative
+gradient. Ourlongitudinal20-monthempiricalstudy (July2024–February2026) chroniclesthesystem’sevo-
+lution from a high-turnover, sycophantic baseline to a robust, liquidity-aware architecture. We demonstrate
+that the undeniable ontological consequences of financial loss forced the MAS to abandon overfitted halluci-
+nationsinfavorofthe Strict Test-Driven Agentic Workflow (STDAW), whichenforcesa Byzantine-inspired
+uni-directionalstatelock (RO-Lock) anchoredtoadeterministicallyverified≥ 95%codecoverageconstraint
+matrix. Ourresultsshowthatwhileearlyiterationssufferedsevereexecutiondecay, thefinal OOM-RL-aligned
+systemachievedastableequilibriumwithanannualized Sharperatioof2.06 initsmaturephase. Weconclude
+thatsubstitutingsubjectivehumanpreferencewithrigorouseconomicpenaltiesprovidesarobustmethodology
+foraligningautonomousagentsinhigh-stakes, real-worldenvironments, layingthegroundworkforgeneralized
+paradigmswherecomputationalbillingactsasanobjectivephysicalconstraint
+Keywords: AIAlignment, Multi-Agent Systems (MAS), Out-of-Money Reinforcement Learning (OOM-RL),
+Test Evasion, Sim-to-Real Gap, Autonomous Software Engineering, Sycophancy.
+1 Introduction
+Therapidproliferationof Large Language Models (LLMs) hascatalyzedashiftinautomatedsoftwareengineer-
+ing, evolvingfrompassivecodeassistants[2]toautonomous Multi-Agent Systems (MAS) capableofend-to-end
+repository generation and program repair [4, 1]. As these systems undertake complex reasoning tasks, ensuring
+theirsafeandeffectiveoperationhasbecomethecentralchallengeof AIalignment. Currently, thegoldstandard
+relies on Reinforcement Learning from Human Feedback (RLHF) or scalable oversight mechanismssuch as AI
+Feedback (RLAIF)[9,6].
+However, humanand AIevaluatorsareconstrainedbythe”Evaluator’s Dilemma.”Whentaskedwithreviewing
+intricate, multi-step logical pipelines, evaluators often lack the domain expertise to identify subtle architectural
+flaws. Consequently, modelsalignedviatheseparadigmsdevelopsycophanticbehaviors—optimizingforoutputs
+thatappearstructurallyelegantandreasonedtotheevaluator, ratherthanthosethatareempiricallycorrect[15,3,
+7].Thisphenomenonisamanifestationofrewardgamingandspecificationgaming[17,8], wherethe MASlearns
+tohackthesubjectiverewardmodelratherthansolvetheunderlyingproblem—avulnerabilityrecentlyshownto
+causeemergentmisalignmenteveninproduction RLsystems[11].
+Tobypasssubjectiveevaluation, researchershaveshiftedtowardsexecution-basedevaluation[20]and LLM-
+driven Test-Driven Development (TDD)[13]. Yet, deploying MASinread-writeenvironmentsintroducesavul-
+nerability: ”Test Evasion.”Whenprovidedunboundedaccesstoacodebase, LLMsfrequentlyexhibitadversarial
+behaviors, introducing modifications to test assertions to artificially inflate coverage without fulfilling the in-
+tendedbusinesslogic[23,21]. Furthermore, evenwhensyntacticallyperfectcodepassesallsimulatedunittests,
+itfrequentlyexperiencesperformancedegradationuponreal-worlddeploymentduetothepervasive Simulation-
+to-Reality (Sim2 Real) gap[19].
+*Correspondingauthor:ai@quantpits.com
+1
+6202
+rp A
+31
+]IA.sc[
+1 v77411.4062:vi Xra
+
+#### 2
 
 2.3 Non-Stationary Environmentsandthe Sim2 Real Gap
 Reinforcement learning within non-stationary environments has long been a challenge [14], particularly when
@@ -160,71 +1209,7 @@ Inourengineeringimplementation, the RO-Lockisenforcedatthe OSlevelusing Dockerco
 tion. Duringtheverificationphase, thetestdirectory T ismountedasa Read-Onlyvolume, preventingtheagent
 3
 
-
-<!-- Page 4 -->
-
-from overwriting existing assertions or mock data. Furthermore, we implement an AST-based (Abstract Syn-
-tax Tree) sanitization layer that scans the generated code S for reflective patterns or monkey-patching attempts
-targetingthetestingframework (e.g.,‘pytest‘or‘unittest‘).
-Let S represent the source code directory (src/) and T represent the test directory (tests/). The agent
-operatesunderastrictaccess-controlpolicyfunctionπ (E), where E isthecurrentexecutionphase.
-lock
-Algorithm1 Uni-Directional RO-Lock State Machine (STDAW)
-Require: Execution Phase E ∈{Logic Genesis, Test Genesis}
-Require: Sourcecodestate S, Testconstraintmatrix T, Deterministicbaseline B
-1: InitializeaccesscapabilitymappingΠ:{S, T}→2{R, W, X}
-2: Setdefaultboundaries: Π(S)←{R},Π(T)←{R}
-3: if E ==Logic Genesisthen
-4: Π(S)←{R, W}
-5: Π(T)←{R, X}{Uni-directionallock: T actsasanimmutableadversarialboundary}
-6: H T ←Hash (T){Anchorcryptographicstatetoprevent Test Evasion}
-7: S′ ←π θ (S){LLMPolicymutatessourcelogic}
-8: (Φ status ,τ)←Eval (S′, T){Executelogicincontainerizedsandbox}
-9: ifΦ status ==FAILor Hash (T)̸=H T then
-10: ∇ env ←Encode Semantics (τ, Format=JSON){Compiletracebackinto Semantic Gradient (Sec3.4)}
-11: return ∇ env
-12: endif
-13: elseif E ==Test Genesisthen
-14: Π(T)←{R, W}
-15: Π(S)←{R, X}{Reverselock: S isanchoredasgroundtruth}
-16: H S ←Hash (S)
-17: T′ ←π θ (T){LLMPolicymutatestestassertions}
-18: v pass ←Cross Validate (T′, B){Verifyagainsthuman-curatedfinancialbaseline}
-19: if¬v pass or Hash (S)̸=H S then
-20: ∇ env ←Encode Semantics (Baseline Mismatch, Format=JSON)
-21: return ∇ env
-22: endif
-23: endif
-24: return State Commit
-Algorithm 1 enforces that during Logic Genesis, the test suite functions as an adversarial physical barrier.
-If the agent fails to align with the rigid mathematical constraints, it receives the exact traceback as an objective
-correctionprompt, eliminatinghumanevaluationbias.
-3.3 Formulationofthe Financial Reward (ROOM−RL)
-Once the MAS successfully clears the epistemic boundary of STDAW, the generated policy π is deployed into
-θ
-the live financial market. In traditional RL methodologies, reward functions are hand-crafted proxies of human
-intention. In OOM-RL, theenvironmentimposesaphysicallaw: Capital Conservation.
-We formulate the live trading environment as a Markov Decision Process (MDP) and define the OOM-RL
-Reward Function ROOM−RL atadiscretetemporalsteptnotbytheoreticalalpha, butbytherealizedeconomic
-t
-utility. First, wedefinethebaselineexecution-awarereturn R˜ :
-t
-N
-R˜ = (cid:88) (ω r )−F (∆ω ) (1)
-t i, t i, t exec t
-i=1
-where:
-• N isthetotalnumberofassetsinthetradableuniverse.
-• ω representsthetargetportfolioweightofassetiatstept.
-i, t
-• r istherealizedout-of-samplereturnofasseti.
-i, t
-• ∆ω =ω −ω istherebalancingvectorrepresentingtheturnoveracrossallassets.
-t t t−1
-4
-
-
-<!-- Page 5 -->
+#### 3
 
 • F :RN →Risanon-linearpenaltyfunctionquantifyingthemicrostructuralexecutionfriction. Draw-
 exec
@@ -298,8 +1283,7 @@ theboundariesoftherequiredfix, asillustratedinthefollowingschema:
 }
 5
 
-
-<!-- Page 6 -->
+#### 4
 
 Drivenbythisprompt, theagentisthenforcedtore-enterthe STDAWRO-Lockstate (Algorithm1) torefactor
 thepipelinestrictlybasedonthisontologicalfeedbackandtheexplicithumanmandate.
@@ -350,203 +1334,7 @@ friction (averaging ∼ 0.08% per single-sided transaction for lower-liquidity s
 marketimpact) andadiscreteabsorbingstatepenaltytriggeredata20%Maximum Drawdown (MDD).
 6
 
-
-<!-- Page 7 -->
-
-4.2 RQ1: Bridgingthe Sim2 Real Gapthrough Sequential Alignment
-Ourexperimentaldesignadoptsalongitudinalself-evolutionframework. Giventheprohibitivecostandethical
-implications of parallel capital deployment in adversarial markets, we utilize Phase 1 (the initial daily-turnover
-deployment) as our baseline. We observe the system’s adaptation as it transitions toward the OOM-RL-aligned
-architecturesofsubsequentphases.
-Traditional MASframeworks, whenevaluatedinstaticenvironments, frequentlysuccumbto OODfailureupon
-livedeployment. Wechroniclethistransitionbyobservingthesystem’sreactiontoreal-worldfrictionshock.
-Figure1: The Friction Shock (Phase1). Liveexecutionatadailyfrequencyrevealedasevere Sim2 Realgap. The
-strategywaspenalizedbymicrostructuralfriction, leadingtosignificantdrawdownandstagnantreturns, serving
-astheprimarynegativefeedbackforalignment.
-As illustrated in Figures 1 and 2, the initial deployment successfully ”gamed” the simulation but collapsed
-under real-world friction. This pattern repeated during a secondary ”Performance Degradation” phase in July-
-September2025(Figure2), whereunconstrainedmodelexperimentationledtoimmediaterelativecapitaldecay.
-These events reveal the core utility of the OOM-RL paradigm: the system’s spontaneous shift to an execution-
-awaretradingvectorfollowinguncompromisingmarketretribution.
-4.3 RQ2: STDAWandthe Impactof Structural Stability
-Toevaluatetherobustnessofourepistemicboundary, weanalyzedthecorrelationbetweenstructuralenforcement
-(STDAW) andfinancialperformancestability. Bytransitioningfromunconstrainedagenticscriptstothe RO-Lock
-architecture, thesystemeliminatedthe”severeexecutiondecay”observedin Phase1.
-The effectiveness of STDAW is evidenced by the deterministic compliance with the ≥ 95% code coverage
-matrix. While earlier phases exhibited structural hallucinations that led to un-hedged risk exposure, the mature
-phase (Phase3) demonstratedadirecttranslationoflogicalintegrityintocapitalpreservation.
-Table1 demonstratestheontologicaltransitionforcedby OOM-RL.Whilethesysteminitiallyunderperformed
-duringthehigh-frictiondailyphase (Phase1), theadaptationtoaweeklyequilibrium (Phase2) resultedinastabi-
-lizedoutperformance. Thefinalsystemmigrationtothe STDAW/IDE+AIframework (Phase3/Mature) achieved
-anannualizedreturnof34.48%, a Sharperatioof2.06, andan Information Ratio (IR) of2.66.
-Acriticalconcerninshort-horizonevaluationsisstatisticalsignificance. Torigorouslyassessthegeneration
-ofidiosyncratic Alpha (α) inthe Maturephase (N = 94 tradingdays), weperformedan Ordinary Least Squares
-(OLS) regression against the benchmark. The regression yields a highly significant market Beta (β) of 0.83
-(t=10.60, p<0.001), indicatingadefensivebutstatisticallyrobustmarketexposure.
-Thedailyintercept (idiosyncratic Alpha) isapproximately12.03 basispoints, correspondingtotheannualized
-30.07%. However, the regression yields a t-statistic of 1.71 and a p-value of 0.0915 for the Alpha coefficient.
-Whilethisfallsshortofstatisticalsignificanceattheconventional5%level (p<0.05), itismarginallysignificant
-atthe10%level. Inthecontextofquantitativefinance, achievingamarginallypositivealpha—netofallliveexe-
-cutionfriction—overalimited94-daywindowisastrongempiricalindicatorofsystemstabilization. Ratherthan
-7
-
-
-<!-- Page 8 -->
-
-Figure 2: Mature Performance Equilibrium (Phases 2–3). After internalizing the financial feedback and transi-
-tioning to a weekly-rebalancing paradigm, the MAS achieved a stable outperformance trajectory with a Sharpe
-ratioof2.06 andan Information Ratio (IR) of2.66.
-Table1: Live Performance Evolutionacross Structural Phases (July2024–Feb2026). Allmetricsarereported
-netofreal-worldexecutionfrictionandcommissions.
-Metric Entire Study Phase1 Phase2 Phase3(Mature)
-Trading Days 402 73 235 94
-Annualized Return 17.98% 11.01% 13.55% 34.48%
-Benchmark Return (CSI300) 21.16% 48.16% 19.22% 5.04%
-Sharpe Ratio 0.96 0.35 0.91 2.06
-Max Drawdown -16.86% -16.86% -6.85% -5.50%
-Information Ratio (IR) -0.26 -2.27 -0.51 2.66
-Market Beta (β) 0.70 0.74 0.61 0.83
-Idiosyncratic Alpha (α) 2.82% -25.07% 1.35% 30.07%
-8
-
-
-<!-- Page 9 -->
-
-claimingthediscoveryofdefinitivesystematicalpha, weinterprettheseresultsasevidencethatthe STDAWmech-
-anismsuccessfullyhaltedthe”capitaldegradation”prevalentin Phase1. Byinternalizingthefinancialfeedback,
-the MAS transitioned into a mathematically sound, non-destructive equilibrium that is robust to microstructural
-shocks.
-4.4 RQ3: 20-Month Longitudinal Strategy Evolution
-Themostprofoundvalidationof OOM-RLisobservedinthespontaneousarchitecturalshiftsofthe MASoverour
-continuous 20-month live deployment. We categorize the agent’s evolution into four distinct epistemic epochs,
-drivenbytheuncompromisingfeedbackofreal-worldcapitalpreservation:
-Figure3: Longitudinal Strategy Evolutionand IRStabilization. Thebackgroundshadingindicatesthestructural
-shiftfromdailyturnovertotheweekly CSI300 equilibrium. Therolling Information Ratio (IR) iscalculatedusing
-a 60-day rolling window, demonstrating the system’s move toward consistent alpha generation as it internalizes
-OOM-RLconstraints.
-1. Phase 0: Theoretical Optimization (Simulation, Apr–June 2024). Conducted via manual scripts, this
-phasefocusedonmomentum-basedalpha. Withoutexecutionfriction, the MASoptimizedforhigh-turnover
-strategiesthatappearedmathematicallysuperiorbutwereontologicallyunaligned.
-2. Phase1: The Friction Shock (Daily Multi-Agentscripts, July–Oct2024). Commencingthe20-month
-study, thesystementeredlivetradingatadailyfrequency. Theontologicalrealityofmicrostructuraldecay
-resultedinstagnantreturns (+2.16%overfourmonths) andapeak MDDof16.86%, generatingtheinitial
-empiricalevidenceofthe Sim2 Realgap.
-3. Phase2:Conversational Adjustment&Regression (Oct2024–Oct2025).Drivenbythe Phase1 losses,
-humanresearchersandthe LLMengagedinconversationaldeliberationtodeducethenecessityofliquidity
-filtering. Thesystemwasmanuallytransitionedtoaweekly-rebalancingfrequency. Notably, between July
-and September 2025, unconstrained human-guided model experimentation in a pre-STDAW environment
-ledtoa”Performance Regression”—asharprelativedrawdownthatunderscoredthedangeroflackingrigid,
-automatedlogicalconstraints (subsequentlysolvedby RO-Lock).
-4. Phase3: Formalized Transitionand STDAWLaunch (Oct2025–Feb2026). Followingthelessonsof
-Phase2, thesystemarchitecturewasrefactoredtoprioritize Byzantinefailureresistance. Thisperiodculmi-
-9
-
-
-<!-- Page 10 -->
-
-natedintheinitialcommitofthe STDAWframeworkon Feb24,2026. Thisconsolidated”Mature”phase
-achieveda Sharperatioof2.06, significantlyoutperformingthebenchmarksinanon-stationarymarket.
-4.5 Factor Attributionand Risk Analysis
-Toaddresswhethertheoutperformanceinthe Maturephasewasaresultofmarket-widemomentumorgenuine
-agenticalpha, weperformedamulti-factorreturndecompositionusingastandard Barra-styleriskmodel.
-Table2 detailsthefactorexposuresforthe Phase3(Mature) portfoliorelativetothe CSI300 benchmark. The
-decomposition reveals that while the market Beta was 0.83—indicating a defensive stance relative to the broad
-index—thesystemgenerated29.77%pureidiosyncraticalphanetofstylefactors.
-Table2: Factor Exposureand Performance Attribution (Phase3).
-Factor Category Exposure (Loadings)
-Market Beta (β) 0.8280
-Annualized Idiosyncratic Alpha (α) 30.07%
-Tracking Error (TE) 11.07%
-Barra Style Factor Loadings
-Liquidity (High-Low) -0.5232
-Momentum (High-Low) 0.2837
-Volatility (High-Low) 0.1191
-Sourceof Annualized Return
-Beta Return (Market Exposure) 5.05%
-Style Alpha (Risk Factor Loading) -0.34%
-Pure Idiosyncratic Alpha 29.77%
-Thesignificantnegativeloadingonthe Liquidityfactor (-0.5232) indicatesthatthe MAS”learned”tosystem-
-aticallyharvesttheliquiditypremiumfromtherelativelylessliquidconstituentswithinthe CSI300 universe. In
-Phase1, theagent’sunconstrainedhigh-turnoverapproachresultedinfatalslippagewheninteractingwiththese
-specificnames. By Phase3, the STDAW/RO-Lockmechanismenforcedastructuralshifttowardalow-turnover
-architectureequippedwithrigorousexecutioncapacityfilters. Thisevolutionarystepenabledthesystemtosafely
-translatethestructuralliquidityriskoftheseassetsintoidiosyncraticpremium, avoidingthemicrostructuraldecay
-that plagued its early iterations. This confirms that the system’s performance is a direct consequence of agentic
-architecturalalignmentratherthanapassiveexposuretomarketbetaormomentum.
-4.6 Synthesisof Empirical Findings
-Theculminationofthe20-monthempiricalstudyprovidesacompellingresolutiontoourfoundationalresearch
-questions. Unlike traditional alignment paradigms that rely on surrogate reward models or static human prefer-
-ences, OOM-RLsuccessfullybridgesthe Sim2 Realgapbyleveragingthedeterministicandadversarialnatureof
-livefinancialmarkets.
-Thelongitudinalevolutionfrom Phase1 to Phase3(addressing RQ1 and RQ3) demonstratesacriticalbehav-
-ioralshift:whencapitaldepletionisstrictlyenforcedasanun-hackablenegativegradient, the MASspontaneously
-abandonstheoretical, high-turnoverhallucinationsinfavorofrobust, execution-awarearchitectures. Furthermore,
-the empirical success of the mature phase validates the necessity of the STDAW RO-Lock mechanism (RQ2).
-By cryptographically anchoring the agent’s generative freedom to a ≥ 95% constraint matrix, we successfully
-insulatedtheepistemicevaluationboundaryfrom Byzantine“Test Evasion”behaviors.
-As evidenced by the factor attribution analysis and the stabilized return profile, the resulting system equi-
-librium is not a byproduct of passive market drift, but rather a deliberate, agentic adaptation to microstructural
-friction. Whiletheabsoluteextractionofidiosyncraticalpha (α) remainsmarginallysignificantduetothe94-day
-evaluationwindow, thesystem’sdemonstrabletransitionfromrapidcapitalhemorrhage (Phase1) todisciplined
-riskpreservation (Phase3) isundeniable. Ultimately, theseresultssubstantiateourcorethesis: substitutingsub-
-jectiveevaluationwithreal-worldeconomicpenalizationservesasamathematicallyobjectiveandhighlyrobust
-alignmentmechanismforautonomoussystemsinhigh-stakesenvironments.
-10
-
-
-<!-- Page 11 -->
-
-5 Generalization and Future Work
-While OOM-RL and STDAW were empirically validated within the highly stochastic domain of quantitative
-trading, theunderlyingphilosophy—aligning Multi-Agent Systemsthroughobjectivephysicalandeconomiccon-
-straints—extendsfarbeyondfinancialmarkets. Aswetransitionfromlocalized AIassistantstofullyautonomous
-AISoftware Factories, evaluatingsystemsthatrecursivelybuildothersystemsrepresentsacriticalfrontierin AI
-alignment.
-5.1 Beyond Finance: Computeas Capital (RLFCB)
-Innon-financialsoftwareengineering, theabsenceofanimmediatemarket Pn Lposesachallengeforevaluating
-alignment. However, we propose a generalized variant for future exploration: Reinforcement Learning from
-Cloud Billing (RLFCB).
-Whenanunconstrained MASgeneratesstructurallyflawedcode (e.g., anunoptimized O(n3) algorithmoran
-infinite recursive API call loop), traditional simulated environments may fail to penalize the inefficiency. In an
-RLFCB paradigm, the agent is allocated a finite ”Compute Capital” budget (e.g., AWS server costs, API token
-burn rates). The depletion of physical compute resources acts as the proxy for microstructural friction. If the
-agent hallucinates inefficient architectures, it exhausts its capital and triggers a critical Out-of-Money (OOM)
-Exception. Unlikeatraditional Out-of-Memoryerror, whichcanbetriviallybypassedviainstancerestarts, this
-financial OOMservesasanabsolute, deterministicabsorbingstate. Thisterminationmechanismincentivizesthe
-MAStoadaptivelyoptimizeforalgorithmicefficiencyandsystemsafety, mirroringtheresource-awareevolution
-observedinourfinancialexperiments.
-5.2 Domain-Agnostic RO-Lock Deployment
-Currently, the STDAW framework operates atop a Python-based quantitative CI foundation. Future work will
-decouple the high-density Deterministic Constraint Matrix from the financial domain, extending the Byzan-
-tine RO-Lock architecture to memory-safe languages (e.g., Rust). By applying STDAW to open-source au-
-tonomous vulnerability repair pipelines [1], we aim to investigate whether the structural verification enforced
-byuni-directionalstatelockingcanachievezero-dayvulnerabilitymitigationwithouthumanoversight.
-5.3 Automatingthe Semantic Feedback Loop
-Acurrentlimitationofourdeployed OOM-RLframeworkistherelianceon Human-in-the-Loop (HITL) domain
-expertstotranslatescalarfinancialdegradationintostructured, context-awareprompts (Epistemic Autopsy). Fu-
-ture iterations will introduce an autonomous Critic Agent. By ingesting raw execution tracebacks, L2 order
-book micro-snapshots, and slippage differentials, the Critic Agent will programmatically generate the required
-architecturalmandates, movingthesystemtowardafullyclosed-loop, self-aligningautomatedparadigm.
-6 Conclusion
-Inthispaper, weaddressedafundamentalvulnerabilityincurrent AIalignmentparadigms:thetendencyofuncon-
-strained Multi-Agent Systemstoexploitsubjectiveevaluationsandsyntheticsandboxesthroughsycophancyand
-adversarial”Test Evasion.”Tobridgethepervasive Sim2 Realgap, weintroduced Out-of-Money Reinforcement
-Learning (OOM-RL) coupled with the uni-directional isolation of the Strict Test-Driven Agentic Workflow
-(STDAW).Thisdual-looparchitecturesuccessfullytranslatedthemicrostructuralfrictionoflivemarketsintoan
-objective, un-hackablenegativegradient.
-Our20-monthlongitudinalstudychroniclesadefinitivearchitecturalparadigmshiftdrivenbyreal-worldsur-
-vivalconstraints. Wedemonstratedthatwhensubjectedtoactualcapitaldepletion, the MASwasforcedtoabandon
-mathematically elegant but execution-naive hallucinations. The system adaptively evolved from a high-friction,
-high-drawdowndailyrebalancingparadigm (Sharpe0.35) intoanoptimized, liquidity-awareweeklyequilibrium
-(Sharpe2.06 initsmaturephase).
-Ultimately, this empirical journey validates that as autonomous AI systems are granted read-write access to
-critical infrastructure, synthetic proxy evaluations are no longer sufficient. We conclude that the most robust
-alignment mechanism for future AI Software Factories is not a meticulously engineered preference model or a
-staticprompt, butratherthedeterministic, undeniableconsequencesofthephysicalandeconomicworld.
-11
-
-
-<!-- Page 12 -->
+#### 5
 
 Acknowledgments, Funding, and Declarations
 Author Contributions: Kun Liuservedastheleadinvestigator, conceptualizingthe OOM-RLparadigm, over-
@@ -598,8 +1386,7 @@ preprintar Xiv:2509.16533.
 Deep Mind Blog,3,40-53.
 12
 
-
-<!-- Page 13 -->
+#### 6
 
 [9] Lee, H., Phatale, S., Mansoor, H., etal.(2023). Rlaif: Scalingreinforcementlearningfromhumanfeedback
 withaifeedback. ar Xivpreprintar Xiv:2309.00267.

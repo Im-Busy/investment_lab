@@ -14,6 +14,7 @@ from .head_shoulders import HeadAndShoulders
 from .spike_ledge import SpikeAndLedge
 from .three_hills import ThreeHillsMountain
 from .parabolic_arc import ParabolicArc
+from .pipe import PipePattern
 
 __all__ = [
     "CupAndHandle",
@@ -21,4 +22,5 @@ __all__ = [
     "SpikeAndLedge",
     "ThreeHillsMountain",
     "ParabolicArc",
+    "PipePattern",
 ]

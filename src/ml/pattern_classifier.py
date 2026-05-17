@@ -117,8 +117,7 @@ class PatternClassifier:
 
         self.model = None
         self.feature_names_: Optional[List[str]] = None
-        self.calibration_slope_: Optional[float] = None
-        self.calibration_intercept_: Optional[float] = None
+        self.calibrator_ = None
 
     def _has_gpu(self) -> bool:
         """Check if GPU is available."""
@@ -253,45 +252,40 @@ class PatternClassifier:
         calibration_data: Optional[Tuple[pd.DataFrame, pd.Series]] = None,
     ) -> float:
         """
-        Calibrate predicted probabilities using Platt scaling or isotonic regression.
+        Calibrate model probabilities using isotonic regression.
+
+        Wraps the trained model in sklearn CalibratedClassifierCV with
+        cv="prefit" and method="isotonic". The calibrator is saved as
+        self.calibrator_ and used at inference time.
 
         Returns calibration error (Brier score loss).
         """
-        from sklearn.calibration import calibration_curve
+        from sklearn.calibration import CalibratedClassifierCV
+        from sklearn.frozen import FrozenEstimator
 
         if calibration_data is not None:
             X_cal, y_cal = calibration_data
             X_cal = X_cal.dropna()
             y_cal = y_cal.reindex(X_cal.index).dropna()
-            # Align X_cal and y_cal after independent NaN removal
             common_idx = X_cal.index.intersection(y_cal.index)
             X_cal = X_cal.loc[common_idx]
             y_cal = y_cal.loc[common_idx]
 
-            if len(X_cal) > 50:
-                cal_proba = self.model.predict_proba(X_cal)[:, 1]
-                proba = cal_proba
-                y_true = y_cal.values
+            if len(X_cal) >= 50:
+                try:
+                    calibrator = CalibratedClassifierCV(
+                        FrozenEstimator(self.model), method="isotonic", cv=5
+                    )
+                    calibrator.fit(X_cal, y_cal)
+                    self.calibrator_ = calibrator
 
-        try:
-            fraction_of_positives, mean_predicted_value = calibration_curve(
-                y_true, proba, n_bins=10, strategy="uniform"
-            )
+                    calibrated_proba = calibrator.predict_proba(X_cal)[:, 1]
+                    calibration_error = float(brier_score_loss(y_cal, calibrated_proba))
+                    return calibration_error
+                except Exception:
+                    pass
 
-            from sklearn.linear_model import LogisticRegression
-
-            calibrator = LogisticRegression()
-            calibrator.fit(proba.reshape(-1, 1), y_true)
-
-            self.calibration_slope_ = float(calibrator.coef_[0, 0])
-            self.calibration_intercept_ = float(calibrator.intercept_[0])
-
-            calibrated_proba = calibrator.predict_proba(proba.reshape(-1, 1))[:, 1]
-            calibration_error = float(brier_score_loss(y_true, calibrated_proba))
-
-        except Exception:
-            calibration_error = float(brier_score_loss(y_true, proba))
-
+        calibration_error = float(brier_score_loss(y_true, proba))
         return calibration_error
 
     def _extract_feature_importance(self) -> Dict[str, float]:
@@ -329,14 +323,10 @@ class PatternClassifier:
 
         X_clean = X.fillna(0)
 
-        proba = self.model.predict_proba(X_clean)[:, 1]
-
-        if self.calibration_slope_ is not None:
-            log_odds = (
-                self.calibration_slope_ * proba / (1 - proba + 1e-10) + self.calibration_intercept_
-            )
-            proba_calibrated = 1 / (1 + np.exp(-log_odds))
-            proba = np.clip(proba_calibrated, 0, 1)
+        if self.calibrator_ is not None:
+            proba = self.calibrator_.predict_proba(X_clean)[:, 1]
+        else:
+            proba = self.model.predict_proba(X_clean)[:, 1]
 
         result = X.copy()
         result["probability_profitable"] = proba
@@ -522,8 +512,7 @@ class PatternClassifier:
         model_data = {
             "model": self.model,
             "feature_names": self.feature_names_,
-            "calibration_slope": self.calibration_slope_,
-            "calibration_intercept": self.calibration_intercept_,
+            "calibrator": self.calibrator_,
             "config": {
                 "model_type": self.model_type,
                 "n_estimators": self.n_estimators,
@@ -553,8 +542,7 @@ class PatternClassifier:
 
         self.model = model_data["model"]
         self.feature_names_ = model_data["feature_names"]
-        self.calibration_slope_ = model_data.get("calibration_slope")
-        self.calibration_intercept_ = model_data.get("calibration_intercept")
+        self.calibrator_ = model_data.get("calibrator")
 
         config = model_data.get("config", {})
         self.model_type = config.get("model_type", self.model_type)

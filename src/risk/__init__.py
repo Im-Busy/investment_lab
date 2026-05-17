@@ -18,7 +18,22 @@ from .diversity_score import (
     DiversityMethod,
     DiversityResult,
 )
-from .crash_factor import CrashFactorModel, CrashFactorFilter, CrashFactorConfig, CrashFactorResult
+from .crash_factor import (
+    CrashFactorModel,
+    CrashFactorFilter,
+    CrashFactorConfig,
+    CrashFactorResult,
+    BehavioralCrashDetector,
+)
+from .kelly_allocator import (
+    KellyAllocator,
+    KellyAllocation,
+    KellyEdge,
+    compute_kelly_from_history,
+    compute_kelly_from_probability,
+    estimate_minimum_capital,
+    format_kelly_report,
+)
 from .failure_set_analyzer import (
     FailureSetAnalyzer,
     StrategyFailureMonitor,
@@ -31,6 +46,8 @@ from .circuit_breakers import (
     CircuitBreakerState,
 )
 from .mc_var import MCVaR, VaRResult
+from .copula_risk import GaussianCopulaRisk, TCopulaRisk, CopulaRiskResult  # Q6
+from .market_impact import MarketImpact, ImpactResult  # Q7
 
 __all__ = [
     # Position Sizing
@@ -60,6 +77,14 @@ __all__ = [
     "CrashFactorFilter",
     "CrashFactorConfig",
     "CrashFactorResult",
+    "BehavioralCrashDetector",
+    "KellyAllocator",
+    "KellyAllocation",
+    "KellyEdge",
+    "compute_kelly_from_history",
+    "compute_kelly_from_probability",
+    "estimate_minimum_capital",
+    "format_kelly_report",
     "FailureSetAnalyzer",
     "StrategyFailureMonitor",
     "FailureTestConfig",
@@ -71,4 +96,11 @@ __all__ = [
     # Monte Carlo VaR / CVaR (T6)
     "MCVaR",
     "VaRResult",
+    # Phase 21 Q6: Copula Risk
+    "GaussianCopulaRisk",
+    "TCopulaRisk",
+    "CopulaRiskResult",
+    # Phase 21 Q7: Market Impact
+    "MarketImpact",
+    "ImpactResult",
 ]

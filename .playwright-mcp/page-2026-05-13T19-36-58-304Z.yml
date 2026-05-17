@@ -1,0 +1,209 @@
+- generic [ref=e3]:
+  - banner:
+    - banner [ref=e4]:
+      - heading "阿 叶 A y e e z B l o g" [level=1] [ref=e8]:
+        - generic [ref=e9]: 阿
+        - generic [ref=e10]: 叶
+        - generic [ref=e11]: A
+        - generic [ref=e12]: "y"
+        - generic [ref=e13]: e
+        - generic [ref=e14]: e
+        - generic [ref=e15]: z
+        - generic [ref=e17]: B
+        - generic [ref=e18]: l
+        - generic [ref=e19]: o
+        - generic [ref=e20]: g
+      - navigation [ref=e22]:
+        - list [ref=e23]:
+          - listitem [ref=e24]:
+            - link "首页" [ref=e25]:
+              - /url: "#"
+          - listitem [ref=e27]:
+            - link "关于" [ref=e28]:
+              - /url: "#"
+          - listitem [ref=e30]:
+            - link "归档" [ref=e31]:
+              - /url: "#"
+          - listitem [ref=e33]:
+            - link "友链" [ref=e34]:
+              - /url: "#"
+          - listitem [ref=e36]:
+            - link "说说" [ref=e37]:
+              - /url: "#"
+          - listitem [ref=e39]:
+            - link "留言" [ref=e40]:
+              - /url: "#"
+          - listitem [ref=e42]:
+            - link "相册" [ref=e43]:
+              - /url: "#"
+          - listitem [ref=e45]:
+            - link "日志" [ref=e46]:
+              - /url: "#"
+          - listitem [ref=e48]:
+            - link "GitHub" [ref=e49]:
+              - /url: https://github.com/Ayeez757/AyeezBlog
+          - listitem [ref=e51]:
+            - link "管理端" [ref=e52]:
+              - /url: /admin
+  - main [ref=e55]:
+    - generic [ref=e56]:
+      - generic:
+        - img
+      - generic [ref=e62]:
+        - generic [ref=e63]:
+          - generic [ref=e64]: W
+          - generic [ref=e65]: E
+          - generic [ref=e66]: L
+          - generic [ref=e67]: C
+          - generic [ref=e68]: O
+          - generic [ref=e69]: M
+          - generic [ref=e70]: E
+          - generic [ref=e72]: T
+          - generic [ref=e73]: O
+        - generic [ref=e74]: AYEEZ BLOG！
+      - generic [ref=e75]:
+        - paragraph [ref=e76]: 这里是阿叶Ayeez 的博客。
+        - paragraph [ref=e77]: 很高兴与你相遇！
+        - paragraph [ref=e78]: 这里会分享技术与生活~
+    - generic [ref=e84]:
+      - generic [ref=e85]:
+        - img "头像" [ref=e86]
+        - generic [ref=e87]:
+          - generic [ref=e88]: 公告！
+          - generic [ref=e89]: 这是新博客，仍然在持续开发~（内容已经迁移，可能有部分图片丢失，可联系管理员修复）
+          - generic [ref=e90]:
+            - text: 旧站：
+            - link "https://butterfly.ayeez.cn" [ref=e91]:
+              - /url: https://butterfly.ayeez.cn
+            - text: （可能停止更新）
+          - generic [ref=e92]: qq闲聊交流群：421300955
+          - generic [ref=e93]:
+            - link "" [ref=e94]:
+              - /url: https://github.com/ayeez757/
+              - generic [ref=e95]: 
+            - link "" [ref=e96]:
+              - /url: https://space.bilibili.com/499974079
+              - generic [ref=e97]: 
+            - link "" [ref=e98]:
+              - /url: https://v.douyin.com/GGeliQdHOQ0/
+              - generic [ref=e99]: 
+            - link "" [ref=e100]:
+              - /url: mailto:3406608593@qq.com
+              - generic [ref=e101]: 
+            - link "" [ref=e102]:
+              - /url: https://qiniu.ayeez.cn/20260221221801914.png
+              - generic [ref=e103]: 
+      - generic [ref=e104]:
+        - link "打开文章：欢迎访问阿叶Ayeez博客~" [ref=e105]:
+          - generic [ref=e106]:
+            - img "欢迎访问阿叶Ayeez博客~" [ref=e107]
+            - generic:
+              - generic: 置顶
+          - generic [ref=e108]:
+            - heading "欢迎访问阿叶Ayeez博客~" [level=3] [ref=e109]
+            - paragraph [ref=e110]: （默认欢迎文章） 阿叶Ayeez博客是一个基于Vue 3与Spring Boot构建的开源博客系统，提供前后端分离架构、Markdown写作、评论互动与后台管理等功能，支持容器化部署与AI辅助创作。
+            - paragraph [ref=e111]: 更新于 2026/4/5
+        - link "打开文章：如何查看mysql的增删改日志" [ref=e112]:
+          - generic [ref=e113]:
+            - img "如何查看mysql的增删改日志" [ref=e114]
+            - generic:
+              - generic: 水
+          - generic [ref=e115]:
+            - heading "如何查看mysql的增删改日志" [level=3] [ref=e116]
+            - paragraph [ref=e117]: 作者在博客遭遇安全风险后，通过 Docker 环境下的 MySQL 二进制日志进行数据审计，详细介绍了从开启、定位到筛选 binlog 的实用步骤，帮助排查数据是否被篡改。
+            - paragraph [ref=e118]: 更新于 2026/4/22
+        - link "打开文章：JMeter 接口与性能测试（含部分经验总结" [ref=e119]:
+          - img "JMeter 接口与性能测试（含部分经验总结" [ref=e121]
+          - generic [ref=e122]:
+            - heading "JMeter 接口与性能测试（含部分经验总结" [level=3] [ref=e123]
+            - paragraph [ref=e124]: 边学边测边写，拿博客生产环境直接测的......
+            - paragraph [ref=e125]: 更新于 2026/4/15
+        - link "打开文章：一次Docker部署项目实战总结" [ref=e126]:
+          - generic [ref=e127]:
+            - img "一次Docker部署项目实战总结" [ref=e128]
+            - generic:
+              - generic: 水
+          - generic [ref=e129]:
+            - heading "一次Docker部署项目实战总结" [level=3] [ref=e130]
+            - paragraph [ref=e131]: 本文分享了从本地构建到服务器部署的完整Docker实战流程，重点介绍了本地构建+服务器导入的部署模式、推荐的目录结构、Dockerfile编写要点、docker-compose配置以及自动化脚本设计，...
+            - paragraph [ref=e132]: 更新于 2026/4/14
+        - link "打开文章：消息队列-RabbitMQ" [ref=e133]:
+          - generic [ref=e134]:
+            - img "消息队列-RabbitMQ" [ref=e135]
+            - generic:
+              - generic: 正在编辑
+          - generic [ref=e136]:
+            - heading "消息队列-RabbitMQ" [level=3] [ref=e137]
+            - paragraph [ref=e138]: RabbitMQ是一种基于AMQP协议的消息队列中间件，通过生产者-消费者模型实现异步通信，支持解耦、异步处理和流量削峰，适用于对可靠性要求较高的业务场景。
+            - paragraph [ref=e139]: 更新于 2026/4/13
+        - link "打开文章：JVM-3：虚拟机栈" [ref=e140]:
+          - generic [ref=e141]:
+            - img "JVM-3：虚拟机栈" [ref=e142]
+            - generic:
+              - generic: 正在编辑
+          - generic [ref=e143]:
+            - heading "JVM-3：虚拟机栈" [level=3] [ref=e144]
+            - paragraph [ref=e145]: 虚拟机栈是每个线程私有的运行时内存区域，内部由栈帧构成，对应着方法的调用。它保存局部变量、中间结果，并管理方法的进入与返回。栈帧包含局部变量表、操作数栈等结构，其大小影响方法嵌套深度，异常则包括栈溢出...
+            - paragraph [ref=e146]: 更新于 2026/4/8
+        - link "打开文章：【安全提醒】您的博客后端存在身份验证绕过漏洞（Path Traversal/Matrix Variables）" [ref=e147]:
+          - img "【安全提醒】您的博客后端存在身份验证绕过漏洞（Path Traversal/Matrix Variables）" [ref=e149]
+          - generic [ref=e150]:
+            - heading "【安全提醒】您的博客后端存在身份验证绕过漏洞（Path Traversal/Matrix Variables）" [level=3] [ref=e151]
+            - paragraph [ref=e152]: 博客后端因路径匹配逻辑缺陷，攻击者可通过矩阵参数绕过JWT身份验证直接访问受保护接口。漏洞发现者已提供验证案例与修复建议，目前问题已修复。
+            - paragraph [ref=e153]: 更新于 2026/4/7
+        - link "打开文章：JVM-2：运行时数据区概述及线程" [ref=e154]:
+          - img "JVM-2：运行时数据区概述及线程" [ref=e156]
+          - generic [ref=e157]:
+            - heading "JVM-2：运行时数据区概述及线程" [level=3] [ref=e158]
+            - paragraph [ref=e159]: JVM运行时数据区是Java程序执行的内存基础，分为线程私有的程序计数器、栈与本地栈，以及线程共享的堆、元空间等区域。每个线程对应一个本地操作系统线程，共同协作完成程序的运行与资源管理。
+            - paragraph [ref=e160]: 更新于 2026/4/4
+        - link "打开文章：JVM-1：类加载子系统" [ref=e161]:
+          - generic [ref=e162]:
+            - img "JVM-1：类加载子系统" [ref=e163]
+            - generic:
+              - generic: 推荐
+          - generic [ref=e164]:
+            - heading "JVM-1：类加载子系统" [level=3] [ref=e165]
+            - paragraph [ref=e166]: 类加载子系统是JVM的核心组件之一，负责将Class文件加载到内存，并经过验证、准备、解析和初始化等阶段，最终生成可被执行的Java类。它遵循双亲委派模型，通过启动类、扩展类和应用程序类加载器的协作，...
+            - paragraph [ref=e167]: 更新于 2026/4/1
+        - link "打开文章：Obsidian+七牛云+PicGo配置教程，实现图片自动上传，分享笔记不再丢图" [ref=e168]:
+          - generic [ref=e169]:
+            - img "Obsidian+七牛云+PicGo配置教程，实现图片自动上传，分享笔记不再丢图" [ref=e170]
+            - generic:
+              - generic: 推荐
+          - generic [ref=e171]:
+            - heading "Obsidian+七牛云+PicGo配置教程，实现图片自动上传，分享笔记不再丢图" [level=3] [ref=e172]
+            - paragraph [ref=e173]: Obsidian分享笔记图片全裂？七牛云+PicGo+Image Auto Upload，搭建个人图床，粘贴即上传，图片自动转在线链接，发博客、发文件永不丢图。
+            - paragraph [ref=e174]: 更新于 2026/3/29
+        - link "打开文章：MySQL从基础知识到进阶到运维" [ref=e175]:
+          - generic [ref=e176]:
+            - img "MySQL从基础知识到进阶到运维" [ref=e177]
+            - generic:
+              - generic: 推荐
+          - generic [ref=e178]:
+            - heading "MySQL从基础知识到进阶到运维" [level=3] [ref=e179]
+            - paragraph [ref=e180]: 超长笔记方便回看......已经5万字符了......阿巴阿巴......
+            - paragraph [ref=e181]: 更新于 2026/3/26
+        - link "打开文章：Redis基础笔记" [ref=e182]:
+          - generic [ref=e183]:
+            - img "Redis基础笔记" [ref=e184]
+            - generic:
+              - generic: 水
+          - generic [ref=e185]:
+            - heading "Redis基础笔记" [level=3] [ref=e186]
+            - paragraph [ref=e187]: Redis是一个基于内存的键值数据库，读写性能高，常用于存储热点数据。它支持字符串、哈希、列表、集合和有序集合等多种数据类型，并提供了丰富的操作命令。本文也介绍了在Java项目中通过Spring Da...
+            - paragraph [ref=e188]: 更新于 2026/2/12
+      - generic [ref=e189]:
+        - button "上一页" [disabled] [ref=e190]
+        - generic [ref=e191]: 1 / 5
+        - button "下一页" [ref=e192]
+  - contentinfo [ref=e193]:
+    - generic [ref=e194]:
+      - generic [ref=e195]: 本站已经运行 84 天 03 时 36 分 58 秒
+      - generic [ref=e196]: 总访问量（PV）：5276 ｜ 总访客数（UV）：2818
+      - generic [ref=e197]: 2026-2026 by 阿叶Ayeez
+      - generic [ref=e198]:
+        - text: 旧站：
+        - link "https://butterfly.ayeez.cn" [ref=e199]:
+          - /url: https://butterfly.ayeez.cn
+      - generic [ref=e200]: 粤ICP备2025505813号-1

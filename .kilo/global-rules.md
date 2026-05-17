@@ -95,3 +95,19 @@ All Python execution and package management uses `uv`. No exceptions unless `uv`
 - Ask questions via the `question` tool when choices need to be made. Batch questions together.
 - For complex explorations: summarize findings in a table or structured format.
 - When backtesting results are generated: always present key metrics (return, Sharpe, max drawdown, win rate) in a comparison table.
+
+## Anti-Rationalization Guardrails (Trading System)
+The following excuses are INVALID. If you think any of them apply, stop and re-evaluate.
+
+| Rationalization | Reality |
+|----------------|---------|
+| "I'll add OOS validation later" | OOS is the only validation that matters. IS results without OOS are meaningless. |
+| "The model's AUC is close enough" | AUC < 0.55 is random. Gap > 0.05 is overfit. There are no exceptions. |
+| "One more feature will fix it" | Adding features without validation adds noise. Stability Selection > feature count. |
+| "The backtest looks good in-sample" | In-sample results prove nothing. Always check OOS (2025+) performance. |
+| "This is too small for a spec" | Any change touching signal generation, ML pipeline, or backtest engine needs a spec. |
+| "I can skip the look-ahead check" | Look-ahead bias is the #1 source of phantom alpha. Always verify with check_lookahead(). |
+| "Let me tune until it passes" | Tuning on test data = overfitting. Set parameters on train, validate once on test. |
+| "The pattern worked on SPY" | Single-instrument results don't generalize. Validate across 5+ instruments. |
+| "I'll add tests after it works" | Untested strategy code is production debt. At minimum: smoke test + OOS backtest. |
+| "Regime shift won't happen again" | Regime shifts (like 2025) are the norm, not the exception. Every strategy must survive them. |

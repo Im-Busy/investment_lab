@@ -1,3 +1,17 @@
+# ChartPatternsv2_WarriorTrading
+
+> *Source PDF: ChartPatternsv2_WarriorTrading.pdf*
+> *Extraction: Combined — previous structured extraction (base) + markitdown raw text*
+
+---
+
+# ChartPatternsv2_WarriorTrading
+
+> *Source PDF: ChartPatternsv2_WarriorTrading.pdf*
+> *Extraction: Combined — previous structured extraction (base) + markitdown raw text*
+
+---
+
 # Warrior Trading Chart Patterns Study Guide
 *Text Extraction & Visual Description for Non-Visual AI*
 
@@ -897,3 +911,884 @@ The document contains approximately 87+ chart illustrations with these common vi
 *End of Document Extraction*
 
 *Note: This markdown extraction preserves all textual content and provides detailed descriptions of visual elements for non-visual AI processing. Actual chart images contain additional visual nuance (exact candle shapes, indicator colors, annotation placement) that cannot be fully captured in text.*
+
+
+---
+
+## Content Unique to Old Extraction (not found in markitdown output)
+
+### 1. # Warrior Trading Chart Patterns Study Guide
+*Text Extraction & Visual Descripti...
+
+# Warrior Trading Chart Patterns Study Guide
+*Text Extraction & Visual Description for Non-Visual AI*
+
+### 2. ## Document Overview
+This is a study guide from Warrior Trading covering various...
+
+## Document Overview
+This is a study guide from Warrior Trading covering various technical analysis chart patterns used for day trading. The document contains text instructions, trading rules, and numerous chart screenshots showing real stock examples. Below is the complete textual content with detailed descriptions of all visual elements.
+
+### 3. ## 1. BULL FLAG BREAKOUT PATTERN...
+
+## 1. BULL FLAG BREAKOUT PATTERN
+
+### 4. ### Rules:
+- Next candle closed above the previous candle's high
+- Price above t...
+
+### Rules:
+- Next candle closed above the previous candle's high
+- Price above this candle's high is considered a buy
+- The close of the next candle would be confirmation of an entry
+
+### 5. ### Illustration Descriptions:...
+
+### Illustration Descriptions:
+
+### 6. **Chart 1: NVFY (Nova Lifestyle Inc) - 5-minute Dynamic Chart**
+- Date: 09/30/20...
+
+**Chart 1: NVFY (Nova Lifestyle Inc) - 5-minute Dynamic Chart**
+- Date: 09/30/2016
+- Time displayed: CD:02:59
+- Price range: ~$2.60 to $4.40
+- Visual: Shows a bull flag formation with an initial sharp upward move (the "flagpole"), followed by a consolidation period sloping slightly downward (the "flag"), then a breakout above the consolidation high
+- Volume bars shown at bottom, increasing on breakout
+- Moving averages displayed (M2, M3 labels visible)
+
+### 7. **Chart 2: CCXI (Chemocentryx Inc) - Bull Flag: 5 min then 1 min**
+- Date: 05/11...
+
+**Chart 2: CCXI (Chemocentryx Inc) - Bull Flag: 5 min then 1 min**
+- Date: 05/11/2016
+- Two panels shown side-by-side:
+  - Left: 5-minute chart showing broader bull flag structure
+  - Right: 1-minute chart showing entry-level detail
+- Price range: ~$3.20 to $4.40
+- Visual: Demonstrates multi-timeframe analysis - the 5-min shows the pattern context, the 1-min shows precise entry timing
+- Volume increases on breakout confirmation
+
+### 8. ## 2. BEAR FLAG BREAKDOWN PATTERN (1-min)...
+
+## 2. BEAR FLAG BREAKDOWN PATTERN (1-min)
+
+### 9. ### Rules:
+- Short first candle to make a new low (inverse of bull flag)...
+
+### Rules:
+- Short first candle to make a new low (inverse of bull flag)
+
+### 10. ### Illustration Descriptions:...
+
+### Illustration Descriptions:
+
+### 11. **Chart 3: GEO (Geo Group Inc New) - Bear Flag Breakdown**
+- Date: 08/16/2016
+- ...
+
+**Chart 3: GEO (Geo Group Inc New) - Bear Flag Breakdown**
+- Date: 08/16/2016
+- Two panels: 5-minute (left) and 1-minute (right)
+- Price range: ~$16.00 to $34.00
+- Visual: Shows sharp downward move (flagpole), brief upward/sideways consolidation (flag), then breakdown below support
+- Red candles dominate during breakdown phase
+- Volume spikes on breakdown confirmation
+
+### 12. ## 3. BEAR FLAG BREAKDOWN PATTERN (5-min)...
+
+## 3. BEAR FLAG BREAKDOWN PATTERN (5-min)
+
+### 13. **Chart 4: NVDA (NVIDIA Corp) - 5-minute Chart**
+- Date: 02/23/2017
+- Price rang...
+
+**Chart 4: NVDA (NVIDIA Corp) - 5-minute Chart**
+- Date: 02/23/2017
+- Price range: ~$101.50 to $107.00
+- Visual: Clear bear flag on larger timeframe - downtrend, consolidation channel sloping up slightly, then breakdown
+- Moving averages and volume indicators visible
+- Demonstrates pattern reliability on liquid large-cap stocks
+
+### 14. ## 4. BULL FLAGS AND FLAT TOPS...
+
+## 4. BULL FLAGS AND FLAT TOPS
+
+### 15. **Chart 5: VECO (Veeco Pharmaceuticals Inc) - 5-minute Dynamic**
+- Date: 03/23/2...
+
+**Chart 5: VECO (Veeco Pharmaceuticals Inc) - 5-minute Dynamic**
+- Date: 03/23/2015
+- Price range: ~$1.40 to $3.60
+- Visual: Shows a flat top resistance level (multiple candles testing same high ~$3.20-3.40), then breakout above that level with strong momentum
+- Volume expansion on breakout
+- Illustrates confluence of bull flag + flat top breakout
+
+### 16. ## 5. FALSE BREAKOUT TRAP / FLAG PATTERN FALSE BREAK...
+
+## 5. FALSE BREAKOUT TRAP / FLAG PATTERN FALSE BREAK
+
+### 17. ### Concept:
+- Warns traders about fake breakouts that reverse quickly
+- Teaches...
+
+### Concept:
+- Warns traders about fake breakouts that reverse quickly
+- Teaches identification of traps to avoid losses
+
+### 18. ### Illustration Descriptions:...
+
+### Illustration Descriptions:
+
+### 19. **Chart 6: TOPS (Top Ships Inc) - Bull Flag Trap**
+- Date: 03/10/2017
+- Price ra...
+
+**Chart 6: TOPS (Top Ships Inc) - Bull Flag Trap**
+- Date: 03/10/2017
+- Price range: ~$1.00 to $2.60
+- Visual: Appears to form bull flag, price breaks above resistance briefly, then immediately reverses downward
+- Trap candle shows long upper wick (rejection)
+- Volume may spike on fake breakout then collapse
+
+### 20. **Chart 7: STAF (Staffing 360 Solutions Inc) - Bull Flag Trap**
+- Date: 07/12/20...
+
+**Chart 7: STAF (Staffing 360 Solutions Inc) - Bull Flag Trap**
+- Date: 07/12/2018
+- Price range: ~$2.90 to $3.50
+- Visual: Similar trap pattern - breakout attempt fails, price falls back into range
+- Demonstrates importance of waiting for candle close confirmation
+
+### 21. ## 6. FLAT TOP BREAKOUT PATTERN...
+
+## 6. FLAT TOP BREAKOUT PATTERN
+
+### 22. ### Rule:
+- Buy first candle that breaks flat top resistance...
+
+### Rule:
+- Buy first candle that breaks flat top resistance
+
+### 23. ### Illustration Descriptions:...
+
+### Illustration Descriptions:
+
+### 24. **Chart 8: MSFT (Microsoft Inc) - 1-minute Dynamic**
+- Price range: ~$5.40 to $6...
+
+**Chart 8: MSFT (Microsoft Inc) - 1-minute Dynamic**
+- Price range: ~$5.40 to $6.20
+- Visual: Multiple candles testing same high level (~$5.90-6.00), forming horizontal resistance "flat top"
+- Breakout candle closes decisively above with volume surge
+- Clean example of horizontal resistance breakout
+
+### 25. **Chart 9: Additional Flat Top Example**
+- Shows another stock with flat top for...
+
+**Chart 9: Additional Flat Top Example**
+- Shows another stock with flat top formation
+- Emphasizes waiting for confirmed close above resistance, not just intraday wick
+
+### 26. ## 7. DOUBLE TOP AT WHOLE DOLLAR, THEN THIRD TIME IT BREAKS...
+
+## 7. DOUBLE TOP AT WHOLE DOLLAR, THEN THIRD TIME IT BREAKS
+
+### 27. ### Concept:
+- Psychological levels ($10, $20, etc.) act as strong resistance
+- ...
+
+### Concept:
+- Psychological levels ($10, $20, etc.) act as strong resistance
+- First two attempts fail, third attempt may succeed with momentum
+
+### 28. **Chart 10: GD (General Dynamics or similar ticker)**
+- Visual: Price tests whol...
+
+**Chart 10: GD (General Dynamics or similar ticker)**
+- Visual: Price tests whole dollar level twice, forms double top pattern
+- Third approach shows stronger volume/momentum, breaks through
+- Teaches patience and confirmation at key psychological levels
+
+### 29. ## 8. FLAT BOTTOM BREAKDOWN PATTERN...
+
+## 8. FLAT BOTTOM BREAKDOWN PATTERN
+
+### 30. ### Rule:
+- Short first candle that breaks below flat bottom support...
+
+### Rule:
+- Short first candle that breaks below flat bottom support
+
+
+---
+
+## Raw Markitdown Extraction (full text)
+
+Chart Pattern Study guide
+
+Copyright © 2021 Warrior Trading™
+All rights reserved.
+
+1
+
+1a
+
+1b
+
+1c
+
+1d
+
+1f
+
+1-1a
+
+1-1-b
+
+1-1-b
+
+2
+
+2a
+
+2b
+
+2c
+
+2e
+
+2f
+
+3
+
+3a
+
+3b
+
+3c
+
+4
+
+4a
+
+4b
+
+4c
+
+4d
+
+5
+
+5a
+
+5b
+
+5c
+
+7
+
+7a
+
+7b
+
+7c
+
+8
+
+8a
+
+9
+
+9b
+
+9c
+
+9e
+
+10
+
+10a
+
+10b
+
+11
+
+14
+
+14a
+
+15
+
+15a
+
+15b
+
+16
+
+16a
+
+16b
+
+16c
+
+17
+
+17a
+
+18
+
+18a
+
+18b
+
+18c
+
+18d
+
+18e
+
+18f
+
+19
+
+19a
+
+19b
+
+20
+
+20a
+
+20b
+
+21b
+
+21c
+
+21c
+
+21d
+
+21e
+
+21f
+
+22
+
+22a
+
+22b
+
+22c
+
+23
+
+23a
+
+25
+
+26
+
+26b
+
+26c
+
+27
+
+28
+
+29
+
+30
+
+31a
+
+31b
+
+32
+
+32
+
+33
+
+33b
+
+33c
+
+37
+
+37a
+
+38
+
+38a
+
+39
+
+39a
+
+39b
+
+40
+
+40a
+
+40b
+
+40c
+
+40d
+
+40g
+
+40h
+
+40i
+
+40k
+
+41
+
+41a
+
+
+
+---
+
+## Content Unique to Old Extraction (not found in markitdown output)
+
+### 1. # ChartPatternsv2_WarriorTrading...
+
+# ChartPatternsv2_WarriorTrading
+
+### 2. > *Source PDF: ChartPatternsv2_WarriorTrading.pdf*
+> *Extraction: Combined — pre...
+
+> *Source PDF: ChartPatternsv2_WarriorTrading.pdf*
+> *Extraction: Combined — previous structured extraction (base) + markitdown raw text*
+
+### 3. # Warrior Trading Chart Patterns Study Guide
+*Text Extraction & Visual Descripti...
+
+# Warrior Trading Chart Patterns Study Guide
+*Text Extraction & Visual Description for Non-Visual AI*
+
+### 4. ## Document Overview
+This is a study guide from Warrior Trading covering various...
+
+## Document Overview
+This is a study guide from Warrior Trading covering various technical analysis chart patterns used for day trading. The document contains text instructions, trading rules, and numerous chart screenshots showing real stock examples. Below is the complete textual content with detailed descriptions of all visual elements.
+
+### 5. ## 1. BULL FLAG BREAKOUT PATTERN...
+
+## 1. BULL FLAG BREAKOUT PATTERN
+
+### 6. ### Rules:
+- Next candle closed above the previous candle's high
+- Price above t...
+
+### Rules:
+- Next candle closed above the previous candle's high
+- Price above this candle's high is considered a buy
+- The close of the next candle would be confirmation of an entry
+
+### 7. ### Illustration Descriptions:...
+
+### Illustration Descriptions:
+
+### 8. **Chart 1: NVFY (Nova Lifestyle Inc) - 5-minute Dynamic Chart**
+- Date: 09/30/20...
+
+**Chart 1: NVFY (Nova Lifestyle Inc) - 5-minute Dynamic Chart**
+- Date: 09/30/2016
+- Time displayed: CD:02:59
+- Price range: ~$2.60 to $4.40
+- Visual: Shows a bull flag formation with an initial sharp upward move (the "flagpole"), followed by a consolidation period sloping slightly downward (the "flag"), then a breakout above the consolidation high
+- Volume bars shown at bottom, increasing on breakout
+- Moving averages displayed (M2, M3 labels visible)
+
+### 9. **Chart 2: CCXI (Chemocentryx Inc) - Bull Flag: 5 min then 1 min**
+- Date: 05/11...
+
+**Chart 2: CCXI (Chemocentryx Inc) - Bull Flag: 5 min then 1 min**
+- Date: 05/11/2016
+- Two panels shown side-by-side:
+  - Left: 5-minute chart showing broader bull flag structure
+  - Right: 1-minute chart showing entry-level detail
+- Price range: ~$3.20 to $4.40
+- Visual: Demonstrates multi-timeframe analysis - the 5-min shows the pattern context, the 1-min shows precise entry timing
+- Volume increases on breakout confirmation
+
+### 10. ## 2. BEAR FLAG BREAKDOWN PATTERN (1-min)...
+
+## 2. BEAR FLAG BREAKDOWN PATTERN (1-min)
+
+### 11. ### Rules:
+- Short first candle to make a new low (inverse of bull flag)...
+
+### Rules:
+- Short first candle to make a new low (inverse of bull flag)
+
+### 12. ### Illustration Descriptions:...
+
+### Illustration Descriptions:
+
+### 13. **Chart 3: GEO (Geo Group Inc New) - Bear Flag Breakdown**
+- Date: 08/16/2016
+- ...
+
+**Chart 3: GEO (Geo Group Inc New) - Bear Flag Breakdown**
+- Date: 08/16/2016
+- Two panels: 5-minute (left) and 1-minute (right)
+- Price range: ~$16.00 to $34.00
+- Visual: Shows sharp downward move (flagpole), brief upward/sideways consolidation (flag), then breakdown below support
+- Red candles dominate during breakdown phase
+- Volume spikes on breakdown confirmation
+
+### 14. ## 3. BEAR FLAG BREAKDOWN PATTERN (5-min)...
+
+## 3. BEAR FLAG BREAKDOWN PATTERN (5-min)
+
+### 15. **Chart 4: NVDA (NVIDIA Corp) - 5-minute Chart**
+- Date: 02/23/2017
+- Price rang...
+
+**Chart 4: NVDA (NVIDIA Corp) - 5-minute Chart**
+- Date: 02/23/2017
+- Price range: ~$101.50 to $107.00
+- Visual: Clear bear flag on larger timeframe - downtrend, consolidation channel sloping up slightly, then breakdown
+- Moving averages and volume indicators visible
+- Demonstrates pattern reliability on liquid large-cap stocks
+
+### 16. ## 4. BULL FLAGS AND FLAT TOPS...
+
+## 4. BULL FLAGS AND FLAT TOPS
+
+### 17. **Chart 5: VECO (Veeco Pharmaceuticals Inc) - 5-minute Dynamic**
+- Date: 03/23/2...
+
+**Chart 5: VECO (Veeco Pharmaceuticals Inc) - 5-minute Dynamic**
+- Date: 03/23/2015
+- Price range: ~$1.40 to $3.60
+- Visual: Shows a flat top resistance level (multiple candles testing same high ~$3.20-3.40), then breakout above that level with strong momentum
+- Volume expansion on breakout
+- Illustrates confluence of bull flag + flat top breakout
+
+### 18. ## 5. FALSE BREAKOUT TRAP / FLAG PATTERN FALSE BREAK...
+
+## 5. FALSE BREAKOUT TRAP / FLAG PATTERN FALSE BREAK
+
+### 19. ### Concept:
+- Warns traders about fake breakouts that reverse quickly
+- Teaches...
+
+### Concept:
+- Warns traders about fake breakouts that reverse quickly
+- Teaches identification of traps to avoid losses
+
+### 20. ### Illustration Descriptions:...
+
+### Illustration Descriptions:
+
+### 21. **Chart 6: TOPS (Top Ships Inc) - Bull Flag Trap**
+- Date: 03/10/2017
+- Price ra...
+
+**Chart 6: TOPS (Top Ships Inc) - Bull Flag Trap**
+- Date: 03/10/2017
+- Price range: ~$1.00 to $2.60
+- Visual: Appears to form bull flag, price breaks above resistance briefly, then immediately reverses downward
+- Trap candle shows long upper wick (rejection)
+- Volume may spike on fake breakout then collapse
+
+### 22. **Chart 7: STAF (Staffing 360 Solutions Inc) - Bull Flag Trap**
+- Date: 07/12/20...
+
+**Chart 7: STAF (Staffing 360 Solutions Inc) - Bull Flag Trap**
+- Date: 07/12/2018
+- Price range: ~$2.90 to $3.50
+- Visual: Similar trap pattern - breakout attempt fails, price falls back into range
+- Demonstrates importance of waiting for candle close confirmation
+
+### 23. ## 6. FLAT TOP BREAKOUT PATTERN...
+
+## 6. FLAT TOP BREAKOUT PATTERN
+
+### 24. ### Rule:
+- Buy first candle that breaks flat top resistance...
+
+### Rule:
+- Buy first candle that breaks flat top resistance
+
+### 25. ### Illustration Descriptions:...
+
+### Illustration Descriptions:
+
+### 26. **Chart 8: MSFT (Microsoft Inc) - 1-minute Dynamic**
+- Price range: ~$5.40 to $6...
+
+**Chart 8: MSFT (Microsoft Inc) - 1-minute Dynamic**
+- Price range: ~$5.40 to $6.20
+- Visual: Multiple candles testing same high level (~$5.90-6.00), forming horizontal resistance "flat top"
+- Breakout candle closes decisively above with volume surge
+- Clean example of horizontal resistance breakout
+
+### 27. **Chart 9: Additional Flat Top Example**
+- Shows another stock with flat top for...
+
+**Chart 9: Additional Flat Top Example**
+- Shows another stock with flat top formation
+- Emphasizes waiting for confirmed close above resistance, not just intraday wick
+
+### 28. ## 7. DOUBLE TOP AT WHOLE DOLLAR, THEN THIRD TIME IT BREAKS...
+
+## 7. DOUBLE TOP AT WHOLE DOLLAR, THEN THIRD TIME IT BREAKS
+
+### 29. ### Concept:
+- Psychological levels ($10, $20, etc.) act as strong resistance
+- ...
+
+### Concept:
+- Psychological levels ($10, $20, etc.) act as strong resistance
+- First two attempts fail, third attempt may succeed with momentum
+
+### 30. **Chart 10: GD (General Dynamics or similar ticker)**
+- Visual: Price tests whol...
+
+**Chart 10: GD (General Dynamics or similar ticker)**
+- Visual: Price tests whole dollar level twice, forms double top pattern
+- Third approach shows stronger volume/momentum, breaks through
+- Teaches patience and confirmation at key psychological levels
+
+
+---
+
+## Raw Markitdown Extraction (full text)
+
+Chart Pattern Study guide
+
+Copyright © 2021 Warrior Trading™
+All rights reserved.
+
+1
+
+1a
+
+1b
+
+1c
+
+1d
+
+1f
+
+1-1a
+
+1-1-b
+
+1-1-b
+
+2
+
+2a
+
+2b
+
+2c
+
+2e
+
+2f
+
+3
+
+3a
+
+3b
+
+3c
+
+4
+
+4a
+
+4b
+
+4c
+
+4d
+
+5
+
+5a
+
+5b
+
+5c
+
+7
+
+7a
+
+7b
+
+7c
+
+8
+
+8a
+
+9
+
+9b
+
+9c
+
+9e
+
+10
+
+10a
+
+10b
+
+11
+
+14
+
+14a
+
+15
+
+15a
+
+15b
+
+16
+
+16a
+
+16b
+
+16c
+
+17
+
+17a
+
+18
+
+18a
+
+18b
+
+18c
+
+18d
+
+18e
+
+18f
+
+19
+
+19a
+
+19b
+
+20
+
+20a
+
+20b
+
+21b
+
+21c
+
+21c
+
+21d
+
+21e
+
+21f
+
+22
+
+22a
+
+22b
+
+22c
+
+23
+
+23a
+
+25
+
+26
+
+26b
+
+26c
+
+27
+
+28
+
+29
+
+30
+
+31a
+
+31b
+
+32
+
+32
+
+33
+
+33b
+
+33c
+
+37
+
+37a
+
+38
+
+38a
+
+39
+
+39a
+
+39b
+
+40
+
+40a
+
+40b
+
+40c
+
+40d
+
+40g
+
+40h
+
+40i
+
+40k
+
+41
+
+41a

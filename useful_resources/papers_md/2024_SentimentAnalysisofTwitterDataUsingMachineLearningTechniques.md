@@ -1,92 +1,964 @@
-International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024) https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
+# 2024_SentimentAnalysisofTwitterDataUsingMachineLearningTechniques
 
-## **Sentiment Analysis of Twitter Data Using Machine Learning Techniques**
+> *Source PDF: 2024_SentimentAnalysisofTwitterDataUsingMachineLearningTechniques.pdf*
+> *Extraction: Combined — previous structured extraction (base) + markitdown raw text*
 
-Mantasha Khan[1] and Ankita Srivastava[2]
+---
 
-1 Student, Department of Computer Science & Engineering, Integral University, INDIA
+# 2024_SentimentAnalysisofTwitterDataUsingMachineLearningTechniques
 
-2 Assistant Professor, Department of Computer Science & Engineering, Integral University, INDIA
+> *Source PDF: 2024_SentimentAnalysisofTwitterDataUsingMachineLearningTechniques.pdf*
+> *Extraction: Combined — markitdown raw text (base) + previous extraction supplements*
 
-1 Corresponding Author: mantashakhan900.0@gmail.com
+---
 
-Received: 22-01-2024 Revised: 11-2-2024 Accepted: 28-02-2024
+International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal
+e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024)
+https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
 
-## **ABSTRACT**
+Sentiment Analysis of Twitter Data Using Machine Learning Techniques
 
-**In the age of social media, it is more convenient for individuals to articulate their thoughts and emotions. Each day, they disseminate their perspectives and notions on various social media platforms about ongoing global events. On controversial issues, one can find a consensus of public feeling, whether positive or negative. Twitter functions as a demonstration of a social media platform where individuals participate in discussions about their perspectives. Twitter sentiment analysis examines the overall feeling or emotion expressed in tweets. It employs machine learning and natural language processing techniques to automatically categorize tweets as good, negative, or neutral depending on their content. It may be used for single tweets or a bigger dataset relating to a specific topic or event. Through the identification of these sentiments, machine learning endows us with an advantageous position in the analysis and prediction of said sentiments. Distinct machine learning models are utilized in this paper to scrutinize sentiments within Twitter data. The proposed system offers a comprehensive evaluation of the performance of various machine learning algorithms, including Vader, XGBoost with Count Vectorizer, XGBoost with Gensim, Random Forest with Count Vectorizer, Random Forest with Gensim, Single LSTM, and Bidirectional LTSM and Bidirectional LTSM gives highest accuracy of .73.**
+Mantasha Khan1 and Ankita Srivastava2
+1Student, Department of Computer Science & Engineering, Integral University, INDIA
+2Assistant Professor, Department of Computer Science & Engineering, Integral University, INDIA
 
-_**Keywords--**_ Crisis Management, LSTM, Sentimental Analysis, Tokenization, Vader
+1Corresponding Author: mantashakhan900.0@gmail.com
 
-## **I. INTRODUCTION**
+Received: 22-01-2024
 
-Twitter has emerged as a prominent platform for discussion of intense emotions, making it a valuable source of information for analyzing sentiments. Sentiment analysis is the technique of examining text to detect its underlying emotional tone. With the rise of social media platforms like Twitter, analysis of sentiment has become an essential tool for businesses, associations, and governments seeking to comprehend public opinion and form well-informed perspectives [11]. Natural Language Processing (NLP) methods are extensively employed for sentiment analysis as they enable machines to comprehend and interpret human language [12]. NLP techniques can
+Revised: 11-2-2024
+
+Accepted: 28-02-2024
+
+ABSTRACT
+
+In the age of social media, it is more convenient for
+individuals  to  articulate  their  thoughts  and  emotions.  Each
+day,  they  disseminate  their  perspectives  and  notions  on
+various  social  media  platforms  about  ongoing  global  events.
+On  controversial  issues,  one  can  find  a  consensus  of  public
+feeling,  whether  positive  or  negative.  Twitter  functions  as  a
+demonstration  of  a  social  media  platform  where  individuals
+participate  in  discussions  about  their  perspectives. Twitter
+sentiment  analysis  examines  the  overall  feeling  or  emotion
+expressed in tweets. It employs machine learning and natural
+language  processing  techniques  to  automatically  categorize
+tweets  as  good,  negative,  or  neutral  depending  on  their
+content.  It  may  be  used for  single  tweets  or  a  bigger dataset
+the
+relating
+identification  of  these  sentiments,  machine  learning  endows
+us  with  an  advantageous  position  in  the  analysis  and
+prediction  of  said  sentiments.  Distinct  machine  learning
+models  are  utilized  in  this  paper  to  scrutinize  sentiments
+within  Twitter  data.  The  proposed  system  offers  a
+comprehensive  evaluation  of  the  performance  of  various
+machine learning algorithms, including Vader, XGBoost with
+CountVectorizer,  XGBoost  with  Gensim,  Random  Forest
+with  CountVectorizer,  Random  Forest  with  Gensim,  Single
+LSTM,  and  Bidirectional  LTSM  and  Bidirectional  LTSM
+gives highest accuracy of .73.
+
+topic  or  event. Through
+
+specific
+
+to  a
+
+Keywords--  Crisis  Management,  LSTM,  Sentimental
+Analysis, Tokenization, Vader
+
+I.
+
+INTRODUCTION
+
+information
+
+Twitter has  emerged as  a  prominent  platform  for
+discussion of intense emotions, making it a valuable source
+of
+for  analyzing  sentiments.  Sentiment
+analysis  is  the  technique  of  examining  text  to  detect  its
+underlying  emotional  tone.  With  the  rise  of  social  media
+platforms  like  Twitter,  analysis  of  sentiment  has  become
+an  essential
+for  businesses,  associations,  and
+governments  seeking  to  comprehend  public  opinion  and
+form  well-informed  perspectives  [11].  Natural  Language
+Processing  (NLP)  methods  are  extensively  employed  for
+sentiment analysis as they enable machines to comprehend
+and  interpret  human  language  [12].  NLP  techniques  can
+
+tool
+
+tweets
+
+identify
+
+in  real
+
+the  sentiment
+time,
+analyze
+conveyed  in  tweets,  and  provide  insights  into  prevailing
+trends  and  patterns  in  public  sentiment  [13].  Machine
+learning algorithms, which fall under the umbrella of NLP,
+can  acquire  knowledge  from  vast  datasets  and  accurately
+predict  the  sentiment  of  new  tweets.  In  this  investigation,
+we aim to assess the efficacy of ML systems in conducting
+sentiment  analysis  on  Twitter  using  NLP  methodologies.
+To  classify  tweets  as  favorable,  negative,  or  neutral.,  we
+will utilize a dataset that includes tweets from the opening
+day  of  the  “FIFA  World  Cup  2022”,  held  in  Qatar.  This
+dataset  encompasses  information  such  as  the  date  of
+creation, number of likes, tweet source, tweet content, and
+sentiment.  We  will  preprocess  this  data  to  eliminate  any
+noise and subsequently use machine learning methods such
+as  Vader,  XGBoost,  Random  Forest,  and  LSTM  (Long
+Short-Term Memory). To improve accuracy, we use count
+vectorizers  and  genism  in  our  models.  Machines  cannot
+interpret letters or words. When dealing with text data, we
+must  represent  it  numerically  so  that  the  machine  can
+interpret  it.  Count  vectorizer  is  a  method  for  translating
+text  to  numerical  data.  Gensim  is  an  open-source  Python
+package  for  NLP.  The  Gensim  package  this  allows us  to
+create  word  embeddings  by
+instruction  word2vec
+classifiers on a particular corpus using either the CBOW or
+skip-gram  approaches.  The  effectiveness  of
+these
+algorithms  will  be  evaluated  based  on  several  criteria,
+including  F1  score,  accuracy,  recall,  and  precision.  By
+employing  sentiment  analysis,  organizations  can  make
+well-informed  decisions  regarding  real-time  monitoring,
+audience  engagement,  brand  impression,  fan  experience
+enhancement,  and  crisis  management.  Twitter  sentiment
+analysis  is  crucial  because  it  helps  businesses  understand
+customer  feedback  and  find areas  where  their  products  or
+services  may  be  Improved  [14]. Sentiment  analysis  may
+help  businesses  track their  company  reputation  online and
+react  promptly  to  unfavorable  comments  or  reviews
+[15]. Sentiment  research  may  help  political  campaigns
+better  grasp  public  sentiment  and  modify  their  messaging
+accordingly [16]. In the case of a crisis, sentiment analysis
+may assist companies in monitoring social media and news
+channels
+responding
+sentiment  analysis
+accordingly. Marketers  may  use
+
+emotions
+
+adverse
+
+and
+
+for
+
+  196
+
+This work is licensed under Creative Commons Attribution 4.0 International License.
+
+International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal
+e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024)
+https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
+
+to comprehend customer habits and tastes, as well as build
+customized advertising campaigns [17].
+
+with  an  emphasis  on  reliable  information.  The  neural
+network-based  technique  achieved  remarkable  accuracy
+(75.99%).
+
+II.
+
+LITERATURE REVIEW
+
+Pak  and  Paroubek  (2010)  [7]  proposed  an
+approach  for  categorizing  tweets  as  objective,  good,  and
+negative.  They  gathered  tweets  using  the  Twitter  API  to
+create  a  Twitter  corpus.  The  tweets  are  automatically
+labeled  with  emoticons.  They  developed  a  sentiment
+classifier  utilizing  a  Naive  Bayes  algorithm  using  features
+such as  Ngrams and  POS  tags.  The training  set  they  used
+was  less  effective  since  it  only  comprised  tweets  with
+emoticons.
+
+N    Bahrawi  (2019)  [3]  This  study  uses  the
+Random  Forest  technique  to  analyze  sentiments  using
+Twitter  data  sources.  They  will  assess  the  results  of  the
+assessment of the method used in this study. The margin of
+error  of  observations  in  this  investigation  was  roughly
+75%.
+
+G.  Shobana  et  al.(2019)  [9]  The  research
+examines
+or
+celebrity  IDs (@realdonaldtrump)
+hashtags (#IPL2018)  to  gain  insight  into  the  attitudes  of
+individuals  on  every  occasion  when  the  individual  tweets
+or  acts in  certain  situations. The  suggested  method  would
+assess  people's  sentiments  utilizing  Python,  Twitter  API,
+and  Text  Blob  (a
+library).  As  a
+consequence, it allows for a more accurate examination of
+the post.
+
+text  processing
+
+D.  Ramana  Kumar  et  al.(2020)  [8]  In  this  work,
+the Bi-LSTM generated three sorts of outcomes: favorable,
+adverse,  and  zero  to  verify  the  TSA  for  the  Sanders
+collection.  In  comparison  to  current  approaches  including
+SVM  and  Neural  Networks,  the  new  Bi-LSTM  approach
+obtained 90.04 percent efficiency, 88.12 percent precision,
+92.31 percent recall, and 90.17 percent F-Measure.
+
+S.  Jacob  et  al.  (2021)  [4]  In  this  article,  the
+researchers  applied  a  machine  learning-based  clustering
+technique.  Tests  were  performed  in  a  qualifying  and  test
+collection comprised of enormous amounts of tweets from
+data  with over  one  lakh  results,  demonstrating  efforts  to
+detect whether a tweet is either positive or negative.
+
+G.  Ravi  Kumar  et  al.(2021)  [5]  This  paper
+attempted  to  employ  three  distinct  machine  learning
+approaches to conduct an estimate assessment. The critical
+assessment is to determine the intensity of the material and
+categorize it as good, bad, or zero sentiment in the tweets.
+As a result, the primary purpose of this investigation work
+is  to  conduct  estimation  investigations  utilizing  machine
+learning (ML) approaches for sentiment analysis. The ML
+experiments  are  carried  out  while  employing  a  US  airline
+Twitter  informative  index  obtained  from  the  Kaggle.  The
+effectiveness of all three ML clusters techniques, including
+decision trees, SVMs, and neural networks, are examined,
+
+the
+
+‘#pandemic’,
+
+‘#Chinese-virus’
+
+tweets  with  hashtags
+
+‘#covid-19’,
+‘#Chinesevirus’,
+
+Cihan  ÇILGIN  et  al.(2022)  [1]  The  researchers
+like  ‘#covid19’,
+collected
+‘#social-distancing’,
+‘#Covid’,
+‘#corona-virius’,
+‘#socialdistance’,
+.
+‘#coronavirus’,
+Between January 1 and July 1, 2020, they gathered tweets
+from     Twitter  an  overall  of  60,243,040  tweets.  In  this
+study,  they  employed  VADER  to  categorize  the  emotion
+conveyed in Twitter data connected to COVID-19, and the
+overall  scores  of  the  following tweets  were  separated  into
+five groups. Furthermore, in the research, Word cloud was
+utilized  to  depict  the  most  often  gathered  text  data  every
+month, whereas N-grams were used to comprehend tweets
+and their meaning. Although there were more unfavorable
+tweets  regarding  COVID-19  during  the  earlier  phases  of
+the epidemic, users posted more favorable tweets later on.
+
+In
+
+[6]
+
+Lal  Khan  et  al.(2022)
+
+this  paper,
+researchers have used the CNN-LSTM Model layout using
+conventional  machine  learning  algorithms.  They  provide
+an innovative deep learning framework for English dialect
+SA as well as Roman Urdu, which consists of two distinct
+levels: an LSTM for ongoing dependency maintenance and
+a  single-layer  CNN  algorithm  for  geographical  feature
+extraction. To acquire the ultimate classification, CNN and
+LSTM feature maps are input into many machine learning
+models. Several word embedding algorithms lend credence
+to  this  idea.  Comprehensive  evaluations  on  four  datasets
+show that the suggested approach is extremely efficient in
+English
+text  and  Roman  Persian  categorization  of
+sentiment,  with  success  rates  around  0.904,  0.841,  0.740,
+as  well  as  0.748  vs  MDPI,  RUSA,  RUSA-19,  and  UCL
+records,  respectively.  The  outcomes  indicate  that  the
+classification  algorithm  using  SVM  and  the  Word2Vec
+CBOW framework are better alternatives for Roman Urdu
+sentiment  evaluation.  In  contrast,  BERT embedding  of
+words,  two-layer  LSTM,  and  SVM  as  categorical  works
+are  more  efficient  alternatives  for  sentiment  evaluation  in
+English.  The  proposed  model  surpasses  other  well-known
+sophisticated  methods  on  related  databases,  increasing
+performance by more than 5%.
+
+Richa  Dhanta  et al.(2023)  [2]  In this article,  they
+examined  the  dataset  from  Twitter  for  sentiment  whether
+they  are  favorable,  unfavorable,  or  zero.  They  used  a
+dataset  of  tweets  collected  from  different  sources,  which
+were  then  preprocessed  to  remove  noise  and  improper
+information  .  To  divide  tweets  as  favorable,  unfavorable,
+or neutral, several machine learning techniques were used,
+such  as  logistic  regression  and  Naive  Bayesian.  The
+efficiency  of  these  methods  is  also  assessed  in  the  study
+using  a  different  number  of  criteria,  including  F1  score,
+accuracy,  recall,  and  precision.  The  results  indicate  that
+
+  197
+
+This work is licensed under Creative Commons Attribution 4.0 International License.
+
+International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal
+e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024)
+https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
+
+machine  learning  methods  are  effective  in  analyzing
+sentiment on Twitter, with Naive Bayes providing the best
+efficiency.
+
+III.   METHODOLOGY
+
+The
+
+technique
+
+sentiment  analysis
+
+involves
+numerous  phases.  The  first  step  is  to  gather  data  and
+execute preprocessing. This dataset was obtained from the
+Kaggle repository and comprises tweets from the inaugural
+day  of  the  FIFA  World  Cup  2022,  which  took  place  in
+Qatar.  In  the  pre-processing  stage,  we  preprocess  the
+dataset  by  cleaning  the  tweets,  eliminating  usernames,
+URLs, stopwords, and so on, and then apply lemmatization
+techniques  to  standardize  words  to  ensure  consistency  in
+sentiment analysis.  To improve the accuracy of our model,
+we  integrate  CountVectorizer  and  Gensim  Word2Vec
+Model  with  our  machine  learning  methods.    This  is
+accomplished  through  the  use  of  feature  extraction  and
+feature  selection techniques. These  techniques  are  used to
+reduce  the  amount  of  input  variables,  prevent  overfitting,
+reduce  computing  complexity  and  training  time,  and
+increase  model  accuracy.  Feature  extraction  methods
+include  vectorization  and  word  embedding.  Finally,
+machine learning algorithms are employed to identify text
+as  positive,  negative,  or  neutral  depending  on  sentiment
+polarity.  Machine  learning  algorithms  categorize  feelings
+based  on  training  and  test  datasets.  The  machine  learning
+models  we  use  are  Vader,  XGBoost,  Random  Forest,  and
+LSTM  (Long  Short-Term  Memory),  are  presented  here.  (
+Figure 1)
+
+Figure 1:  Methodology
+
+A. Data Collection
+
+Cup
+
+This  dataset  was  acquired  from  the  Kaggle
+repository and includes tweets from the opening day of the
+“FIFA  World
+in  Qatar.
+(“https://www.kaggle.com/code/aks777sp/fifa-world-cup-
+day-1-tweets”). In this dataset, we have 22524 rows and 6
+columns. The dataset (Figure 2) contains information such
+as  the  unnamed,  date  created,  the  number  of  likes,  the
+source of the tweet, the tweet itself, and the sentiment.
+
+2022”
+
+held
+
+  198
+
+This work is licensed under Creative Commons Attribution 4.0 International License.
+
+International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal
+e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024)
+https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
+
+B. Pre-Processing
+
+For  the  model  to  be  more  accurate,  we  must
+preprocess the data. To preprocess the tweets collected, we
+first  remove  the  usernames,  URLs,  stopwords,  and  so  on.
+After  we  have  removed  all  of  the  usernames,  URLs,  and
+stopwords, we tokenize the text and utilize the lemmatizer
+approach to reduce the term to its root form.
+
+Figure 2:  The Dataset
+
+Table 1: Tweets along with pre-processed tweets
+
+Tweets
+
+Pre-Processed Tweets
+
+v  Wales
+
+tomorrow.  A  must  win?
+
+‘England â\x9c\x85 @England #WorldCup2022
+https://t.co/Zy3uPDRfWI’
+‘USA
+#WorldCup2022’
+‘I'm  going  for  @England  to  win  3-0  tomorrow
+#ENGIRN #WorldCup2022’
+‘The  tunnel  footage  of  the  Qatar  players  coming  out
+today  was  smart!!!  #WorldCup2022  #QATECU
+https://t.co/LkLROGJ1Go’
+‘@anonewsco  ,  @KromSec  broadcast  Iran  Protests  in
+#WorldCup2022
+#FIFAWorldCup
+\n\n#MahsaAmini\n#Anonymous \n#OpIran’
+
+C. Machine Learning Models
+a. VADER
+
+In  the  nltk,  sentiment,  Python  library  provides  a
+module  called  VADER,  which  was  designed  primarily  to
+handle  text  generated  in  social  networking  settings,  while
+it  can  also  handle  language  from  other  contexts.  VADER
+can  determine  the  polarity  of  sentiments  (positive  or
+negative)  in  a  particular  chunk  of  text  when  the  data  is
+processed unlabeled. To identify the overall sentiment of a
+corpus  of  text,  VADER  consults  a  lexicon  of  sentiment-
+related terms.
+
+Here's  an  example  of  how
+
+is
+organized,  with  each  word  assigned  a  valence  rating(In
+Figure 3)
+
+lexicon
+
+the
+
+‘england worldcup’
+
+‘usa v wale tomorrow must win worldcup’
+
+‘im going win tomorrow engirn worldcup’
+
+‘tunnel  footage  qatar  player  coming  today  smart
+worldcup qatecu’
+
+‘broadcast
+mahsaamini anonymous opiran’
+
+iran  protest  worldcup
+
+fifaworldcup
+
+generalization.  XGBoost,  known  for  its  computing  speed,
+feature  significance  analysis,  and  management  of  missing
+values, is  commonly  used  for applications  like regression,
+classification, and ranking.
+
+learning
+
+XGBoost,  or  eXtreme  Gradient  Boosting,  is  a
+machine
+technique  classified  as  ensemble
+learning.  It  is  used  for  supervised  learning  problems  like
+regression and classification. XGBoost creates a predictive
+model  by  iteratively  merging  the  predictions  of  numerous
+independent models, most often decision trees.
+c. Random Forest
+
+A  Random  Forest  is  similar  to  a  collaborative
+decision-making team in machine learning. It integrates the
+opinions of several "trees" (individual models) to improve
+predictions,  resulting  in  a  stronger  and  better-performing
+model.  The  Random  Forest  Algorithm's  extensive  appeal
+originates  from  its  user-friendliness  and  versatility,  which
+allow  it  to  efficiently  handle  both  classification  and
+regression  issues. The  algorithm's  strength  is  its  ability  to
+handle  complicated  datasets  while minimizing  overfitting,
+making  it  a  useful  tool  for a  variety  of  prediction  tasks in
+machine learning.
+
+Figure 3:  Lexicon with valence rating
+
+b. XGBoost
+
+XGBoost  is a machine  learning  method that  falls
+under  the  ensemble  learning  category,  especially  the
+gradient boosting framework. It uses decision trees as base
+learners  and  regularization  approaches  to  improve  model
+
+  199
+
+This work is licensed under Creative Commons Attribution 4.0 International License.
+
+International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal
+e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024)
+https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
+
+Figure 4:  Random Forest
+
+d. LSTM (Long Short-Term Memory)
+
+(LSTM  (Long  Short-Term  Memory)  is  a  form  of
+RNN  (Recurrent  Neural  Network)  that  can maintain  long-
+term dependencies in sequential input. LSTMs can process
+and  evaluate  sequential  data,  including  time  series,  text,
+and  voice.  The  functioning  of  an  LSTM  can  be  shown
+in(Figure.5)
+
+LSTMs have demonstrated exceptional success in
+sentiment  analysis  on  tweets  because  of  their  capacity  to
+capture  contextual  information,  manage  varied
+input
+durations, and model sophisticated language patterns. They
+are  an  effective  method  for  extracting  sentiment-related
+information from brief and informal writing, resulting in a
+better knowledge of public opinion and sentiment patterns
+on social media platforms.
+
+Bidirectional  LSTM,  often  known  as  BiLSTM,
+refers to a model of sequences that has two LSTM layers,
+one  for  forward  processing  and  another  for  backward
+processing.  It  is  typically  used  for  NLP-related  activities.
+The  idea  behind  this  method  is  that  by  analyzing  input in
+both  ways,  the  model  may  better  grasp  the  link  between
+sequences.
+
+Figure 5:  LSTM architecture
+
+Figure 6:  Bidirectional LSTM architecture
+
+IV.   RESULTS AND DISCUSSIONS
+
+through
+
+is  assessed
+
+Sentiment  analysis
+
+the
+consideration of metrics such as accuracy, precision, recall,
+and F1-Score (represented by equations 1, 2, 3, and 4). The
+sentiment  distribution,  following  the  preprocessing  of  the
+dataset,  is  visualized  in  Figure  7.  In  addition,  Figure  8
+showcases the Top 10 Sources of Tweet Count. Moreover,
+Figure  9  presents  a  Word  Cloud  depicting  sentiments.
+Lastly, Figure 10 exhibits the time series sentiment trends
+on  the  initial  day  of  the  FIFA  World  Cup  2020  in  Qatar.
+Emotion  labels  are  resampled  and  tallied  at  various  time
+intervals.
+
+  200
+
+This work is licensed under Creative Commons Attribution 4.0 International License.
+
+International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal
+e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024)
+https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
+
+Figure 7:  Distribution of sentiment
+
+Figure 8:  Top 10 Sources of Tweet Count
+
+Figure 10:  Time series Sentiment Trends
+
+Table 2:  Performance Analysis of Machine Learning
+Models for Sentiment analysis
+
+Models
+Vader
+XGBoost with
+CountVectorizer
+XGBoost with Gensim
+Random Forest with
+CountVectorizer
+Random Forest with
+Gensim
+Single LSTM
+Bidirectional LTSM
+
+Accuracy
+.57 .70
+
+.59 .69
+
+.68 .71
+.73 Many  machine  learning  methodologies,  such  as
+Vader,  XGBoost  with  CountVectorizer,  XGBoost  with
+Gensim,  Random  Forest  with  CountVectorizer,  Random
+Forest  with  Gensim,  Single  LSTM,  and  Bidirectional
+LTSM,  are  employed  to  conduct  sentimental  analysis.
+Amongst  all  of  these  machine  learning  models  that  we
+have  tested,  it is  observed  that  Bidirectional  LTSM  yields
+the  most  superior  outcomes,  with  an  accuracy  of  0.73.
+When  compared  to  the  other  machine  learning  models,
+Bidirectional LTSM exhibits the greatest performance. The
+performance  analysis  of  machine  learning  models  for
+sentiment  analysis  is  illustrated  in  Table  2.  In  addition,
+Figure 11 presents the confusion matrix of the bidirectional
+LSTM  model,  which  possesses  the  highest  degree  of
+accuracy. The F1-score, recall, and precision all amount to
+0.73. Figure 13 demonstrates the evaluation metrics of our
+machine learning approaches.
+
+Figure 9:  Word Cloud
+
+  201
+
+This work is licensed under Creative Commons Attribution 4.0 International License.
+
+International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal
+e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024)
+https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
+
+2.  Audience  Engagement:  Marketing  teams  may
+adapt  their  efforts  based  on  sentiment  analysis
+data to better connect with their target audience.
+3.  Brand  impression:  Sponsors  can  assess  their
+brand's  impression  among  fans  and  alter  strategy
+appropriately.
+
+4.  Fan Experience Enhancement: Event organizers
+may  use  sentiment  analysis  to  identify  areas  for
+improvement  and  then  improve  the  entire  fan
+experience, resulting in maximum satisfaction.
+5.  Crisis  Management:  Quickly  identify  possible
+controversies  or  unfavorable  situations  and  take
+corrective steps to limit their impact.
+
+VI.      CONCLUSION
+
+Figure 11:  Confusion Matrix of Bi-LSTM Model
+
+Figure 12:  Accuracy scores of Machine learning
+Approaches
+
+the
+
+demonstrates
+
+learning  methodologies,
+
+the  other  machine
+LTSM
+
+This  paper  examines  the  utilization  of  various
+machine
+including  Vader,
+XGBoost  with  CountVectorizer,  XGBoost  with  Gensim,
+Random Forest with CountVectorizer, Random Forest with
+Gensim,  Single  LSTM,  and  Bidirectional  LTSM,  for
+performing sentiment analysis on Twitter. Among all these
+machine learning models that have been tested, it has been
+observed  that  Bidirectional  LTSM  produces  the  most
+superior  results,  achieving  an  accuracy  of  0.73.  When
+learning  models,
+compared
+to
+Bidirectional
+highest
+performance.  Initially,  the  data  from  the  Kaggle  dataset
+“fifa_world_cup_2022_tweets”,  which  was  stored  in  a
+CSV  file,  will  be  loaded.  This  dataset  comprises  tweets
+related to the opening day of the FIFA World Cup held in
+Qatar.  Subsequently,  the  dataset  will  be  pre-processed  by
+performing  tasks  such  as  removing  usernames,  URLs,
+stopwords,  lemmatization,  and  tokenization.  Furthermore,
+visualizations  will  be  created  to  gain  insights,  including
+sentiment distribution plots, word clouds depicting positive
+and  negative  words,  and  time  series  sentiment  trends
+during  the  event.  Additionally,  sentiment  scores  will  be
+calculated  for  each  tweet  by  leveraging  these  models,
+encompassing  dimensions  of  positivity,  negativity,  and
+neutrality.  Lastly,  a  comparative  study  among  these
+models  will  be  conducted.  In  the  future,  the  Neural
+Network  model  shows  promise  and  has  the  potential  to
+outperform  the  other  models  in  terms  of  accuracy  if  it  is
+fine-tuned.
+
+Figure 13: Graphical representation of evaluation
+performance of algorithms
+
+V.       APPLICATIONS
+
+1.  Real-time  monitoring:  It  allows  stakeholders  to
+quickly  while
+
+address
+opinions
+negative
+capitalizing on good sentiment.
+
+REFERENCES
+
+[1]
+
+Çilgin,  C.,  Baş,  M.,  Bilgehan,  H.  &  Ünal,  C.
+(2022).  Twitter  sentiment  analysis  during  covid-
+19  outbreak  with  VADER.  AJIT-e:  Academic
+Journal  of  Information  Technology,  13(49),  72–
+89. https://doi.org/10.5824/ajite.2022.02.001.x.
+
+  202
+
+This work is licensed under Creative Commons Attribution 4.0 International License.
+
+International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal
+e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024)
+https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
+
+[2]
+
+[3]
+
+[4]
+
+[5]
+
+[6]
+
+[7]
+
+[8]
+
+[9]
+
+[10]
+
+[11]
+
+2(2),
+
+learning.
+
+Deutschland
+
+Dhanta,  R.,  Sharma,  H.,  Kumar,  V.  &  Singh,  H.
+O.  (2023).  Twitter  sentimental  analysis  using
+machine
+International  Journal  of
+Communication  and  Information  Technology,
+4(1),
+DOI:
+71–83.
+10.33545/2707661x.2023.v4.i1a.63.
+Bahrawi,  N.  (2019).  Sentiment  analysis  using
+random  forest  algorithm-online  social  media
+based. Journal of Information Technology and Its
+Utilization,
+29.
+https://doi.org/10.30818/jitu.2.2.2695.
+(2021).
+Jacob,  S.  S.  &  Vijayakumar,  R.
+Sentimental  analysis  over  twitter  data  using
+clustering  based  machine
+learning  algorithm.
+Journal  of  Ambient  Intelligence  and  Humanized
+Computing.  https://doi.org/10.1007/s12652-020-
+02771-9.
+Ravi Kumar, G., Venkata Sheshanna, K. & Anjan
+Babu,  G.  (2021).  Sentiment  analysis  for  airline
+tweets  utilizing  machine  learning  techniques.  In:
+EAI/Springer  Innovations  in  Communication  and
+Computing,  pp.  791–799.  Springer  Science  and
+Business  Media
+GmbH.
+https://doi.org/10.1007/978-3-030-49795-8_75.
+Khan  L,  Amjad  A,  Afaq  KM  &  Chang  H-T.
+(2022).  Deep  sentiment  analysis  using  CNN-
+LSTM architecture of english and roman urdu text
+shared  in  social  media.  Applied  Sciences,  12(5),
+2694. https://doi.org/10.3390/app12052694.
+Paroubek.
+Alexander
+(2010). Twitter as a corpus for sentiment analysis
+and  opinion  mining.  Proceedings  of  the  Seventh
+International Conference on Language Resources
+(LREC'10),  Valletta,  Malta.
+and  Evaluation
+European Language Resources Association.
+Kumar, D. & Rao, S. (2020). A sentiment analysis
+of  twitter  data  using  bi-directional  long  short
+term  memory.  DOI:  10.1007/978-3-030-30271-
+9_16.
+Shobana,  G.,  Vigneshwara,  B.  &  Maniraj  Sai,  A.
+(2019).
+analysis.
+International  Journal  of  Recent  Technology  and
+343–346.
+Engineering,
+https://doi.org/10.46501/ijmtst061266.
+Dashrath  Mahto,  Subhash  Chandra  Yadav  &
+Gotam  Singh  Lalotra.
+(2022).  Sentiment
+textual  data  using  hybrid
+prediction  of
+convbidirectional-lstm model. Mobile Information
+Systems. https://doi.org/10.1155/2022/1068554.
+I. Guellil & K. Boukhalfa. (2015). Social big data
+mining: A survey  focused on opinion mining and
+sentiments analysis. 12th International Symposium
+on  Programming  and  Systems  (ISPS),  Algiers,
+
+sentimental
+
+Pak  &
+
+Twitter
+
+Patrick
+
+7(4),
+
+[12]
+
+[13]
+
+[14]
+
+[15]
+
+[16]
+
+[17]
+
+on
+
+pp.
+
+DOI:
+
+1-10.
+
+89-94.
+
+Inventive
+
+using  Novel-CNN.
+
+Algeria,
+10.1109/ISPS.2015.7244976.
+A.  Świetlicka,  D.  Haczyk  &  M.  Haczyk.  (2023).
+Graph  neural  networks  for  natural  language
+processing  in  human-robot  interaction.  Signal
+Processing:
+Architectures,
+Algorithms,
+Arrangements,  and  Applications  (SPA),  Poznan,
+DOI:
+pp.
+Poland,
+10.23919/SPA59660.2023.10274451.
+K.  S.  Madhu,  B.  C.  Reddy,  C.  Damarukanadhan,
+M.  Polireddy  &  N.  Ravinder.  (2021).  Real  time
+sentimental  analysis  on  twitter.  6th  International
+Conference
+Computation
+Technologies,  Coimbatore,  India,  pp.  1030-1034.
+DOI: 10.1109/ICICT50816.2021.9358772.
+N.  Deepa,  J.  S.  Priya  &  T.  Devi.  (2023).
+Sentimental  analysis  recognition  in  customer
+review
+International
+Conference  on  Computer  Communication  and
+Informatics  (ICCCI),  Coimbatore,  India,  pp.  1-4.
+doi: 10.1109/ICCCI56745.2023.10128627.
+Y.  E.  Cakra  &  B.  Distiawan  Trisedya.  (2015).
+Stock  price  prediction  using  linear  regression
+based  on
+International
+sentiment  analysis.
+Conference  on  Advanced  Computer  Science  and
+(ICACSIS),  Depok,
+Information
+Indonesia,
+DOI:
+147-154.
+10.1109/ICACSIS.2015.7415179.
+P.  Khurana  Batra,  A.  Saxena,  Shruti  &  C.  Goel.
+(2020).  Election  result  prediction  using  twitter
+sentiments
+International
+Conference  on  Parallel,  Distributed  and  Grid
+Computing  (PDGC),  Waknaghat,  India,  pp.  182-
+185. DOI: 10.1109/PDGC50313.2020.9315789.
+A.  Z.  Adamov  &  E.  Adali.  (2016).  Opinion
+mining  and  Sentiment  Analysis  for  contextual
+online-advertisement.  IEEE  10th  International
+Conference  on  Application  of  Information  and
+(AICT),  Baku,
+Communication  Technologies
+Azerbaijan,
+DOI:
+10.1109/ICAICT.2016.7991682.
+
+Systems
+pp.
+
+analysis.
+
+Sixth
+
+1-3.
+
+pp.
+
+[19]
+
+[18]  Malde,  Ravi.  (2020).  A  short  introduction  to
+VADER.  Towards  Data  Science.  Available  at:
+https://towardsdatascience.com/an-short-
+introduction-to-vader-3f3860208d53.
+Schott,  Madison.
+algorithm
+https://medium.com/capital-one-tech/random-
+forest-algorithm-for-machine-learning-
+c4b2c8cc9feb.
+
+forest
+learning.  Medium.
+
+(2019).  Random
+
+for  machine
+
+  203
+
+This work is licensed under Creative Commons Attribution 4.0 International License.
+
+
+
+---
+
+## Content from Previous Extraction (not in markitdown output)
+
+### Visual/Chart/Graph Descriptions
+
+#### 1
 
 analyze tweets in real time, identify the sentiment conveyed in tweets, and provide insights into prevailing trends and patterns in public sentiment [13]. Machine learning algorithms, which fall under the umbrella of NLP, can acquire knowledge from vast datasets and accurately predict the sentiment of new tweets. In this investigation, we aim to assess the efficacy of ML systems in conducting sentiment analysis on Twitter using NLP methodologies. To classify tweets as favorable, negative, or neutral., we will utilize a dataset that includes tweets from the opening day of the “FIFA World Cup 2022”, held in Qatar. This dataset encompasses information such as the date of creation, number of likes, tweet source, tweet content, and sentiment. We will preprocess this data to eliminate any noise and subsequently use machine learning methods such as Vader, XGBoost, Random Forest, and LSTM (Long Short-Term Memory). To improve accuracy, we use count vectorizers and genism in our models. Machines cannot interpret letters or words. When dealing with text data, we must represent it numerically so that the machine can interpret it. Count vectorizer is a method for translating text to numerical data. Gensim is an open-source Python package for NLP. The Gensim package this allows us to create word embeddings by instruction word2 vec classifiers on a particular corpus using either the CBOW or skip-gram approaches. The effectiveness of these algorithms will be evaluated based on several criteria, including F1 score, accuracy, recall, and precision. By employing sentiment analysis, organizations can make well-informed decisions regarding real-time monitoring, audience engagement, brand impression, fan experience enhancement, and crisis management. Twitter sentiment analysis is crucial because it helps businesses understand customer feedback and find areas where their products or services may be Improved [14]. Sentiment analysis may help businesses track their company reputation online and react promptly to unfavorable comments or reviews [15]. Sentiment research may help political campaigns better grasp public sentiment and modify their messaging accordingly [16]. In the case of a crisis, sentiment analysis may assist companies in monitoring social media and news channels for adverse emotions and responding accordingly. Marketers may use sentiment analysis
 
-196
-
-This work is licensed under Creative Commons Attribution 4.0 International License.
-
-International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024) https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
-
-to comprehend customer habits and tastes, as well as build customized advertising campaigns [17].
-
-## **II. LITERATURE REVIEW**
-
-Pak and Paroubek (2010) [7] proposed an approach for categorizing tweets as objective, good, and negative. They gathered tweets using the Twitter API to create a Twitter corpus. The tweets are automatically labeled with emoticons. They developed a sentiment classifier utilizing a Naive Bayes algorithm using features such as Ngrams and POS tags. The training set they used was less effective since it only comprised tweets with emoticons.
-
-N  Bahrawi (2019) [3] This study uses the Random Forest technique to analyze sentiments using Twitter data sources. They will assess the results of the assessment of the method used in this study. The margin of error of observations in this investigation was roughly 75%.
-
-G. Shobana et al.(2019) [9] The research examines celebrity  IDs (@realdonaldtrump) or hashtags (#IPL2018) to gain insight into the attitudes of individuals on every occasion when the individual tweets or acts in certain situations. The suggested method would assess people's sentiments utilizing Python, Twitter API, and Text Blob (a text processing library). As a consequence, it allows for a more accurate examination of the post.
-
-D. Ramana Kumar et al.(2020) [8] In this work, the Bi-LSTM generated three sorts of outcomes: favorable, adverse, and zero to verify the TSA for the Sanders collection. In comparison to current approaches including SVM and Neural Networks, the new Bi-LSTM approach obtained 90.04 percent efficiency, 88.12 percent precision, 92.31 percent recall, and 90.17 percent F-Measure.
-
-S. Jacob et al. (2021) [4] In this article, the researchers applied a machine learning-based clustering technique. Tests were performed in a qualifying and test collection comprised of enormous amounts of tweets from data with over one lakh results, demonstrating efforts to detect whether a tweet is either positive or negative.
-
-G. Ravi Kumar et al.(2021) [5] This paper attempted to employ three distinct machine learning approaches to conduct an estimate assessment. The critical assessment is to determine the intensity of the material and categorize it as good, bad, or zero sentiment in the tweets. As a result, the primary purpose of this investigation work is to conduct estimation investigations utilizing machine learning (ML) approaches for sentiment analysis. The ML experiments are carried out while employing a US airline Twitter informative index obtained from the Kaggle. The effectiveness of all three ML clusters techniques, including decision trees, SVMs, and neural networks, are examined,
-
-with an emphasis on reliable information. The neural network-based technique achieved remarkable accuracy (75.99%).
-
-Cihan ÇILGIN et al.(2022) [1] The researchers collected the tweets with hashtags like ‘#covid19’, ‘#Covid’, ‘#pandemic’, ‘#social-distancing’, ‘#socialdistance’, ‘#covid-19’, ‘#corona-virius’, ‘#coronavirus’, ‘#Chinesevirus’, ‘#Chinese-virus’ . Between January 1 and July 1, 2020, they gathered tweets from    Twitter an overall of 60,243,040 tweets. In this study, they employed VADER to categorize the emotion conveyed in Twitter data connected to COVID-19, and the overall scores of the following tweets were separated into five groups. Furthermore, in the research, Word cloud was utilized to depict the most often gathered text data every month, whereas N-grams were used to comprehend tweets and their meaning. Although there were more unfavorable tweets regarding COVID-19 during the earlier phases of the epidemic, users posted more favorable tweets later on.
+#### 2
 
 Lal Khan et al.(2022) [6] In this paper, researchers have used the CNN-LSTM Model layout using conventional machine learning algorithms. They provide an innovative deep learning framework for English dialect SA as well as Roman Urdu, which consists of two distinct levels: an LSTM for ongoing dependency maintenance and a single-layer CNN algorithm for geographical feature extraction. To acquire the ultimate classification, CNN and LSTM feature maps are input into many machine learning models. Several word embedding algorithms lend credence to this idea. Comprehensive evaluations on four datasets show that the suggested approach is extremely efficient in English text and Roman Persian categorization of sentiment, with success rates around 0.904, 0.841, 0.740, as well as 0.748 vs MDPI, RUSA, RUSA-19, and UCL records, respectively. The outcomes indicate that the classification algorithm using SVM and the Word2 Vec CBOW framework are better alternatives for Roman Urdu sentiment evaluation. In contrast, BERT embedding of words, two-layer LSTM, and SVM as categorical works are more efficient alternatives for sentiment evaluation in English. The proposed model surpasses other well-known sophisticated methods on related databases, increasing performance by more than 5%.
 
-Richa Dhanta et al.(2023) [2] In this article, they examined the dataset from Twitter for sentiment whether they are favorable, unfavorable, or zero. They used a dataset of tweets collected from different sources, which were then preprocessed to remove noise and improper information . To divide tweets as favorable, unfavorable, or neutral, several machine learning techniques were used, such as logistic regression and Naive Bayesian. The efficiency of these methods is also assessed in the study using a different number of criteria, including F1 score, accuracy, recall, and precision. The results indicate that
-
-This work is licensed under Creative Commons Attribution 4.0 International License.
-
-197
-
-International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024) https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
-
-machine learning methods are effective in analyzing sentiment on Twitter, with Naive Bayes providing the best efficiency.
-
-## **III. METHODOLOGY**
+#### 3
 
 The sentiment analysis technique involves numerous phases. The first step is to gather data and execute preprocessing. This dataset was obtained from the Kaggle repository and comprises tweets from the inaugural day of the FIFA World Cup 2022, which took place in Qatar. In the pre-processing stage, we preprocess the dataset by cleaning the tweets, eliminating usernames, URLs, stopwords, and so on, and then apply lemmatization techniques to standardize words to ensure consistency in sentiment analysis.  To improve the accuracy of our model, we integrate Count Vectorizer and Gensim Word2 Vec Model with our machine learning methods.  This is accomplished through the use of feature extraction and feature selection techniques. These techniques are used to reduce the amount of input variables, prevent overfitting, reduce computing complexity and training time, and increase model accuracy. Feature extraction methods include vectorization and word embedding. Finally, machine learning algorithms are employed to identify text as positive, negative, or neutral depending on sentiment polarity. Machine learning algorithms categorize feelings based on training and test datasets. The machine learning models we use are Vader, XGBoost, Random Forest, and LSTM (Long Short-Term Memory), are presented here. ( Figure 1)
 
-**==> picture [187 x 427] intentionally omitted <==**
-
-**Figure 1:** Methodology
-
-## _**A. Data Collection**_
+#### 4
 
 This dataset was acquired from the Kaggle repository and includes tweets from the opening day of the “FIFA World Cup 2022” held in Qatar. (“https://www.kaggle.com/code/aks777 sp/fifa-world-cupday-1-tweets”). In this dataset, we have 22524 rows and 6 columns. The dataset (Figure 2) contains information such as the unnamed, date created, the number of likes, the source of the tweet, the tweet itself, and the sentiment.
 
-This work is licensed under Creative Commons Attribution 4.0 International License.
-
-198
-
-International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024) https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
-
-**==> picture [233 x 87] intentionally omitted <==**
-
-## _**B. Pre-Processing**_
-
-For the model to be more accurate, we must preprocess the data. To preprocess the tweets collected, we first remove the usernames, URLs, stopwords, and so on. After we have removed all of the usernames, URLs, and stopwords, we tokenize the text and utilize the lemmatizer approach to reduce the term to its root form.
-
-**Figure 2:** The Dataset
+#### 5
 
 |**Figure 2:**The Dataset|**Figure 2:**The Dataset|
 |---|---|
@@ -98,172 +970,1207 @@ For the model to be more accurate, we must preprocess the data. To preprocess th
 |‘The tunnel footage of the Qatar players coming out<br>today was smart!!! #World Cup2022 #QATECU<br>https://t.co/Lk LROGJ1 Go’|‘tunnel footage qatar player coming today smart<br>worldcup qatecu’|
 |‘@anonewsco , @Krom Sec broadcast Iran Protests in<br>#World Cup2022<br>#FIFAWorld Cup<br>\n\n#Mahsa Amini\n#Anonymous\n#Op Iran’|‘broadcast iran protest worldcup fifaworldcup<br>mahsaamini anonymous opiran’|
 
-
-
-## _**C. Machine Learning Models**_
-
-## _**a. VADER**_
-
-In the nltk, sentiment, Python library provides a module called VADER, which was designed primarily to handle text generated in social networking settings, while it can also handle language from other contexts. VADER can determine the polarity of sentiments (positive or negative) in a particular chunk of text when the data is processed unlabeled. To identify the overall sentiment of a corpus of text, VADER consults a lexicon of sentimentrelated terms.
+#### 6
 
 Here's an example of how the lexicon is organized, with each word assigned a valence rating (In Figure 3)
 
-**==> picture [236 x 86] intentionally omitted <==**
-
-generalization. XGBoost, known for its computing speed, feature significance analysis, and management of missing values, is commonly used for applications like regression, classification, and ranking.
-
-XGBoost, or e Xtreme Gradient Boosting, is a machine learning technique classified as ensemble learning. It is used for supervised learning problems like regression and classification. XGBoost creates a predictive model by iteratively merging the predictions of numerous independent models, most often decision trees.
-
-## _**c. Random Forest**_
-
-A Random Forest is similar to a collaborative decision-making team in machine learning. It integrates the opinions of several "trees" (individual models) to improve predictions, resulting in a stronger and better-performing model. The Random Forest Algorithm's extensive appeal originates from its user-friendliness and versatility, which allow it to efficiently handle both classification and regression issues. The algorithm's strength is its ability to handle complicated datasets while minimizing overfitting, making it a useful tool for a variety of prediction tasks in machine learning.
+#### 7
 
 **Figure 3:** Lexicon with valence rating
 
-## _**b. XGBoost**_
-
-XGBoost is a machine learning method that falls under the ensemble learning category, especially the gradient boosting framework. It uses decision trees as base learners and regularization approaches to improve model
-
-This work is licensed under Creative Commons Attribution 4.0 International License.
-
-199
-
-International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024) https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
-
-**==> picture [237 x 137] intentionally omitted <==**
-
-**Figure 4:** Random Forest
-
-## _**d. LSTM (Long Short-Term Memory)**_
+#### 8
 
 (LSTM (Long Short-Term Memory) is a form of RNN (Recurrent Neural Network) that can maintain longterm dependencies in sequential input. LSTMs can process and evaluate sequential data, including time series, text, and voice. The functioning of an LSTM can be shown in (Figure.5 _**)**_
 
-LSTMs have demonstrated exceptional success in sentiment analysis on tweets because of their capacity to capture contextual information, manage varied input durations, and model sophisticated language patterns. They are an effective method for extracting sentiment-related information from brief and informal writing, resulting in a better knowledge of public opinion and sentiment patterns on social media platforms _**.**_
-
-Bidirectional LSTM, often known as Bi LSTM, refers to a model of sequences that has two LSTM layers, one for forward processing and another for backward processing. It is typically used for NLP-related activities. The idea behind this method is that by analyzing input in both ways, the model may better grasp the link between sequences.
-
-**==> picture [238 x 121] intentionally omitted <==**
+#### 9
 
 **Figure 5:** LSTM architecture
 
-**==> picture [233 x 269] intentionally omitted <==**
+#### 10
 
 **Figure 6:** Bidirectional LSTM architecture
 
-## **IV. RESULTS AND DISCUSSIONS**
+#### 11
 
 Sentiment analysis is assessed through the consideration of metrics such as accuracy, precision, recall, and F1-Score (represented by equations 1, 2, 3, and 4). The sentiment distribution, following the preprocessing of the dataset, is visualized in Figure 7. In addition, Figure 8 showcases the Top 10 Sources of Tweet Count. Moreover, Figure 9 presents a Word Cloud depicting sentiments. Lastly, Figure 10 exhibits the time series sentiment trends on the initial day of the FIFA World Cup 2020 in Qatar. Emotion labels are resampled and tallied at various time intervals.
 
-**==> picture [208 x 42] intentionally omitted <==**
-
-**==> picture [209 x 53] intentionally omitted <==**
-
-**==> picture [209 x 40] intentionally omitted <==**
-
-This work is licensed under Creative Commons Attribution 4.0 International License.
-
-200
-
-International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024) https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
-
-**==> picture [235 x 74] intentionally omitted <==**
-
-**==> picture [209 x 165] intentionally omitted <==**
+#### 12
 
 **Figure 7:** Distribution of sentiment
 
-**==> picture [224 x 133] intentionally omitted <==**
+#### 13
 
 **Figure 8:** Top 10 Sources of Tweet Count
 
-**==> picture [197 x 199] intentionally omitted <==**
-
-**==> picture [232 x 182] intentionally omitted <==**
+#### 14
 
 **Figure 10:** Time series Sentiment Trends
 
-**Table 2:** Performance Analysis of Machine Learning Models for Sentiment analysis
-
-|Models|Accuracy|
-|---|---|
-|Vader|.57|
-|XGBoost with<br>Count Vectorizer|.70|
-|XGBoostwith Gensim|.59|
-|Random Forest with<br>Count Vectorizer|.69|
-|Random Forest with<br>Gensim|.68|
-|Single LSTM|.71|
-|Bidirectional LTSM|.73|
-
-
+#### 15
 
 Many machine learning methodologies, such as Vader, XGBoost with Count Vectorizer, XGBoost with Gensim, Random Forest with Count Vectorizer, Random Forest with Gensim, Single LSTM, and Bidirectional LTSM, are employed to conduct sentimental analysis. Amongst all of these machine learning models that we have tested, it is observed that Bidirectional LTSM yields the most superior outcomes, with an accuracy of 0.73. When compared to the other machine learning models, Bidirectional LTSM exhibits the greatest performance. The performance analysis of machine learning models for sentiment analysis is illustrated in Table 2. In addition, Figure 11 presents the confusion matrix of the bidirectional LSTM model, which possesses the highest degree of accuracy. The F1-score, recall, and precision all amount to 0.73. Figure 13 demonstrates the evaluation metrics of our machine learning approaches.
 
-**Figure 9:** Word Cloud
-
-This work is licensed under Creative Commons Attribution 4.0 International License.
-
-201
-
-International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024) https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
-
-**==> picture [234 x 194] intentionally omitted <==**
+#### 16
 
 **Figure 11:** Confusion Matrix of Bi-LSTM Model
 
-**==> picture [234 x 143] intentionally omitted <==**
+#### 17
 
 **Figure 12:** Accuracy scores of Machine learning Approaches
 
-**==> picture [237 x 140] intentionally omitted <==**
+#### 18
 
 **Figure 13:** Graphical representation of evaluation performance of algorithms
 
-## **V.       APPLICATIONS**
-
-1. **Real-time monitoring:** It allows stakeholders to address negative opinions quickly while capitalizing on good sentiment.
-
-2. **Audience Engagement:** Marketing teams may adapt their efforts based on sentiment analysis data to better connect with their target audience.
-
-3. **Brand impression:** Sponsors can assess their brand's impression among fans and alter strategy appropriately.
-
-4. **Fan Experience Enhancement:** Event organizers may use sentiment analysis to identify areas for improvement and then improve the entire fan experience, resulting in maximum satisfaction.
-
-5. **Crisis Management:** Quickly identify possible controversies or unfavorable situations and take corrective steps to limit their impact.
-
-## **VI.      CONCLUSION**
+#### 19
 
 This paper examines the utilization of various machine learning methodologies, including Vader, XGBoost with Count Vectorizer, XGBoost with Gensim, Random Forest with Count Vectorizer, Random Forest with Gensim, Single LSTM, and Bidirectional LTSM, for performing sentiment analysis on Twitter. Among all these machine learning models that have been tested, it has been observed that Bidirectional LTSM produces the most superior results, achieving an accuracy of 0.73. When compared to the other machine learning models, Bidirectional LTSM demonstrates the highest performance. Initially, the data from the Kaggle dataset “fifa_world_cup_2022_tweets”, which was stored in a CSV file, will be loaded. This dataset comprises tweets related to the opening day of the FIFA World Cup held in Qatar. Subsequently, the dataset will be pre-processed by performing tasks such as removing usernames, URLs, stopwords, lemmatization, and tokenization. Furthermore, visualizations will be created to gain insights, including sentiment distribution plots, word clouds depicting positive and negative words, and time series sentiment trends during the event. Additionally, sentiment scores will be calculated for each tweet by leveraging these models, encompassing dimensions of positivity, negativity, and neutrality. Lastly, a comparative study among these models will be conducted. In the future, the Neural Network model shows promise and has the potential to outperform the other models in terms of accuracy if it is fine-tuned.
 
-## **REFERENCES**
-
-- [1] Çilgin, C., Baş, M., Bilgehan, H. & Ünal, C. (2022). Twitter sentiment analysis during covid19 outbreak with VADER. _AJIT-e: Academic Journal of Information Technology, 13_ (49), 72– 89. https://doi.org/10.5824/ajite.2022.02.001.x.
-
-This work is licensed under Creative Commons Attribution 4.0 International License.
-
-202
-
-International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024) https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
+#### 20
 
 - [2] Dhanta, R., Sharma, H., Kumar, V. & Singh, H. _Algeria_ , pp. 1-10. DOI: O. (2023). Twitter sentimental analysis using 10.1109/ISPS.2015.7244976. machine learning. _International Journal of_ [12] A. Świetlicka, D. Haczyk & M. Haczyk. (2023). _Communication and Information Technology,_ Graph neural networks for natural language _4_ (1), 71–83. DOI: processing in human-robot interaction. _Signal_ 10.33545/2707661 x.2023.v4.i1 a.63. _Processing: Algorithms, Architectures,_
 
-- [3] Bahrawi, N. (2019). Sentiment analysis using _Arrangements, and Applications (SPA), Poznan,_ random forest algorithm-online social media _Poland_ , pp. 89-94. DOI: based. _Journal of Information Technology and Its_ 10.23919/SPA59660.2023.10274451. _Utilization, 2_ (2), 29. [13] K. S. Madhu, B. C. Reddy, C. Damarukanadhan, https://doi.org/10.30818/jitu.2.2.2695. M. Polireddy & N. Ravinder. (2021). Real time
+### Additional Content
 
-- [4] Jacob, S. S. & Vijayakumar, R. (2021). sentimental analysis on twitter. _6[th] International_ Sentimental analysis over twitter data using _Conference on Inventive Computation_ clustering based machine learning algorithm. _Technologies, Coimbatore, India_ , pp. 1030-1034. _Journal of Ambient Intelligence and Humanized_ DOI: 10.1109/ICICT50816.2021.9358772. _Computing_ . https://doi.org/10.1007/s12652-020[14] N. Deepa, J. S. Priya & T. Devi. (2023). 02771-9. Sentimental analysis recognition in customer
+#### 1
 
-- [5] Ravi Kumar, G., Venkata Sheshanna, K. & Anjan review using Novel-CNN. _International_ Babu, G. (2021). Sentiment analysis for airline _Conference on Computer Communication and_ tweets utilizing machine learning techniques. In: _Informatics (ICCCI), Coimbatore, India_ , pp. 1-4. _EAI/Springer Innovations in Communication and_ doi: 10.1109/ICCCI56745.2023.10128627. _Computing_ , pp. 791–799. Springer Science and [15] Y. E. Cakra & B. Distiawan Trisedya. (2015). Business Media Deutschland Gmb H. Stock price prediction using linear regression https://doi.org/10.1007/978-3-030-49795-8_75. based on sentiment analysis. _International_
+## **Sentiment Analysis of Twitter Data Using Machine Learning Techniques**
 
-- [6] Khan L, Amjad A, Afaq KM & Chang H-T. _Conference on Advanced Computer Science and_ (2022). Deep sentiment analysis using CNN- _Information Systems (ICACSIS), Depok,_ LSTM architecture of english and roman urdu text _Indonesia_ , pp. 147-154. DOI: shared in social media. _Applied Sciences, 12_ (5), 10.1109/ICACSIS.2015.7415179. 2694. https://doi.org/10.3390/app12052694. [16] P. Khurana Batra, A. Saxena, Shruti & C. Goel.
+#### 2
 
-- [7] Alexander Pak & Patrick Paroubek. (2020). Election result prediction using twitter (2010). Twitter as a corpus for sentiment analysis sentiments analysis. _Sixth International_ and opinion mining. _Proceedings of the Seventh Conference on Parallel, Distributed and Grid International Conference on Language Resources Computing (PDGC), Waknaghat, India_ , pp. 182- _and Evaluation (LREC'10), Valletta, Malta_ . 185. DOI: 10.1109/PDGC50313.2020.9315789. European Language Resources Association. [17] A. Z. Adamov & E. Adali. (2016). Opinion
+Mantasha Khan[1] and Ankita Srivastava[2]
 
-- [8] Kumar, D. & Rao, S. (2020). _A sentiment analysis_ mining and Sentiment Analysis for contextual _of twitter data using bi-directional long short_ online-advertisement. _IEEE 10[th] International term memory_ . DOI: 10.1007/978-3-030-30271- _Conference on Application of Information and_ 9_16. _Communication Technologies (AICT), Baku,_
+#### 3
 
-- [9] Shobana, G., Vigneshwara, B. & Maniraj Sai, A. _Azerbaijan_ , pp. 1-3. DOI: (2019). Twitter sentimental analysis. 10.1109/ICAICT.2016.7991682. _International Journal of Recent Technology and_ [18] Malde, Ravi. (2020). A short introduction to _Engineering, 7_ (4), 343–346. VADER. _Towards Data Science_ . Available at: https://doi.org/10.46501/ijmtst061266. https://towardsdatascience.com/an-short-
+1 Student, Department of Computer Science & Engineering, Integral University, INDIA
 
-- [10] Dashrath Mahto, Subhash Chandra Yadav & introduction-to-vader-3 f3860208 d53. Gotam Singh Lalotra. (2022). Sentiment [19] Schott, Madison. (2019). Random forest prediction of textual data using hybrid algorithm for machine learning. _Medium_ . convbidirectional-lstm model. _Mobile Information_ https://medium.com/capital-one-tech/random- _Systems_ . https://doi.org/10.1155/2022/1068554. forest-algorithm-for-machine-learning-
+#### 4
 
-- [11] I. Guellil & K. Boukhalfa. (2015). Social big data c4 b2 c8 cc9 feb. mining: A survey focused on opinion mining and sentiments analysis. _12[th] International Symposium on Programming and Systems (ISPS), Algiers,_
+2 Assistant Professor, Department of Computer Science & Engineering, Integral University, INDIA
+
+#### 5
+
+1 Corresponding Author: mantashakhan900.0@gmail.com
+
+#### 6
+
+**In the age of social media, it is more convenient for individuals to articulate their thoughts and emotions. Each day, they disseminate their perspectives and notions on various social media platforms about ongoing global events. On controversial issues, one can find a consensus of public feeling, whether positive or negative. Twitter functions as a demonstration of a social media platform where individuals participate in discussions about their perspectives. Twitter sentiment analysis examines the overall feeling or emotion expressed in tweets. It employs machine learning and natural language processing techniques to automatically categorize tweets as good, negative, or neutral depending on their content. It may be used for single tweets or a bigger dataset relating to a specific topic or event. Through the identification of these sentiments, machine learning endows us with an advantageous position in the analysis and prediction of said sentiments. Distinct machine learning models are utilized in this paper to scrutinize sentiments within Twitter data. The proposed system offers a comprehensive evaluation of the performance of various machine learning algorithms, including Vader, XGBoost with Count Vectorizer, XGBoost with Gensim, Random Forest with Count Vectorizer, Random Forest with Gensim, Single LSTM, and Bidirectional LTSM and Bidirectional LTSM gives highest accuracy of .73.**
+
+#### 7
+
+_**Keywords--**_ Crisis Management, LSTM, Sentimental Analysis, Tokenization, Vader
+
+#### 8
+
+Twitter has emerged as a prominent platform for discussion of intense emotions, making it a valuable source of information for analyzing sentiments. Sentiment analysis is the technique of examining text to detect its underlying emotional tone. With the rise of social media platforms like Twitter, analysis of sentiment has become an essential tool for businesses, associations, and governments seeking to comprehend public opinion and form well-informed perspectives [11]. Natural Language Processing (NLP) methods are extensively employed for sentiment analysis as they enable machines to comprehend and interpret human language [12]. NLP techniques can
+
+#### 9
+
+G. Shobana et al.(2019) [9] The research examines celebrity  IDs (@realdonaldtrump) or hashtags (#IPL2018) to gain insight into the attitudes of individuals on every occasion when the individual tweets or acts in certain situations. The suggested method would assess people's sentiments utilizing Python, Twitter API, and Text Blob (a text processing library). As a consequence, it allows for a more accurate examination of the post.
+
+#### 10
+
+Cihan ÇILGIN et al.(2022) [1] The researchers collected the tweets with hashtags like ‘#covid19’, ‘#Covid’, ‘#pandemic’, ‘#social-distancing’, ‘#socialdistance’, ‘#covid-19’, ‘#corona-virius’, ‘#coronavirus’, ‘#Chinesevirus’, ‘#Chinese-virus’ . Between January 1 and July 1, 2020, they gathered tweets from    Twitter an overall of 60,243,040 tweets. In this study, they employed VADER to categorize the emotion conveyed in Twitter data connected to COVID-19, and the overall scores of the following tweets were separated into five groups. Furthermore, in the research, Word cloud was utilized to depict the most often gathered text data every month, whereas N-grams were used to comprehend tweets and their meaning. Although there were more unfavorable tweets regarding COVID-19 during the earlier phases of the epidemic, users posted more favorable tweets later on.
+
+#### 11
+
+**==> picture [187 x 427] intentionally omitted <==**
+
+#### 12
+
+**==> picture [233 x 87] intentionally omitted <==**
+
+#### 13
+
+## _**C. Machine Learning Models**_
+
+#### 14
+
+**==> picture [236 x 86] intentionally omitted <==**
+
+#### 15
+
+XGBoost, or e Xtreme Gradient Boosting, is a machine learning technique classified as ensemble learning. It is used for supervised learning problems like regression and classification. XGBoost creates a predictive model by iteratively merging the predictions of numerous independent models, most often decision trees.
+
+#### 16
+
+**==> picture [237 x 137] intentionally omitted <==**
+
+#### 17
+
+## _**d. LSTM (Long Short-Term Memory)**_
+
+#### 18
+
+Bidirectional LSTM, often known as Bi LSTM, refers to a model of sequences that has two LSTM layers, one for forward processing and another for backward processing. It is typically used for NLP-related activities. The idea behind this method is that by analyzing input in both ways, the model may better grasp the link between sequences.
+
+#### 19
+
+**==> picture [238 x 121] intentionally omitted <==**
+
+#### 20
+
+**==> picture [233 x 269] intentionally omitted <==**
+
+
+---
+
+## Content Unique to Old Extraction (not found in markitdown output)
+
+### 1. # 2024_SentimentAnalysisofTwitterDataUsingMachineLearningTechniques...
+
+# 2024_SentimentAnalysisofTwitterDataUsingMachineLearningTechniques
+
+### 2. > *Source PDF: 2024_SentimentAnalysisofTwitterDataUsingMachineLearningTechniques...
+
+> *Source PDF: 2024_SentimentAnalysisofTwitterDataUsingMachineLearningTechniques.pdf*
+> *Extraction: Combined — markitdown raw text (base) + previous extraction supplements*
+
+### 3. ## Content from Previous Extraction (not in markitdown output)...
+
+## Content from Previous Extraction (not in markitdown output)
+
+### 4. ### Visual/Chart/Graph Descriptions...
+
+### Visual/Chart/Graph Descriptions
+
+### 5. analyze tweets in real time, identify the sentiment conveyed in tweets, and prov...
+
+analyze tweets in real time, identify the sentiment conveyed in tweets, and provide insights into prevailing trends and patterns in public sentiment [13]. Machine learning algorithms, which fall under the umbrella of NLP, can acquire knowledge from vast datasets and accurately predict the sentiment of new tweets. In this investigation, we aim to assess the efficacy of ML systems in conducting sentiment analysis on Twitter using NLP methodologies. To classify tweets as favorable, negative, or neutral., we will utilize a dataset that includes tweets from the opening day of the “FIFA World Cup 2022”, held in Qatar. This dataset encompasses information such as the date of creation, number of likes, tweet source, tweet content, and sentiment. We will preprocess this data to eliminate any noise and subsequently use machine learning methods such as Vader, XGBoost, Random Forest, and LSTM (Long Short-Term Memory). To improve accuracy, we use count vectorizers and genism in our models. Machines cannot interpret letters or words. When dealing with text data, we must represent it numerically so that the machine can interpret it. Count vectorizer is a method for translating text to numerical data. Gensim is an open-source Python package for NLP. The Gensim package this allows us to create word embeddings by instruction word2 vec classifiers on a particular corpus using either the CBOW or skip-gram approaches. The effectiveness of these algorithms will be evaluated based on several criteria, including F1 score, accuracy, recall, and precision. By employing sentiment analysis, organizations can make well-informed decisions regarding real-time monitoring, audience engagement, brand impression, fan experience enhancement, and crisis management. Twitter sentiment analysis is crucial because it helps businesses understand customer feedback and find areas where their products or services may be Improved [14]. Sentiment analysis may help businesses track their company reputation online and react promptly to unfavorable comments or reviews [15]. Sentiment research may help political campaigns better grasp public sentiment and modify their messaging accordingly [16]. In the case of a crisis, sentiment analysis may assist companies in monitoring social media and news channels for adverse emotions and responding accordingly. Marketers may use sentiment analysis
+
+### 6. Lal Khan et al.(2022) [6] In this paper, researchers have used the CNN-LSTM Mode...
+
+Lal Khan et al.(2022) [6] In this paper, researchers have used the CNN-LSTM Model layout using conventional machine learning algorithms. They provide an innovative deep learning framework for English dialect SA as well as Roman Urdu, which consists of two distinct levels: an LSTM for ongoing dependency maintenance and a single-layer CNN algorithm for geographical feature extraction. To acquire the ultimate classification, CNN and LSTM feature maps are input into many machine learning models. Several word embedding algorithms lend credence to this idea. Comprehensive evaluations on four datasets show that the suggested approach is extremely efficient in English text and Roman Persian categorization of sentiment, with success rates around 0.904, 0.841, 0.740, as well as 0.748 vs MDPI, RUSA, RUSA-19, and UCL records, respectively. The outcomes indicate that the classification algorithm using SVM and the Word2 Vec CBOW framework are better alternatives for Roman Urdu sentiment evaluation. In contrast, BERT embedding of words, two-layer LSTM, and SVM as categorical works are more efficient alternatives for sentiment evaluation in English. The proposed model surpasses other well-known sophisticated methods on related databases, increasing performance by more than 5%.
+
+### 7. The sentiment analysis technique involves numerous phases. The first step is to ...
+
+The sentiment analysis technique involves numerous phases. The first step is to gather data and execute preprocessing. This dataset was obtained from the Kaggle repository and comprises tweets from the inaugural day of the FIFA World Cup 2022, which took place in Qatar. In the pre-processing stage, we preprocess the dataset by cleaning the tweets, eliminating usernames, URLs, stopwords, and so on, and then apply lemmatization techniques to standardize words to ensure consistency in sentiment analysis.  To improve the accuracy of our model, we integrate Count Vectorizer and Gensim Word2 Vec Model with our machine learning methods.  This is accomplished through the use of feature extraction and feature selection techniques. These techniques are used to reduce the amount of input variables, prevent overfitting, reduce computing complexity and training time, and increase model accuracy. Feature extraction methods include vectorization and word embedding. Finally, machine learning algorithms are employed to identify text as positive, negative, or neutral depending on sentiment polarity. Machine learning algorithms categorize feelings based on training and test datasets. The machine learning models we use are Vader, XGBoost, Random Forest, and LSTM (Long Short-Term Memory), are presented here. ( Figure 1)
+
+### 8. This dataset was acquired from the Kaggle repository and includes tweets from th...
+
+This dataset was acquired from the Kaggle repository and includes tweets from the opening day of the “FIFA World Cup 2022” held in Qatar. (“https://www.kaggle.com/code/aks777 sp/fifa-world-cupday-1-tweets”). In this dataset, we have 22524 rows and 6 columns. The dataset (Figure 2) contains information such as the unnamed, date created, the number of likes, the source of the tweet, the tweet itself, and the sentiment.
+
+### 9. |**Figure 2:**The Dataset|**Figure 2:**The Dataset|
+|---|---|
+|**Table 1:**Tweet...
+
+|**Figure 2:**The Dataset|**Figure 2:**The Dataset|
+|---|---|
+|**Table 1:**Tweets along withpre-processed tweets||
+|Tweets|Pre-Processed Tweets|
+|‘England â\x9 c\x85 @England #World Cup2022<br>https://t.co/Zy3 u PDRf WI’|‘england worldcup’|
+|‘USA<br>v<br>Wales<br>tomorrow.<br>A<br>must<br>win?<br>#World Cup2022’|‘usa v wale tomorrow must win worldcup’|
+|‘I'm going for @England to win 3-0 tomorrow<br>#ENGIRN#World Cup2022’|‘im going win tomorrow engirn worldcup’|
+|‘The tunnel footage of the Qatar players coming out<br>today was smart!!! #World Cup2022 #QATECU<br>https://t.co/Lk LROGJ1 Go’|‘tunnel footage qatar player coming today smart<br>worldcup qatecu’|
+|‘@anonewsco , @Krom Sec broadcast Iran Protests in<br>#World Cup2022<br>#FIFAWorld Cup<br>\n\n#Mahsa Amini\n#Anonymous\n#Op Iran’|‘broadcast iran protest worldcup fifaworldcup<br>mahsaamini anonymous opiran’|
+
+### 10. Here's an example of how the lexicon is organized, with each word assigned a val...
+
+Here's an example of how the lexicon is organized, with each word assigned a valence rating (In Figure 3)
+
+### 11. **Figure 3:** Lexicon with valence rating...
+
+**Figure 3:** Lexicon with valence rating
+
+### 12. (LSTM (Long Short-Term Memory) is a form of RNN (Recurrent Neural Network) that ...
+
+(LSTM (Long Short-Term Memory) is a form of RNN (Recurrent Neural Network) that can maintain longterm dependencies in sequential input. LSTMs can process and evaluate sequential data, including time series, text, and voice. The functioning of an LSTM can be shown in (Figure.5 _**)**_
+
+### 13. **Figure 5:** LSTM architecture...
+
+**Figure 5:** LSTM architecture
+
+### 14. **Figure 6:** Bidirectional LSTM architecture...
+
+**Figure 6:** Bidirectional LSTM architecture
+
+### 15. Sentiment analysis is assessed through the consideration of metrics such as accu...
+
+Sentiment analysis is assessed through the consideration of metrics such as accuracy, precision, recall, and F1-Score (represented by equations 1, 2, 3, and 4). The sentiment distribution, following the preprocessing of the dataset, is visualized in Figure 7. In addition, Figure 8 showcases the Top 10 Sources of Tweet Count. Moreover, Figure 9 presents a Word Cloud depicting sentiments. Lastly, Figure 10 exhibits the time series sentiment trends on the initial day of the FIFA World Cup 2020 in Qatar. Emotion labels are resampled and tallied at various time intervals.
+
+### 16. **Figure 7:** Distribution of sentiment...
+
+**Figure 7:** Distribution of sentiment
+
+### 17. **Figure 8:** Top 10 Sources of Tweet Count...
+
+**Figure 8:** Top 10 Sources of Tweet Count
+
+### 18. **Figure 10:** Time series Sentiment Trends...
+
+**Figure 10:** Time series Sentiment Trends
+
+### 19. Many machine learning methodologies, such as Vader, XGBoost with Count Vectorize...
+
+Many machine learning methodologies, such as Vader, XGBoost with Count Vectorizer, XGBoost with Gensim, Random Forest with Count Vectorizer, Random Forest with Gensim, Single LSTM, and Bidirectional LTSM, are employed to conduct sentimental analysis. Amongst all of these machine learning models that we have tested, it is observed that Bidirectional LTSM yields the most superior outcomes, with an accuracy of 0.73. When compared to the other machine learning models, Bidirectional LTSM exhibits the greatest performance. The performance analysis of machine learning models for sentiment analysis is illustrated in Table 2. In addition, Figure 11 presents the confusion matrix of the bidirectional LSTM model, which possesses the highest degree of accuracy. The F1-score, recall, and precision all amount to 0.73. Figure 13 demonstrates the evaluation metrics of our machine learning approaches.
+
+### 20. **Figure 11:** Confusion Matrix of Bi-LSTM Model...
+
+**Figure 11:** Confusion Matrix of Bi-LSTM Model
+
+### 21. **Figure 12:** Accuracy scores of Machine learning Approaches...
+
+**Figure 12:** Accuracy scores of Machine learning Approaches
+
+### 22. **Figure 13:** Graphical representation of evaluation performance of algorithms...
+
+**Figure 13:** Graphical representation of evaluation performance of algorithms
+
+### 23. This paper examines the utilization of various machine learning methodologies, i...
+
+This paper examines the utilization of various machine learning methodologies, including Vader, XGBoost with Count Vectorizer, XGBoost with Gensim, Random Forest with Count Vectorizer, Random Forest with Gensim, Single LSTM, and Bidirectional LTSM, for performing sentiment analysis on Twitter. Among all these machine learning models that have been tested, it has been observed that Bidirectional LTSM produces the most superior results, achieving an accuracy of 0.73. When compared to the other machine learning models, Bidirectional LTSM demonstrates the highest performance. Initially, the data from the Kaggle dataset “fifa_world_cup_2022_tweets”, which was stored in a CSV file, will be loaded. This dataset comprises tweets related to the opening day of the FIFA World Cup held in Qatar. Subsequently, the dataset will be pre-processed by performing tasks such as removing usernames, URLs, stopwords, lemmatization, and tokenization. Furthermore, visualizations will be created to gain insights, including sentiment distribution plots, word clouds depicting positive and negative words, and time series sentiment trends during the event. Additionally, sentiment scores will be calculated for each tweet by leveraging these models, encompassing dimensions of positivity, negativity, and neutrality. Lastly, a comparative study among these models will be conducted. In the future, the Neural Network model shows promise and has the potential to outperform the other models in terms of accuracy if it is fine-tuned.
+
+### 24. - [2] Dhanta, R., Sharma, H., Kumar, V. & Singh, H. _Algeria_ , pp. 1-10. DOI: O...
+
+- [2] Dhanta, R., Sharma, H., Kumar, V. & Singh, H. _Algeria_ , pp. 1-10. DOI: O. (2023). Twitter sentimental analysis using 10.1109/ISPS.2015.7244976. machine learning. _International Journal of_ [12] A. Świetlicka, D. Haczyk & M. Haczyk. (2023). _Communication and Information Technology,_ Graph neural networks for natural language _4_ (1), 71–83. DOI: processing in human-robot interaction. _Signal_ 10.33545/2707661 x.2023.v4.i1 a.63. _Processing: Algorithms, Architectures,_
+
+### 25. ## **Sentiment Analysis of Twitter Data Using Machine Learning Techniques**...
+
+## **Sentiment Analysis of Twitter Data Using Machine Learning Techniques**
+
+### 26. Mantasha Khan[1] and Ankita Srivastava[2]...
+
+Mantasha Khan[1] and Ankita Srivastava[2]
+
+### 27. 1 Student, Department of Computer Science & Engineering, Integral University, IN...
+
+1 Student, Department of Computer Science & Engineering, Integral University, INDIA
+
+### 28. 2 Assistant Professor, Department of Computer Science & Engineering, Integral Un...
+
+2 Assistant Professor, Department of Computer Science & Engineering, Integral University, INDIA
+
+### 29. 1 Corresponding Author: mantashakhan900.0@gmail.com...
+
+1 Corresponding Author: mantashakhan900.0@gmail.com
+
+### 30. **In the age of social media, it is more convenient for individuals to articulat...
+
+**In the age of social media, it is more convenient for individuals to articulate their thoughts and emotions. Each day, they disseminate their perspectives and notions on various social media platforms about ongoing global events. On controversial issues, one can find a consensus of public feeling, whether positive or negative. Twitter functions as a demonstration of a social media platform where individuals participate in discussions about their perspectives. Twitter sentiment analysis examines the overall feeling or emotion expressed in tweets. It employs machine learning and natural language processing techniques to automatically categorize tweets as good, negative, or neutral depending on their content. It may be used for single tweets or a bigger dataset relating to a specific topic or event. Through the identification of these sentiments, machine learning endows us with an advantageous position in the analysis and prediction of said sentiments. Distinct machine learning models are utilized in this paper to scrutinize sentiments within Twitter data. The proposed system offers a comprehensive evaluation of the performance of various machine learning algorithms, including Vader, XGBoost with Count Vectorizer, XGBoost with Gensim, Random Forest with Count Vectorizer, Random Forest with Gensim, Single LSTM, and Bidirectional LTSM and Bidirectional LTSM gives highest accuracy of .73.**
+
+
+---
+
+## Raw Markitdown Extraction (full text)
+
+International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal
+e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024)
+https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
+
+Sentiment Analysis of Twitter Data Using Machine Learning Techniques
+
+Mantasha Khan1 and Ankita Srivastava2
+1Student, Department of Computer Science & Engineering, Integral University, INDIA
+2Assistant Professor, Department of Computer Science & Engineering, Integral University, INDIA
+
+1Corresponding Author: mantashakhan900.0@gmail.com
+
+Received: 22-01-2024
+
+Revised: 11-2-2024
+
+Accepted: 28-02-2024
+
+ABSTRACT
+
+In the age of social media, it is more convenient for
+individuals  to  articulate  their  thoughts  and  emotions.  Each
+day,  they  disseminate  their  perspectives  and  notions  on
+various  social  media  platforms  about  ongoing  global  events.
+On  controversial  issues,  one  can  find  a  consensus  of  public
+feeling,  whether  positive  or  negative.  Twitter  functions  as  a
+demonstration  of  a  social  media  platform  where  individuals
+participate  in  discussions  about  their  perspectives. Twitter
+sentiment  analysis  examines  the  overall  feeling  or  emotion
+expressed in tweets. It employs machine learning and natural
+language  processing  techniques  to  automatically  categorize
+tweets  as  good,  negative,  or  neutral  depending  on  their
+content.  It  may  be  used for  single  tweets  or  a  bigger dataset
+the
+relating
+identification  of  these  sentiments,  machine  learning  endows
+us  with  an  advantageous  position  in  the  analysis  and
+prediction  of  said  sentiments.  Distinct  machine  learning
+models  are  utilized  in  this  paper  to  scrutinize  sentiments
+within  Twitter  data.  The  proposed  system  offers  a
+comprehensive  evaluation  of  the  performance  of  various
+machine learning algorithms, including Vader, XGBoost with
+CountVectorizer,  XGBoost  with  Gensim,  Random  Forest
+with  CountVectorizer,  Random  Forest  with  Gensim,  Single
+LSTM,  and  Bidirectional  LTSM  and  Bidirectional  LTSM
+gives highest accuracy of .73.
+
+topic  or  event. Through
+
+specific
+
+to  a
+
+Keywords--  Crisis  Management,  LSTM,  Sentimental
+Analysis, Tokenization, Vader
+
+I.
+
+INTRODUCTION
+
+information
+
+Twitter has  emerged as  a  prominent  platform  for
+discussion of intense emotions, making it a valuable source
+of
+for  analyzing  sentiments.  Sentiment
+analysis  is  the  technique  of  examining  text  to  detect  its
+underlying  emotional  tone.  With  the  rise  of  social  media
+platforms  like  Twitter,  analysis  of  sentiment  has  become
+an  essential
+for  businesses,  associations,  and
+governments  seeking  to  comprehend  public  opinion  and
+form  well-informed  perspectives  [11].  Natural  Language
+Processing  (NLP)  methods  are  extensively  employed  for
+sentiment analysis as they enable machines to comprehend
+and  interpret  human  language  [12].  NLP  techniques  can
+
+tool
+
+tweets
+
+identify
+
+in  real
+
+the  sentiment
+time,
+analyze
+conveyed  in  tweets,  and  provide  insights  into  prevailing
+trends  and  patterns  in  public  sentiment  [13].  Machine
+learning algorithms, which fall under the umbrella of NLP,
+can  acquire  knowledge  from  vast  datasets  and  accurately
+predict  the  sentiment  of  new  tweets.  In  this  investigation,
+we aim to assess the efficacy of ML systems in conducting
+sentiment  analysis  on  Twitter  using  NLP  methodologies.
+To  classify  tweets  as  favorable,  negative,  or  neutral.,  we
+will utilize a dataset that includes tweets from the opening
+day  of  the  “FIFA  World  Cup  2022”,  held  in  Qatar.  This
+dataset  encompasses  information  such  as  the  date  of
+creation, number of likes, tweet source, tweet content, and
+sentiment.  We  will  preprocess  this  data  to  eliminate  any
+noise and subsequently use machine learning methods such
+as  Vader,  XGBoost,  Random  Forest,  and  LSTM  (Long
+Short-Term Memory). To improve accuracy, we use count
+vectorizers  and  genism  in  our  models.  Machines  cannot
+interpret letters or words. When dealing with text data, we
+must  represent  it  numerically  so  that  the  machine  can
+interpret  it.  Count  vectorizer  is  a  method  for  translating
+text  to  numerical  data.  Gensim  is  an  open-source  Python
+package  for  NLP.  The  Gensim  package  this  allows us  to
+create  word  embeddings  by
+instruction  word2vec
+classifiers on a particular corpus using either the CBOW or
+skip-gram  approaches.  The  effectiveness  of
+these
+algorithms  will  be  evaluated  based  on  several  criteria,
+including  F1  score,  accuracy,  recall,  and  precision.  By
+employing  sentiment  analysis,  organizations  can  make
+well-informed  decisions  regarding  real-time  monitoring,
+audience  engagement,  brand  impression,  fan  experience
+enhancement,  and  crisis  management.  Twitter  sentiment
+analysis  is  crucial  because  it  helps  businesses  understand
+customer  feedback  and  find areas  where  their  products  or
+services  may  be  Improved  [14]. Sentiment  analysis  may
+help  businesses  track their  company  reputation  online and
+react  promptly  to  unfavorable  comments  or  reviews
+[15]. Sentiment  research  may  help  political  campaigns
+better  grasp  public  sentiment  and  modify  their  messaging
+accordingly [16]. In the case of a crisis, sentiment analysis
+may assist companies in monitoring social media and news
+channels
+responding
+sentiment  analysis
+accordingly. Marketers  may  use
+
+emotions
+
+adverse
+
+and
+
+for
+
+  196
 
 This work is licensed under Creative Commons Attribution 4.0 International License.
 
-203
+International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal
+e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024)
+https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
+
+to comprehend customer habits and tastes, as well as build
+customized advertising campaigns [17].
+
+with  an  emphasis  on  reliable  information.  The  neural
+network-based  technique  achieved  remarkable  accuracy
+(75.99%).
+
+II.
+
+LITERATURE REVIEW
+
+Pak  and  Paroubek  (2010)  [7]  proposed  an
+approach  for  categorizing  tweets  as  objective,  good,  and
+negative.  They  gathered  tweets  using  the  Twitter  API  to
+create  a  Twitter  corpus.  The  tweets  are  automatically
+labeled  with  emoticons.  They  developed  a  sentiment
+classifier  utilizing  a  Naive  Bayes  algorithm  using  features
+such as  Ngrams and  POS  tags.  The training  set  they  used
+was  less  effective  since  it  only  comprised  tweets  with
+emoticons.
+
+N    Bahrawi  (2019)  [3]  This  study  uses  the
+Random  Forest  technique  to  analyze  sentiments  using
+Twitter  data  sources.  They  will  assess  the  results  of  the
+assessment of the method used in this study. The margin of
+error  of  observations  in  this  investigation  was  roughly
+75%.
+
+G.  Shobana  et  al.(2019)  [9]  The  research
+examines
+or
+celebrity  IDs (@realdonaldtrump)
+hashtags (#IPL2018)  to  gain  insight  into  the  attitudes  of
+individuals  on  every  occasion  when  the  individual  tweets
+or  acts in  certain  situations. The  suggested  method  would
+assess  people's  sentiments  utilizing  Python,  Twitter  API,
+and  Text  Blob  (a
+library).  As  a
+consequence, it allows for a more accurate examination of
+the post.
+
+text  processing
+
+D.  Ramana  Kumar  et  al.(2020)  [8]  In  this  work,
+the Bi-LSTM generated three sorts of outcomes: favorable,
+adverse,  and  zero  to  verify  the  TSA  for  the  Sanders
+collection.  In  comparison  to  current  approaches  including
+SVM  and  Neural  Networks,  the  new  Bi-LSTM  approach
+obtained 90.04 percent efficiency, 88.12 percent precision,
+92.31 percent recall, and 90.17 percent F-Measure.
+
+S.  Jacob  et  al.  (2021)  [4]  In  this  article,  the
+researchers  applied  a  machine  learning-based  clustering
+technique.  Tests  were  performed  in  a  qualifying  and  test
+collection comprised of enormous amounts of tweets from
+data  with over  one  lakh  results,  demonstrating  efforts  to
+detect whether a tweet is either positive or negative.
+
+G.  Ravi  Kumar  et  al.(2021)  [5]  This  paper
+attempted  to  employ  three  distinct  machine  learning
+approaches to conduct an estimate assessment. The critical
+assessment is to determine the intensity of the material and
+categorize it as good, bad, or zero sentiment in the tweets.
+As a result, the primary purpose of this investigation work
+is  to  conduct  estimation  investigations  utilizing  machine
+learning (ML) approaches for sentiment analysis. The ML
+experiments  are  carried  out  while  employing  a  US  airline
+Twitter  informative  index  obtained  from  the  Kaggle.  The
+effectiveness of all three ML clusters techniques, including
+decision trees, SVMs, and neural networks, are examined,
+
+the
+
+‘#pandemic’,
+
+‘#Chinese-virus’
+
+tweets  with  hashtags
+
+‘#covid-19’,
+‘#Chinesevirus’,
+
+Cihan  ÇILGIN  et  al.(2022)  [1]  The  researchers
+like  ‘#covid19’,
+collected
+‘#social-distancing’,
+‘#Covid’,
+‘#corona-virius’,
+‘#socialdistance’,
+.
+‘#coronavirus’,
+Between January 1 and July 1, 2020, they gathered tweets
+from     Twitter  an  overall  of  60,243,040  tweets.  In  this
+study,  they  employed  VADER  to  categorize  the  emotion
+conveyed in Twitter data connected to COVID-19, and the
+overall  scores  of  the  following tweets  were  separated  into
+five groups. Furthermore, in the research, Word cloud was
+utilized  to  depict  the  most  often  gathered  text  data  every
+month, whereas N-grams were used to comprehend tweets
+and their meaning. Although there were more unfavorable
+tweets  regarding  COVID-19  during  the  earlier  phases  of
+the epidemic, users posted more favorable tweets later on.
+
+In
+
+[6]
+
+Lal  Khan  et  al.(2022)
+
+this  paper,
+researchers have used the CNN-LSTM Model layout using
+conventional  machine  learning  algorithms.  They  provide
+an innovative deep learning framework for English dialect
+SA as well as Roman Urdu, which consists of two distinct
+levels: an LSTM for ongoing dependency maintenance and
+a  single-layer  CNN  algorithm  for  geographical  feature
+extraction. To acquire the ultimate classification, CNN and
+LSTM feature maps are input into many machine learning
+models. Several word embedding algorithms lend credence
+to  this  idea.  Comprehensive  evaluations  on  four  datasets
+show that the suggested approach is extremely efficient in
+English
+text  and  Roman  Persian  categorization  of
+sentiment,  with  success  rates  around  0.904,  0.841,  0.740,
+as  well  as  0.748  vs  MDPI,  RUSA,  RUSA-19,  and  UCL
+records,  respectively.  The  outcomes  indicate  that  the
+classification  algorithm  using  SVM  and  the  Word2Vec
+CBOW framework are better alternatives for Roman Urdu
+sentiment  evaluation.  In  contrast,  BERT embedding  of
+words,  two-layer  LSTM,  and  SVM  as  categorical  works
+are  more  efficient  alternatives  for  sentiment  evaluation  in
+English.  The  proposed  model  surpasses  other  well-known
+sophisticated  methods  on  related  databases,  increasing
+performance by more than 5%.
+
+Richa  Dhanta  et al.(2023)  [2]  In this article,  they
+examined  the  dataset  from  Twitter  for  sentiment  whether
+they  are  favorable,  unfavorable,  or  zero.  They  used  a
+dataset  of  tweets  collected  from  different  sources,  which
+were  then  preprocessed  to  remove  noise  and  improper
+information  .  To  divide  tweets  as  favorable,  unfavorable,
+or neutral, several machine learning techniques were used,
+such  as  logistic  regression  and  Naive  Bayesian.  The
+efficiency  of  these  methods  is  also  assessed  in  the  study
+using  a  different  number  of  criteria,  including  F1  score,
+accuracy,  recall,  and  precision.  The  results  indicate  that
+
+  197
+
+This work is licensed under Creative Commons Attribution 4.0 International License.
+
+International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal
+e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024)
+https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
+
+machine  learning  methods  are  effective  in  analyzing
+sentiment on Twitter, with Naive Bayes providing the best
+efficiency.
+
+III.   METHODOLOGY
+
+The
+
+technique
+
+sentiment  analysis
+
+involves
+numerous  phases.  The  first  step  is  to  gather  data  and
+execute preprocessing. This dataset was obtained from the
+Kaggle repository and comprises tweets from the inaugural
+day  of  the  FIFA  World  Cup  2022,  which  took  place  in
+Qatar.  In  the  pre-processing  stage,  we  preprocess  the
+dataset  by  cleaning  the  tweets,  eliminating  usernames,
+URLs, stopwords, and so on, and then apply lemmatization
+techniques  to  standardize  words  to  ensure  consistency  in
+sentiment analysis.  To improve the accuracy of our model,
+we  integrate  CountVectorizer  and  Gensim  Word2Vec
+Model  with  our  machine  learning  methods.    This  is
+accomplished  through  the  use  of  feature  extraction  and
+feature  selection techniques. These  techniques  are  used to
+reduce  the  amount  of  input  variables,  prevent  overfitting,
+reduce  computing  complexity  and  training  time,  and
+increase  model  accuracy.  Feature  extraction  methods
+include  vectorization  and  word  embedding.  Finally,
+machine learning algorithms are employed to identify text
+as  positive,  negative,  or  neutral  depending  on  sentiment
+polarity.  Machine  learning  algorithms  categorize  feelings
+based  on  training  and  test  datasets.  The  machine  learning
+models  we  use  are  Vader,  XGBoost,  Random  Forest,  and
+LSTM  (Long  Short-Term  Memory),  are  presented  here.  (
+Figure 1)
+
+Figure 1:  Methodology
+
+A. Data Collection
+
+Cup
+
+This  dataset  was  acquired  from  the  Kaggle
+repository and includes tweets from the opening day of the
+“FIFA  World
+in  Qatar.
+(“https://www.kaggle.com/code/aks777sp/fifa-world-cup-
+day-1-tweets”). In this dataset, we have 22524 rows and 6
+columns. The dataset (Figure 2) contains information such
+as  the  unnamed,  date  created,  the  number  of  likes,  the
+source of the tweet, the tweet itself, and the sentiment.
+
+2022”
+
+held
+
+  198
+
+This work is licensed under Creative Commons Attribution 4.0 International License.
+
+International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal
+e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024)
+https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
+
+B. Pre-Processing
+
+For  the  model  to  be  more  accurate,  we  must
+preprocess the data. To preprocess the tweets collected, we
+first  remove  the  usernames,  URLs,  stopwords,  and  so  on.
+After  we  have  removed  all  of  the  usernames,  URLs,  and
+stopwords, we tokenize the text and utilize the lemmatizer
+approach to reduce the term to its root form.
+
+Figure 2:  The Dataset
+
+Table 1: Tweets along with pre-processed tweets
+
+Tweets
+
+Pre-Processed Tweets
+
+v  Wales
+
+tomorrow.  A  must  win?
+
+‘England â\x9c\x85 @England #WorldCup2022
+https://t.co/Zy3uPDRfWI’
+‘USA
+#WorldCup2022’
+‘I'm  going  for  @England  to  win  3-0  tomorrow
+#ENGIRN #WorldCup2022’
+‘The  tunnel  footage  of  the  Qatar  players  coming  out
+today  was  smart!!!  #WorldCup2022  #QATECU
+https://t.co/LkLROGJ1Go’
+‘@anonewsco  ,  @KromSec  broadcast  Iran  Protests  in
+#WorldCup2022
+#FIFAWorldCup
+\n\n#MahsaAmini\n#Anonymous \n#OpIran’
+
+C. Machine Learning Models
+a. VADER
+
+In  the  nltk,  sentiment,  Python  library  provides  a
+module  called  VADER,  which  was  designed  primarily  to
+handle  text  generated  in  social  networking  settings,  while
+it  can  also  handle  language  from  other  contexts.  VADER
+can  determine  the  polarity  of  sentiments  (positive  or
+negative)  in  a  particular  chunk  of  text  when  the  data  is
+processed unlabeled. To identify the overall sentiment of a
+corpus  of  text,  VADER  consults  a  lexicon  of  sentiment-
+related terms.
+
+Here's  an  example  of  how
+
+is
+organized,  with  each  word  assigned  a  valence  rating(In
+Figure 3)
+
+lexicon
+
+the
+
+‘england worldcup’
+
+‘usa v wale tomorrow must win worldcup’
+
+‘im going win tomorrow engirn worldcup’
+
+‘tunnel  footage  qatar  player  coming  today  smart
+worldcup qatecu’
+
+‘broadcast
+mahsaamini anonymous opiran’
+
+iran  protest  worldcup
+
+fifaworldcup
+
+generalization.  XGBoost,  known  for  its  computing  speed,
+feature  significance  analysis,  and  management  of  missing
+values, is  commonly  used  for applications  like regression,
+classification, and ranking.
+
+learning
+
+XGBoost,  or  eXtreme  Gradient  Boosting,  is  a
+machine
+technique  classified  as  ensemble
+learning.  It  is  used  for  supervised  learning  problems  like
+regression and classification. XGBoost creates a predictive
+model  by  iteratively  merging  the  predictions  of  numerous
+independent models, most often decision trees.
+c. Random Forest
+
+A  Random  Forest  is  similar  to  a  collaborative
+decision-making team in machine learning. It integrates the
+opinions of several "trees" (individual models) to improve
+predictions,  resulting  in  a  stronger  and  better-performing
+model.  The  Random  Forest  Algorithm's  extensive  appeal
+originates  from  its  user-friendliness  and  versatility,  which
+allow  it  to  efficiently  handle  both  classification  and
+regression  issues. The  algorithm's  strength  is  its  ability  to
+handle  complicated  datasets  while minimizing  overfitting,
+making  it  a  useful  tool  for a  variety  of  prediction  tasks in
+machine learning.
+
+Figure 3:  Lexicon with valence rating
+
+b. XGBoost
+
+XGBoost  is a machine  learning  method that  falls
+under  the  ensemble  learning  category,  especially  the
+gradient boosting framework. It uses decision trees as base
+learners  and  regularization  approaches  to  improve  model
+
+  199
+
+This work is licensed under Creative Commons Attribution 4.0 International License.
+
+International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal
+e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024)
+https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
+
+Figure 4:  Random Forest
+
+d. LSTM (Long Short-Term Memory)
+
+(LSTM  (Long  Short-Term  Memory)  is  a  form  of
+RNN  (Recurrent  Neural  Network)  that  can maintain  long-
+term dependencies in sequential input. LSTMs can process
+and  evaluate  sequential  data,  including  time  series,  text,
+and  voice.  The  functioning  of  an  LSTM  can  be  shown
+in(Figure.5)
+
+LSTMs have demonstrated exceptional success in
+sentiment  analysis  on  tweets  because  of  their  capacity  to
+capture  contextual  information,  manage  varied
+input
+durations, and model sophisticated language patterns. They
+are  an  effective  method  for  extracting  sentiment-related
+information from brief and informal writing, resulting in a
+better knowledge of public opinion and sentiment patterns
+on social media platforms.
+
+Bidirectional  LSTM,  often  known  as  BiLSTM,
+refers to a model of sequences that has two LSTM layers,
+one  for  forward  processing  and  another  for  backward
+processing.  It  is  typically  used  for  NLP-related  activities.
+The  idea  behind  this  method  is  that  by  analyzing  input in
+both  ways,  the  model  may  better  grasp  the  link  between
+sequences.
+
+Figure 5:  LSTM architecture
+
+Figure 6:  Bidirectional LSTM architecture
+
+IV.   RESULTS AND DISCUSSIONS
+
+through
+
+is  assessed
+
+Sentiment  analysis
+
+the
+consideration of metrics such as accuracy, precision, recall,
+and F1-Score (represented by equations 1, 2, 3, and 4). The
+sentiment  distribution,  following  the  preprocessing  of  the
+dataset,  is  visualized  in  Figure  7.  In  addition,  Figure  8
+showcases the Top 10 Sources of Tweet Count. Moreover,
+Figure  9  presents  a  Word  Cloud  depicting  sentiments.
+Lastly, Figure 10 exhibits the time series sentiment trends
+on  the  initial  day  of  the  FIFA  World  Cup  2020  in  Qatar.
+Emotion  labels  are  resampled  and  tallied  at  various  time
+intervals.
+
+  200
+
+This work is licensed under Creative Commons Attribution 4.0 International License.
+
+International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal
+e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024)
+https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
+
+Figure 7:  Distribution of sentiment
+
+Figure 8:  Top 10 Sources of Tweet Count
+
+Figure 10:  Time series Sentiment Trends
+
+Table 2:  Performance Analysis of Machine Learning
+Models for Sentiment analysis
+
+Models
+Vader
+XGBoost with
+CountVectorizer
+XGBoost with Gensim
+Random Forest with
+CountVectorizer
+Random Forest with
+Gensim
+Single LSTM
+Bidirectional LTSM
+
+Accuracy
+.57 .70
+
+.59 .69
+
+.68 .71
+.73 Many  machine  learning  methodologies,  such  as
+Vader,  XGBoost  with  CountVectorizer,  XGBoost  with
+Gensim,  Random  Forest  with  CountVectorizer,  Random
+Forest  with  Gensim,  Single  LSTM,  and  Bidirectional
+LTSM,  are  employed  to  conduct  sentimental  analysis.
+Amongst  all  of  these  machine  learning  models  that  we
+have  tested,  it is  observed  that  Bidirectional  LTSM  yields
+the  most  superior  outcomes,  with  an  accuracy  of  0.73.
+When  compared  to  the  other  machine  learning  models,
+Bidirectional LTSM exhibits the greatest performance. The
+performance  analysis  of  machine  learning  models  for
+sentiment  analysis  is  illustrated  in  Table  2.  In  addition,
+Figure 11 presents the confusion matrix of the bidirectional
+LSTM  model,  which  possesses  the  highest  degree  of
+accuracy. The F1-score, recall, and precision all amount to
+0.73. Figure 13 demonstrates the evaluation metrics of our
+machine learning approaches.
+
+Figure 9:  Word Cloud
+
+  201
+
+This work is licensed under Creative Commons Attribution 4.0 International License.
+
+International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal
+e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024)
+https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
+
+2.  Audience  Engagement:  Marketing  teams  may
+adapt  their  efforts  based  on  sentiment  analysis
+data to better connect with their target audience.
+3.  Brand  impression:  Sponsors  can  assess  their
+brand's  impression  among  fans  and  alter  strategy
+appropriately.
+
+4.  Fan Experience Enhancement: Event organizers
+may  use  sentiment  analysis  to  identify  areas  for
+improvement  and  then  improve  the  entire  fan
+experience, resulting in maximum satisfaction.
+5.  Crisis  Management:  Quickly  identify  possible
+controversies  or  unfavorable  situations  and  take
+corrective steps to limit their impact.
+
+VI.      CONCLUSION
+
+Figure 11:  Confusion Matrix of Bi-LSTM Model
+
+Figure 12:  Accuracy scores of Machine learning
+Approaches
+
+the
+
+demonstrates
+
+learning  methodologies,
+
+the  other  machine
+LTSM
+
+This  paper  examines  the  utilization  of  various
+machine
+including  Vader,
+XGBoost  with  CountVectorizer,  XGBoost  with  Gensim,
+Random Forest with CountVectorizer, Random Forest with
+Gensim,  Single  LSTM,  and  Bidirectional  LTSM,  for
+performing sentiment analysis on Twitter. Among all these
+machine learning models that have been tested, it has been
+observed  that  Bidirectional  LTSM  produces  the  most
+superior  results,  achieving  an  accuracy  of  0.73.  When
+learning  models,
+compared
+to
+Bidirectional
+highest
+performance.  Initially,  the  data  from  the  Kaggle  dataset
+“fifa_world_cup_2022_tweets”,  which  was  stored  in  a
+CSV  file,  will  be  loaded.  This  dataset  comprises  tweets
+related to the opening day of the FIFA World Cup held in
+Qatar.  Subsequently,  the  dataset  will  be  pre-processed  by
+performing  tasks  such  as  removing  usernames,  URLs,
+stopwords,  lemmatization,  and  tokenization.  Furthermore,
+visualizations  will  be  created  to  gain  insights,  including
+sentiment distribution plots, word clouds depicting positive
+and  negative  words,  and  time  series  sentiment  trends
+during  the  event.  Additionally,  sentiment  scores  will  be
+calculated  for  each  tweet  by  leveraging  these  models,
+encompassing  dimensions  of  positivity,  negativity,  and
+neutrality.  Lastly,  a  comparative  study  among  these
+models  will  be  conducted.  In  the  future,  the  Neural
+Network  model  shows  promise  and  has  the  potential  to
+outperform  the  other  models  in  terms  of  accuracy  if  it  is
+fine-tuned.
+
+Figure 13: Graphical representation of evaluation
+performance of algorithms
+
+V.       APPLICATIONS
+
+1.  Real-time  monitoring:  It  allows  stakeholders  to
+quickly  while
+
+address
+opinions
+negative
+capitalizing on good sentiment.
+
+REFERENCES
+
+[1]
+
+Çilgin,  C.,  Baş,  M.,  Bilgehan,  H.  &  Ünal,  C.
+(2022).  Twitter  sentiment  analysis  during  covid-
+19  outbreak  with  VADER.  AJIT-e:  Academic
+Journal  of  Information  Technology,  13(49),  72–
+89. https://doi.org/10.5824/ajite.2022.02.001.x.
+
+  202
+
+This work is licensed under Creative Commons Attribution 4.0 International License.
+
+International Journal of Engineering and Management Research                           Peer Reviewed & Refereed Journal
+e-ISSN: 2250-0758 | p-ISSN: 2394-6962                                                             Volume-14, Issue-1 (February 2024)
+https://ijemr.vandanapublications.com                                                          https://doi.org/10.5281/zenodo.10791485
+
+[2]
+
+[3]
+
+[4]
+
+[5]
+
+[6]
+
+[7]
+
+[8]
+
+[9]
+
+[10]
+
+[11]
+
+2(2),
+
+learning.
+
+Deutschland
+
+Dhanta,  R.,  Sharma,  H.,  Kumar,  V.  &  Singh,  H.
+O.  (2023).  Twitter  sentimental  analysis  using
+machine
+International  Journal  of
+Communication  and  Information  Technology,
+4(1),
+DOI:
+71–83.
+10.33545/2707661x.2023.v4.i1a.63.
+Bahrawi,  N.  (2019).  Sentiment  analysis  using
+random  forest  algorithm-online  social  media
+based. Journal of Information Technology and Its
+Utilization,
+29.
+https://doi.org/10.30818/jitu.2.2.2695.
+(2021).
+Jacob,  S.  S.  &  Vijayakumar,  R.
+Sentimental  analysis  over  twitter  data  using
+clustering  based  machine
+learning  algorithm.
+Journal  of  Ambient  Intelligence  and  Humanized
+Computing.  https://doi.org/10.1007/s12652-020-
+02771-9.
+Ravi Kumar, G., Venkata Sheshanna, K. & Anjan
+Babu,  G.  (2021).  Sentiment  analysis  for  airline
+tweets  utilizing  machine  learning  techniques.  In:
+EAI/Springer  Innovations  in  Communication  and
+Computing,  pp.  791–799.  Springer  Science  and
+Business  Media
+GmbH.
+https://doi.org/10.1007/978-3-030-49795-8_75.
+Khan  L,  Amjad  A,  Afaq  KM  &  Chang  H-T.
+(2022).  Deep  sentiment  analysis  using  CNN-
+LSTM architecture of english and roman urdu text
+shared  in  social  media.  Applied  Sciences,  12(5),
+2694. https://doi.org/10.3390/app12052694.
+Paroubek.
+Alexander
+(2010). Twitter as a corpus for sentiment analysis
+and  opinion  mining.  Proceedings  of  the  Seventh
+International Conference on Language Resources
+(LREC'10),  Valletta,  Malta.
+and  Evaluation
+European Language Resources Association.
+Kumar, D. & Rao, S. (2020). A sentiment analysis
+of  twitter  data  using  bi-directional  long  short
+term  memory.  DOI:  10.1007/978-3-030-30271-
+9_16.
+Shobana,  G.,  Vigneshwara,  B.  &  Maniraj  Sai,  A.
+(2019).
+analysis.
+International  Journal  of  Recent  Technology  and
+343–346.
+Engineering,
+https://doi.org/10.46501/ijmtst061266.
+Dashrath  Mahto,  Subhash  Chandra  Yadav  &
+Gotam  Singh  Lalotra.
+(2022).  Sentiment
+textual  data  using  hybrid
+prediction  of
+convbidirectional-lstm model. Mobile Information
+Systems. https://doi.org/10.1155/2022/1068554.
+I. Guellil & K. Boukhalfa. (2015). Social big data
+mining: A survey  focused on opinion mining and
+sentiments analysis. 12th International Symposium
+on  Programming  and  Systems  (ISPS),  Algiers,
+
+sentimental
+
+Pak  &
+
+Twitter
+
+Patrick
+
+7(4),
+
+[12]
+
+[13]
+
+[14]
+
+[15]
+
+[16]
+
+[17]
+
+on
+
+pp.
+
+DOI:
+
+1-10.
+
+89-94.
+
+Inventive
+
+using  Novel-CNN.
+
+Algeria,
+10.1109/ISPS.2015.7244976.
+A.  Świetlicka,  D.  Haczyk  &  M.  Haczyk.  (2023).
+Graph  neural  networks  for  natural  language
+processing  in  human-robot  interaction.  Signal
+Processing:
+Architectures,
+Algorithms,
+Arrangements,  and  Applications  (SPA),  Poznan,
+DOI:
+pp.
+Poland,
+10.23919/SPA59660.2023.10274451.
+K.  S.  Madhu,  B.  C.  Reddy,  C.  Damarukanadhan,
+M.  Polireddy  &  N.  Ravinder.  (2021).  Real  time
+sentimental  analysis  on  twitter.  6th  International
+Conference
+Computation
+Technologies,  Coimbatore,  India,  pp.  1030-1034.
+DOI: 10.1109/ICICT50816.2021.9358772.
+N.  Deepa,  J.  S.  Priya  &  T.  Devi.  (2023).
+Sentimental  analysis  recognition  in  customer
+review
+International
+Conference  on  Computer  Communication  and
+Informatics  (ICCCI),  Coimbatore,  India,  pp.  1-4.
+doi: 10.1109/ICCCI56745.2023.10128627.
+Y.  E.  Cakra  &  B.  Distiawan  Trisedya.  (2015).
+Stock  price  prediction  using  linear  regression
+based  on
+International
+sentiment  analysis.
+Conference  on  Advanced  Computer  Science  and
+(ICACSIS),  Depok,
+Information
+Indonesia,
+DOI:
+147-154.
+10.1109/ICACSIS.2015.7415179.
+P.  Khurana  Batra,  A.  Saxena,  Shruti  &  C.  Goel.
+(2020).  Election  result  prediction  using  twitter
+sentiments
+International
+Conference  on  Parallel,  Distributed  and  Grid
+Computing  (PDGC),  Waknaghat,  India,  pp.  182-
+185. DOI: 10.1109/PDGC50313.2020.9315789.
+A.  Z.  Adamov  &  E.  Adali.  (2016).  Opinion
+mining  and  Sentiment  Analysis  for  contextual
+online-advertisement.  IEEE  10th  International
+Conference  on  Application  of  Information  and
+(AICT),  Baku,
+Communication  Technologies
+Azerbaijan,
+DOI:
+10.1109/ICAICT.2016.7991682.
+
+Systems
+pp.
+
+analysis.
+
+Sixth
+
+1-3.
+
+pp.
+
+[19]
+
+[18]  Malde,  Ravi.  (2020).  A  short  introduction  to
+VADER.  Towards  Data  Science.  Available  at:
+https://towardsdatascience.com/an-short-
+introduction-to-vader-3f3860208d53.
+Schott,  Madison.
+algorithm
+https://medium.com/capital-one-tech/random-
+forest-algorithm-for-machine-learning-
+c4b2c8cc9feb.
+
+forest
+learning.  Medium.
+
+(2019).  Random
+
+for  machine
+
+  203
+
+This work is licensed under Creative Commons Attribution 4.0 International License.

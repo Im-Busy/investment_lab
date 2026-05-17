@@ -1,15 +1,45 @@
 {
   "phase_4": {
-    "timestamp": "2026-05-13T13:44:33.927873",
-    "model_path": "models\\pattern_classifier_v3_SPY_20260513_134347.pkl",
+    "timestamp": "2026-05-14T20:14:40.914286",
+    "model_path": "models\\pattern_classifier_v3_SPY_20260514_201401.pkl",
     "best_config": {
-      "entry_threshold": 0.5,
+      "entry_threshold": 0.45,
       "trail_stop": true,
       "conviction": false,
-      "trail_atr": 3.0,
+      "trail_atr": 2.5,
       "vol_gate": null
     },
-    "best_sharpe": 0.2,
-    "iterations": 1
+    "best_sharpe": 0.15,
+    "iterations": 5
+  },
+  "phase_1": {
+    "timestamp": "2026-05-14T20:11:09.802586",
+    "groups": [
+      [
+        "SPY"
+      ]
+    ],
+    "tickers": [
+      "SPY"
+    ]
+  },
+  "phase_3": {
+    "timestamp": "2026-05-14T20:11:09.814481",
+    "model_path": ""
+  },
+  "phase_5": {
+    "timestamp": "2026-05-14T20:15:36.366105",
+    "sweep_results": {
+      "entry_threshold": 0.44999999999999996,
+      "trail_atr": 2.0,
+      "conviction": false,
+      "vol_gate": 1.8,
+      "sharpe": 0.15,
+      "return_pct": 2.84,
+      "trades": 20,
+      "win_rate": 55.0,
+      "profit_factor": 0.79,
+      "max_dd": -3.32
+    }
   }
 }

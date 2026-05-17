@@ -1,3 +1,17 @@
+# Chart-Pattern-PDF-Free-Download
+
+> *Source PDF: Chart-Pattern-PDF-Free-Download.pdf*
+> *Extraction method: Manual/AI extraction from image-heavy PDF (markitdown could not extract text)*
+
+---
+
+# Chart-Pattern-PDF-Free-Download
+
+> *Source PDF: Chart-Pattern-PDF-Free-Download.pdf*
+> *Extraction method: Manual/AI extraction from image-heavy PDF (markitdown could not extract text)*
+
+---
+
 # Chart Patterns Reference Guide
 *Extracted from: Chart-Pattern-PDF-Free-Download.pdf*
 

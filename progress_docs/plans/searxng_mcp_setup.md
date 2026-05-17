@@ -190,3 +190,18 @@ If the JSON API returns 403:
 If Caddy can't connect to SearXNG:
 1. Ensure both containers are on the same network: `docker network inspect searxng-docker_searxng`
 2. Check Caddy logs: `docker compose logs caddy --tail=50`
+
+---
+
+## Status (from setup-searxng-mcp.md — 2026-04-26)
+
+Partially complete. SearXNG MCP server configured in `.kilocode/mcp.json`. Docker dependency being evaluated. Alternative: hosted SearXNG instance or direct API usage.
+
+| # | Task | Status |
+|---|------|--------|
+| 1 | Evaluate Docker vs hosted SearXNG | ⏳ |
+| 2 | Configure MCP server connection | 🔄 Partial |
+| 3 | Test search queries from agent | ⏳ |
+| 4 | Document in COMMAND_CHEATSHEET.md | ⏳ |
+
+Note: Alternative search tools already available (Tavily, Exa).

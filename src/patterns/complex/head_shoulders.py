@@ -50,7 +50,7 @@ class HeadAndShoulders(BasePattern):
         max_pattern_bars: int = 180,
         entry_offset: float = 0.01,
         stop_offset: float = 0.01,
-        volume_filter: bool = False,
+        volume_filter: bool = True,
     ):
         """
         Initialize Head and Shoulders pattern detector.
@@ -476,7 +476,7 @@ class InverseHeadAndShoulders(BasePattern):
         max_pattern_bars: int = 180,
         entry_offset: float = 0.01,
         stop_offset: float = 0.01,
-        volume_filter: bool = False,
+        volume_filter: bool = True,
     ):
         """
         FIXED: Increased max_pattern_bars from 120 to 180 for daily timeframe.

@@ -78,3 +78,28 @@ Built ML infrastructure following the study-then-implement approach from referen
 - ML enhancement showed no significant improvement in 1-year test — baseline system already reasonably optimized
 - Signal scorer (Rank IC 0.975) is the strongest component
 - Future work (Phase 05 ML Advanced) deferred pending GPU availability
+
+---
+
+## Phase 4 Implementation Report (2026-04-21)
+
+*(Merged from PHASE4_IMPLEMENTATION.md)*
+
+**Core ML Modules Created:**
+
+| File | Lines | Purpose |
+|------|-------|---------|
+| `src/ml/pattern_classifier.py` | 340 | LightGBM pattern classifier with calibration |
+| `src/ml/feature_engineering.py` | 350 | 80+ features extraction |
+
+**Feature Categories:** Price, Momentum (RSI x5, MACD, Stoch), Volatility (ATR, BB, hist vol), Volume (OBV, VWAP, CMF), Pattern Shape (body ratio, engulfing), Regime (ADX, trend), Forward Returns (1/3/5/10/20d).
+
+**Expected Outcomes:**
+| Metric | Baseline | Target |
+|--------|----------|--------|
+| Win Rate | 50-55% | 55-60% |
+| Sharpe | 0.6-0.8 | 0.8-1.2 |
+| Max DD | -15% | -10% |
+| Profit Factor | 1.3-1.5 | 1.5-1.8 |
+
+**Output:** `models/pattern_classifier_{ts}.pkl`, `reports/ml_plots/`, `reports/ml_training/`.

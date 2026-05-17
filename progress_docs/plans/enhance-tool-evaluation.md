@@ -8,10 +8,10 @@ scope: |
   (portfolio optimization), Bandit (security linting), CCXT (crypto API), FinGPT
   (LLM sentiment), aeon (time-series ML). Only HIGH/MEDIUM priority items get
   immediate implementation. LOW items are deferred until project direction warrants.
-status: 🔴 Planned
+status: ✅ Complete — T10a-1 through T10a-6 done (2026-05-16 verification). T10b-1 ✅. T10c deferred.
 tasks_total: 10
 tasks_active: 0
-tasks_complete: 0
+tasks_complete: 7
 ---
 
 # Tool Evaluation Additions

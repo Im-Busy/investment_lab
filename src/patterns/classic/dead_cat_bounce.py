@@ -44,7 +44,7 @@ class DeadCatBounce(BasePattern):
     def __init__(
         self,
         event_decline_pct: float = 0.15,
-        min_bounce_pct: float = 0.38,
+        min_bounce_pct: float = 0.50,
         max_bounce_pct: float = 0.62,
         max_bars_after_event: int = 20,
         entry_offset: float = 0.01,
@@ -56,7 +56,7 @@ class DeadCatBounce(BasePattern):
 
         Args:
             event_decline_pct: Minimum decline percentage for event day (default 15%)
-            min_bounce_pct: Minimum bounce retracement (default 38%)
+            min_bounce_pct: Minimum bounce retracement (default 50%)
             max_bounce_pct: Maximum bounce retracement (default 62%)
             max_bars_after_event: Maximum bars to look for bounce after event
             entry_offset: Price offset for entry orders

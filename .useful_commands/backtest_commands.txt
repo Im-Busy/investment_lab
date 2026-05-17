@@ -20,6 +20,12 @@ uv run scripts/backtest_ml_enhanced.py --symbol SPY --strategy ema --start 2018-
 uv run scripts/backtest_ml_enhanced.py --symbol SPY --strategy vwap --no-ml
 ```
 
+## Simple Technical Baselines vs ML (SPY 2020-2026)
+```bash
+# Compare RSI(14), MA Crossover 50/200, Buy & Hold vs ML strategy
+uv run scripts/backtest_simple_baselines.py
+```
+
 ## Custom Capital and Risk
 ```bash
 uv run scripts/backtest_ml_enhanced.py --symbol SPY --strategy vwap --capital 50000 --risk-pct 0.02

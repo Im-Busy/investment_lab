@@ -1,0 +1,1642 @@
+{
+  "C:\\Dev\\projects\\investment_trying\\src\\config.py": {
+    "mtime": 1778820097.2106903,
+    "ast_hash": "10846cdbede0886bf4bb614a678650ce",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\main.py": {
+    "mtime": 1778820097.326171,
+    "ast_hash": "1a52d74c8c5f09d867a585df2afee556",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\__init__.py": {
+    "mtime": 1778820097.106879,
+    "ast_hash": "1ffc51ebf5096f39ca41ab1e3b569145",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ai\\__init__.py": {
+    "mtime": 1778820097.1174552,
+    "ast_hash": "2f4a5cdbcf590f3924c67aedf9162d15",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\analysis\\ablation_engine.py": {
+    "mtime": 1778820097.1274107,
+    "ast_hash": "2cb2ffc2ee338f5522a771d0db9fa767",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\analysis\\ablation_study_runner.py": {
+    "mtime": 1778820097.1298964,
+    "ast_hash": "5e8f93905275d24cbd8a87e500bcf332",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\analysis\\contribution_analyzer.py": {
+    "mtime": 1778820097.135929,
+    "ast_hash": "3e5deb27b646ee32ea81768d21e0a33f",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\analysis\\contribution_charts.py": {
+    "mtime": 1778820097.1435027,
+    "ast_hash": "36b8f0dc99c89b461d2ce2851498d1fb",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\analysis\\contribution_report.py": {
+    "mtime": 1778820097.1464975,
+    "ast_hash": "2cfc1a5b112e69fbf9d14d7a559576a2",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\analysis\\correlation_analyzer.py": {
+    "mtime": 1778820097.147495,
+    "ast_hash": "f26a89af4601e8e33559c169244ec337",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\analysis\\deflated_sharpe.py": {
+    "mtime": 1778820097.1495962,
+    "ast_hash": "c3004eab233cc13348b9fd9358a752d9",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\analysis\\pattern_performance_tracker.py": {
+    "mtime": 1778820097.1505954,
+    "ast_hash": "75a86cfa2007b9013477c0c3c50f6e57",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\analysis\\pattern_selector.py": {
+    "mtime": 1778820097.1531124,
+    "ast_hash": "b64d64d59855a07959102baba66a66d6",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\analysis\\pattern_selector_viz.py": {
+    "mtime": 1778820097.154112,
+    "ast_hash": "a103ada512206d2013b06741f8135f9d",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\analysis\\performance_filter.py": {
+    "mtime": 1778820097.1561124,
+    "ast_hash": "8b768bfbc419e049161dc1f2968fcda8",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\analysis\\signal_event_log.py": {
+    "mtime": 1778820097.1571121,
+    "ast_hash": "37bfd7169fb5db04196c93b316020d3e",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\analysis\\signal_quality_filter.py": {
+    "mtime": 1778820097.1586177,
+    "ast_hash": "bcef161ae9dc91a5bec85c95a84402be",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\analysis\\statistical_filter.py": {
+    "mtime": 1778820097.1596267,
+    "ast_hash": "8a7331677d3ebb9ebc2b12040fe8db77",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\analysis\\synergy_analyzer.py": {
+    "mtime": 1778820097.1616275,
+    "ast_hash": "69da527b82af4780c10c8decd119bb45",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\analysis\\trade_attributor.py": {
+    "mtime": 1778820097.162627,
+    "ast_hash": "b7a81ad9f788be753cba182a2490fe2e",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\analysis\\walk_forward_validator.py": {
+    "mtime": 1778820097.164629,
+    "ast_hash": "7eab6be038dfb671f8e9add178699610",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\analysis\\__init__.py": {
+    "mtime": 1778820097.1243603,
+    "ast_hash": "1a20dc63d1553fa62357bb05c821b032",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\backtest\\adapter.py": {
+    "mtime": 1778820097.176736,
+    "ast_hash": "21d939c2729ba35d340f88ada782d94b",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\backtest\\benchmark.py": {
+    "mtime": 1778820097.178268,
+    "ast_hash": "c9eaec3c258dd2cc5353f89f35603500",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\backtest\\engine.py": {
+    "mtime": 1778820097.181309,
+    "ast_hash": "64ca23e6ba15c21d2f39041db7a82215",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\backtest\\epistemic_autopsy.py": {
+    "mtime": 1778820097.187341,
+    "ast_hash": "4b5bc1c4ef57b8fac108ef15b1aa7e6f",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\backtest\\friction_scoring.py": {
+    "mtime": 1778820097.1959732,
+    "ast_hash": "d4170660e385a7b54a5a45ae796941b1",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\backtest\\metrics.py": {
+    "mtime": 1778838627.781132,
+    "ast_hash": "f409468b4349a44c1d4390b1f1b54173",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\backtest\\risk_metrics.py": {
+    "mtime": 1778820097.2051818,
+    "ast_hash": "b4df6e40ee2c0225c84f6d51d4ccc4e7",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\backtest\\vectorbt_adapter.py": {
+    "mtime": 1778820097.2071831,
+    "ast_hash": "a28a5eed3dbc4f5b98f7d2039da2057e",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\backtest\\vectorbt_alternative.py": {
+    "mtime": 1778820097.208694,
+    "ast_hash": "f40d47b0118f4658fb9d1c4fdc5d24a3",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\backtest\\__init__.py": {
+    "mtime": 1778820097.1737342,
+    "ast_hash": "9706fb080461cd7579eac71e46095a30",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\data_ingestion\\crypto_provider.py": {
+    "mtime": 1778861535.6756124,
+    "ast_hash": "9b4fe7adb5852df516df58fe02563861",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\data_ingestion\\data_utils.py": {
+    "mtime": 1778820097.2137463,
+    "ast_hash": "8a71ec0db7ac05023272dcd22fb766b7",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\data_ingestion\\duckdb_helpers.py": {
+    "mtime": 1778820097.2157495,
+    "ast_hash": "92f28800e38d4f9a0dead8199a0fd8a3",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\data_ingestion\\event_calendar.py": {
+    "mtime": 1778820097.2212634,
+    "ast_hash": "e55aa6b5987546253bc2f240d558df3d",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\data_ingestion\\event_calendar_production.py": {
+    "mtime": 1778820097.2253733,
+    "ast_hash": "8d146a9bed8bd28393d4876ef8749eee",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\data_ingestion\\fetch_china.py": {
+    "mtime": 1778824961.6997807,
+    "ast_hash": "4976643eb582476f9afd9558348e4b9a",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\data_ingestion\\fetch_data.py": {
+    "mtime": 1778820097.22637,
+    "ast_hash": "0eeb23ea1ac70eb9b2eb706091fb6ef8",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\data_ingestion\\sec_filing_scraper.py": {
+    "mtime": 1778858071.1002636,
+    "ast_hash": "0c3f7861b87d25a7d2fa88db8e8b41c6",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\features\\alpha_factors.py": {
+    "mtime": 1778820097.235927,
+    "ast_hash": "871c16c79f2351ffd0961d6ca80c9941",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\features\\smoothing.py": {
+    "mtime": 1778820097.23693,
+    "ast_hash": "156acaae956643d5491a7b12d322fcc3",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\features\\technical_indicators.py": {
+    "mtime": 1778820097.2395115,
+    "ast_hash": "041154ffd75016a9c7ac596cc21c2957",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\features\\__init__.py": {
+    "mtime": 1778820097.2309246,
+    "ast_hash": "32381cc288b49cf902caa059cc15d2f1",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\gpu\\backtest.py": {
+    "mtime": 1778820097.2465236,
+    "ast_hash": "708db22bc74e434ab3033f45ec91c795",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\gpu\\features.py": {
+    "mtime": 1778820097.2521203,
+    "ast_hash": "71f269b29667b47bdff4aa3f9cbfda67",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\gpu\\pattern_detector.py": {
+    "mtime": 1778820097.2606778,
+    "ast_hash": "33cd8aaf2b59c1887393c1610e8169fa",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\gpu\\signal_aggregator.py": {
+    "mtime": 1778820097.2626941,
+    "ast_hash": "d4ac49b737a7929490504315355316ae",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\gpu\\smooth.py": {
+    "mtime": 1778820097.265692,
+    "ast_hash": "c25012731be91ac33a456029f9b09ff1",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\gpu\\utils.py": {
+    "mtime": 1778820097.26669,
+    "ast_hash": "9cb48ccc160e6903d679dd4404a60914",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\gpu\\__init__.py": {
+    "mtime": 1778820097.2435296,
+    "ast_hash": "0d1af9300477c2e967f991af3de1f7ec",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\indicators\\asian_range.py": {
+    "mtime": 1778820097.2712045,
+    "ast_hash": "871ed16918ef8d888c0b0f3a95a25df3",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\indicators\\fibonacci.py": {
+    "mtime": 1778820097.2732048,
+    "ast_hash": "e66199402f025b2d7b359cd00db231da",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\indicators\\ifvg.py": {
+    "mtime": 1778820097.278207,
+    "ast_hash": "2390ef40d7d19100ecc0687d9c753eaf",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\indicators\\indicator_cache.py": {
+    "mtime": 1778820097.282503,
+    "ast_hash": "51333f3f39a1ba050246ae57fd9d4af0",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\indicators\\kalman_hedge.py": {
+    "mtime": 1778820097.2845066,
+    "ast_hash": "3c8c95b85e9b3af930f3c45e6aad9f6f",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\indicators\\liquidity_sweep.py": {
+    "mtime": 1778820097.2865129,
+    "ast_hash": "5c62af4a45c55ff8e92b2f31e380f4a7",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\indicators\\mss.py": {
+    "mtime": 1778820097.2885087,
+    "ast_hash": "dfd07c5263d7bb6c8e6adb6eaa701acf",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\indicators\\pinescript_helpers.py": {
+    "mtime": 1778873904.4266717,
+    "ast_hash": "77922442487d87ff3dcc7cebb0e6eaa3",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\indicators\\pivots.py": {
+    "mtime": 1778820097.2901356,
+    "ast_hash": "e219a939f8484cb3939959e76d7fbd29",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\indicators\\pivots_numba.py": {
+    "mtime": 1778820097.298635,
+    "ast_hash": "83185883a8e2964645c959f5a48d71ee",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\indicators\\regime.py": {
+    "mtime": 1778820097.3037007,
+    "ast_hash": "c93ceb6a23095abc602d476fc2cdd4d7",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\indicators\\regime_detector.py": {
+    "mtime": 1778820097.3132718,
+    "ast_hash": "f8dc581216f79a8056e6fe9553e63e81",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\indicators\\technical.py": {
+    "mtime": 1778820097.3182511,
+    "ast_hash": "1b57e4a9fa120d19459c39e17316be0a",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\indicators\\technical_numba.py": {
+    "mtime": 1778820097.321658,
+    "ast_hash": "6e5df599dac94eef821116f9c2e9941c",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\indicators\\volatility_adaptive.py": {
+    "mtime": 1778820097.3226554,
+    "ast_hash": "a0897d76b7d4d783ea69b5e625f69638",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\indicators\\vwap.py": {
+    "mtime": 1778820097.3241625,
+    "ast_hash": "a685bd59dea6d2eecceed9c085b77416",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\indicators\\__init__.py": {
+    "mtime": 1778872953.254355,
+    "ast_hash": "5b18ead9d26a8b34c3450fa6de1e5f50",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\adversarial_overfit.py": {
+    "mtime": 1778820097.3306966,
+    "ast_hash": "40cb41cce990f5b8f73b487ccb6a750b",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\automl.py": {
+    "mtime": 1778820097.339234,
+    "ast_hash": "828c3275aef941ab0fdf3dd72f08d7f0",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\backtest_bridge.py": {
+    "mtime": 1778820097.3432584,
+    "ast_hash": "96b57ff6cb8c6e9cc1e4d4214f46420a",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\breakout_classifier.py": {
+    "mtime": 1778820097.3452733,
+    "ast_hash": "e62c1da4e3115d7eed01cf5fc9913550",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\change_point_regime.py": {
+    "mtime": 1778820097.3528676,
+    "ast_hash": "440912647236ce9a523021236362e73b",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\circuit_overfit.py": {
+    "mtime": 1778820097.3604553,
+    "ast_hash": "a4661288193c8b9cb15c340abc8a03e3",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\cnn_regime.py": {
+    "mtime": 1778820097.3700683,
+    "ast_hash": "833b1880037479af9da89e1a2fcac622",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\combinatorial_purged_cv.py": {
+    "mtime": 1778820097.3730817,
+    "ast_hash": "97c1ce1b496cdcef173248c845e30c5b",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\cross_asset_features.py": {
+    "mtime": 1778820097.3760753,
+    "ast_hash": "241e8a7ce386e2b996d2d34fb2bd642d",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\cross_symbol_cluster.py": {
+    "mtime": 1778820097.3770764,
+    "ast_hash": "59dd0da2c35c183d27a803ff2c2c5353",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\drawdown_target.py": {
+    "mtime": 1778820097.3795965,
+    "ast_hash": "2af5ac3ad0e8f8249abbff89ba2fbe7a",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\dream_team_ensemble.py": {
+    "mtime": 1778820097.381598,
+    "ast_hash": "fa057bbc13cf4583c6372a719089c3bb",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\dynamic_ensemble.py": {
+    "mtime": 1778910303.07962,
+    "ast_hash": "bd4e68a70c1315616ee11676f8e6015f",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\ebm_alpha.py": {
+    "mtime": 1778820097.3845937,
+    "ast_hash": "8ac0899602cbefb77832189bf895c717",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\ebm_classifier.py": {
+    "mtime": 1778820097.385595,
+    "ast_hash": "11945b5d732f6ea791769d881c19a7be",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\ensemble_models.py": {
+    "mtime": 1778820097.387595,
+    "ast_hash": "990f7aab4bbdf67a3153d8fd37d04703",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\ensemble_regime.py": {
+    "mtime": 1778820097.389102,
+    "ast_hash": "8762d75f364ed0efcfbf1fc38c178399",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\expected_returns.py": {
+    "mtime": 1778903331.3172753,
+    "ast_hash": "70b6e4ca1035d043f09a5394e2240551",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\experiment_logger.py": {
+    "mtime": 1778820097.3911192,
+    "ast_hash": "5cfb8c2b410018b7b235e9c1b6b0721f",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\factor_engine.py": {
+    "mtime": 1778908919.9044118,
+    "ast_hash": "b5106706c0ec5d5747f12b86a247eb49",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\factor_features.py": {
+    "mtime": 1778907289.421184,
+    "ast_hash": "5b96f28184740c724e5d28450f76de0d",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\features.py": {
+    "mtime": 1778820097.3996615,
+    "ast_hash": "7daaf3700eda557392a914d826e8a8e8",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\feature_engineering.py": {
+    "mtime": 1778820097.3921182,
+    "ast_hash": "ee6bf6d8fc3d0e5e72782f3bab052167",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\feature_selector.py": {
+    "mtime": 1778820097.3941236,
+    "ast_hash": "ca503181ca0239addcbfbe0108d572c2",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\feature_store.py": {
+    "mtime": 1778820097.3961253,
+    "ast_hash": "e2076b5880e10637c9248df14545ce75",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\frac_diff.py": {
+    "mtime": 1778820097.4017131,
+    "ast_hash": "985b6fac456826308b3148bb2a407aa8",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\fundamental_features.py": {
+    "mtime": 1778846180.3062098,
+    "ast_hash": "c4a5611e8cfb059059f21751296b2676",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\gap_fill_predictor.py": {
+    "mtime": 1778820097.4067132,
+    "ast_hash": "bab9cdfb06ca3d5e425a810056e14395",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\gmm_regime.py": {
+    "mtime": 1778820097.4103258,
+    "ast_hash": "cd8512d7d00309b38b3b477ad688356c",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\hdbscan_anomaly.py": {
+    "mtime": 1778820097.4208553,
+    "ast_hash": "fac79db740eefef25ea482387c741558",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\historical_analog.py": {
+    "mtime": 1778820097.4286551,
+    "ast_hash": "94b6610e16a5953e17f0e77f24fafd2b",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\hmm_regime.py": {
+    "mtime": 1778820097.4327843,
+    "ast_hash": "1bf432b89d78e14dff6d04a78a0d5508",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\macro_regime.py": {
+    "mtime": 1778820097.4347887,
+    "ast_hash": "d9d86e6b00377ec800e567880847d064",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\meta_labeler.py": {
+    "mtime": 1778820097.4367855,
+    "ast_hash": "a880cb48053a840365773f2b6796049f",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\meta_labeler_v2.py": {
+    "mtime": 1778820097.4382913,
+    "ast_hash": "758218110cc493856c791d48d335f8e1",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\metrics.py": {
+    "mtime": 1778820097.4393022,
+    "ast_hash": "9125a7288d819d3d17dcff3383105306",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\mlflow_logger.py": {
+    "mtime": 1778820097.4412992,
+    "ast_hash": "87f3e87acdb4a0ad9989dcc747a44bf9",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\model_selector.py": {
+    "mtime": 1778820097.4432993,
+    "ast_hash": "a86fad8da2c532d774247556b0a41ff1",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\overfitting_detectors.py": {
+    "mtime": 1778820097.460423,
+    "ast_hash": "47f0f18b1dc70ce5d81c0fbf43054938",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\path_signature_regime.py": {
+    "mtime": 1778820097.4684649,
+    "ast_hash": "4df26772dce585c045183e0ed28772d6",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\pattern_classifier.py": {
+    "mtime": 1778820097.4720695,
+    "ast_hash": "b25308c3cf012ef8afde1ed3e65e5015",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\pattern_scorer.py": {
+    "mtime": 1778820097.4770901,
+    "ast_hash": "407cdb3d2a35274e2dac22c07f41be87",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\pca_kmeans_regime.py": {
+    "mtime": 1778820097.4876595,
+    "ast_hash": "921c5088b21377b4d41d94136cdaed2f",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\pipeline.py": {
+    "mtime": 1778820097.4898686,
+    "ast_hash": "ab3e0f2d00dd637de791e531c4db642e",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\preprocessing.py": {
+    "mtime": 1778905774.7604287,
+    "ast_hash": "bb2e4fbf1a7a38412137aca29662b81c",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\purged_cv.py": {
+    "mtime": 1778820097.4918573,
+    "ast_hash": "7d9ce11a70bfe76c6f04652b5973781b",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\r2_rd_regime.py": {
+    "mtime": 1778820097.493856,
+    "ast_hash": "59d1e5a63ad73f499e26dbc2b274b243",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\regimefolio.py": {
+    "mtime": 1778820097.5073752,
+    "ast_hash": "fea95d4f7448a51a0076ff51341f7098",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\regime_analysis.py": {
+    "mtime": 1778820097.495855,
+    "ast_hash": "38fa2f4cda2641f998b679be4fed83f3",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\regime_base.py": {
+    "mtime": 1778820097.4968586,
+    "ast_hash": "abb7737cd27fa0081fa29da406dc78e9",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\regime_gate.py": {
+    "mtime": 1778820097.4983656,
+    "ast_hash": "a6cd985d08cc3e0642cd84fb16c7b315",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\regime_model.py": {
+    "mtime": 1778820097.5003724,
+    "ast_hash": "951818dfb95ef3a1231c818f4b59420d",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\regime_router.py": {
+    "mtime": 1778820097.5013757,
+    "ast_hash": "9a5fbc50e0daa539e4d38ab3d4decb85",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\registry.py": {
+    "mtime": 1778820097.5114114,
+    "ast_hash": "45bd275fb53bb1b74c312a1b42c30551",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\risk_factors.py": {
+    "mtime": 1778820097.5134141,
+    "ast_hash": "d8d6da1ae6c0e9c6d491ecc4feb9f141",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\sector_map.py": {
+    "mtime": 1778820097.5154188,
+    "ast_hash": "497968e14ec5926490f0ce1da6890c84",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\shap_dashboard.py": {
+    "mtime": 1778820097.5174215,
+    "ast_hash": "a022940ef500e691dc0dfed0eaf36b3f",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\signal_scorer.py": {
+    "mtime": 1778820097.5230293,
+    "ast_hash": "bce77ef085a57f6a0cc070a2e7c25777",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\simple_meta_labeler.py": {
+    "mtime": 1778820097.527622,
+    "ast_hash": "d7a5c188aeeaf132052dc7694f38d021",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\simple_regime.py": {
+    "mtime": 1778820097.53019,
+    "ast_hash": "8fbd8fecdbab1f65309c6999d7d4ff57",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\stop_loss_optimizer.py": {
+    "mtime": 1778820097.5361946,
+    "ast_hash": "d269bf41809eac5cc431aab08e705a77",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\survival_analyzer.py": {
+    "mtime": 1778820097.5467703,
+    "ast_hash": "e6010491619d5299fd20065daeaf543c",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\triple_barrier.py": {
+    "mtime": 1778820097.5513203,
+    "ast_hash": "0efa5ba27ea0ded3ee00194904780a4d",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\volatility_forecaster.py": {
+    "mtime": 1778820097.567492,
+    "ast_hash": "c1682c319487053b43b831f4453f0331",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\volume_profile_cluster.py": {
+    "mtime": 1778820097.5684938,
+    "ast_hash": "6acb8bed7794218ddba9e08d5f1edaee",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\walk_forward.py": {
+    "mtime": 1778820097.570856,
+    "ast_hash": "6bace161adfb06cef1d11d3eed0a16b6",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\__init__.py": {
+    "mtime": 1778909205.7216747,
+    "ast_hash": "ddb501d4d4fb6ed61b61870ba0d0388c",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\models\\catboost_wrapper.py": {
+    "mtime": 1778820097.4463048,
+    "ast_hash": "fdbe6ce83d58b8bf366857126628a7a8",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\models\\chronos.py": {
+    "mtime": 1778820097.4488096,
+    "ast_hash": "d60b63cfefdd1806a394117d47540daa",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\models\\fincast.py": {
+    "mtime": 1778820097.4538372,
+    "ast_hash": "b430bbed4d3fef49117ebb1dadb3e43a",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\models\\xlstm.py": {
+    "mtime": 1778820097.4558403,
+    "ast_hash": "7fa3f757f8fa1c5ae8f4b712409a8312",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\models\\__init__.py": {
+    "mtime": 1778820097.4443018,
+    "ast_hash": "eec1ca5c22b5c78f6b068717e4cb0045",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\tuning\\aro_selector.py": {
+    "mtime": 1778820097.5553143,
+    "ast_hash": "e8bf1e1a2f1d8b95686cdd2a41f82bd8",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\tuning\\base.py": {
+    "mtime": 1778820097.5563135,
+    "ast_hash": "33c2b855d9ab35771345f1541442203a",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\tuning\\ga_tuner.py": {
+    "mtime": 1778820097.5583134,
+    "ast_hash": "14d80730d09b2f2abccf2f60ce7936f4",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\tuning\\gwo_tuner.py": {
+    "mtime": 1778820097.5594914,
+    "ast_hash": "da5a694324db65eadd7c115678eab769",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\tuning\\optuna_strategy_tuner.py": {
+    "mtime": 1778820097.56049,
+    "ast_hash": "e13c479e8ca11a9c666bc97ab07b6626",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\tuning\\optuna_tuner.py": {
+    "mtime": 1778820097.5624897,
+    "ast_hash": "7e72c6e117c4c320da8ef9e77fc92d04",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\tuning\\stability_selector.py": {
+    "mtime": 1778820097.5644898,
+    "ast_hash": "0229b3bac11077c2ed8fcf509ff2b859",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\tuning\\woa_tuner.py": {
+    "mtime": 1778820097.565491,
+    "ast_hash": "6963bb695ee0f12a183876b106e0a035",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\tuning\\__init__.py": {
+    "mtime": 1778820097.5533192,
+    "ast_hash": "aac0ac8ee3a686bbf8967deccea01da4",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\optimization\\huatai_pipeline.py": {
+    "mtime": 1778908760.2168007,
+    "ast_hash": "afcbf8b98ec2d28648f9e3711dd0f08c",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\optimization\\__init__.py": {
+    "mtime": 1778908574.4809248,
+    "ast_hash": "54851ac9f9a99426985ce8d87cbec110",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\optimizer\\portfolio_optimizer.py": {
+    "mtime": 1778820097.5758576,
+    "ast_hash": "914e5cee4ea937b096f25826bf60273c",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\optimizer\\pypfopt_integration.py": {
+    "mtime": 1778820097.5768588,
+    "ast_hash": "814c215cf584f5ce0887161c5cc4b65b",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\optimizer\\__init__.py": {
+    "mtime": 1778820097.5738528,
+    "ast_hash": "5e1e5b6ae37dd6ff7fcf31147d3224af",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\base.py": {
+    "mtime": 1778820097.5900028,
+    "ast_hash": "15c8d8d4e61a24525e845c1823b86e26",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\__init__.py": {
+    "mtime": 1778820097.5824108,
+    "ast_hash": "620fbf481d5e8b2144babb2067add881",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\basic\\floor_pivot.py": {
+    "mtime": 1778820097.6051912,
+    "ast_hash": "c3badc2c7d2b70db33c735ff90b2eacc",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\basic\\matching_lows.py": {
+    "mtime": 1778820097.6086924,
+    "ast_hash": "8962676f8ca6894c50bf1b404cf75b1f",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\basic\\msl.py": {
+    "mtime": 1778820097.6107209,
+    "ast_hash": "710923707badf8991d6add22a1a36c1d",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\basic\\nr7id.py": {
+    "mtime": 1778820097.6137156,
+    "ast_hash": "83433c687b6f030dc5b233beb9914283",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\basic\\n_bar_decline.py": {
+    "mtime": 1778820097.6117144,
+    "ast_hash": "9aa126ac26c86991578144fb1e1ec957",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\basic\\two_bar_reversal.py": {
+    "mtime": 1778820097.6147146,
+    "ast_hash": "0dabadf9d3b02437b4811e357ae40a4c",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\basic\\__init__.py": {
+    "mtime": 1778820097.5965755,
+    "ast_hash": "0596604ae91ab5ef0e0d6fd41c42cbaa",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\breakout\\donchian.py": {
+    "mtime": 1778820097.6182208,
+    "ast_hash": "239d78dd73e678da748e60de49fd7530",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\breakout\\gap.py": {
+    "mtime": 1778820097.6192267,
+    "ast_hash": "ccf3980308916752724251ef4ce454f2",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\breakout\\__init__.py": {
+    "mtime": 1778820097.616713,
+    "ast_hash": "af0d2184d5ce4caf080597d6b4e0780a",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\candlestick\\dark_cloud.py": {
+    "mtime": 1778820097.6282578,
+    "ast_hash": "b33619aeb9eb3edc55e16b2726bacac2",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\candlestick\\doji.py": {
+    "mtime": 1778820097.6292808,
+    "ast_hash": "68b2ccb3dcac30df0804969abd343ff2",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\candlestick\\engulfing.py": {
+    "mtime": 1778820097.6312733,
+    "ast_hash": "db5f9827d4b4cea4e35a429469c868ab",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\candlestick\\hammer.py": {
+    "mtime": 1778820097.6342816,
+    "ast_hash": "162b5acd1e523970113882cba4a34b4a",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\candlestick\\harami.py": {
+    "mtime": 1778820097.6352844,
+    "ast_hash": "1f51d8a4af4f700451be81bb8d8a828d",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\candlestick\\__init__.py": {
+    "mtime": 1778820097.624735,
+    "ast_hash": "f8b7d433cb4de7a37bdcd25fbae3866d",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\classic\\ascending_triangle.py": {
+    "mtime": 1778820097.6398869,
+    "ast_hash": "0a8e358baef2ade4605e0e9c90ec9ed9",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\classic\\dead_cat_bounce.py": {
+    "mtime": 1778820097.6408727,
+    "ast_hash": "e689006d137d21f0a55f8babbc0ac54c",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\classic\\descending_triangle.py": {
+    "mtime": 1778820097.643882,
+    "ast_hash": "16ed89892f134b4aefb01fd19927483c",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\classic\\double_bottom.py": {
+    "mtime": 1778820097.645866,
+    "ast_hash": "81f513ca7c54362492bea87dfe5af0de",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\classic\\double_top.py": {
+    "mtime": 1778820097.6489172,
+    "ast_hash": "2901df450337f02b21ad68e517f0d83a",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\classic\\rectangle.py": {
+    "mtime": 1778820097.6549938,
+    "ast_hash": "553c807ad7d1e997adb4e24c0da3c0be",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\classic\\trader_vic_2b.py": {
+    "mtime": 1778820097.6626196,
+    "ast_hash": "50691cc73a8560b379e54c2befa0481a",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\classic\\triple_bottom.py": {
+    "mtime": 1778820097.665614,
+    "ast_hash": "bbd09386ece653b0dc90376147bcbbfc",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\classic\\triple_top.py": {
+    "mtime": 1778820097.6676116,
+    "ast_hash": "535cc1321734da68d16e40e301757b72",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\classic\\wedge.py": {
+    "mtime": 1778820097.66964,
+    "ast_hash": "9df3b69677d11ba7878bfd6e4191ce13",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\classic\\__init__.py": {
+    "mtime": 1778820097.6372895,
+    "ast_hash": "5618ff499038ab16faab7cb185f1f580",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\complex\\cup_handle.py": {
+    "mtime": 1778820097.6727097,
+    "ast_hash": "8d3f8197095df0804bc365d3db9b4aef",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\complex\\head_shoulders.py": {
+    "mtime": 1778820097.6737084,
+    "ast_hash": "2398b61519d2a19d6f6cdfdc65123e47",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\complex\\parabolic_arc.py": {
+    "mtime": 1778820097.674711,
+    "ast_hash": "c1f48339f0fa916a3fa111d91ccbb13a",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\complex\\spike_ledge.py": {
+    "mtime": 1778820097.675709,
+    "ast_hash": "2905355d369c3000d6e32c7e30c65b6e",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\complex\\three_hills.py": {
+    "mtime": 1778820097.675709,
+    "ast_hash": "5e8d8e1dca7a122a56e2cb52c2dc4103",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\complex\\__init__.py": {
+    "mtime": 1778820097.671652,
+    "ast_hash": "65f198612eba70aa59f1231f7f97307e",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\continuation\\flag.py": {
+    "mtime": 1778820097.6782167,
+    "ast_hash": "5bd30222be7151a0a6b6e2170d4d9011",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\continuation\\pennant.py": {
+    "mtime": 1778820097.6802244,
+    "ast_hash": "ded70d759dc66ceb513e4b8ac53eaab1",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\continuation\\__init__.py": {
+    "mtime": 1778820097.6767092,
+    "ast_hash": "294f344b930b9192ab2a16f84f9731a2",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\fmz\\adaptive_bollinger.py": {
+    "mtime": 1778873182.910175,
+    "ast_hash": "8aadf3f32f571728750c0fc28d84d8db",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\fmz\\ai_volatility_breakout.py": {
+    "mtime": 1778873229.7157779,
+    "ast_hash": "6393eb84b191662e12c6d9ff8bd4a651",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\fmz\\alpha_beast.py": {
+    "mtime": 1778873034.3960433,
+    "ast_hash": "546caf7b3e83f08efe1dda665139b1cc",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\fmz\\ema_macd_hf.py": {
+    "mtime": 1778873139.0777118,
+    "ast_hash": "14489d256a6b5027f7dac58fe980a2c3",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\fmz\\momentum_zigzag.py": {
+    "mtime": 1778873306.3318324,
+    "ast_hash": "cf81117bf86e1efa6b6947f000a8dab8",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\fmz\\multi_factor_trend.py": {
+    "mtime": 1778873087.7656355,
+    "ast_hash": "a2d716f2dbf56b522ee522d297c6a489",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\fmz\\__init__.py": {
+    "mtime": 1778872982.475939,
+    "ast_hash": "71b6dd2957e39bf7e318f3711493b199",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\harmonic\\abc.py": {
+    "mtime": 1778820097.6842268,
+    "ast_hash": "be843910a6a8f6dd13c1d7f173406a0e",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\harmonic\\bollinger.py": {
+    "mtime": 1778820097.6872263,
+    "ast_hash": "61d7c0b4210600a9dd6b3e10539c403d",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\harmonic\\gartley.py": {
+    "mtime": 1778820097.690271,
+    "ast_hash": "b7c2aa111a7fbe7f78ddfd37c21502d1",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\harmonic\\symmetric_triangle.py": {
+    "mtime": 1778820097.6922748,
+    "ast_hash": "198df490945506198e011fb3a11c7410",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\harmonic\\__init__.py": {
+    "mtime": 1778820097.6822276,
+    "ast_hash": "cc911859edc9f861aed049705a1a9b18",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\portfolio\\black_litterman.py": {
+    "mtime": 1778820097.7039528,
+    "ast_hash": "cb027359c1ad6f0dd35d21a7d65eb2d0",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\portfolio\\multi_asset_allocator.py": {
+    "mtime": 1778861483.2781832,
+    "ast_hash": "988bd0f01099876587f5c74bb9adcdd8",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\portfolio\\multi_strategy_engine.py": {
+    "mtime": 1778820097.7069354,
+    "ast_hash": "a8ac78fde365fe02f5157524c33ea11d",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\portfolio\\portfolio_risk.py": {
+    "mtime": 1778820097.7115166,
+    "ast_hash": "db93348635d57f0f077152c9c6466762",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\portfolio\\signal_aggregator.py": {
+    "mtime": 1778820097.7185328,
+    "ast_hash": "70eccc9a380f8c41fce2e83e64337682",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\portfolio\\strategy_ranker.py": {
+    "mtime": 1778820097.7229316,
+    "ast_hash": "d898792b1333f1759ec00fcfffd8c235",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\portfolio\\__init__.py": {
+    "mtime": 1778820097.6988177,
+    "ast_hash": "4b4d59cfa80e45a3d466cb0eeda43bb3",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\risk\\circuit_breakers.py": {
+    "mtime": 1778820097.7288733,
+    "ast_hash": "b7e46396a24ef12ed60167c0ca1817b9",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\risk\\crash_factor.py": {
+    "mtime": 1778820097.7297618,
+    "ast_hash": "874ea80d3dc6891d888727d19730989d",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\risk\\daily_limits.py": {
+    "mtime": 1778820097.731774,
+    "ast_hash": "ddddc8e78ece1cf416b04e5cd4c00c29",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\risk\\diversity_calculator.py": {
+    "mtime": 1778820097.7328134,
+    "ast_hash": "fd3c3d507f40a45270f24c35c1654bea",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\risk\\diversity_score.py": {
+    "mtime": 1778820097.734813,
+    "ast_hash": "04639292b975d2fa3a83cc33e22bb39d",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\risk\\dynamic_rebalancing.py": {
+    "mtime": 1778820097.736813,
+    "ast_hash": "b8368f1cf7339d275ae6a4eee6aa22bf",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\risk\\failure_set_analyzer.py": {
+    "mtime": 1778820097.7403266,
+    "ast_hash": "18b290a5c76f2fd486b2928f8fb5e4fa",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\risk\\kelly_allocator.py": {
+    "mtime": 1778911107.365269,
+    "ast_hash": "3049f3834f3a97d41845f61c3b62ac7a",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\risk\\mc_var.py": {
+    "mtime": 1778820097.749857,
+    "ast_hash": "26bdb2e4e4b1ecc10e57a8d27864c8ee",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\risk\\position_probability.py": {
+    "mtime": 1778820097.752887,
+    "ast_hash": "740d9696e302789431e57ce6a645b0eb",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\risk\\position_sizing.py": {
+    "mtime": 1778820097.7594738,
+    "ast_hash": "e3bd4e2aec35d125dd8ec76801c73745",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\risk\\purged_cv.py": {
+    "mtime": 1778820097.76548,
+    "ast_hash": "e3f16df7eb3b0e9f9a2bc61633f5620e",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\risk\\strategy_aware_sizing.py": {
+    "mtime": 1778861442.5864766,
+    "ast_hash": "acbbfe5756cc26c7c3ee6992ab9587e5",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\risk\\turnover_penalty.py": {
+    "mtime": 1778820097.7700422,
+    "ast_hash": "fee6e8563d9d77c817d7df4ee9490017",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\risk\\__init__.py": {
+    "mtime": 1778910898.660832,
+    "ast_hash": "cab89a0239fb138fad0ca5073b481dcb",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\rl\\rl_trade_executor.py": {
+    "mtime": 1778820097.7770183,
+    "ast_hash": "e6b375f0429e2e95ba7f62480e625e90",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\rl\\trade_execution_env.py": {
+    "mtime": 1778820097.778528,
+    "ast_hash": "a5d9d99cddc811b27ade414c0c8a1a03",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\rl\\__init__.py": {
+    "mtime": 1778820097.7750187,
+    "ast_hash": "34c19340d7f3bac3d94ec814e27c6077",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\signals\\chronos_signal.py": {
+    "mtime": 1778820097.7845356,
+    "ast_hash": "fca8cde1f89381eb1ef2f0d6fefa9e69",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\signals\\classification.py": {
+    "mtime": 1778907707.0724595,
+    "ast_hash": "ac7510b627fe5f5ae270fa8e823bfa62",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\signals\\collinearity.py": {
+    "mtime": 1778905929.6480482,
+    "ast_hash": "1283d4427a04a83ad5502fc4aa74d6e8",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\signals\\evaluation_gate.py": {
+    "mtime": 1778903136.4465368,
+    "ast_hash": "d22a896ee114f361a451654a99c123da",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\signals\\event_detector.py": {
+    "mtime": 1778820097.785536,
+    "ast_hash": "054384570f9b092db392d1fd1ef53629",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\signals\\event_weighting.py": {
+    "mtime": 1778820097.7875364,
+    "ast_hash": "168ce6c0517c29c7389b8fe3bbed639b",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\signals\\factor_purification.py": {
+    "mtime": 1778902657.7973006,
+    "ast_hash": "e9900b113f0a5e172df67c69c64bea57",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\signals\\ir_weighting.py": {
+    "mtime": 1778902108.5490575,
+    "ast_hash": "1daaeb7e02d1d28f205585940dd3f301",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\signals\\order_flow.py": {
+    "mtime": 1778873367.8197062,
+    "ast_hash": "9b3e4710bd4ee5304b414b2e7c006b07",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\signals\\pattern_boost.py": {
+    "mtime": 1778820097.7885368,
+    "ast_hash": "4d0f21b48439277383960f41627a2942",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\signals\\position_manager.py": {
+    "mtime": 1778820097.789582,
+    "ast_hash": "c2bf25d5781de5f014c4549d51465518",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\signals\\scoring.py": {
+    "mtime": 1778905640.888214,
+    "ast_hash": "223987f4bdeb3b06c3542ca66b7a5893",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\signals\\sentiment_scorer.py": {
+    "mtime": 1778820097.7905781,
+    "ast_hash": "c5ae1f686ad57eba8368a4275101c3a0",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\signals\\signal_generator.py": {
+    "mtime": 1778820097.7925804,
+    "ast_hash": "fb4e7fb24c0038cc3e61625805565fb6",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\signals\\__init__.py": {
+    "mtime": 1778907622.2932255,
+    "ast_hash": "5646ed59733fd4218ed2366ef03b052f",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\signals\\sentiment\\dictionary.py": {
+    "mtime": 1778841020.5302577,
+    "ast_hash": "272609f5a9a76073cd6e01137e2a53c4",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\signals\\sentiment\\filing_analyzer.py": {
+    "mtime": 1778858142.7429807,
+    "ast_hash": "a0ebfcfa4b3a4fce3986ef7ff59c87a5",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\signals\\sentiment\\finbert.py": {
+    "mtime": 1778857865.6071186,
+    "ast_hash": "ea45d3f5392562715f7089813468a0ab",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\signals\\sentiment\\multi_source_fusion.py": {
+    "mtime": 1778858274.4033499,
+    "ast_hash": "65914f9438643f37c9b018211db1ad52",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\signals\\sentiment\\__init__.py": {
+    "mtime": 1778858428.3456714,
+    "ast_hash": "ab6a7d4299dcb8aef391311a979cb79c",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\adaptive_router.py": {
+    "mtime": 1778820097.8021016,
+    "ast_hash": "25bc823d8df181876f483b865de2f771",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\adx_trend_strength.py": {
+    "mtime": 1778820097.8051336,
+    "ast_hash": "ee8b0c0fe25150fb981375bb072d9732",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\awesome_oscillator.py": {
+    "mtime": 1778820097.8086412,
+    "ast_hash": "023d3ec81297e463ad8e4d343be4aac4",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\bb_squeeze_strategy.py": {
+    "mtime": 1778823922.510139,
+    "ast_hash": "47ef9240187b8e5d8b8a9bc2916e4d0c",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\bond_fade_strategy.py": {
+    "mtime": 1778823922.5141375,
+    "ast_hash": "0aa7c64c356ec0a5a435be8c9c6e922e",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\cci_strategy.py": {
+    "mtime": 1778820097.83841,
+    "ast_hash": "0dd5f27e6581a3c81d6a1996bc3b2da7",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\chaikin_oscillator.py": {
+    "mtime": 1778820097.840612,
+    "ast_hash": "33b782d909fd5dde02b3979568b6b67b",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\chandelier_exit.py": {
+    "mtime": 1778820097.8421183,
+    "ast_hash": "5302ddde90262ff5d2c8721957d74e4e",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\combined_strategy.py": {
+    "mtime": 1778820097.8441265,
+    "ast_hash": "4a4f218163ffe3a25edbced8ef9dcba3",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\confluence.py": {
+    "mtime": 1778820097.846126,
+    "ast_hash": "1ffc9ce3c4c24672d00ad0dbdf116a95",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\connors_rsi.py": {
+    "mtime": 1778820097.847126,
+    "ast_hash": "b27523ac076190d26586ff418fd918e2",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\crypto_momentum_strategy.py": {
+    "mtime": 1778823922.5162635,
+    "ast_hash": "1bb62a4693a49fa71bf38b56640b4061",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\dip_buy_strategy.py": {
+    "mtime": 1778823922.5192752,
+    "ast_hash": "150956516789314bb66f4f802d8a55f7",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\donchian_breakout.py": {
+    "mtime": 1778820097.8496406,
+    "ast_hash": "e0b1db701f3c1916b58ae95ea6b6b840",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\ema_ribbon.py": {
+    "mtime": 1778820097.8506403,
+    "ast_hash": "1fe3c61dce8a4bcfdbb8cdd6685abec7",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\gap_fill_strategy.py": {
+    "mtime": 1778823842.9609694,
+    "ast_hash": "17de05176b99d2cae142c3ad3881f8cf",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\gold_trend_strategy.py": {
+    "mtime": 1778823922.5242715,
+    "ast_hash": "1b9f81768a74f71bb56e750c764a6506",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\ichimoku_cloud.py": {
+    "mtime": 1778820097.854642,
+    "ast_hash": "55c9939d01ca2479ced1bd16136f6d98",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\influencer_confluence.py": {
+    "mtime": 1778820097.856644,
+    "ast_hash": "7c69647d9cd93356bf50eeef97c58ffa",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\keltner_channel.py": {
+    "mtime": 1778820097.861719,
+    "ast_hash": "b24add583a60e6ef6fd71de4cb17a0ad",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\linear_regression_channel.py": {
+    "mtime": 1778820097.865731,
+    "ast_hash": "6e0a8c3289ecd6e40ca18550f94d86e1",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\london_breakout.py": {
+    "mtime": 1778820097.8693078,
+    "ast_hash": "5624b6253c68991c6f81acd3bcf17dc1",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\lowvol_momentum_strategy.py": {
+    "mtime": 1778823922.5212731,
+    "ast_hash": "efa5fd7765b295c2625cb246f63fb3a9",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\macd_histogram.py": {
+    "mtime": 1778820097.8743465,
+    "ast_hash": "614ba940b1dc58ccb7fb9d648276748a",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\mean_reversion_strategy.py": {
+    "mtime": 1778841957.0456462,
+    "ast_hash": "0d1bddf61a24431a546702479b9cb23f",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\mfi_strategy.py": {
+    "mtime": 1778820097.8795874,
+    "ast_hash": "aad28f41ee9f16f2f1d765b39a59968b",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\ml_strategy.py": {
+    "mtime": 1778853589.6561782,
+    "ast_hash": "2a136c360f1c40fba71704d32ad1bb60",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\multi_timeframe_bias.py": {
+    "mtime": 1778820097.8908772,
+    "ast_hash": "35cb013a64e9b48a61f7198fef75fc32",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\pairs_scanner.py": {
+    "mtime": 1778820097.8954039,
+    "ast_hash": "d475d835acb68dfd217f706965371319",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\pairs_trading_strategy.py": {
+    "mtime": 1778861050.0005314,
+    "ast_hash": "8c9be04b28b7bb789357863b48fcbdcd",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\pair_trading.py": {
+    "mtime": 1778820097.893406,
+    "ast_hash": "c395b8e649bdd14a76b3413c43070636",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\parabolic_sar.py": {
+    "mtime": 1778820097.897404,
+    "ast_hash": "db360d00c3984a0e4b520d4603caf18f",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\regime_router_strategy.py": {
+    "mtime": 1778842230.3040178,
+    "ast_hash": "53bdc031141fd353f5590cef74bbe6c2",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\rsi_divergence.py": {
+    "mtime": 1778820097.899489,
+    "ast_hash": "4e5eb3a86343e4faf50b4b83a71633a6",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\rsi_oversold_strategy.py": {
+    "mtime": 1778823922.522274,
+    "ast_hash": "03ad785791006335161c88cadbca5c9f",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\rules_first_strategy.py": {
+    "mtime": 1778902449.7754364,
+    "ast_hash": "21ebe6401d9f7411205c305d1f1fad50",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\sector_oversold_strategy.py": {
+    "mtime": 1778823922.5232735,
+    "ast_hash": "be138f3e7666e1dddbd647aa9b81204f",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\silver_breakout_strategy.py": {
+    "mtime": 1778823922.5253255,
+    "ast_hash": "5d045f172fcc5a576b2264655bfd4a74",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\sma_crossover.py": {
+    "mtime": 1778820097.9024863,
+    "ast_hash": "df799136e50044b16911a47002d57229",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\smc_reversal.py": {
+    "mtime": 1778820097.9044886,
+    "ast_hash": "ba1be161b798f317d21aa5cdcdf644f6",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\smc_reversal_bt.py": {
+    "mtime": 1778820097.9054868,
+    "ast_hash": "0f930cc9c4cecda39661830e7e7845ae",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\stoch_rsi_crossover.py": {
+    "mtime": 1778820097.9064865,
+    "ast_hash": "2721e25513f2a0c4eb3e5b610bf9d753",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\strategy_registry.py": {
+    "mtime": 1778820097.908487,
+    "ast_hash": "f5c52d505f5db73db0b985fc58f0133b",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\tsi_strategy.py": {
+    "mtime": 1778820097.9096708,
+    "ast_hash": "109c36e32aacbd7013fd9d057c7003ae",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\ultimate_oscillator.py": {
+    "mtime": 1778820097.9116778,
+    "ast_hash": "e0b3a84664d8f45bc9e0c29eadd26dde",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\volume_confirmation.py": {
+    "mtime": 1778820097.9126778,
+    "ast_hash": "7366c4b2d056138648be763e8a255dff",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\vwap_bounce.py": {
+    "mtime": 1778820097.9156795,
+    "ast_hash": "285635ac54954d9cdfe3c15a86a211b1",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\vwap_sma_confluence.py": {
+    "mtime": 1778820097.9186833,
+    "ast_hash": "8fe550ac668fc13a3200f0ec8072780c",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\williams_r_reversal.py": {
+    "mtime": 1778820097.9207234,
+    "ast_hash": "88199c6917fb0ede53f57ef9a7eb09cf",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\__init__.py": {
+    "mtime": 1778823805.3090477,
+    "ast_hash": "4131afe43c67591bc752e938d422daee",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\backtest_py\\multi_pattern_strategy.py": {
+    "mtime": 1778820097.824801,
+    "ast_hash": "bee03b7bff24c2c7efd8ac74aefebbaa",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\backtest_py\\multi_pattern_strategy_optimized.py": {
+    "mtime": 1778873454.5920315,
+    "ast_hash": "250e0c479ccb37db412370c2f97aebdd",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\backtest_py\\runner.py": {
+    "mtime": 1778837804.5439491,
+    "ast_hash": "2153a8aacf4a642828f78b254c0502aa",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\backtest_py\\__init__.py": {
+    "mtime": 1778820097.8166773,
+    "ast_hash": "74dd98afc6e926c6273359488bfedef6",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\examples\\influencer_smc_example.py": {
+    "mtime": 1778820097.8526413,
+    "ast_hash": "b06fdc84c4c240c788b8787d20bc8b60",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\utils\\helpers.py": {
+    "mtime": 1778820097.9319787,
+    "ast_hash": "ba15b31676a1af90b0345d66197cba32",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\utils\\notebook_helpers.py": {
+    "mtime": 1778837923.5262485,
+    "ast_hash": "45c897e78d2389e4e13c047dc53e6d83",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\utils\\validators.py": {
+    "mtime": 1778820097.9456103,
+    "ast_hash": "c373e3b2f89c47a2c2b9363f5fa06385",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\utils\\__init__.py": {
+    "mtime": 1778820097.9252858,
+    "ast_hash": "7987c56f3b820dcb7f767033e41a02c9",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\visualization\\charts.py": {
+    "mtime": 1778820097.9551375,
+    "ast_hash": "b13901d94b72930a165b9db6e16f0b70",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\visualization\\pattern_markers.py": {
+    "mtime": 1778820097.9571395,
+    "ast_hash": "a223c8a1552e6fd0710d5ee22dffda38",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\visualization\\report.py": {
+    "mtime": 1778820097.9586463,
+    "ast_hash": "ab80f8684430e2ba2fc0ac0ef3fd8582",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\visualization\\tearsheet.py": {
+    "mtime": 1778820097.9596555,
+    "ast_hash": "593a5539c0fff5382b1a23e25667b463",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\visualization\\__init__.py": {
+    "mtime": 1778820097.9531379,
+    "ast_hash": "a2b5b68dc1497dfbb200841853ce57bb",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\analysis\\AI_COMMANDS.txt": {
+    "mtime": 1778820097.1218169,
+    "ast_hash": "23e3558d470d9f47c9b10f6ac1015058",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\backtest\\AI_COMMANDS.txt": {
+    "mtime": 1778820097.1676302,
+    "ast_hash": "9bfbb1e8dab09df32056368fa84c39cd",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\data_ingestion\\AI_COMMANDS.txt": {
+    "mtime": 1778820097.2116919,
+    "ast_hash": "7684b5d2245da6989a3e8f85da62b164",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\features\\AI_COMMANDS.txt": {
+    "mtime": 1778820097.2283747,
+    "ast_hash": "8fcfddbd07d9d4253aa2c2a6db25f76f",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\indicators\\AI_COMMANDS.txt": {
+    "mtime": 1778820097.2686894,
+    "ast_hash": "507a1ceac82e7925cebda9b6b1c9b6a1",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\ml\\AI_COMMANDS.txt": {
+    "mtime": 1778820097.3271744,
+    "ast_hash": "adf688329bffad378cd2fb6578eedda7",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\optimizer\\AI_COMMANDS.txt": {
+    "mtime": 1778820097.572852,
+    "ast_hash": "5cc3a5ec91973ecd59feb4bccde77379",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\patterns\\AI_COMMANDS.txt": {
+    "mtime": 1778820097.5794015,
+    "ast_hash": "8dc97375d4c8626025dcb5e84123c017",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\portfolio\\AI_COMMANDS.txt": {
+    "mtime": 1778820097.6942878,
+    "ast_hash": "9466f338fabef6b6cc3400e873461baa",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\risk\\AI_COMMANDS.txt": {
+    "mtime": 1778820097.7249267,
+    "ast_hash": "d4aa69087025055d3e9e7df51210604f",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\signals\\AI_COMMANDS.txt": {
+    "mtime": 1778820097.7815387,
+    "ast_hash": "92ee6de4f7056978ef49910dae633470",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\AI_COMMANDS.txt": {
+    "mtime": 1778820097.7935798,
+    "ast_hash": "dee5e8b5cc663419b34fa0a017c04e78",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\strategies\\INFLUENCER_FRAMEWORK_README.md": {
+    "mtime": 1778820097.7955797,
+    "ast_hash": "8e7ad7ba1a5fdcbe135c755003a6f750",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\utils\\AI_COMMANDS.txt": {
+    "mtime": 1778820097.9237378,
+    "ast_hash": "3576f6bc022d79fe8b5f4f1c59844720",
+    "semantic_hash": ""
+  },
+  "C:\\Dev\\projects\\investment_trying\\src\\visualization\\AI_COMMANDS.txt": {
+    "mtime": 1778820097.9521427,
+    "ast_hash": "f592d832bd1228cb5fd5ee71c095a8aa",
+    "semantic_hash": ""
+  }
+}

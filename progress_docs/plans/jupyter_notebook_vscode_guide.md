@@ -341,3 +341,15 @@ HTML('<h2>Backtest Complete!</h2>')
 - [VSCode Jupyter Documentation](https://code.visualstudio.com/docs/datascience/jupyter-notebooks)
 - [Jupyter Keyboard Shortcuts](https://code.visualstudio.com/docs/datascience/jupyter-notebooks#_jupyter-notebook-editor-shortcuts)
 - [Data Science in VSCode](https://code.visualstudio.com/docs/datascience/overview)
+
+---
+
+## Setup Status (from setup-jupyter-vscode.md — 2026-04-19) ✅ Complete
+
+**Changes:**
+- VS Code Python interpreter pointed to uv environment
+- Jupyter kernel configured to use project Python
+- Notebook execution verified for all 15+ notebooks
+- Notebook helpers created in `src/utils/notebook_helpers.py`
+
+**Notebook Inventory:** 01-04 (Pattern backtests), 05 (SPY long-term), 06-08 (Pattern selection/contribution), 09 (Multi-timeframe), 10 (Pair trading, pending), 11 (Parameter robustness, pending), 12 (Regime-aware), 13 (ML validation), 14 (Regime detector comparison), 15 (Phase 2 validation), ML_Training_Colab.

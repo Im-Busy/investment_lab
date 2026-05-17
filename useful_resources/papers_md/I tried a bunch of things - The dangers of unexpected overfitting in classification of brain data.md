@@ -1,14 +1,16 @@
 # I tried a bunch of things - The dangers of unexpected overfitting in classification of brain data
 
-         Kent Academic Repository
+> *Source PDF: I tried a bunch of things - The dangers of unexpected overfitting in classification of brain data.pdf*
+> *Extraction: Combined — markitdown raw text (base) + previous extraction supplements*
 
+---
+
+Kent Academic Repository
 
 Hosseini, Mahan, Powell, Michael, Collins, John, Callahan-Flintoft, Chloe,
 Jones, William, Bowman, Howard and Wyble, Brad (2020) I tried a bunch
 of things: The dangers of unexpected overfitting in classification of brain
-data. Neuroscience & Biobehavioral Reviews, 119 . pp. 456-467. ISSN 0149-7634.
-
-
+data.  Neuroscience & Biobehavioral Reviews, 119 . pp. 456-467. ISSN 0149-7634.
 
 Downloaded from
 https://kar.kent.ac.uk/84806/ The University of Kent's Academic Repository KAR
@@ -26,65 +28,58 @@ CC BY-NC-ND (Attribution-NonCommercial-NoDerivatives)
 
 Additional information
 
-
 Versions of research works
 
 Versions of Record
 If this version is the version of record, it is the same as the published version available on the publisher's web site.
 Cite as the published version.
+
 Author Accepted Manuscripts
 If this document is identified as the Author Accepted Manuscript it is the version after peer review but before type
 setting, copy editing or publisher branding. Cite as Surname, Initial. (Year) 'Title of article'. To be published in Title
-of Journal , Volume and issue numbers [peer-reviewed accepted version]. Available at: DOI or URL (Accessed: date).
+of Journal , Volume and issue numbers peer-reviewed accepted version. Available at: DOI or URL (Accessed: date).
+
 Enquiries
 If you have questions about this document contact ResearchSupport@kent.ac.uk. Please include the URL of the record
 in KAR. If you believe that your, or a third party's rights have been compromised through this document please see
 our Take Down policy (available from https://www.kent.ac.uk/guides/kar-the-kent-academic-repository#policies).
 
-  I TRIED A BUNCH OF THINGS: THE DANGERS
+I TRIED A BUNCH OF THINGS: THE DANGERS
 
-     OF UNEXPECTED OVERFITTING IN
+OF UNEXPECTED OVERFITTING IN
 
-      CLASSIFICATION OF BRAIN DATA
+CLASSIFICATION OF BRAIN DATA
 
+MAHAN HOSSEINI1*, MICHAEL POWELL2*, JOHN COLLINS3, CHLOE CALLAHAN-
 
-   MAHAN HOSSEINI1*, MICHAEL POWELL2*, JOHN COLLINS3, CHLOE CALLAHAN-
+FLINTOFT4,WILLIAM JONES1, HOWARD BOWMAN1,5, AND BRAD WYBLE 6
 
-      FLINTOFT4,WILLIAM JONES1, HOWARD BOWMAN1,5, AND BRAD WYBLE6
+1. Computing Department, University of Kent
 
+2. Manada Technology LLC
 
-                                   1. Computing Department, University of Kent
+3. Physics Department, Penn State University
 
-                                            2. Manada Technology LLC
+4. Army Research Lab, Aberdeen Proving Grounds
 
-                                   3. Physics Department, Penn State University
+5. School of Psychology, University of Birmingham
 
-                                4. Army Research Lab, Aberdeen Proving Grounds
+6. Psychology Department, Penn State University
 
-                                5. School of Psychology, University of Birmingham
+*Co-first authors
 
-                                 6. Psychology Department, Penn State University
+None of the authors have competing interests with regards to this work.
 
-                                                    *Co-first authors
+Figures to be printed in Black and White, but online in color.
 
-               None of the authors have competing interests with regards to this work.
-
-                        Figures to be printed in Black and White, but online in color.
-
-
-
-
-                          See OSF page for code sample and data:
-
-                  https://osf.io/qkvhd/?view_only=bb01fb14e61c405a936765f1524b36b9
-
+See OSF page for code sample and data:
+https://osf.io/qkvhd/?view_only=bb01fb14e61c405a936765f1524b36b9
 
 ABSTRACT
 
-
 Machine learning has enhanced the abilities of neuroscientists to interpret information collected
 
-through EEG, fMRI, and MEG data. With these powerful techniques comes the danger of
+through  EEG,  fMRI,  and  MEG  data.  With  these  powerful  techniques  comes  the  danger  of
 
 overfitting of hyperparameters which can render results invalid. We refer to this problem as ‘over-
 
@@ -92,17 +87,17 @@ hyping’ and show that it is pernicious despite commonly used precautions. Over
 
 when analysis decisions are made after observing analysis outcomes and can produce results that
 
-are partially or even completely spurious. It is commonly assumed that cross-validation is an
+are  partially  or  even  completely  spurious.  It  is  commonly  assumed  that  cross-validation  is  an
 
-effective protection against overfitting or overhyping, but this is not actually true. In this article,
+effective protection against overfitting or overhyping, but this is not actually true.  In this article,
 
 1
 
-we show that spurious result can be obtained on random data by modifying hyperparameters in
+we show that spurious result can be obtained on random data by modifying hyperparameters in
 
-seemingly innocuous ways, despite the use of cross-validation. We recommend a number of
+seemingly  innocuous  ways,  despite  the  use  of  cross-validation.  We  recommend  a  number  of
 
-techniques for limiting over-hyping, such as lock boxes, blind analyses, pre-registrations, and
+techniques  for  limiting  over-hyping,  such  as  lock  boxes,  blind  analyses,  pre-registrations,  and
 
 nested cross-validation. These techniques, are common in other fields that use machine learning,
 
@@ -110,26 +105,19 @@ including computer science and physics. Adopting similar safeguards is critical 
 
 robustness of machine-learning techniques in the neurosciences.
 
-
-
-
 Keywords: Overfitting; over-hyping; machine learning; classification; analysis, EEG
-
-
-
 
 INTRODUCTION
 
-
-Computers have revolutionized approaches to data analysis in psychology and neuroscience,
+Computers  have  revolutionized  approaches  to  data  analysis  in  psychology  and  neuroscience,
 
 effectively allowing one to interpret not only the neural correlates of cognitive processes, but also
 
-the information content that is represented in the brain through the use of machine learning.
+the  information  content  that  is  represented  in  the  brain  through  the  use  of  machine  learning.
 
-However, with these new and powerful tools come new dangers. Machine learning algorithms
+However,  with  these  new  and  powerful  tools  come  new  dangers.  Machine  learning  algorithms
 
-allow a pattern classifier to weave many subtle threads of information together to detect subtle
+allow a pattern classifier to weave  many subtle threads of information together to detect  subtle
 
 patterns, e.g. to determine from MEG data whether someone is currently viewing a building or an
 
@@ -139,15 +127,15 @@ boxes to their human operators, as they create complex mappings between features
 
 that exceed one’s ability to comprehend. This lack of interpretability can be especially pernicious
 
-when combined with the dangers of overfitting, which  is a problem inherent to  all fitting
+when  combined  with  the  dangers  of  overfitting,  which  is  a  problem  inherent  to  all  fitting
 
-algorithms, see Table 1 and (Poldrack et al 2020). Specifically, interpretability enables the
+algorithms,  see  Table  1  and  (Poldrack  et  al  2020).  Specifically,  interpretability  enables  the
 
-plausibility with which a classification or prediction is arrived at to be assessed against prior
+plausibility  with  which  a  classification  or  prediction  is  arrived  at  to  be  assessed  against  prior
 
-understanding and  theory. Consequently, when  using “black-box” machine  learning  (i.e.
+understanding  and  theory.  Consequently,  when  using  “black-box”  machine  learning  (i.e.
 
-algorithms where the internal parameters are essentially uninterpretable by humans), one can
+algorithms  where  the  internal  parameters  are  essentially  uninterpretable  by  humans),  one  can
 
 unintentionally create a classifier that does very well on a specific data set, but poorly on other
 
@@ -155,12 +143,9 @@ data sets (i.e. we say the classifer has been overfit to the training data; see 
 
 way to critique or judge the plausibility of the solution found by the algorithm.
 
-
-
-
 2
 
-The issue of overfitting is related to another topic that is frequently discussed in the scientific
+The  issue  of  overfitting  is  related  to  another  topic  that  is  frequently  discussed  in  the  scientific
 
 literature, which is researcher degrees of freedom (e.g. Simmons, Nelson & Simonsohn 2011).
 
@@ -168,16 +153,15 @@ This term reflects the fact that choices made during analysis can erroneously in
 
 statistical significance by eliminating options that produce non-significant or otherwise unwanted
 
-results. A parallel issue exists in machine learning, but with additional layers of complexity that
+results. A parallel issue exists in machine learning, but with additional layers of  complexity that
 
 can obscure the influence of choices made by the researcher on the analysis outcome. For example,
 
-techniques such as cross-validation (i.e. tools for reducing overfitting, see Table 1) are often
+techniques  such  as  cross-validation  (i.e.  tools  for  reducing  overfitting,  see  Table  1)  are  often
 
 thought to insulate the analysis from the statistical inflation provided by degrees of freedom in the
 
 analysis, but it will be shown here that this is not the case.
-
 
 Issues associated with analysis overfitting are by no means new to science: High-energy physics
 
@@ -185,7 +169,7 @@ has had a number of high-profile false discoveries, some of which were the resul
 
 analysis to a particular data set. Related difficulties have been argued to have arisen during the
 
-search for gravitational-waves (Creswell et al, 2017; New Scientist, 2018). Indeed, because of
+search  for  gravitational-waves  (Creswell  et  al,  2017;  New  Scientist,  2018).  Indeed,  because  of
 
 several high-profile false discoveries, high-energy physics has already gone through a replicability
 
@@ -201,8 +185,7 @@ inappropriate selection of data was the culprit. For accounts of some of these i
 
 experimental practice, see Harrison (2002) and Dorigo (2015).
 
-
-The similarities between data analysis in high-energy physics and modern neuroscience are
+ The  similarities  between  data  analysis  in  high-energy  physics  and  modern  neuroscience  are
 
 striking: both fields have enormous quantities of data that need to be reduced to discover signals
 
@@ -218,18 +201,17 @@ signal where none actually exists, much like in aforementioned case from physics
 
 when making measurements in high-energy physics and neuroscience, complicated apparatuses
 
-are often used, and analyses typically contain an extremely sophisticated  set of software
+are  often  used,  and  analyses  typically  contain  an  extremely  sophisticated  set  of  software
 
-algorithms. Optimization  (i.e. making choices to increase effectiveness), and debugging of
+algorithms.  Optimization  (i.e.  making  choices  to  increase  effectiveness),  and  debugging  of
 
 3
 
-complex analysis pipelines for both neuroscience and physics data sets require many decisions that
+complex analysis pipelines for both neuroscience and physics data sets require many decisions that
 
 are often necessary to, and yet present grave dangers to the generalizability of the results, such that
 
 the results will not replicate on a separate data set.
-
 
 To prevent such cases, the high-energy physics community has adopted several conventions and
 
@@ -237,19 +219,19 @@ methods in the analysis and interpretation of data. For example, blind analysis 
 
 in which analysis optimization occurs without consulting the dependent variable of interest (e.g.
 
-Klein & Roodman 2005). Since the optimization algorithm is blind to the result of interest,
+Klein  &  Roodman  2005).  Since  the  optimization  algorithm  is  blind  to  the  result  of  interest,
 
-researcher degrees of freedom will be unable to  artificially inflate estimates of  statistical
+researcher  degrees  of  freedom  will  be  unable  to  artificially  inflate  estimates  of  statistical
 
-significance.  Unlike  physics,  while  related  issues have been  discussed  in  the  literature
+significance.  Unlike  physics,  while  related  issues  have  been  discussed  in  the  literature
 
-(Kriegeskorte et  al 2009; Button 2019; Brooks  et  al 2017; Bowman  et  al. In Press), the
+(Kriegeskorte  et  al  2009;  Button  2019;  Brooks  et  al  2017;  Bowman  et  al.  In  Press),  the
 
-neuroscience field has not yet fully responded to the dangers of over-hyping when complex
+neuroscience  field  has  not  yet  fully  responded  to  the  dangers  of  over-hyping  when  complex
 
 analyses are used, which increases the potential of false findings and presents a major barrier to
 
-the replicability of the literature. At the end of this paper, we will discuss several preventative
+the replicability of the literature. At the  end of this  paper, we will discuss  several  preventative
 
 solutions, including blind analysis.
 
@@ -261,7 +243,7 @@ data can be referred to as out-of-sample, meaning that it is outside of the data
 
 and evaluate the classifier. In other words, if one were to develop a machine learning approach on
 
-one data set and then apply the same algorithm to a second set of data drawn from the same
+one  data  set  and  then  apply  the  same  algorithm  to  a  second  set  of  data  drawn  from  the  same
 
 distribution, performance might be much worse than on the original set of data even though one
 
@@ -273,20 +255,17 @@ valid only on the data set used to configure the classifier, are tuned to the sp
 
 in the data, and are unlikely to be replicated on any other set. One of the earlier and more startling
 
-examples of overfitting was performed by Freedman (1983), where he showed—with high
+examples  of  overfitting  was  performed  by  Freedman  (1983),  where  he  showed—with  high
 
 statistical significance—that a regression model could be used to find a strong relationship between
 
-independent random variables drawn from a standard normal distribution (which have no real
+independent  random  variables  drawn  from  a  standard  normal  distribution  (which  have  no  real
 
 relationship whatsoever).
 
-
-
-
 4
 
-To better understand the principles of this conundrum in machine learning, we rely on a commonly
+To better understand the principles of this conundrum in machine learning, we rely on a commonly
 
 used distinction between parameters and hyperparameters. In the context of machine learning, we
 
@@ -294,19 +273,19 @@ use the term parameter to refer to aspects of the analysis that are directly dri
 
 a training algorithm. For example when training a support-vector-machine (or SVM, a commonly
 
-used classifier in machine learning), the training algorithm uses the data to adjust a set of
+used  classifier  in  machine  learning),  the  training  algorithm  uses  the  data  to  adjust  a  set  of
 
-parameters which allow that classifier to learn how specific patterns of brain activity predict
+parameters  which  allow  that  classifier  to  learn  how  specific  patterns  of  brain  activity  predict
 
-specific dependent variables. Hyperparameters, on the other hand, refer to aspects of an analysis
+specific dependent variables.  Hyperparameters, on the other hand, refer to aspects of an analysis
 
 that are configured (often by manual selection) to improve the outcome of the training process (see
 
-Table 1). In neuroscience hyperparameters will include, but are not necessarily limited to the
+Table  1).  In  neuroscience  hyperparameters  will  include,  but  are  not  necessarily  limited  to  the
 
-following: artifact rejection criteria, feature selection  (i.e. electrodes or ROIs in the brain),
+following:  artifact  rejection  criteria,  feature  selection  (i.e.  electrodes  or  ROIs  in  the  brain),
 
-frequency filter settings, control parameters of classifiers (e.g. choice of kernels, setting of
+frequency  filter  settings,  control  parameters  of  classifiers  (e.g.  choice  of  kernels,  setting  of
 
 regularisation parameters), and even choice of classifier (e.g. SVM vs. random forests vs naïve
 
@@ -314,14 +293,13 @@ Bayes). These are settings and choices that could, at least in principle, apply 
 
 sets.
 
-
-In this context, we propose the term over-hyping as a specific case of (typically unintentional)
+In this context,  we propose the term  over-hyping as  a specific case of  (typically unintentional)
 
 overfitting through adjustment of analysis hyperparameters to improve the results for a specific
 
 data set after which point the same results cannot be obtained on another data set with the same
 
-hyperparameters. We suggest that over-hyping is a fairly widespread and poorly understood
+hyperparameters.  We  suggest  that  over-hyping  is  a  fairly  widespread  and  poorly  understood
 
 problem in the neurosciences, particularly because the field utilizes relatively expensive and time
 
@@ -329,17 +307,17 @@ consuming data collection practices (unlike the field of machine-vision, for exa
 
 a better understanding of the error introduced through over-hyping is crucial, since this error is
 
-easy to commit yet difficult to detect. Furthermore, while there has been a lot of discussion of
+easy to  commit yet difficult to detect.  Furthermore, while there has been a lot of discussion of
 
 problems of circularity and inflated effects in neuroscience analyses (e.g. Kriegeskorte, Simmons,
 
 Bellgowan & Baker 2009; Vul, Harris, Winkielman & Pashler 2009; Eklund, Nichols, Anderson
 
-& Knutsson 2015; Brooks, Zoumpoulaki & Bowman, 2017; Bowman et al. In Press), machine
+& Knutsson  2015;  Brooks, Zoumpoulaki  & Bowman, 2017;  Bowman et  al.  In Press), machine
 
 learning algorithms are so effective that they provide dangers above and beyond those that have
 
-been discussed. Optimization of hyperparameters is a common and necessary practice in the
+been  discussed.  Optimization  of  hyperparameters  is  a  common  and  necessary  practice  in  the
 
 machine learning literature (Bouthillier & Varoquaux 2020) and it is difficult to determine how
 
@@ -347,25 +325,21 @@ the data were treated during the optimization process. Importantly, as will be d
 
 the technique of cross-validation, often employed as a safeguard against overfitting, is not entirely
 
-
 5
 
-effective at ensuring generalizability. We suspect that the incidence of accidental overfitting errors
+effective at ensuring generalizability. We suspect that the incidence of accidental overfitting errors
 
-in the literature could be substantial already, and may increase as machine learning methods
+in  the  literature  could  be  substantial  already,  and  may  increase  as  machine  learning  methods
 
 increase in popularity.
-
-
-
 
 CROSS-VALIDATION DOES NOT PREVENT OVER-HYPING WHEN RE-USED
 
 ON THE SAME DATA SET
 
-In the neuroscience literature and also in machine learning more generally, a method that is
+In  the  neuroscience  literature  and  also  in  machine  learning  more  generally,  a  method  that  is
 
-typically employed to prevent overfitting  is cross-validation, in which data are repeatedly
+typically  employed  to  prevent  overfitting  is  cross-validation,  in  which  data  are  repeatedly
 
 partitioned into two non-overlapping subsets. In each iteration, classifiers are trained on one set
 
@@ -373,15 +347,15 @@ and tested on the other and the results of multiple iterations are averaged toge
 
 There are many varieties of cross-validation, such as K-fold, in which the data are divided into K
 
-equal subsets (or “folds”) and the train/testing process is repeated once for each of the subsets. In
+equal subsets (or “folds”) and the train/testing process is repeated once for each of the subsets.  In
 
 each repetition, the designated subset is used for testing while the remaining subsets are combined
 
 together to form a training set. Thus for a 10 fold cross-validation scheme, ten separate classifiers
 
-are trained, each trained on 90% of the data, and tested on 10%. The results are then computed as
+are trained, each trained on 90% of the data, and tested on 10%.  The results are then computed as
 
-the average accuracy of the 10 classifiers on the test set. The accuracy scores from the training
+the average accuracy of the 10 classifiers on the test set.  The accuracy scores from the training
 
 sets are not used, as these scores are likely to reflect some amount of overfitting.
 
@@ -389,11 +363,11 @@ Other approaches to cross-validation are similar. Stratified sampling can be use
 
 each subset of the data has an equal proportion of samples from each class of data (e.g. hit vs miss
 
-trials) before the K folds are defined. Leave-One-Out methods break up the data into subsets such
+trials) before the K folds are defined.  Leave-One-Out methods break up the data into subsets such
 
 that each subset corresponds to one group of trials (e.g. one subject) and the classifier is trained
 
-for subsets excluding each such group in turn.  Thus for a data set with 20 subjects, twenty
+for  subsets  excluding  each  such  group  in  turn.    Thus  for  a  data  set  with  20  subjects,  twenty
 
 classifiers would be trained, one excluding the data from each subject in turn and then tested on
 
@@ -405,13 +379,13 @@ Regardless of which specific form of cross-validation is used, the principle of 
 
 that because the training and testing sets are disjoint in each iteration, the average performance on
 
-the test sets can be taken as an unbiased estimate of classifier performance on out-of-sample data.
+the test sets can be  taken as an unbiased estimate of classifier performance on out-of-sample data.
 
 6
 
-However, this is only true as long as one important restriction is obeyed: After performing cross-
+However, this is only true as long as one important restriction is obeyed: After performing cross-
 
-validation, decisions regarding the  analysis  pipeline must not be made  to obtain higher
+validation,  decisions  regarding  the  analysis  pipeline  must  not  be  made  to  obtain  higher
 
 performance on that same data. Reusing the same data to optimize analysis parameters can induce
 
@@ -421,37 +395,33 @@ The reason that over-hyping can occur despite cross-validation is that all data 
 
 of a combination of signal and noise. The signal is the portion of the data containing the useful
 
-information that one would like the machine learning classifier to discover, while the noise
+information  that  one  would  like  the  machine  learning  classifier  to  discover,  while  the  noise
 
 includes other sources of variability. However, when an analysis is optimized on a given data set
 
-after viewing the results, the choice of hyperparameters can be influenced by how the noise
+after  viewing  the  results,  the  choice  of  hyperparameters  can  be  influenced  by  how  the  noise
 
-affected the classification accuracy. In other words, some of the unwanted noise “leaks” into the
+affected the classification accuracy.  In other words, some of the unwanted noise “leaks” into the
 
-hyperparameter configuration. Consequently, while the optimization improves classification
+hyperparameter  configuration.  Consequently,  while  the  optimization  improves  classification
 
-accuracy on this data set, performance may remain constant or even worsen on a completely
+accuracy  on  this  data  set,  performance  may  remain  constant  or  even  worsen  on  a  completely
 
 distinct set of data, because (in a statistical sense) its noise is not shared with the data driving the
 
-optimization (Figure 1). In other words, the analysis would not replicate at the same level of
+optimization  (Figure  1).  In  other  words,  the  analysis  would  not  replicate  at  the  same  level  of
 
 significance on a distinct dataset even if the sampling conditions and the analysis were identical.
 
-
-
-
-
 7
 
-The possibility that cross-validation does not prevent over-hyping, is well known in the machine
+The possibility that cross-validation does not prevent over-hyping, is well known in the machine
 
 learning and machine vision communities (Domingos 2012), which are taking increasing care to
 
 avoid the problem. For example, machine-learning competitions on websites such as Kaggle.com
 
-provide contestants with sample data on which to optimize their models. However the final
+provide  contestants  with  sample  data  on  which  to  optimize  their  models.  However  the  final
 
 evaluation of the contestants is performed on a different data set that is either held as confidential
 
@@ -459,55 +429,30 @@ by the sponsoring organization, or is released only a few days before the end of
 
 (i.e. the “held out” set or “private set”). Contestants who access the data more often than the rules
 
-
-
-                                                                                               Data from Class One
-                                                                                               Data from Class Two
-          Initial                                     Cross Validation
-       Analysis                                         Train   Test
-     Parameters                                 Data  Data
-                                                                                                  Publish Average
-                                                                           Train Classifier.                                                                                              Accuracy
-                                                             Get Accuracy on
-                                                                             Test Data
- Set               Preprocess                                                                           Yes
- Data                 Data                                                Train Classifier.         Average Accuracy
-                                                             Get Accuracy on         Good Enough?
-                                                                             Test Data  Entire
-
-                                                                           Train Classifier.                                                                            No
-                                                             Get Accuracy on
-                                                                             Test Data
-
-
-
-      Retest on                                                                         Modify Analysis
-    Same Data                                                                             Parameters
 Figure 1. An example of how over-hyping can be induced by modifying hyperparameters after
 evaluating a system through cross-validation. The feedback loop allowing hyperparameters to be
 adjusted after viewing the results provides a route for analysis decisions to be made in response
 to the noise in the data set, despite the separation of data into training/testing sets.
 
-
-
-permit are disqualified, their organizations can be barred from future competitions and in one
+permit  are  disqualified,  their  organizations  can  be  barred  from  future  competitions  and  in  one
 
 recent high-profile case a lead scientist was fired (Markoff 2015).
 
-In writing this paper, we share the experience of our colleagues in the physics and computer
+In  writing  this  paper,  we  share  the  experience  of  our  colleagues  in  the  physics  and  computer
 
-science disciplines so as to encourage more rigorous standards of machine learning before a
+science  disciplines  so  as  to  encourage  more  rigorous  standards  of  machine  learning  before  a
 
 replicability crisis in neuroscience machine learning unfolds. It is not our intent to call out specific
 
-examples of bad practice in the literature, although in our informal survey of the neuroscience
+examples of bad practice in  the literature,  although in  our informal survey  of the neuroscience
 
 classification literature it was rarely the case that appropriate precautions had been documented
 
-
 8
 
-(i.e. some variety of preregistration, blind analysis optimization, nested cross-validation or lock
+Average Accuracy Good Enough?YesPublish Average AccuracyNoModify Analysis ParametersRetest on Same DataData from Class OneData from Class TwoTrain Classifier. Get Accuracy on Test DataPreprocessDataTrainDataCross ValidationTestDataTrain Classifier. Get Accuracy on Test DataTrain Classifier. Get Accuracy on Test DataInitial AnalysisParametersEntire Data Set
+
+(i.e. some variety of preregistration, blind analysis optimization, nested cross-validation or lock
 
 box, which will be described below). Without these precautions it is impossible to determine from
 
@@ -519,7 +464,7 @@ overhyping is unlike the problem of double-dipping(Kriegeskorte, Simmons, Belgow
 
 the practice of selecting a subset of data based on particular values in the data (i.e. picking a highly
 
-active set of voxels), and then running a statistical analysis on that same subset. The greater
+active  set  of  voxels),  and  then  running  a  statistical  analysis  on  that  same  subset.  The  greater
 
 difficulty in identifying cases of over-hyping is that it would have occurred during the optimization
 
@@ -527,15 +472,15 @@ of the analysis, and a description of the analyses performed during optimization
 
 typically omitted from the methods. Another issue that we observe in the literature is inconsistent
 
-terminology, which makes it harder to understand exactly what was done (e.g. Ng (1997) and
+terminology,  which  makes  it  harder  to  understand  exactly  what  was  done  (e.g.  Ng  (1997)  and
 
-Varoquaux et al. (2017) use incompatible definitions of ‘test set’). To help clarify terminology,
+Varoquaux et al.  (2017) use incompatible definitions of ‘test set’). To help clarify terminology,
 
-we offer a table describing common terms and descriptions of what they are typically taken to
+we offer a table describing common terms  and descriptions of what  they  are typically taken to
 
 mean (Table 1). We suggest a new term, the Lock box, which refers to a set of data that is held-out
 
-from the optimization process for verification and should not be consulted until the method’s
+from  the  optimization  process  for  verification  and  should  not  be  consulted  until  the  method’s
 
 hyperparameters have been completely determined. The term hold-out data set is sometimes taken
 
@@ -547,7 +492,7 @@ in an inaccessible reserve. More will be said about this below. Next, we provide
 
 over-hyping despite use of cross-validation using a sample of EEG data recorded from our own
 
-lab. We use real data instead of simulated data, to ensure that the noise reflects the genuine
+lab.  We  use  real  data  instead  of  simulated  data,  to  ensure  that  the  noise  reflects  the  genuine
 
 variability typically found in similar datasets.
 
@@ -559,7 +504,7 @@ data in which there is no signal). By taking the most favorable result from thes
 
 each of a large number of iterations (1000 simulations in total) we evaluate how often a spurious
 
-result can be obtained by making a single hyperparameter choice despite cross-validation. The
+result  can  be  obtained  by  making  a  single  hyperparameter  choice  despite  cross-validation.  The
 
 one-shot hyperparameter adjustment was often able to reveal a spurious classification effect using
 
@@ -571,7 +516,7 @@ hyping, though small, would provide erroneous evidence of target discrimination 
 
 9
 
-over long periods of time, which is commonly taken as evidence that a neural correlate of working
+over long periods of time, which is commonly taken as evidence that a neural correlate of working
 
 memory has been measured. A comparison to a lock box data set (i.e. data that were not consulted
 
@@ -581,7 +526,7 @@ this chosen set of hyperparameters, which is the expected outcome from a randoml
 
 labels on the data set.
 
-In the second example, we show a more extreme case of overhyping. Hyperparameters were
+In  the  second  example,  we  show  a  more  extreme  case  of  overhyping.  Hyperparameters  were
 
 iteratively optimized to eliminate some features of the data set through a genetic algorithm using
 
@@ -593,12 +538,11 @@ that were set aside and not used in the genetic algorithm's fitness function. Pe
 
 to improve on the data on which the classifiers were optimized, but not on the lock box data. Note
 
-that highly robust over-hyping was obtained, despite the use of cross-validation. The obtained
+that  highly  robust  over-hyping  was  obtained,  despite  the  use  of  cross-validation.  The  obtained
 
-results, presented below, demonstrate  that  classifiers can  easily be over-hyped  to obtain
+results,  presented  below,  demonstrate  that  classifiers  can  easily  be  over-hyped  to  obtain
 
 performance that will not generalize to set-aside or out-of-sample data.
-
 
 METHODS
 
@@ -632,7 +576,7 @@ artifact rejection, see the EEG recordings section of experiment one in the orig
 
 10
 
-number of trials after artifact rejection. We decided to exclude an additional subject, choosing
+number of trials after artifact rejection. We decided to exclude an additional subject, choosing
 
 the one with the least number of trials, in order to be able to split the data into two equal parts for
 
@@ -652,12 +596,11 @@ could not have contributed to over-hyping. The complete methods from the origina
 
 provided in the supplemental.
 
-
 SIMULATION 1. OVERHYPING DUE TO KERNEL SELECTION DESPITE
 
 CROSS-VALIDATION
 
-      The first analysis measures the property of temporal generalisation within an EEG
+The first analysis  measures the property of temporal generalisation within an EEG
 
 signal, which indicates whether a classifier trained at one point in time relative to stimulus onset
 
@@ -667,11 +610,11 @@ whether memory representations are stable over time in working memory research (
 
 & King 2014).
 
-    We ran a series of 1000 independent executions (which we will refer to as iterations
+We ran a series of 1000 independent executions (which we will refer to as iterations
 
 below) to measure whether and how often a spurious effect could be obtained if one tested a set
 
-of 40 different classifiers on independent random shuffles of a data set. In effect, this is similar
+of 40 different classifiers on independent random shuffles of a data set.  In effect, this is similar
 
 to 1000 scientists trying to perform over-hyping on 1000 randomly shuffled copies of the same
 
@@ -679,7 +622,7 @@ data set. Each of the 1000 scientists uses cross-validation on 40 different kind
 
 then chooses their best result from the 40.
 
-          It needs to be stressed: all analyses were exclusively performed on null-data. Hence, any
+It needs to be stressed: all analyses were exclusively performed on null-data. Hence, any
 
 systematic improvements above chance performance must be due to over-hyping. Also, the
 
@@ -695,7 +638,7 @@ specific. Our temporal generalisation analyses used functions of the MVPA-Light 
 
 11
 
-       For each of the 1000 iterations randomized OP & LB data sets were created. 40
+For each of the 1000 iterations randomized OP & LB data sets were created. 40
 
 configurations of classifiers (i.e. 40 different hyperparameter configurations) were used in each
 
@@ -719,7 +662,7 @@ candidate lambdas were 1, 0.88, 0.77, 0.66, 0.55, 0.44, 0.33, 0.22, 0.11 and 0. 
 
 generalisation analyses were performed using 5-fold cross-validation.
 
-      These 40 candidate configurations competed in each of the 1000 iterations of the
+These 40 candidate configurations competed in each of the 1000 iterations of the
 
 analysis, which we call OP Competition as it represents a competition between hyperparameters
 
@@ -739,13 +682,13 @@ competition for that iteration. These winning configurations were then used to a
 
 of over-hyping by comparing them to the LB set.
 
-      There are a number of plausible ways to formulate a C-Mass index. An alternative set of
+There are a number of plausible ways to formulate a C-Mass index. An alternative set of
 
-of simulations is presented in the appendix. The alternative measured the extent of above- as
+of simulations is presented in the appendix. The alternative  measured the extent of above- as
 
 well as below-chance AUC across the entire temporal generalization map to acknowledge the
 
-fact that below-chance classification in the context of EEG data can be meaningful (we provide
+fact that below-chance classification in the context of EEG data can be  meaningful (we provide
 
 a brief discussion of this in the appendix, too). Both versions of the C-Mass analysis reveal
 
@@ -753,12 +696,9 @@ essentially similar results and we use the above-chance variant in the main body
 
 chance classification is the more canonical approach.
 
-
-
-
 12
 
-    We selected one of the 1000 iterations to demonstrate how manual selection could
+We selected one of the 1000 iterations to demonstrate how manual selection could
 
 produce what appears to be a theoretically meaningful result in a temporal generalization map
 
@@ -804,7 +744,7 @@ classification at later time points was also disrupted, causing our permutation 
 
 next, to generate significant AUC clusters for the winning OP, but not the LB map.
 
-    We adopted a cluster-extent permutation test for our temporal generalisation maps, which
+We adopted a cluster-extent permutation test for our temporal generalisation maps, which
 
 was based on functions of the ADAM toolbox (Fahrenfort, van Driel, van Gaal & Olivers, 2018).
 
@@ -822,118 +762,124 @@ null. Clusters were determined statistically significant if only 5% of permuted 
 
 13
 
-sizes exceeded their size (i.e. alpha of 0.05). For a more detailed introduction of this test, see the
+sizes exceeded their size (i.e. alpha of 0.05). For a more detailed introduction of this test, see the
 
 supplementary material.
 
-
-
 SIMULATION 1. RESULTS
 
-
-      The results of these simulations revealed a systematic improvement in C-Mass by
+The results of these simulations revealed a systematic improvement in C-Mass by
 
 selection of the winning analysis. To illustrate that these effects are systematic, a comparison of
 
 the OP competition winners against their respective LB counterparts shows how the C-Mass
 
-
-
-
-
 14
 
-distributions are shifted by the selection process, despite the use of cross-validation (Figure 3).
+distributions are shifted by the selection process, despite the use of cross-validation (Figure 3).
 
 The top panel illustrates that the average C-Mass is greater for the winning OP than the set of
 
+Figure 2. How overhyping manifests in temporal generalisation maps. Maps of a winning optimization
+set   (Winning OP), its corresponding Lock Box (LB) and the  worst optimization set (Losing OP),
+which implemented hyperparameters that led to minimal C-Mass, (panel C) are plotted with their main
+diagonal AUC vectors below. Beige areas in AUC time-series plots show divergence from chance-
+level classification (i.e. AUC of 0.5) in main diagonals. Classification performance was at a higher
+level for the winning OP compared to both other analyses. A family-wise error correction cluster-
+extent test was performed (Nichols & Holmes 2002) for winning OP & LB maps and only showed
+statistically significant AUC clusters for the OP map. Maps and cluster-boundaries (i.e. matrices
+determining statistical significance) were 2D-smoothed separately using a boxcar of 40 ms width. This
+was only done to facilitate visualization and did not affect any analyses, which were all computed prior
+to smoothing. As all three analyses decoded null-data, any differences in classification performance
+must be due to the effectiveness of classifiers’ hyperparameters (in this case an LDA classifier with a
+lambda of 1 for winning OP & LB). This is a demonstration of overhyping because these
+hyperparameters fitted the noise of the OP dataset best, which however differed in the LB dataset and
+thus led to decreased classification performance for the LB. This map triplet was manually chosen. An
+additional 9 triplets can be found in the supplementary material.
 
-
-
-
- Figure 2. How overhyping manifests in temporal generalisation maps. Maps of a winning optimization
- set  (Winning OP), its corresponding Lock Box (LB) and the worst optimization set (Losing OP),
- which implemented hyperparameters that led to minimal C-Mass, (panel C) are plotted with their main
- diagonal AUC vectors below. Beige areas in AUC time-series plots show divergence from chance-
- level classification (i.e. AUC of 0.5) in main diagonals. Classification performance was at a higher
- level for the winning OP compared to both other analyses. A family-wise error correction cluster-
- extent test was performed (Nichols & Holmes 2002) for winning OP & LB maps and only showed
- statistically significant AUC clusters for the OP map. Maps and cluster-boundaries (i.e. matrices
- determining statistical significance) were 2D-smoothed separately using a boxcar of 40 ms width. This
- was only done to facilitate visualization and did not affect any analyses, which were all computed prior
- to smoothing. As all three analyses decoded null-data, any differences in classification performance
- must be due to the effectiveness of classifiers’ hyperparameters (in this case an LDA classifier with a
- lambda of 1 for winning OP & LB). This is a demonstration of overhyping because these
- hyperparameters fitted the noise of the OP dataset best, which however differed in the LB dataset and
- thus led to decreased classification performance for the LB. This map triplet was manually chosen. An
- additional 9 triplets can be found in the supplementary material.
 LB’s.
-
-
-
-
 
 15
 
-      The second panel illustrates that classification performance on a randomly selected set of
+The second panel illustrates that classification performance on a randomly selected set of
 
 hyperparameters, as opposed to the winning set from the parameter-optimization phase, is
 
-                                                    approximately equal to performance on
+approximately equal to performance on
 
-                                                         the LBs dataset when using the
+the LBs dataset when using the
 
-                                                 winning hyperparameter set, as it
+winning hyperparameter set, as it
 
-                                                    should be if the difference between OP
+should be if the difference between OP
 
-                                                and LB classification is due entirely to
+and LB classification is due entirely to
 
-                                                           noise. This result demonstrates how a
+noise. This result demonstrates how a
 
-                                             Lock Box provides an unbiased
+Lock Box provides an unbiased
 
-                                                        estimate of performance, as the
+estimate of performance, as the
 
-                                                            resulting C-Mass is free of any
+resulting C-Mass is free of any
 
-                                                   overhyping effects.
+overhyping effects.
 
-                                                  The focus of this analysis lies
+The focus of this analysis lies
 
-                                                           in the top panel of Figure 3: the
+in the top panel of Figure 3: the
 
-                                                            distributions of OP & LB C-Mass for
+distributions of OP & LB C-Mass for
 
-                                                 winning hyperparameters of the OP
+winning hyperparameters of the OP
 
-                                                     competition clearly demonstrate
+competition clearly demonstrate
+
+overhyping of classification results. If
+
+overhyping was absent, these
+
+distributions should sit on top of one
+
+another. However, the POOP C-Mass
+
+distribution has a higher mean (0.516),
+
+median (0.515) and smaller variance
+
+(0.0001) compared to the LB C-Mass
+
+distribution (mean: 0.5, median:0.5,
+
+variance:0.0002). The bottom panel of
+
+Figure 2 illustrates how the within-
+
+iteration differences in C-Mass
+
+between OP and LB were distributed.
+
+This distribution should be centred
+
+around zero if no overhyping was
+
 Figure 3. C-Mass distributions of OP (blue) and LB
-                                                   overhyping of classification results. If
 (red) maps (top two panels), as well as their within-
-                                                   overhyping was absent, theseiteration difference (bottom panel). The top panel
-shows C-Mass results for the OP & LB maps that        distributions should sit on top of one
-incorporated winning hyperparameters from the                                                         another. However, the POOP C-Mass
+iteration difference (bottom panel). The top panel
+shows C-Mass results for the OP & LB maps that
+incorporated winning hyperparameters from the
 parameter-optimization phase, the middle panel shows
-                                                            distribution has a higher mean (0.516),the distribution of LB C-Mass after choosing
-hyperparameters randomly. The coloured vertical lines  median (0.515) and smaller variance
-indicate distributions’ median value and the rectangles                                                      (0.0001) compared to the LB C-Mass
+the distribution of LB C-Mass after choosing
+hyperparameters randomly. The coloured vertical lines
+indicate distributions’ median value and the rectangles
 surrounding these lines indicate the interquartile
-                                                            distribution (mean: 0.5, median:0.5,ranges. The black vertical line in the bottom panel
-indicates a OP – LB difference of zero (i.e. no           variance:0.0002). The bottom panel of
-overhyping).                                                     Figure 2 illustrates how the within-
-
-                                                            iteration differences in C-Mass
-
-                                                 between OP and LB were distributed.
-
-                                                    This distribution should be centred
-
-                                                  around zero if no overhyping was
+ranges. The black vertical line in the bottom panel
+indicates a OP – LB difference of zero (i.e. no
+overhyping).
 
 16
 
-observed (i.e. a given set of hyperparameters leading to similar success in decoding between-
+observed (i.e. a given set of hyperparameters leading to similar success in decoding between-
 
 class differences for OP as well as LB null-data). The observed mean (0.016) and median (0.015)
 
@@ -949,7 +895,7 @@ overhyping. However, p-values obtained from simulation analyses should be interp
 
 caution, as we discuss in more detail in the supplementary material.
 
-    We further assessed how vulnerable the different classifiers were to overhyping. Across
+We further assessed how vulnerable the different classifiers were to overhyping. Across
 
 all classifiers, the median difference in C-Mass between winning OP and LB was positive and
 
@@ -960,6 +906,7 @@ SVM: median = 0.015, n = 329; polynomial SVM: median =0.013, n =189; RBF SVM: me
 0.013, n =132; LDA: median =0.018, n =350). We investigated whether overhyping was more
 
 pronounced for certain classifiers by conducting a Kruskal-Wallis test (due to non-normality of
+
 C-Mass values), which revealed a significant difference among the four classifier types (²
 
 (3,996) =20.07, p < .001). Post-hoc pair-wise tests of mean rank-differences between classifiers
@@ -970,7 +917,7 @@ to all three SVM classifiers. The differences between SVM classifiers were all n
 
 (we provide detailed results of this analysis in the supplementary material).
 
-        Finally, we present an exploratory analysis in the supplementary material, which suggests
+Finally, we present an exploratory analysis in the supplementary material, which suggests
 
 that temporal generalization with simple classifiers (e.g. having linear classification kernels)
 
@@ -982,19 +929,13 @@ configurations in a given iteration) the OP competition about twice as often as 
 
 models.
 
-
-
 SIMULATION 2. OVERHYPING BY FEATURE SELECTION DESPITE CROSS-
 
 VALIDATION
 
-
-
-
-
 17
 
-In addition to kernel parameters, analysis optimization can involve feature selection, in which
+In addition to kernel parameters, analysis optimization can involve feature selection, in which
 
 portions of the data set are excluded from the pipeline on the grounds that they contain irrelevant
 
@@ -1014,9 +955,9 @@ data set using feature selection via a genetic algorithm approach for feature se
 
 simulation is similar to 16 different scientists trying to perform over-hyping on 16 randomly
 
-shuffled copies of the same data set. Each of those 16 scientists uses cross validation for several
+shuffled copies of the same data set.  Each of those 16 scientists uses cross validation for several
 
-hundred iterations, progressively improving the analysis hyperparameters at each iteration. The
+hundred iterations, progressively improving the analysis hyperparameters at each iteration.  The
 
 raw data are the same as were used in the first analysis and are again randomly shuffled to
 
@@ -1044,30 +985,29 @@ prior to the analysis to remove the correspondence between data and conditions.
 
 A support vector machine (SVM) was used to classify the post-processed EEG data and the over-
 
-hyping was accomplished with a custom genetic algorithm that adjusted weights for the 64
+hyping  was  accomplished  with  a  custom  genetic  algorithm  that  adjusted  weights  for  the  64
 
-frequency bands available to the classifier. The SVM was MATLAB’s fitcsvm, with an RBF
+frequency  bands  available  to  the  classifier.  The  SVM  was  MATLAB’s  fitcsvm,  with  an  RBF
 
 kernel and kernelscale set at 25. No additional classifiers or kernel settings were attempted for this
 
 analysis.
 
-
 18
 
-To demonstrate that cross-validation is inadequate protection against overhyping, the analysis was
+To demonstrate that cross-validation is inadequate protection against overhyping, the analysis was
 
 repeated for 16 iterations. For each iteration, 15% of the data were set aside in a Lock Box (LB)
 
 to test for over-hyping. Since the data was randomized, it was expected that performance on this
 
-outer test set should be at 50% (chance level), while performance on the 85% of the trials that
+outer test set should be at 50% (chance level),  while performance on the 85% of the trials that
 
-formed the Hyperparameter Optimization (OP) set would be elevated above chance by the last
+formed the Hyperparameter  Optimization (OP) set  would be elevated above chance by the last
 
 generation of the genetic algorithm. Over-hyping on the 16 OP sets was performed using a genetic
 
-algorithm coupled with cross-validation. For each generation of the genetic algorithm, 10
+algorithm  coupled  with  cross-validation.  For  each  generation  of  the  genetic  algorithm,  10
 
 candidate feature-weight vectors were each evaluated against a shared set of 10 random partitions
 
@@ -1079,13 +1019,13 @@ constructed with 64 values ranging from 0.95 to 1.05. During training and testin
 
 were multiplied by the power spectra for each trial before being provided to the SVM.
 
-Within each OP  iteration, for each of the 10 candidate feature weight vectors, the SVM
+Within  each  OP  iteration,  for  each  of  the  10  candidate  feature  weight  vectors,  the  SVM
 
 performance in terms of AUC on the 10 random partitions was averaged to compute performance
 
-for each candidate. The best candidate was selected and then repeatedly mutated by adding 64
+for each candidate.  The  best  candidate was selected and then  repeatedly  mutated by adding 64
 
-random numbers (range [-.05 .05]) to create 10 new candidates for the next generation of the
+random  numbers  (range  [-.05  .05])  to  create  10  new  candidates  for  the  next  generation  of  the
 
 genetic algorithm. This process was repeated for 400 generations to optimize the analysis.
 
@@ -1095,64 +1035,59 @@ classification of the LB set for each of the 16 iterations and the results were 
 
 evolution of the feature-weight vector. This is a strong violation of the principle of using a lock
 
-box but it is done here as a demonstration. In practice accessing a lock box multiple times can
+box but it is done here as a demonstration. In practice accessing a  lock box multiple times can
 
-itself result in overfitting, particularly if the results are used to influence analysis choices or
+itself  result  in  overfitting,  particularly  if  the  results  are  used  to  influence  analysis  choices  or
 
 stopping criteria.
 
-To measure the  statistical significance of the model's classification on the hyperparameter
+To  measure  the  statistical  significance  of  the  model's  classification  on  the  hyperparameter
 
-optimization set, a permutation test was run after the final generation of the genetic algorithm.
+optimization set,  a permutation  test was run after the final  generation of the genetic algorithm.
 
 First, the analysis result was computed as the mean AUC across the ten OP partitions using the
 
 final generation of feature-weights. Then, all condition labels for the trials (i.e. the target-type)
 
-were randomly shuffled 1000 times, a number chosen to balance the computational costs of
+were  randomly  shuffled  1000  times,  a  number  chosen  to  balance  the  computational  costs  of
 
 running 1000 separate analyses. After each such shuffling, for each of the ten partitions, the SVM
 
-
 19
 
-classifier was retrained with the best final weight vector and the AUC was measured. These AUC
+classifier was retrained with the best final weight vector and the AUC was measured. These AUC
 
 values were shuffled to create a null-hypothesis distribution of 1000 values.The p-value was then
 
-computed as the fraction of the null-hypothesis distribution that was larger than the non-
+computed  as  the  fraction  of  the  null-hypothesis  distribution  that  was  larger  than  the  non-
 
 permutated classification result (i.e. the proportion of shufflings that produced a mean AUC greater
 
 than the mean AUC on the unshuffled data).
 
-This entire procedure was repeated independently for 16 iterations  times to demonstrate the
+This  entire  procedure  was  repeated  independently  for  16  iterations    times  to  demonstrate  the
 
-robustness  of  over-hyping.  In  each  case,  the  data were randomly  repartitioned  into  a
+robustness  of  over-hyping.  In  each  case,  the  data  were  randomly  repartitioned  into  a
 
 hyperparameter optimization set and a lock box, and the genetic algorithm was used to optimize
 
 weights for the hyperparameter optimization..
 
-
 SIMULATION 2. RESULTS
 
-
-The results of overhyping by feature selection are illustrated in Figure 4, which shows that
+The  results  of  overhyping  by  feature  selection  are  illustrated  in  Figure  4,  which  shows  that
 
 performance improves on the hyperparameter optimization set without corresponding changes on
 
 the lock box set. As the labels were randomly shuffled, any performance above chance (AUC of
 
-0.5) in a statistical sense, would indicate overhyping. All 16 iterations of the OP set had
+0.5)  in  a  statistical  sense,  would  indicate  overhyping.  All  16  iterations  of  the  OP  set  had
 
-significantly elevated performance by the  final generation of the feature-selection genetic
+significantly  elevated  performance  by  the  final  generation  of  the  feature-selection  genetic
 
 algorithm. One of the LB sets was significant.
 
-
 DISCUSSION
-
 
 This paper demonstrates the ease with which over-hyping can be induced when using machine
 
@@ -1166,41 +1101,22 @@ Similar problems may exist with other hyperparameters, e.g. choosing time window
 
 ways of filtering out artifacts. Moreover, the same concerns apply to any kind of large neural data
 
-set. For example, in the case of using multi-voxel pattern-analysis (MVPA) on fMRI data,
+set.  For  example,  in  the  case  of  using  multi-voxel  pattern-analysis  (MVPA)  on  fMRI  data,
 
 optimization through selection of any analysis step in the pipeline during consultation with the
 
 data could lead to the same kinds of over-hyping that we demonstrate here.
 
-
-
-
 20
 
-           Generation               Generation               Generation               Generation
-                                        *                           *                         *                          ** AUC
-
-
-             *                                        *            *                           * AUC
-
-
-             *                         *                           *                         *
- AUC
-
-
-                           *             *                          *
- AUC                                                   *
-
-
-Figure 4. To demonstrate that models can be over-hyped using feature selection, a genetic
+Figure  4.  To  demonstrate  that  models  can  be  over-hyped  using  feature  selection,  a  genetic
 algorithm was used to iteratively select features to optimize performance on a randomly shuffled
 EEG data set, thus performance should not deviate from chance. The optimization procedure was
 run for 16 iterations, with 400 generations in each. The blue trace indicates accuracy from a cross-
-validation test on the hyperparameter optimization set, while the red shows performance on a
+validation test  on the hyperparameter optimization set,  while the  red shows performance on  a
 lockbox set. The asterisks indicate when the results of the final generation differed significantly
 from chance at an alpha level of .05. All of the OP sets were significantly different from chance,
 while only one of the LB sets was.
-
 
 These results should not be taken to indict cross-validation as a poor methodological choice: It is
 
@@ -1212,21 +1128,23 @@ indicate that cross-validation does not permit heedless analysis optimization.
 
 Importantly, the problem of over-hyping becomes more severe as the sample size reduces. This
 
-reflects the fact that error bars are larger when samples are small (Lorca-Puls et al, 2018), a
+reflects  the  fact  that  error  bars  are  larger  when  samples  are  small  (Lorca-Puls  et  al,  2018),  a
 
 phenomenon that has been compelling demonstrated in machine learning applied to neuroimaging
 
-data (Flint, et al, 2019; Varoquaux, 2018). This mirrors the law of large numbers in classical
+data  (Flint,  et  al,  2019;  Varoquaux,  2018).  This  mirrors  the  law  of  large  numbers  in  classical
 
 statistics, which states that there is increased error in estimates as samples get smaller (Dekking et
 
 21
 
-al, 2005). The combination of large error bars and over-hyping means that applications of machine
+*****************AUCGenerationGenerationGenerationGenerationAUCAUCAUC
+
+al, 2005). The combination of large error bars and over-hyping means that applications of machine
 
 learning in neuroimaging are likely to be especially vulnerable to the file-drawer effect (Lorca-
 
-Puls et al, 2018), which reflects the fact that only analyses that generate significant effects get
+Puls  et  al,  2018), which reflects  the fact  that only  analyses that generate  significant  effects  get
 
 published, leading to potentially very severe inflation of published accuracies and effect-sizes.
 
@@ -1238,20 +1156,19 @@ journals publishing data from classification analyses encourage the use of one o
 
 listed below.
 
-
 THE PRE-REGISTRATION APPROACH
 
 In cases where there is a clearly defined analysis plan that exists before efforts are made to analyze
 
-the data, a really good approach to minimizing over-hyping is pre-registration. Pre-registration
+the data,  a really  good  approach to  minimizing over-hyping is  pre-registration. Pre-registration
 
 (Nosek, Ebersole, DeHaven, & Mellor 2018). involves submitting a complete analysis plan to an
 
-external server that is accessible to the journal’s readership.  This practice encourages the
+external  server  that  is  accessible  to  the  journal’s  readership.    This  practice  encourages  the
 
 practitioner to specify all hyperparameters at the onset of an analysis and provides a time stamp
 
-indicating that they have done so.  This is helpful because cross-validation does succeed in
+indicating  that  they  have  done  so.    This  is  helpful  because  cross-validation  does  succeed  in
 
 providing an unbiased estimate of out-of-sample performance when classification results are not
 
@@ -1259,7 +1176,7 @@ used to iteratively optimize performance. Therefore, it is safe to pre-register 
 
 specify a classification analysis before attempting it. The pre-registration would provide evidence
 
-that the hyperparameters were finalized prior to attempting the analysis using previously
+that  the  hyperparameters  were  finalized  prior  to  attempting  the  analysis  using  previously
 
 established methods. The advantage of this approach is that all of the data can be used in the final
 
@@ -1269,7 +1186,7 @@ which limits the effectiveness of the analysis. The Registered Report (Chambers,
 
 Pruszynski, 2017) is another publication format that can guard against over-hyping in a similar
 
-way as pre-registration.  In this context, an analysis plan is developed in consultation with a
+way  as  pre-registration.    In  this  context,  an  analysis  plan  is  developed  in  consultation  with  a
 
 reviewing team before the data are analyzed and the article is published regardless of the outcome.
 
@@ -1277,18 +1194,13 @@ This approach removes any opportunity to overhype provided that no modifications
 
 are performed.
 
-
-
-
-
 22
 
-THE LOCK BOX APPROACH.
+THE LOCK BOX APPROACH.
 
+Using  a  metaphorical  data  lock  box  makes  it  possible  to  determine  whether  over-hyping  has
 
-Using a metaphorical data lock box makes  it possible to determine whether over-hyping has
-
-occurred. This entails setting aside an amount of data at the beginning of an analysis and not
+occurred.  This  entails  setting  aside  an  amount  of  data  at  the  beginning  of  an  analysis  and  not
 
 accessing that data until the analysis protocol is clearly defined, which includes all stages of pre-
 
@@ -1302,9 +1214,9 @@ the ultimate performance of the algorithm is evaluated on a separate set of data
 
 until the final stage of the test. The workflow of using a lock box is shown in Figure 5.
 
-We suggest that, moving forward, when machine classification approaches to data analysis in
+We  suggest  that,  moving  forward,  when  machine  classification  approaches  to  data  analysis  in
 
-neuroscience must be developed without clear default choices for hyperparameters or existing
+neuroscience  must  be  developed  without  clear  default  choices  for  hyperparameters  or  existing
 
 software, that such approaches should incorporate a lock box approach, in which data are set aside
 
@@ -1316,7 +1228,7 @@ point, the data in the lock box should be accessed just one time to generate an 
 
 of the algorithm’s performance. This result is likely to be less favorable than the data that were
 
-being used during optimization and should be published alongside the results from any other
+being  used  during  optimization  and  should  be  published  alongside  the  results  from  any  other
 
 analyses. At the same time, reviewers would need to be more willing to accept results that seem
 
@@ -1336,62 +1248,29 @@ A possible alternative is to access the lock box multiple times during optimizat
 
 correction to any resultant statistics as a function of the number of times the lock box data was
 
-evaluated. A method for accessing a lock box multiple times while limiting overfitting was
+evaluated.  A  method  for  accessing  a  lock  box  multiple  times  while  limiting  overfitting  was
 
 suggested by Dwork (2015). This method called for simultaneously evaluating a given model on
 
-both the hyperparameter optimization set and on the lock box, and then only revealing the
+both  the  hyperparameter  optimization  set  and  on  the  lock  box,  and  then  only  revealing  the
 
 23
 
-performance on the lock box to the operator if that performance was significantly different than
+performance on the lock box to the operator if that performance was significantly different than
 
 that of the model on the hyperparameter optimization set. Furthermore, the performance on the
 
-lock box set would be presented only after being summed with a Laplacian noise variable. By
+lock box set  would be presented only  after being summed with  a  Laplacian noise variable. By
 
 following this method, the maximum error rate when generalizing to out-of-sample data can be
 
-limited by only observing the performance on the lock box a set number of times (and halting
+limited by only observing the performance on the  lock box a set  number of times (and halting
 
 hyperparameter optimization once that limit is reached). While this is an innovative method for
 
 limiting overfitting, it only sets the maximum error rate when generalizing – To get the true error
 
 rate, a second lock box would have to be used.
-
-
-
-
-
-                                                                                          Data from Class One
-                            Parameter                                                          Data from Class Two
-                 Set Aside  Optimization Set
- Set         Some Data                                      Publish Accuracies on Parameter
-                                                               Optimization Set and Lock Box                     Preprocess                                      Lock                                                      Lock Data                                                                                                          Lock Box                                    Box                                                   Box
- Entire                                                        CrossTrainValidationTest                              Initial
-                                                       Data   Data
-                   Parameters
-                                                                                                           Lock
-                                                                                              Train Classifier.
-                                                                                                    Box
-                                                                             Get Accuracy on
-                                                                                                Test Data
-
-                           Preprocess                                                                          Yes
-                            Data                                                   Train Classifier.
-                                                                            Get Accuracy on       Average Accuracy
-                                                                                               Test Data          Good Enough?
-
-
-
-                                                                                              Train Classifier.                                                                                      No
-                                                                            Get Accuracy on
-                                                                                               Test Data
-
-
-                     Retest on                                                                       Modify Analysis
-               Same Data                                                                            Parameters
 
 Figure 5. Here the workflow of using a lock box is demonstrated in illustrative form. Data is first
 divided into a hyperparameter optimization set and a lock box. The model can be repeatedly tested
@@ -1400,19 +1279,17 @@ hyperparameter optimization and the analysis workflow is determined, the model c
 against the lock box data. By doing this, an unbiased estimate of overfitting can be obtained, and
 an objective measure of how well this system will generalize is achieved.
 
-
-
 24
 
-Note that this lock box approach is evaluative. It does not prevent over-hyping, but allows one to
+Data from Class OneData from Class TwoTrain Classifier. Get Accuracy on Test DataTrain Classifier. Get Accuracy on Test DataTrain Classifier. Get Accuracy on Test DataSet Aside Some DataParameter Optimization SetLock BoxInitial ParametersPreprocessDataTrainDataCross ValidationTestDataAverage Accuracy Good Enough?YesNoModify Analysis ParametersRetest on Same DataPreprocessLock BoxPublish Accuracies on Parameter Optimization Set and Lock BoxLock BoxLock BoxEntire Data Set
 
-test whether  it has occurred. However, the performance of the algorithm on the lock box is
+Note that this lock box approach is evaluative. It does not prevent over-hyping, but allows one to
+
+test  whether  it  has  occurred.  However,  the  performance  of  the  algorithm  on  the  lock  box  is
 
 guaranteed to be a non- over-hyped result if the technique was correctly used.
 
-
 NESTED CROSS-VALIDATION
-
 
 Another way to respond to the problem of overfitting hyperparameters is to use a generalization
 
@@ -1424,7 +1301,7 @@ the results generalize to out-of-sample data. In this approach, inner cross-vali
 
 an outer cross-validation procedure, with a different portion of the data serving as outer “hold-out
 
-set” on each outer iteration. Importantly, for each outer iteration, an unbiased assessment of
+set”  on  each  outer  iteration.  Importantly,  for  each  outer  iteration,  an  unbiased  assessment  of
 
 accuracy can be obtained by testing on this outer hold-out set. That is, the best parameters and
 
@@ -1456,9 +1333,9 @@ at the end of the procedure will be the result of multiple configurations of hyp
 
 thus it may be especially difficult to understand the link between the data and the accuracy. For
 
-example, in analysis of fMRI data where the region of interest is one of the hyperparameters,
+example,  in  analysis  of  fMRI  data  where  the  region  of  interest  is  one  of  the  hyperparameters,
 
-different iterations of the outer loop may converge on different regions of the brain. It would
+different  iterations  of  the  outer  loop  may  converge  on  different  regions  of  the  brain.  It  would
 
 therefore be difficult to gain insight into what brain areas are driving the classification. We give
 
@@ -1466,44 +1343,12 @@ more details of nested cross-validation and a simplified example in the Suppleme
 
 25
 
-                                                                                                                                            Data from Class One
-                                                                                                                                            Data from Class Two
-
-
-
-            Fold the               Publish average accuracy
-                                     from Hold-out sets
-                                                                                                                                                Preprocess                                                                                                     Run                                                                                                                                                         Classifier                                                                                                                on             data          Hold-out                                                                                                                                              Hold-out                                                                                                                         Hold-out                                                                                                                                                set                                                  Set Set                                                                                                                                                                set
-  Data                                           Select newCrossfoldValidation
-                                                                  Train  Test
-                                                       Data Data
-                                                          Initial   Entire
-                                       Parameters                                           Train Classifier.
-                                                                              Get Accuracy                    Yes
-                                                                        on Test Data
-                                 Preprocess
-                                 Data
-                                                                                              Train Classifier.
-                                                                              Get Accuracy           AverageGood Enough?Accuracy
-                                                                        on Test Data
-
-
-                                                                                             Train Classifier.               No
-                                                                              Get Accuracy
-                                                                        on Test Data
-                               Retest on                                                                            Modify
-                       Same Data                                                                                  Analysis Parameters
-
-Figure 6. Here the workflow of nested cross-validation is demonstrated in illustrative form. The
+Figure 6. Here the workflow of nested cross-validation is demonstrated in illustrative form. The
 data set is folded into multiple combinations of hold-out set and inner optimization set. Each of
 these folds is essentially similar to the lock box approach described above and can be optimized.
 The final accuracy would be the average accuracy computed across all of the hold-out sets.
 
-
-
-
 THE BLIND ANALYSIS APPROACH
-
 
 Blind analysis can be an appropriate tool for preventing over-hyping when testing a well-defined
 
@@ -1519,27 +1364,27 @@ et al. 2017; Bowman et al. In Press). Some examples of using blind analysis incl
 
 all condition labels and then artificially adding ‘target signals’ to some trials. The hyperparameters
 
-of the model can then be optimized to detect the signal present in the modified data. Once the
-
+of the model can then be optimized to  detect  the  signal  present  in  the modified data. Once the
 
 26
 
-hyperparameters are locked  in, the blind can be  lifted  (e.g. conditions unscrambled and
+Data from Class OneData from Class TwoTrain Classifier. Get Accuracy on Test DataTrain Classifier. Get Accuracy on Test DataTrain Classifier. Get Accuracy on Test DataFold the dataHold-outSetInitial ParametersPreprocessDataTrainDataCross ValidationTestDataAverage Accuracy Good Enough?YesNoModify Analysis ParametersRetest on Same DataPreprocessHold-out setRun Classifier on Hold-out setPublish average accuracy from Hold-out setsSelect new foldEntire Data Set
+
+hyperparameters  are  locked  in,  the  blind  can  be  lifted  (e.g.  conditions  unscrambled  and
 
 modifications removed), and the true results can be calculated. The advantage of this approach is
 
-that all of the data can be used during the optimization phase, and the final evaluation of
+that  all  of  the  data  can  be  used  during  the  optimization  phase,  and  the  final  evaluation  of
 
 performance can be done across all of the data instead of just the outer-box set. Note that blind-
 
 analysis is a way to minimize over-hyping. If used in conjunction with a lock box, one can both
 
-minimize and diagnose overfitting. The disadvantage of the blind analysis is that it obscures
+minimize  and  diagnose  overfitting.  The  disadvantage  of  the  blind  analysis  is  that  it  obscures
 
-accuracy on the key predicted variable, and this may prevent the development of an effective
+accuracy  on  the  key  predicted  variable,  and  this  may  prevent  the  development  of  an  effective
 
 analysis plan depending on the type of data one uses, in which case a lock box is a good solution.
-
 
 WHICH APPROACH TO USE
 
@@ -1573,19 +1418,15 @@ transparent can highlight the points where leakage of information into the (hype
 
 dependent) pipeline may have occurred.
 
-
-
-
 SAFE VERSUS EFFECTIVE USE OF MACHINE LEARNING
 
 Optimal use of machine learning in neuroscience requires that it be used both safely (i.e. without
 
-over-hyping such that the results can be trusted) and effectively (i.e. the classifier is
-
+over-hyping  such that the results can be trusted) and effectively (i.e. the classifier is
 
 27
 
-appropriately tuned to discriminating signal). In the terminology of machine learning, safe
+appropriately tuned to  discriminating signal). In the terminology of machine learning, safe
 
 largely corresponds to minimizing variance, while effective largely corresponds to reducing bias
 
@@ -1607,7 +1448,6 @@ forward is to make use of expertise when it is available, such that good decisio
 
 front, and ideally even pre-registered prior to viewing the results of analysis on critical data.
 
-
 CONCLUSION
 
 The biggest danger of data science is that the methods are powerful enough to find apparent signal
@@ -1618,11 +1458,11 @@ are complex, which makes it difficult to clearly understand the possibilities fo
 
 optimization and evaluation stages that can lead to over-hyping. Our results illustrate how easily
 
-this can occur despite the use of cross-validation. Moreover, it can be difficult to detect over-
+this  can  occur  despite  the  use  of  cross-validation.  Moreover,  it  can  be  difficult  to  detect  over-
 
-hyping without having an abundance of data, which can be costly to collect. However, as
+hyping  without  having  an  abundance  of  data,  which  can  be  costly  to  collect.  However,  as
 
-reproducibility is a cornerstone of scientific research, it is vital that methods of assessing and
+reproducibility  is  a  cornerstone  of  scientific  research,  it  is  vital  that  methods  of  assessing  and
 
 assuring generalizability be used. By setting aside an amount of data that is not accessed until the
 
@@ -1634,32 +1474,23 @@ blind analysis methods, good faith pre-registrations of the analysis parameters 
 
 validation reduce the possibility of overfitting. Conversely, using any method that allows one to
 
-check performance on the same data repeatedly without independent data that has not been
+check  performance  on  the  same  data  repeatedly  without  independent  data  that  has  not  been
 
-consulted can induce over-hyping, inflating false positive rates and damaging replicability.
+consulted  can  induce  over-hyping,  inflating  false  positive  rates  and  damaging  replicability.
 
-Devoting more attention to these dangers at this point, when machine learning approaches in
+Devoting  more  attention  to  these  dangers  at  this  point,  when  machine  learning  approaches  in
 
-neuroscience are relatively nascent, will allow us to improve the  state of science before
+neuroscience  are  relatively  nascent,  will  allow  us  to  improve  the  state  of  science  before
 
 inappropriate methods become standardized.
 
-
-
-
 28
 
-ACKNOWLEDGEMENTS:
+ACKNOWLEDGEMENTS:
 
 This work was performed with the support of NSF grant 1734220 to B. W.
 
-
-
-
-
 REFERENCES:
-
-
 
 Arlot, S., & Celisse, A. (2010). A survey of cross-validation procedures for model
 
@@ -1701,10 +1532,9 @@ Grieder, P. (1967). Evidence for a two-peak structure in the A 2 meson. Physics 
 
 44-47.
 
-
 29
 
-Cichy, R. M., Pantazis, D., & Oliva, A. (2014). Resolving human object recognition in space and
+Cichy, R. M., Pantazis, D., & Oliva, A. (2014). Resolving human object recognition in space and
 
 time. Nature neuroscience, 17(3), 455-462.
 
@@ -1756,10 +1586,9 @@ Freedman, D. A.(1983). A note on screening regression equations. the American St
 
 37(2), 152-155.
 
-
 30
 
-Geman, S., Bienenstock, E., & Doursat, R. (1992). Neural networks and the bias/variance
+Geman, S., Bienenstock, E., & Doursat, R. (1992). Neural networks and the bias/variance
 
 dilemma. Neural computation, 4(1), 1-58.
 
@@ -1813,7 +1642,7 @@ neuroimaging: a primer with examples. Human brain mapping, 15(1), 1-25.
 
 31
 
-Nosek, B. A., Ebersole, C. R., DeHaven, A. C., & Mellor, D. T. (2018). The preregistration
+Nosek, B. A., Ebersole, C. R., DeHaven, A. C., & Mellor, D. T. (2018). The preregistration
 
 revolution. Proceedings of the National Academy of Sciences, 115(11), 2600-2606.
 
@@ -1865,99 +1694,231 @@ studies of emotion, personality, and social cognition. Perspectives on psycholog
 
 science, 4(3), 274-290.
 
-
-
 32
 
-TABLES
-
+TABLES
 
 Table 1. The terminology used in this and other papers are defined in this table.
 
+Term
 
+Definition
 
- Term                          Definition
+Machine Learning
 
+Machine learning is the use of semi-automated fitting algorithms to discern
 
- Machine Learning          Machine learning is the use of semi-automated fitting algorithms to discern
+patterns in data. Typically, machine  learning algorithms are trained with
 
-                            patterns in data. Typically, machine learning algorithms are trained with
+labeled data from two or more classes, and are then used to predict which
 
-                            labeled data from two or more classes, and are then used to predict which
+class  a  new  and  unlabeled  data  item  belongs  to.  Examples  of  machine
 
-                               class a new and unlabeled data item belongs to. Examples of machine
+learning algorithms are support vector machine (SVM) classifiers, random
 
-                             learning algorithms are support vector machine (SVM) classifiers, random
+forest models, and naive Bayes classifiers.
 
-                              forest models, and naive Bayes classifiers.
+Cross-Validation
 
+A  technique  commonly  used  to evaluate  classification  performance  that
 
- Cross-Validation         A technique commonly used to evaluate classification performance that
+repeatedly divides the data into two subsets (each division is a fold), one
 
-                           repeatedly divides the data into two subsets (each division is a fold), one
+of  which  is  used  to  train  a  classifier,  the  other  being  used  to  test  it.
 
-                            of which is used to train a classifier, the other being used to test  it.
+Performance is taken as the average across all folds. See the supplemental
 
-                         Performance is taken as the average across all folds. See the supplemental
+for a more thorough description.
 
-                              for a more thorough description.
+Training and Testing sets
 
+These terms generally refer to the two subsets of data used during cross-
 
- Training and Testing sets     These terms generally refer to the two subsets of data used during cross-
+validation. However, the term test-set is sometimes used to refer to data
 
-                               validation. However, the term test-set is sometimes used to refer to data
+that has been set-aside for later evaluation. We advise against that usage
 
-                            that has been set-aside for later evaluation. We advise against that usage
+for the sake of consistency.
 
-                              for the sake of consistency.
+Nested Cross-Validation
 
+Nested cross-validation is a generalization of cross-validation in which the
 
- Nested Cross-Validation     Nested cross-validation is a generalization of cross-validation in which the
+data  are  now  partitioned  into  N  outer  sets/  folds.  Each  of  these  folds
 
-                          data are now partitioned into N outer sets/ folds. Each of these folds
+provides an outer hold-out set, and an inner set, on one outer cycle. On
 
-                           provides an outer hold-out set, and an inner set, on one outer cycle. On
+each such outer cycle, cross-validation is performed on the inner set. The
 
-                         each such outer cycle, cross-validation is performed on the inner set. The
-
-                             benefit of the nested approach is that is provides a reliable assessment of
-
-
-
-
+benefit of the nested approach is that is provides a reliable assessment of
 
 33
 
-                               overfitting of hyperparameters. See the supplemental for a more thorough
+overfitting of hyperparameters. See the supplemental for a more thorough
 
-                              description.
+description.
 
+Lock box
 
- Lock box            We introduce the term lock box to mean a subset of data that are removed
+We introduce the term lock box to mean a subset of data that are removed
 
-                        from the analysis pipeline at the very start of optimization and not
+from  the  analysis  pipeline  at  the  very  start  of  optimization  and  not
 
-                          accessed until all hyperparameter adjustments and training have been
+accessed  until  all  hyperparameter  adjustments  and  training  have  been
 
-                          completed.
+completed.
 
+Hyperparameter
 
- Hyperparameter           Hyperparameters are a kind of parameter whose values are adjusted either
+Hyperparameters are a kind of parameter whose values are adjusted either
 
-                        by hand or by algorithms to improve model performance (e.g. weights of
+by hand or by algorithms to improve model performance (e.g. weights of
 
-                             electrodes, regions of interest, SVM model kernel functions, classification
+electrodes, regions of interest, SVM model kernel functions, classification
 
-                       model types). They are distinct from other parameters, whose values are
+model types). They are distinct from other parameters, whose values are
 
-                             set during classifier training (e.g. the linear function that results from
+set  during  classifier  training  (e.g.  the  linear  function  that  results  from
 
-                              training a least squares model or the classification function that results
+training  a  least  squares  model  or  the  classification  function  that  results
 
-                        from training a Support Vector Machine classifier).
-
-
-
-
+from training a Support Vector Machine classifier).
 
 34
+
+
+
+---
+
+## Content from Previous Extraction (not in markitdown output)
+
+### Visual/Chart/Graph Descriptions
+
+#### 1
+
+Retest on                                                                         Modify Analysis
+    Same Data                                                                             Parameters
+Figure 1. An example of how over-hyping can be induced by modifying hyperparameters after
+evaluating a system through cross-validation. The feedback loop allowing hyperparameters to be
+adjusted after viewing the results provides a route for analysis decisions to be made in response
+to the noise in the data set, despite the separation of data into training/testing sets.
+
+#### 2
+
+competition clearly demonstrate
+Figure 3. C-Mass distributions of OP (blue) and LB
+                                                   overhyping of classification results. If
+(red) maps (top two panels), as well as their within-
+                                                   overhyping was absent, theseiteration difference (bottom panel). The top panel
+shows C-Mass results for the OP & LB maps that        distributions should sit on top of one
+incorporated winning hyperparameters from the                                                         another. However, the POOP C-Mass
+parameter-optimization phase, the middle panel shows
+                                                            distribution has a higher mean (0.516),the distribution of LB C-Mass after choosing
+hyperparameters randomly. The coloured vertical lines  median (0.515) and smaller variance
+indicate distributions’ median value and the rectangles                                                      (0.0001) compared to the LB C-Mass
+surrounding these lines indicate the interquartile
+                                                            distribution (mean: 0.5, median:0.5,ranges. The black vertical line in the bottom panel
+indicates a OP – LB difference of zero (i.e. no           variance:0.0002). The bottom panel of
+overhyping).                                                     Figure 2 illustrates how the within-
+
+### Additional Content
+
+#### 1
+
+# I tried a bunch of things - The dangers of unexpected overfitting in classification of brain data
+
+#### 2
+
+FLINTOFT4,WILLIAM JONES1, HOWARD BOWMAN1,5, AND BRAD WYBLE6
+
+#### 3
+
+Data from Class One
+                                                                                               Data from Class Two
+          Initial                                     Cross Validation
+       Analysis                                         Train   Test
+     Parameters                                 Data  Data
+                                                                                                  Publish Average
+                                                                           Train Classifier.                                                                                              Accuracy
+                                                             Get Accuracy on
+                                                                             Test Data
+ Set               Preprocess                                                                           Yes
+ Data                 Data                                                Train Classifier.         Average Accuracy
+                                                             Get Accuracy on         Good Enough?
+                                                                             Test Data  Entire
+
+#### 4
+
+Train Classifier.                                                                            No
+                                                             Get Accuracy on
+                                                                             Test Data
+
+#### 5
+
+Generation               Generation               Generation               Generation
+                                        *                           *                         *                          ** AUC
+
+#### 6
+
+Data from Class One
+                            Parameter                                                          Data from Class Two
+                 Set Aside  Optimization Set
+ Set         Some Data                                      Publish Accuracies on Parameter
+                                                               Optimization Set and Lock Box                     Preprocess                                      Lock                                                      Lock Data                                                                                                          Lock Box                                    Box                                                   Box
+ Entire                                                        CrossTrainValidationTest                              Initial
+                                                       Data   Data
+                   Parameters
+                                                                                                           Lock
+                                                                                              Train Classifier.
+                                                                                                    Box
+                                                                             Get Accuracy on
+                                                                                                Test Data
+
+#### 7
+
+Preprocess                                                                          Yes
+                            Data                                                   Train Classifier.
+                                                                            Get Accuracy on       Average Accuracy
+                                                                                               Test Data          Good Enough?
+
+#### 8
+
+Train Classifier.                                                                                      No
+                                                                            Get Accuracy on
+                                                                                               Test Data
+
+#### 9
+
+Retest on                                                                       Modify Analysis
+               Same Data                                                                            Parameters
+
+#### 10
+
+Data from Class One
+                                                                                                                                            Data from Class Two
+
+#### 11
+
+Fold the               Publish average accuracy
+                                     from Hold-out sets
+                                                                                                                                                Preprocess                                                                                                     Run                                                                                                                                                         Classifier                                                                                                                on             data          Hold-out                                                                                                                                              Hold-out                                                                                                                         Hold-out                                                                                                                                                set                                                  Set Set                                                                                                                                                                set
+  Data                                           Select newCrossfoldValidation
+                                                                  Train  Test
+                                                       Data Data
+                                                          Initial   Entire
+                                       Parameters                                           Train Classifier.
+                                                                              Get Accuracy                    Yes
+                                                                        on Test Data
+                                 Preprocess
+                                 Data
+                                                                                              Train Classifier.
+                                                                              Get Accuracy           AverageGood Enough?Accuracy
+                                                                        on Test Data
+
+#### 12
+
+Train Classifier.               No
+                                                                              Get Accuracy
+                                                                        on Test Data
+                               Retest on                                                                            Modify
+                       Same Data                                                                                  Analysis Parameters

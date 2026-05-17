@@ -82,6 +82,27 @@ except ImportError:
 # VWAP indicator
 from .vwap import compute_vwap
 
+# PineScript helper functions for strategy conversion
+from .pinescript_helpers import (
+    barssince,
+    change,
+    crossover,
+    crossover_value,
+    crossunder,
+    crossunder_value,
+    dmi,
+    highest,
+    lowest,
+    macd,
+    nz,
+    qqe,
+    sar,
+    stdev,
+    supertrend,
+    valuewhen,
+    vwap_simple,
+)
+
 __all__ = [
     # Technical indicators
     "sma",
@@ -153,6 +174,24 @@ __all__ = [
     "NUMBA_PIVOTS_AVAILABLE",
     # VWAP
     "compute_vwap",
+    # PineScript helpers
+    "crossover",
+    "crossunder",
+    "crossover_value",
+    "crossunder_value",
+    "nz",
+    "highest",
+    "lowest",
+    "barssince",
+    "change",
+    "valuewhen",
+    "supertrend",
+    "sar",
+    "dmi",
+    "macd",
+    "vwap_simple",
+    "stdev",
+    "qqe",
     # Performance Optimization
     "IndicatorCache",
 ]

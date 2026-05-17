@@ -652,3 +652,142 @@ The hypothesis is rejected if:
 | `data/raw/XLV_daily.csv` | Download | N/A |
 | `data/raw/EEM_daily.csv` | Download | N/A |
 | `plans/cross_asset_features_implementation.md` | This file | N/A |
+
+---
+
+## 10. JOE Cross-Asset Backtest Validation
+
+*(Merged from `joe_cross_asset_backtest.md` — 2026-05-09)*
+
+**Prerequisite:** Cross-asset feature experiment (completed — JOE: 0.47 → 0.62 AUC)
+
+### 10.1 Rationale
+
+JOE showed the largest cross-asset improvement: Test AUC 0.471 → 0.620, Overfit Gap 0.378 → 0.164. The question: does this AUC improvement translate to actual trading profit?
+
+AUC measures ranking ability. A backtest measures P&L. They don't always align — a model can rank well but still lose money if: profitable predictions are concentrated in low-volatility periods, the threshold-selected trades have poor risk/reward, or the model generates signals too infrequently to overcome transaction costs.
+
+### 10.2 What to Do
+
+Run two backtests on JOE using the trained models:
+
+| Run | Model | Expected Test AUC |
+|-----|-------|-------------------|
+| A | No cross-asset | 0.47 |
+| B | With cross-asset | 0.62 |
+
+**Parameters:** Symbol=JOE, 2017-01-01 to 2024-12-31, $100k capital, 2% risk per trade, 0.1% commission.
+
+**Metrics:** Total Return, Sharpe, Max Drawdown, Win Rate, Profit Factor, Number of Trades (>30).
+
+### 10.3 Success Criteria
+
+- **Strong:** Backtest B Sharpe > 0.5 AND > Backtest A by +0.2 Sharpe
+- **Weak:** Backtest B higher return with similar drawdown
+- **Rejection:** Backtest B worse than A despite higher AUC
+- **Minimum:** 30+ trades per backtest
+
+---
+
+## 11. Meta-Labeling for JOE and KODK
+
+*(Merged from `meta_labeling_joe_kodk.md` — 2026-05-09)*
+
+**Prerequisite:** Cross-asset feature experiment (completed — JOE +0.15 AUC, KODK +0.07 AUC)
+
+### 11.1 Rationale
+
+JOE and KODK are the two instruments with meaningful cross-asset AUC improvement. However, both still have overfit gaps above 0.15 (JOE: 0.164, KODK: 0.264).
+
+**Meta-labeling** (López de Prado) trains a second model that predicts: "Given that the primary model says BUY, will this specific trade actually be profitable?" This filters out bad trades from good signals.
+
+### 11.2 How It Works
+
+1. Primary model generates BUY/SELL signals
+2. For each signal, record features + market context at signal time
+3. Label each signal: was the resulting trade profitable? (binary)
+4. Train a SECOND model to predict "will this signal make money?"
+5. Only take trades where BOTH models agree
+
+The meta-model learns patterns like: "When RSI > 70 AND SPY is below 50d MA, JOE buy signals usually fail."
+
+### 11.3 Implementation
+
+- Model: CatBoost (smaller depth than primary)
+- Features: primary confidence + instrument features + market context
+- CV: PurgedKFold
+- Target: AUC > 0.55 for useful filtering
+
+Existing code: `src/ml/meta_labeler.py` — check if reusable.
+
+### 11.4 Success Criteria
+
+- Meta-model Test AUC > 0.55
+- Filtered trades: win rate ≥ +5% vs unfiltered
+- 20+ trades remain after filtering
+- Sharpe improvement ≥ 0.1
+
+### 11.5 Risks
+
+- Too few trades after aggressive filtering
+- Overfitting on small sample (fewer samples than primary)
+- Leakage: must ensure meta-model doesn't use future information
+
+---
+
+## 12. CRVL Cross-Asset Fix
+
+*(Merged from `crvl_cross_asset_fix.md` — 2026-05-09)*
+
+**Prerequisite:** Cross-asset feature experiment (completed — CRVL: 0.593 → 0.525 AUC, Scenario D)
+
+### 12.1 Rationale
+
+CRVL was the only instrument where cross-asset features made things *worse*: Test AUC 0.593 → 0.525, Overfit Gap +0.197. The full 26 cross-asset features overwhelmed the model.
+
+CRVL is a mid-cap financial services stock. It likely responds to SPY (broad market) and XLF (financial sector), but probably not QQQ (tech) or TLT (bonds).
+
+### 12.2 Experiment: Reduced Cross-Asset Set
+
+| Run | Cross-Asset Features | Hypothesis |
+|-----|---------------------|------------|
+| A | SPY only (~15 features) | Core market beta is enough |
+| B | SPY + XLF (~16 features) | Financial sector context matters |
+| C | SPY regime only (~11 features) | Even simpler |
+| D | Full set (baseline, done) | Control |
+
+Add `--market-tickers` CLI flag to `train_ml_model_v2.py` for custom ticker selection.
+
+### 12.3 Success Criteria
+
+- At least one reduced set beats NoCA baseline (Test AUC > 0.593)
+- Overfit gap < 0.20
+- Cross-asset features appear in top 10
+
+---
+
+## 13. Expand Instrument Universe
+
+*(Merged from `expand_instrument_universe.md` — 2026-05-09)*
+
+**Prerequisite:** Cross-asset feature experiment on 6 instruments (completed)
+
+### 13.1 Rationale
+
+Cross-asset features help most for smaller/less-efficient stocks (JOE +0.15, KODK +0.07). Large ETFs (SPY, QQQ) show little benefit. Does this generalize?
+
+### 13.2 Candidate Instruments
+
+| Ticker | Type | Rationale |
+|--------|------|-----------|
+| SF, OMF, MTG | Small/Mid Cap | Financial/consumer/insurance — like CRVL/KODK |
+| XLB, XLI, XLP, XLY, XLU | Sector ETFs | Commodity/industrial/staples/discretionary/utilities |
+| EFA, VWO | International | Non-US exposure, different drivers |
+
+Download via yfinance, train with/without cross-asset, analyze by market cap / sector / ETF-vs-stock.
+
+### 13.3 Success Criteria
+
+- 3+ new instruments show AUC improvement > 0.03
+- Pattern generalizes to same instrument types
+- No new Scenario D (worse) without explainable reason

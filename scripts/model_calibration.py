@@ -21,7 +21,7 @@ from src.ml.feature_engineering import FeatureExtractor  # noqa: E402
 from src.ml.pattern_classifier import PatternClassifier  # noqa: E402
 from src.ml.triple_barrier import TripleBarrierLabeler  # noqa: E402
 
-MODEL_PATH = "models/pattern_classifier_v3_SPY_20260511_224704.pkl"
+MODEL_PATH = "models/pattern_classifier_v3_SPY_20260514_195235.pkl"
 DATA_PATH = "data/raw/SPY_daily.csv"
 HORIZON = 5
 OUTPUT_DIR = Path("reports/calibration")
@@ -164,8 +164,7 @@ def main() -> None:
     model.load(MODEL_PATH)
     print(f"Model: {len(model.feature_names_)} features, type={model.model_type}")
     print(
-        f"Platt scaling: slope={model.calibration_slope_:.4f}, "
-        f"intercept={model.calibration_intercept_:.4f}"
+        f"Calibrator: {type(model.calibrator_).__name__ if model.calibrator_ is not None else 'None'}"
     )
 
     print("\nLoading data...")

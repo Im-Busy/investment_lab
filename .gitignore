@@ -165,6 +165,15 @@ logs/
 # Package egg-info (auto-generated)
 /src/investment_trying.egg-info/
 
+# Web scraping / data ingestion (potential TOC/legal risk)
+/src/data_ingestion/financial_scraper.py
+/src/data_ingestion/sec_filing_scraper.py
+/src/data_ingestion/fetch_data.py
+/src/data_ingestion/fetch_china.py
+/src/data_ingestion/crypto_provider.py
+/scripts/scrape_financial_data.py
+/scripts/refresh_data.py
+
 # Archived/obsolete scripts
 /scripts/_archived/
 /scripts/archive/

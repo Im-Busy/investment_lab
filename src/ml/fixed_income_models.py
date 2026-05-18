@@ -646,3 +646,273 @@ class CIRModel:
         if self._result is None:
             return False
         return 2 * self._result.kappa * self._result.theta >= self._result.sigma**2
+
+
+# ── B2: Bond Duration & Convexity ──────────────────────────────────────
+
+
+@dataclass
+class BondResult:
+    price: float
+    ytm: float
+    macaulay_duration: float
+    modified_duration: float
+    convexity: float
+    dv01: float
+    current_yield: float
+    coupon: float
+    maturity: float
+    face_value: float
+    frequency: int
+
+    def to_dict(self) -> Dict:
+        return {
+            "price": round(self.price, 4),
+            "ytm": round(self.ytm * 100, 4),
+            "macaulay_duration": round(self.macaulay_duration, 4),
+            "modified_duration": round(self.modified_duration, 4),
+            "convexity": round(self.convexity, 4),
+            "dv01": round(self.dv01, 4),
+            "current_yield": round(self.current_yield * 100, 4),
+            "coupon": round(self.coupon * 100, 4),
+            "maturity": round(self.maturity, 4),
+            "face_value": self.face_value,
+            "frequency": self.frequency,
+        }
+
+
+class BondPricer:
+    """Fixed-income bond pricing with duration and convexity analytics.
+
+    Computes price, yield, duration (Macaulay/modified), convexity, DV01,
+    and current yield for a vanilla coupon bond. Supports Newton-Raphson
+    root-finding for price→YTM inversion.
+
+    Formulas:
+        Price = Σ [c/(1+y/f)^(i)] + FV/(1+y/f)^(nf)
+        MacaulayDuration = (1/P) * Σ [t_i * CF_i / (1+y/f)^(i)]
+        ModifiedDuration = MacaulayDuration / (1 + y/f)
+        Convexity = (1/P) * Σ [t_i*(t_i+1/f) * CF_i / (1+y/f)^(i+2)] / f^2
+        DV01 = ModifiedDuration * Price / 10_000
+
+    Args:
+        face_value: Par value (default 100).
+        frequency: Coupons per year (2 = semiannual, default US convention).
+    """
+
+    def __init__(self, face_value: float = 100.0, frequency: int = 2):
+        self.face_value = face_value
+        self.frequency = frequency
+
+    def price(
+        self,
+        ytm: float,
+        coupon: float,
+        maturity: float,
+    ) -> float:
+        """Compute bond price from yield-to-maturity.
+
+        Args:
+            ytm: Yield-to-maturity as decimal (e.g., 0.05 = 5%).
+            coupon: Annual coupon rate as decimal.
+            maturity: Time to maturity in years.
+
+        Returns:
+            Clean price (present value of future cash flows).
+        """
+        periods = int(round(maturity * self.frequency))
+        if periods <= 0:
+            return self.face_value
+
+        ytm_per = ytm / self.frequency
+        cpn_payment = coupon * self.face_value / self.frequency
+        t = np.arange(1, periods + 1) / self.frequency
+        discount = 1.0 / (1.0 + ytm_per) ** np.arange(1, periods + 1)
+        pv_coupons = cpn_payment * np.sum(discount)
+        pv_face = self.face_value * discount[-1]
+        return float(pv_coupons + pv_face)
+
+    def compute(
+        self,
+        ytm: float,
+        coupon: float,
+        maturity: float,
+    ) -> BondResult:
+        """Full bond analytics: price, duration, convexity, DV01.
+
+        Args:
+            ytm: Yield-to-maturity as decimal.
+            coupon: Annual coupon rate as decimal.
+            maturity: Time to maturity in years.
+
+        Returns:
+            BondResult with all analytics.
+        """
+        periods = int(round(maturity * self.frequency))
+        if periods <= 0:
+            return BondResult(
+                price=self.face_value,
+                ytm=ytm,
+                macaulay_duration=0.0,
+                modified_duration=0.0,
+                convexity=0.0,
+                dv01=0.0,
+                current_yield=coupon,
+                coupon=coupon,
+                maturity=maturity,
+                face_value=self.face_value,
+                frequency=self.frequency,
+            )
+
+        ytm_per = ytm / self.frequency
+        cpn_payment = coupon * self.face_value / self.frequency
+        t = np.arange(1, periods + 1) / self.frequency
+        discount = 1.0 / (1.0 + ytm_per) ** np.arange(1, periods + 1)
+
+        pv_coupons = cpn_payment * np.sum(discount)
+        pv_face = self.face_value * discount[-1]
+        price = float(pv_coupons + pv_face)
+
+        weighted_t = t * cpn_payment * discount
+        weighted_t[-1] += t[-1] * pv_face
+        macaulay_d = float(np.sum(weighted_t) / price)
+
+        modified_d = macaulay_d / (1.0 + ytm_per)
+
+        f2 = self.frequency * self.frequency
+        convex_t = t * (t + 1.0 / self.frequency) * cpn_payment * discount
+        convex_t[-1] += t[-1] * (t[-1] + 1.0 / self.frequency) * pv_face
+        convexity = float(np.sum(convex_t) / (price * (1.0 + ytm_per) ** 2 * f2))
+
+        dv01 = modified_d * price / 10_000.0
+
+        return BondResult(
+            price=price,
+            ytm=ytm,
+            macaulay_duration=macaulay_d,
+            modified_duration=modified_d,
+            convexity=convexity,
+            dv01=dv01,
+            current_yield=(coupon * self.face_value / price),
+            coupon=coupon,
+            maturity=maturity,
+            face_value=self.face_value,
+            frequency=self.frequency,
+        )
+
+    def ytm_from_price(
+        self,
+        target_price: float,
+        coupon: float,
+        maturity: float,
+        initial_guess: float = 0.05,
+        tolerance: float = 1e-8,
+        max_iter: int = 100,
+    ) -> float:
+        """Solve for YTM given a bond price via Newton-Raphson.
+
+        Args:
+            target_price: Observed clean price.
+            coupon: Annual coupon rate as decimal.
+            maturity: Time to maturity in years.
+            initial_guess: Starting YTM guess (default 5%).
+            tolerance: Convergence tolerance.
+            max_iter: Maximum iterations.
+
+        Returns:
+            Implied YTM as decimal.
+        """
+        y = initial_guess
+        for _ in range(max_iter):
+            p = self.price(y, coupon, maturity)
+            dp = (self.price(y + 1e-6, coupon, maturity) - p) / 1e-6
+            if abs(dp) < 1e-15:
+                break
+            y_new = y - (p - target_price) / dp
+            if abs(y_new - y) < tolerance:
+                return float(y_new)
+            y = max(y_new, -0.99)
+        return float(y)
+
+    def price_etf_proxy(
+        self,
+        ytm: float,
+        avg_maturity: float,
+        avg_coupon: float = 0.04,
+    ) -> BondResult:
+        """Price and analyze a bond ETF like TLT/IEF as a proxy bond.
+
+        Treats the ETF as a single coupon bond with weighted-average
+        maturity and coupon. Use for duration-based risk estimation.
+
+        Args:
+            ytm: Current yield-to-maturity.
+            avg_maturity: Weighted-average maturity in years.
+            avg_coupon: Weighted-average coupon rate.
+
+        Returns:
+            BondResult with duration and convexity analytics.
+        """
+        return self.compute(ytm=ytm, coupon=avg_coupon, maturity=avg_maturity)
+
+    def price_impact(
+        self,
+        ytm: float,
+        coupon: float,
+        maturity: float,
+        yield_change_bp: float,
+    ) -> Dict:
+        """Estimate price change from yield shift using duration+convexity.
+
+        ΔP/P ≈ −ModifiedDuration * Δy + 0.5 * Convexity * (Δy)²
+
+        Args:
+            ytm: Current YTM.
+            coupon: Annual coupon rate.
+            maturity: Time to maturity.
+            yield_change_bp: Yield change in basis points (positive = yield up).
+
+        Returns:
+            Dictionary with estimated price, delta, and percentage change.
+        """
+        result = self.compute(ytm, coupon, maturity)
+        dy = yield_change_bp / 10_000.0
+        pct_change = -result.modified_duration * dy + 0.5 * result.convexity * dy**2
+        new_price = result.price * (1.0 + pct_change)
+        return {
+            "current_price": round(result.price, 4),
+            "yield_change_bp": yield_change_bp,
+            "mod_duration": round(result.modified_duration, 4),
+            "convexity": round(result.convexity, 4),
+            "pct_change": round(pct_change * 100, 6),
+            "estimated_price": round(new_price, 4),
+            "dv01_estimate": round(result.dv01 * abs(yield_change_bp), 4),
+        }
+
+    def bond_yield_series(
+        self,
+        prices: np.ndarray,
+        coupon: float,
+        maturity: float,
+    ) -> np.ndarray:
+        """Convert price series to YTM series via root-finding.
+
+        Args:
+            prices: Array of observed clean prices.
+            coupon: Annual coupon rate.
+            maturity: Time to maturity in years.
+
+        Returns:
+            Array of implied YTMs.
+        """
+        ytms = np.zeros(len(prices))
+        for i, p in enumerate(prices):
+            if i == 0:
+                ytms[i] = coupon
+            else:
+                ytms[i] = (
+                    ytms[i - 1] if p <= 0 else self.ytm_from_price(p, coupon, maturity, ytms[i - 1])
+                )
+            if ytms[i] < 0:
+                ytms[i] = coupon
+        return ytms

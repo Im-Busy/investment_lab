@@ -1,10 +1,10 @@
 # Investment Trying Lab
 
-Multi-pattern trading system with ML-powered regime detection, 34+ chart pattern detectors, and a custom event-driven backtesting framework.
+Multi-pattern trading system with ML-powered regime detection, 54 chart pattern detectors across 10 categories, and a custom event-driven backtesting framework.
 
 ## Overview
 
-- **Pattern Detection**: 30+ detectors across 7 categories (basic, breakout, candlestick, classic, complex, continuation, harmonic)
+- **Pattern Detection**: 54 detectors across 10 categories (basic, breakout, candlestick, classic, complex, continuation, harmonic, fmz, technical, range-persistence)
 - **ML Pipeline**: CatBoost/LightGBM with PurgedKFold cross-validation, SHAP explainability, triple-barrier labeling, meta-labeling
 - **Backtesting**: Custom event-driven engine + backtesting.py strategy wrappers
 - **Risk Management**: Position sizing, circuit breakers, Monte Carlo VaR, diversity constraints
@@ -16,7 +16,7 @@ Multi-pattern trading system with ML-powered regime detection, 34+ chart pattern
 | Directory | Purpose |
 |-----------|---------|
 | `src/` | Core source code (20 subpackages) |
-| `tests/` | Test suite (60+ test files) |
+| `tests/` | Test suite (66 test files) |
 | `scripts/` | CLI scripts for training, backtesting, analysis |
 | `notebooks/` | Jupyter notebooks (.py paired files) |
 | `reports/` | Analysis results, charts, backtest metrics |

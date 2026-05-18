@@ -43,7 +43,7 @@
 ### 9. Hypothesis for Property-Based Testing
 
 - **Category:** Testing
-- **Why:** 34 pattern detectors process price data. Edge cases (NaN gaps, flat markets, extreme volatility) can produce silent garbage. A single `@given` decorator can discover breaking inputs.
+- **Why:** 54 pattern detectors process price data. Edge cases (NaN gaps, flat markets, extreme volatility) can produce silent garbage. A single `@given` decorator can discover breaking inputs.
 - **How:** `uv add hypothesis --group dev`. Add property tests to top ~10 pattern detectors: `@given(st.lists(st.floats(min_value=0), min_size=5))` + assert confidence is in [0,1] and no exceptions.
 - **Effort:** 2-4 hours. Additive only.
 - **Trigger:** When pattern detection bugs surface in backtests, or when hardening detectors for production.

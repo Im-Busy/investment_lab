@@ -230,6 +230,37 @@ from src.ml.fixed_income_models import (
     VasicekModel,
     CIRModel,
     RateModelResult,
+    BondPricer,
+    BondResult,
+)
+
+# Phase 21 D9: Kalman Hedge Ratios
+from src.ml.kalman_hedge import (
+    KalmanHedgeEstimator,
+    KalmanHedgePair,
+    KalmanHedgeResult,
+    PortfolioHedgeEstimator,
+)
+
+# Phase 21 C10: Wavelet/FFT Signal Processing
+from src.ml.wavelet_signals import (
+    WaveletDenoiser,
+    DenoiseResult,
+    FFTCycleDetector,
+    CycleResult,
+    SignalDecomposer,
+    DecompositionResult,
+    FFTFilter,
+)
+
+# Phase 21 D6: VAR + Granger Causality
+from src.ml.var_granger import (
+    VARModel,
+    VARResult,
+    GrangerCausalityTest,
+    GrangerResult,
+    CrossAssetLeadLag,
+    LeadLagResult,
 )
 
 # Phase 21 Block A: Options Pricing (A1-A7)
@@ -244,6 +275,33 @@ from src.ml.options_pricing import (
     VolSurfaceSlice,
     compute_greeks,
     delta_hedge_ratio,
+)
+
+# Phase 21 B11: CDS Pricing
+from src.ml.cds_pricing import (
+    CDSPricer,
+    CDSCurveResult,
+    CDSSpread,
+)
+
+# Phase 21 A12: Options Visualization
+from src.ml.options_visualization import (
+    OptionsVisualizer,
+    OptionLeg,
+)
+
+# Phase 21 B7: Rate Derivatives Pricing
+from src.ml.rate_derivatives import (
+    DiscountCurve,
+    InterestRateSwap,
+    IRSResult,
+    SwaptionPricer,
+    SwaptionResult,
+    CapFloorPricer,
+    CapFloorResult,
+    RateDerivativeSignal,
+    compute_forward_curve_from_df,
+    swap_spread_signal,
 )
 
 __all__ = [
@@ -426,6 +484,28 @@ __all__ = [
     "VasicekModel",
     "CIRModel",
     "RateModelResult",
+    "BondPricer",
+    "BondResult",
+    # Phase 21 D9: Kalman Hedge Ratios
+    "KalmanHedgeEstimator",
+    "KalmanHedgePair",
+    "KalmanHedgeResult",
+    "PortfolioHedgeEstimator",
+    # Phase 21 C10: Wavelet/FFT Signal Processing
+    "WaveletDenoiser",
+    "DenoiseResult",
+    "FFTCycleDetector",
+    "CycleResult",
+    "SignalDecomposer",
+    "DecompositionResult",
+    "FFTFilter",
+    # Phase 21 D6: VAR + Granger Causality
+    "VARModel",
+    "VARResult",
+    "GrangerCausalityTest",
+    "GrangerResult",
+    "CrossAssetLeadLag",
+    "LeadLagResult",
     # Phase 21 Block A: Options Pricing
     "BlackScholes",
     "BlackScholesResult",
@@ -437,4 +517,22 @@ __all__ = [
     "VolSurfaceSlice",
     "compute_greeks",
     "delta_hedge_ratio",
+    # Phase 21 B11: CDS Pricing
+    "CDSPricer",
+    "CDSCurveResult",
+    "CDSSpread",
+    # Phase 21 A12: Options Visualization
+    "OptionsVisualizer",
+    "OptionLeg",
+    # Phase 21 B7: Rate Derivatives Pricing
+    "DiscountCurve",
+    "InterestRateSwap",
+    "IRSResult",
+    "SwaptionPricer",
+    "SwaptionResult",
+    "CapFloorPricer",
+    "CapFloorResult",
+    "RateDerivativeSignal",
+    "compute_forward_curve_from_df",
+    "swap_spread_signal",
 ]

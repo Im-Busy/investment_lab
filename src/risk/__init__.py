@@ -48,6 +48,13 @@ from .circuit_breakers import (
 from .mc_var import MCVaR, VaRResult
 from .copula_risk import GaussianCopulaRisk, TCopulaRisk, CopulaRiskResult  # Q6
 from .market_impact import MarketImpact, ImpactResult  # Q7
+from .delta_hedging import (
+    DeltaHedgeSimulator,
+    DeltaHedgeResult,
+    GammaScalper,
+    PortfolioHedgeOptimizer,
+)  # A11
+from .vol_trading import VolTradeAnalyzer, VolTradeResult, VolArbitrageResult  # A13
 
 __all__ = [
     # Position Sizing
@@ -103,4 +110,13 @@ __all__ = [
     # Phase 21 Q7: Market Impact
     "MarketImpact",
     "ImpactResult",
+    # A11: Delta Hedging
+    "DeltaHedgeSimulator",
+    "DeltaHedgeResult",
+    "GammaScalper",
+    "PortfolioHedgeOptimizer",
+    # A13: Volatility Trading Strategies
+    "VolTradeAnalyzer",
+    "VolTradeResult",
+    "VolArbitrageResult",
 ]

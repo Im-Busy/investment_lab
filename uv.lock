@@ -2803,6 +2803,7 @@ dependencies = [
     { name = "scrapling" },
     { name = "seaborn" },
     { name = "shap" },
+    { name = "stable-baselines3" },
     { name = "statsmodels" },
     { name = "streamlit" },
     { name = "surya-ocr" },
@@ -2897,6 +2898,7 @@ requires-dist = [
     { name = "scrapling", specifier = ">=0.4.8" },
     { name = "seaborn", specifier = ">=0.13.2" },
     { name = "shap", specifier = ">=0.51.0" },
+    { name = "stable-baselines3", specifier = ">=2.9.0a2" },
     { name = "statsmodels", specifier = ">=0.14.6" },
     { name = "streamlit", specifier = ">=1.56.0" },
     { name = "surya-ocr", specifier = ">=0.13.1" },
@@ -6773,6 +6775,21 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/08/f3/34354f183d8faafc631585571224b54d1b4b67e796972c36519c074ca355/srsly-2.5.3-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:5fb59c42922e095d1ea36085c55bc16e2adb06a7bfe57b24d381e0194ae699f2", size = 1128409, upload-time = "2026-03-23T11:56:18.761Z" },
     { url = "https://files.pythonhosted.org/packages/a4/d9/5531f8a19492060b4e76e4ab06aca6f096fb5128fe18cc813d1772daf653/srsly-2.5.3-cp313-cp313-win_amd64.whl", hash = "sha256:111805927f05f5db440aeeacb85ce43da0b19ce7b2a09567a9ef8d30f3cc4d83", size = 650820, upload-time = "2026-03-23T11:56:20.096Z" },
     { url = "https://files.pythonhosted.org/packages/8e/8a/62fb7a971eca29e12f03fb9ddacb058548c14d33e5b5675ff0f85839cc7b/srsly-2.5.3-cp313-cp313-win_arm64.whl", hash = "sha256:0f106b0a700ab56e4a7c431b0f1444009ab6cb332edc7bbf6811c2a43f4722cb", size = 637278, upload-time = "2026-03-23T11:56:21.439Z" },
+]
+
+[[package]]
+name = "stable-baselines3"
+version = "2.9.0a2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "cloudpickle" },
+    { name = "gymnasium" },
+    { name = "numpy" },
+    { name = "torch" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/04/62/101ae862f571966e587fcda173f1ae340e37924c1f75faff976d11681fdd/stable_baselines3-2.9.0a2.tar.gz", hash = "sha256:26331714770078d36afb2c4d4557ed86b512b0c149106b6b1d65ddcc86f93a24", size = 221896, upload-time = "2026-04-19T20:20:15.324Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c4/e5/d99deb10517d66de8675ca7031ea0b36bbff2a347c18432d5fdecbedf386/stable_baselines3-2.9.0a2-py3-none-any.whl", hash = "sha256:69a1c8560487eae570e72498362a21880322bc0515f94d2c4422429fc7c7bde6", size = 187628, upload-time = "2026-04-19T20:20:13.248Z" },
 ]
 
 [[package]]

@@ -18,7 +18,7 @@ Every configuration with a trail stop outperforms its no-trail counterpart by 2-
 - `et=0.45 baseline` → Return 21.9%, Sharpe 0.30
 
 ### 2. Rules-First > ML for OOS Robustness
-Pure rule-based pattern detection (34 chart patterns, reliability weights, mr=0.70 filter) produces **+0.76 OOS Sharpe** on SPY 2025-2026. The best ML variant (RegimeRouter no-flipped) achieves only +0.35. **Adding ML to rules degrades** — every combined config underperforms pure rules-first OOS.
+Pure rule-based pattern detection (54 chart patterns across 10 categories, reliability weights, mr=0.70 filter) produces **+0.76 OOS Sharpe** on SPY 2025-2026. The best ML variant (RegimeRouter no-flipped) achieves only +0.35. **Adding ML to rules degrades** — every combined config underperforms pure rules-first OOS.
 
 **BESTS.md evidence:** `Direction A+B > Combined ML+Rules Convergence`, `Direction A+B > Rules-First OOS`
 

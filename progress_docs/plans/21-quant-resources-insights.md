@@ -79,7 +79,7 @@ All ideas extracted via "Think Freely, Then Compare" protocol. Ideas already inc
 | B4 | **Credit spread (BAA-AAA) as risk appetite** — corporate stress gauge | `Risk Management/README.md` | 🔴 Planned (Q2+) | Q2 | `macro_regime.py` already has credit_spread column. Wire into regime gate. ~80 loc. |
 | B5 | **Vasicek interest rate model** — mean-reverting short rate | `Python/readme.md` | 🔴 Deferred | Q2 + B1 | Rate modeling. ~100 loc, scipy. |
 | B6 | **CIR interest rate model** — non-negative short rate (Vasicek alternative) | `Python/readme.md` | 🔴 Deferred | Q2 + B5 | Better for low-rate environments. ~100 loc. |
-| B7 | **Interest rate derivative pricing** — swaps, caps, floors, swaptions | `Projects/readme.md` | 🔴 Deferred (P3) | Q2 + B5+B6 | Requires full rate infrastructure. ~400 loc. |
+| B7 | **Interest rate derivative pricing** — swaps, caps, floors, swaptions | `Projects/readme.md` | ✅ → Done | — | **Implemented 2026-05-18.** ~420 loc, scipy. Rate derivative signals for ML. |
 | B8 | **Treasury auction cycle effects** — predictable liquidity/vol patterns | (inferred from fixed income) | 🔴 Deferred | Q2 | Calendar-driven alpha. ~80 loc, Treasury auction calendar. |
 | B9 | **TLT/IEF as rate proxies** — bond ETFs as tradable rate exposure | Inferred — used in `cross_asset_features.py` | 🔴 Partial | — | `_add_bond_features` exists. Add yield-to-maturity estimation. ~50 loc. |
 | B10 | **Real yield analysis (TIPS)** — inflation-adjusted yield for macro regime | (inferred from fixed income) | 🔴 Deferred | Q2 + B1 | Needs TIPS data. ~100 loc. |

@@ -113,6 +113,17 @@ def run_single(
         yield_curve_near_inversion_mult=yield_curve_near_inversion_mult,
     )
 
+    # Buy & Hold comparison
+    if len(df) >= 2:
+        bh_return = (df["Close"].iloc[-1] / df["Close"].iloc[0] - 1) * 100
+        daily_ret = df["Close"].pct_change().dropna()
+        bh_sharpe = (
+            float((daily_ret.mean() / daily_ret.std()) * (252**0.5)) if daily_ret.std() > 0 else 0.0
+        )
+        bh_max_dd = ((df["Close"] / df["Close"].cummax() - 1).min()) * 100
+    else:
+        bh_return = bh_sharpe = bh_max_dd = 0.0
+
     result = {
         "symbol": symbol,
         "start": str(df.index[0].date()) if len(df) > 0 else "N/A",
@@ -126,6 +137,9 @@ def run_single(
         "win_rate_pct": stats["Win Rate [%]"],
         "profit_factor": stats["Profit Factor"],
         "exposure_pct": stats["Exposure Time [%]"],
+        "bh_return_pct": round(bh_return, 2),
+        "bh_sharpe": round(bh_sharpe, 3),
+        "bh_max_dd_pct": round(bh_max_dd, 2),
         "_trades": getattr(stats, "_trades", None),
     }
     return result
@@ -171,6 +185,7 @@ def sweep_entry(
         print(
             f"  et={et:.1f}: Sharpe {r['sharpe']:.3f}, Return {r['return_pct']:.1f}%, "
             f"Trades {r['trades']}, Win {r['win_rate_pct']:.1f}%, PF {r['profit_factor']:.2f}"
+            f"  |  B&H Return {r['bh_return_pct']:.1f}%"
         )
     return results
 
@@ -190,6 +205,7 @@ def sweep_reliability(
         print(
             f"  mr={mr:.1f}: Sharpe {r['sharpe']:.3f}, Return {r['return_pct']:.1f}%, "
             f"Trades {r['trades']}, Win {r['win_rate_pct']:.1f}%, PF {r['profit_factor']:.2f}"
+            f"  |  B&H Return {r['bh_return_pct']:.1f}%"
         )
     return results
 
@@ -207,6 +223,9 @@ def print_table(results: list[dict]) -> None:
         "win_rate_pct",
         "profit_factor",
         "exposure_pct",
+        "bh_return_pct",
+        "bh_sharpe",
+        "bh_max_dd_pct",
     ]
     header = [c.replace("_pct", "%") for c in cols]
     widths = [max(len(h), 8) for h in header]
@@ -392,6 +411,11 @@ def main() -> None:
         all_results = [result]
         print()
         print_table([result])
+
+        print(
+            f"\nBuy & Hold:  Return={result['bh_return_pct']:.1f}%  "
+            f"Sharpe={result['bh_sharpe']:.3f}  MaxDD={result['bh_max_dd_pct']:.1f}%"
+        )
 
         print(
             f"\nConfig: et={args.entry_threshold} exit_et={args.exit_threshold} "

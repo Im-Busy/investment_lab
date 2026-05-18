@@ -145,6 +145,17 @@ def run_single(
         print(f"  FAIL {symbol}: {e}")
         return None
 
+    # Buy & Hold comparison
+    if len(df) >= 2:
+        bh_return = (df["Close"].iloc[-1] / df["Close"].iloc[0] - 1) * 100
+        daily_ret = df["Close"].pct_change().dropna()
+        bh_sharpe = (
+            float((daily_ret.mean() / daily_ret.std()) * (252**0.5)) if daily_ret.std() > 0 else 0.0
+        )
+        bh_max_dd = ((df["Close"] / df["Close"].cummax() - 1).min()) * 100
+    else:
+        bh_return = bh_sharpe = bh_max_dd = 0.0
+
     n_bars = len(df)
     result = {
         "symbol": symbol,
@@ -162,6 +173,9 @@ def run_single(
         "profit_factor": round(stats["Profit Factor"], 2),
         "exposure_pct": round(stats["Exposure Time [%]"], 1),
         "annual_return_pct": round(stats.get("Return (Ann.) [%]", 0), 2),
+        "bh_return_pct": round(bh_return, 2),
+        "bh_sharpe": round(bh_sharpe, 3),
+        "bh_max_dd_pct": round(bh_max_dd, 2),
     }
     return result
 
@@ -175,9 +189,9 @@ def print_table(results: list[dict]) -> None:
         "symbol",
         "label",
         "return_pct",
+        "bh_return_pct",
         "sharpe",
-        "sortino",
-        "calmar",
+        "bh_sharpe",
         "max_dd_pct",
         "trades",
         "win_rate_pct",
@@ -188,9 +202,9 @@ def print_table(results: list[dict]) -> None:
         "Symbol",
         "Category",
         "Return%",
+        "BnH%",
         "Sharpe",
-        "Sortino",
-        "Calmar",
+        "BnH Sh",
         "MaxDD%",
         "Trades",
         "Win%",
@@ -212,7 +226,9 @@ def print_table(results: list[dict]) -> None:
         vals = []
         for c in cols:
             v = r.get(c, "")
-            if c in ("sharpe", "sortino", "calmar", "profit_factor") and isinstance(v, float):
+            if c in ("sharpe", "bh_sharpe", "sortino", "calmar", "profit_factor") and isinstance(
+                v, float
+            ):
                 vals.append(f"{v:.3f}")
             elif isinstance(v, float):
                 vals.append(f"{v:.2f}")
@@ -244,6 +260,14 @@ def print_insights(results: list[dict]) -> None:
     print(
         f"Profitable (return > 0): {len(profitable)}/{len(results)} ({100 * len(profitable) / len(results):.0f}%)"
     )
+
+    beat_bh_sharpe = [r for r in results if r.get("sharpe", 0) > r.get("bh_sharpe", 0)]
+    if beat_bh_sharpe:
+        print(
+            f"Beat B&H Sharpe: {len(beat_bh_sharpe)}/{len(results)} "
+            f"({100 * len(beat_bh_sharpe) / len(results):.0f}%): "
+            f"{', '.join(r['symbol'] for r in beat_bh_sharpe)}"
+        )
 
     # Top 5 performers
     print("\n--- Top 5 by Sharpe ---")

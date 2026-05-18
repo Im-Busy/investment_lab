@@ -94,6 +94,7 @@ dependencies = [
     "graphifyy>=0.8.5",
     "scrapling>=0.4.8",
     "arch>=8.0.0",
+    "stable-baselines3>=2.9.0a2",
 ]
 
 [dependency-groups]

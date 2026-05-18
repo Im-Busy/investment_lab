@@ -101,6 +101,11 @@ PATTERN_RELIABILITY: dict[str, float] = {
     "Crab Pattern": 0.50,
     "Cypher Pattern": 0.55,
     "Shark Pattern": 0.50,
+    # D7a-d: Technical indicator patterns
+    "Keltner Channel": 0.60,
+    "Williams %R": 0.52,
+    "CCI": 0.50,
+    "Ichimoku Cloud": 0.58,
 }
 
 
@@ -236,6 +241,10 @@ class RulesFirstStrategy(Strategy):
         )
         from src.patterns.harmonic.gartley import GartleyPattern
         from src.patterns.harmonic.symmetric_triangle import SymmetricTriangle
+        from src.patterns.technical.keltner_channel import KeltnerChannelPattern
+        from src.patterns.technical.williams_r import WilliamsRPattern
+        from src.patterns.technical.cci import CCIPattern
+        from src.patterns.technical.ichimoku import IchimokuPattern
 
         return [
             GartleyPattern(),
@@ -279,6 +288,10 @@ class RulesFirstStrategy(Strategy):
             CrabPattern(),
             CypherPattern(),
             SharkPattern(),
+            KeltnerChannelPattern(),
+            WilliamsRPattern(),
+            CCIPattern(),
+            IchimokuPattern(),
         ]
 
     def _build_df(self) -> pd.DataFrame:

@@ -1,10 +1,10 @@
 ---
 project: investment_trying
-last_updated: 2026-05-18 (Phase 21 EXPANDED — All Blocks Complete. Q1-Q8 + D3/D10/D11 + B1/B4/B5 + A1-A7 = 21 items total.)
+last_updated: 2026-05-18 (Phase 21 EXPANDED — 41/46 items. D5+D12 RL done. ALL IMPLEMENTABLE ITEMS COMPLETE. 5 FPGA out of scope.)
 summary: |
-  Rule-based multi-pattern trading system with 47+ chart pattern detectors (34 original + 6 FMZ conversions + 5 harmonic + 2 misc),
-  ML-enhanced regime detection, Numba-accelerated indicators, and event-driven
-  backtesting engine. All 21 phases complete. Phase 21 expanded with Blocks A/B/D (21 items).
+  Rule-based multi-pattern trading system with 47+ chart pattern detectors, ML-enhanced
+  regime detection, Numba-accelerated indicators, PPO/SAC/CQL RL trade execution, and
+  event-driven backtesting engine. All 21 phases complete. Phase 21: 41/46 items.
   Phase 07 paper trading running (14-day protocol).
 phases_total: 21
 phases_complete: 21
@@ -39,7 +39,7 @@ enhancement_tracks: 4
 | 18 | **Useful Repos Integration (Wave 1)** | [plan](18-useful-repos-integration.md) | — | ✅ DONE — All 7 items complete (3 P0 + 2 P2). |
 | 19 | **New Repos Wave 2** | [plan](19-new-repos-wave2.md) | — | ✅ DONE — All 9 items complete (3 P0 + 3 P1 + 3 P2). |
 | **20** | **System Hardening & Signal Quality** | [plan](20-system-hardening.md) | — | ✅ Complete — H1-H7 all implemented (2026-05-17). Multi-TP default, pattern registry, sector scoring, IR scalar, GA post-step, BTC audit. |
-| **21** | **Quant-Resources Signal Enhancers** | [plan](21-quant-resources-insights.md) | — | ✅ Complete — Q1-Q8 + D3/D10/D11 + B1/B4/B5 + A1-A7 (21 items, 2026-05-18). All blocks done. VIX gate, yield curve, GARCH/ARIMA+GARCH, options sentiment, model validation, copula risk, market impact, order book, structural break, state space, Nelson-Siegel, credit spreads, Vasicek/CIR, Black-Scholes, Heston, SABR, VolSurface, Greeks. |
+| **21** | **Quant-Resources Signal Enhancers** | [plan](21-quant-resources-insights.md) | — | ✅ Complete — 41/46 items. ALL gates open. Q1-Q8 + D3/D5/D6/D7a-d/D9/D10/D11/D12 + B1/B2/B4/B5/B6/B7/B8/B9/B10/B11 + C10 + A1-A7/A11/A12/A13. 5 FPGA out-of-scope (C1-C7). |
 ## Three-Direction Execution Roadmap
 
 ```

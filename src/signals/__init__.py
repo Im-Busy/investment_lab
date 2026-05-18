@@ -65,6 +65,16 @@ from .vix_regime_gate import VixRegimeGate
 from .yield_curve_gate import YieldCurveGate
 from .options_sentiment import OptionsSentimentProvider
 from .order_book_features import OrderBookFeatures, OrderBookSignal
+from .treasury_auctions import TreasuryAuctionCalendar, AuctionDay  # B8
+from .bond_etf_proxy import (
+    BondETFProxy,
+    TLT_PROXY,
+    IEF_PROXY,
+    SHY_PROXY,
+    LQD_PROXY,
+    rate_sensitivity,
+)  # B9
+from .real_yield_analysis import RealYieldAnalyzer, RealYieldSnapshot  # B10
 
 __all__ = [
     "SignalGenerator",
@@ -125,4 +135,17 @@ __all__ = [
     "OptionsSentimentProvider",
     "OrderBookFeatures",
     "OrderBookSignal",
+    # B8: Treasury Auctions
+    "TreasuryAuctionCalendar",
+    "AuctionDay",
+    # B9: Bond ETF Proxy
+    "BondETFProxy",
+    "TLT_PROXY",
+    "IEF_PROXY",
+    "SHY_PROXY",
+    "LQD_PROXY",
+    "rate_sensitivity",
+    # B10: Real Yield Analysis
+    "RealYieldAnalyzer",
+    "RealYieldSnapshot",
 ]

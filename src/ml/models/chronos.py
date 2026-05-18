@@ -19,53 +19,49 @@ class ChronosForecaster:
     """
     Chronos-2 wrapper for financial forecasting.
 
-    Features:
-    - Zero-shot forecasting (no training required)
-    - Multivariate and covariate-informed support
-    - Multiple model sizes (8M to 1B+ parameters)
-    - In-context learning across series
+    Uses Chronos2Pipeline (chronos-2, chronos-2-small, bolt variants).
+    Features: zero-shot forecasting, probabilistic quantile forecasts.
     """
 
     MODEL_SIZES = {
-        "tiny": "amazon/chronos-2-tiny",
-        "mini": "amazon/chronos-2-mini",
-        "small": "amazon/chronos-2-small",
-        "base": "amazon/chronos-2-base",
-        "large": "amazon/chronos-2-large",
-        "xl": "amazon/chronos-2-xl",
+        "chronos-2": "amazon/chronos-2",
+        "chronos-2-small": "autogluon/chronos-2-small",
+        "bolt-tiny": "amazon/chronos-bolt-tiny",
+        "bolt-mini": "amazon/chronos-bolt-mini",
+        "bolt-small": "amazon/chronos-bolt-small",
+        "bolt-base": "amazon/chronos-bolt-base",
     }
+
+    _DEFAULT_SIZE = "chronos-2"
 
     def __init__(
         self,
-        model_size: str = "base",
-        device: str = "cuda",
+        model_size: str = "chronos-2",
+        device: str = "cpu",
         prediction_length: int = 64,
         context_length: int = 512,
     ):
         """
-        Initialize Chronos-2.
+        Initialize Chronos-2 forecaster.
 
         Args:
-            model_size: Model size variant
+            model_size: Model size variant (chronos-2 is default)
             device: torch device
             prediction_length: Forecast horizon
             context_length: Input context length
         """
-        try:
-            from chronos import ChronosPipeline
-        except ImportError:
-            raise ImportError("Install chronos-forecasting: uv add chronos-forecasting")
+        from chronos import Chronos2Pipeline
 
         self.model_size = model_size
         self.device = device
         self.prediction_length = prediction_length
         self.context_length = context_length
 
-        model_id = self.MODEL_SIZES.get(model_size, self.MODEL_SIZES["base"])
-        self.pipeline = ChronosPipeline.from_pretrained(
+        model_id = self.MODEL_SIZES.get(model_size, self.MODEL_SIZES[self._DEFAULT_SIZE])
+        self.pipeline = Chronos2Pipeline.from_pretrained(
             model_id,
             device_map=device,
-            torch_dtype="auto",
+            dtype="auto",
         )
 
     def predict(
@@ -81,41 +77,39 @@ class ChronosForecaster:
         Args:
             series: Time series to forecast
             exogenous: Optional covariates
-            num_samples: Number of sample paths
+            num_samples: Number of sample paths (ignored by chronos-2; uses built-in samples)
             quantiles: Quantiles for probabilistic forecasts
 
         Returns:
-            Dictionary with forecasts
+            Dictionary with mean, median, and quantile forecasts as pd.Series
         """
         import torch
 
-        context = torch.tensor(series.values, dtype=torch.float32).unsqueeze(0)
+        values = series.values.astype(np.float32)
+        context = torch.tensor(values).reshape(1, 1, -1)
 
-        predictions = self.pipeline.predict(
+        quantile_preds, mean_preds = self.pipeline.predict_quantiles(
             context,
             prediction_length=self.prediction_length,
-            num_samples=num_samples,
-            quantiles=quantiles,
+            quantile_levels=quantiles,
         )
+
+        q_np = quantile_preds[0].detach().cpu().numpy().squeeze()  # (pred_len, n_quantiles)
+        m_np = mean_preds[0].detach().cpu().numpy().squeeze()  # (pred_len,)
 
         forecast_index = pd.date_range(
             start=series.index[-1] + pd.Timedelta(days=1),
             periods=self.prediction_length,
-            freq=series.index.freq or "D",
+            freq="D",
         )
 
-        predictions_np = predictions.numpy()
-
         result = {
-            "mean": pd.Series(predictions_np.mean(axis=0).squeeze(), index=forecast_index),
-            "median": pd.Series(np.median(predictions_np, axis=0).squeeze(), index=forecast_index),
+            "mean": pd.Series(m_np, index=forecast_index),
+            "median": pd.Series(np.median(q_np, axis=1), index=forecast_index),
         }
 
-        for q in quantiles:
-            result[f"q{int(q * 100)}"] = pd.Series(
-                np.quantile(predictions_np, q, axis=0).squeeze(),
-                index=forecast_index,
-            )
+        for i, q in enumerate(quantiles):
+            result[f"q{int(q * 100)}"] = pd.Series(q_np[:, i], index=forecast_index)
 
         return result
 

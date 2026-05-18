@@ -11,6 +11,7 @@ Contains harmonic and advanced chart patterns:
 
 from .abc import ABCPattern
 from .bollinger import BollingerBands
+from .extended import ButterflyPattern, BatPattern, CrabPattern, CypherPattern, SharkPattern
 from .gartley import GartleyPattern
 from .symmetric_triangle import SymmetricTriangle
 
@@ -19,4 +20,9 @@ __all__ = [
     "ABCPattern",
     "SymmetricTriangle",
     "BollingerBands",
+    "ButterflyPattern",
+    "BatPattern",
+    "CrabPattern",
+    "CypherPattern",
+    "SharkPattern",
 ]

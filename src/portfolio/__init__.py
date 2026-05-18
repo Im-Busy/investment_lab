@@ -34,6 +34,11 @@ from .black_litterman import (
     BLView,
 )
 
+from .eiten_builder import (
+    EitenPortfolioBuilder,
+    PortfolioOptimizationResult,
+)
+
 __all__ = [
     "SignalAggregator",
     "AggregationMethod",
@@ -58,4 +63,6 @@ __all__ = [
     "BLConfig",
     "BLResult",
     "BLView",
+    "EitenPortfolioBuilder",
+    "PortfolioOptimizationResult",
 ]

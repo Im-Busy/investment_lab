@@ -94,7 +94,7 @@ The knowledge graph categorizes every paper into these topics via keyword matchi
 | `backtest` | `src/backtest/` | Event-driven backtest engine | 6 papers |
 | `signals` | `src/signals/` | Signal aggregation, confluence scoring | 4 papers |
 | `portfolio` | `src/portfolio/` | Black-Litterman, multi-strategy engine | 3 papers |
-| `patterns` | `src/patterns/` | 34+ chart pattern detectors | — |
+| `patterns` | `src/patterns/` | 54 chart pattern detectors (10 categories) | — |
 | `analysis` | `src/analysis/` | Ablation, contribution, DSR/PSR/FDR | — |
 
 ---

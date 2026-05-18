@@ -73,6 +73,33 @@ except ImportError:
     LondonBreakoutStrategy = None
     LONDON_BREAKOUT_AVAILABLE = False
 
+# Instrument-Specific Alpha Strategies (backtesting.py)
+try:
+    from .gap_fill_strategy import GapFillStrategy
+    from .bb_squeeze_strategy import BBSqueezeStrategy
+    from .rsi_oversold_strategy import RSIOversoldStrategy
+    from .dip_buy_strategy import DipBuyStrategy
+    from .lowvol_momentum_strategy import LowVolMomentumStrategy
+    from .sector_oversold_strategy import SectorOversoldStrategy
+    from .gold_trend_strategy import GoldTrendStrategy
+    from .silver_breakout_strategy import SilverBreakoutStrategy
+    from .bond_fade_strategy import BondFadeStrategy
+    from .crypto_momentum_strategy import CryptoMomentumStrategy
+
+    ALPHA_STRATEGIES_AVAILABLE = True
+except ImportError:
+    GapFillStrategy = None
+    BBSqueezeStrategy = None
+    RSIOversoldStrategy = None
+    DipBuyStrategy = None
+    LowVolMomentumStrategy = None
+    SectorOversoldStrategy = None
+    GoldTrendStrategy = None
+    SilverBreakoutStrategy = None
+    BondFadeStrategy = None
+    CryptoMomentumStrategy = None
+    ALPHA_STRATEGIES_AVAILABLE = False
+
 __all__ = [
     # Confluence
     "ConfluenceScorer",
@@ -125,4 +152,16 @@ __all__ = [
     # London Breakout Strategy
     "LondonBreakoutStrategy",
     "LONDON_BREAKOUT_AVAILABLE",
+    # Instrument-Specific Alpha Strategies
+    "GapFillStrategy",
+    "BBSqueezeStrategy",
+    "RSIOversoldStrategy",
+    "DipBuyStrategy",
+    "LowVolMomentumStrategy",
+    "SectorOversoldStrategy",
+    "GoldTrendStrategy",
+    "SilverBreakoutStrategy",
+    "BondFadeStrategy",
+    "CryptoMomentumStrategy",
+    "ALPHA_STRATEGIES_AVAILABLE",
 ]

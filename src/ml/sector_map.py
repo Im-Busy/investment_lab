@@ -59,6 +59,13 @@ SECTOR_MAP: dict[str, str] = {
     "AVB": "utilities_reits",
     "D": "utilities_reits",
     "SO": "utilities_reits",
+    # Materials
+    "XLB": "materials",
+    "NEM": "materials",
+    "STLD": "materials",
+    "NUE": "materials",
+    "FCX": "materials",
+    "GOLD": "materials",
 }
 
 SECTOR_NAMES: list[str] = [
@@ -69,4 +76,5 @@ SECTOR_NAMES: list[str] = [
     "consumer",
     "industrials",
     "utilities_reits",
+    "materials",
 ]

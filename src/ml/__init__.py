@@ -81,6 +81,7 @@ from src.ml.survival_analyzer import (
     compare_survival_models,
 )
 from src.ml.volatility_forecaster import VolatilityForecaster, VolForecastResult
+from src.ml.garch_forecaster import GARCHForecaster, GARCHForecastResult
 from src.ml.breakout_classifier import BreakoutClassifier, BreakoutResult
 from src.ml.ensemble_models import (
     EnsembleBuilder,
@@ -127,6 +128,180 @@ from src.ml.dream_team_ensemble import (
     DreamTeamEnsemble,
     DreamTeamResult,
     DreamTeamConfig,
+)
+
+# C5: Circuit overfitting detection
+from src.ml.circuit_overfit import CircuitOverfitDetector, CircuitOverfitResult
+
+# C6: Adversarial overfitting detection
+from src.ml.adversarial_overfit import AdversarialOverfitDetector, AdversarialOverfitResult
+
+# A+B: Regime-adaptive ML
+from src.ml.simple_regime import (
+    SimpleTrendRegimeDetector,
+    SimpleVolRegimeDetector,
+    CombinedSimpleRegimeDetector,
+)
+from src.ml.regime_router import RegimeRouter
+
+# Phase 17: HP Filter Return Forecasting (R4)
+from src.ml.expected_returns import (
+    hp_filter,
+    hp_forecast,
+    hp_expected_return,
+    HPFilter,
+    HP_LAMBDA_DAILY,
+    HP_LAMBDA_WEEKLY,
+    HP_LAMBDA_MONTHLY,
+    HP_LAMBDA_QUARTERLY,
+)
+
+# Phase 17 P1: Liquidity Factor (R6) + MAD Pipeline (R8)
+from src.ml.factor_features import (
+    compute_cei,
+    compute_liquidity_factor,
+    compute_cei_dataframe,
+    compute_amihud_illiquidity,
+    compute_roll_spread,
+    add_liquidity_features,
+    CEI_WINDOW,
+    compute_dtd,
+    compute_dtd_dataframe,
+    add_dtd_features,
+)
+from src.ml.preprocessing import (
+    MADOutlierClipper,
+    RankStandardizer,
+    mad_clip,
+    rank_standardize,
+    mad_rank_pipeline,
+)
+
+# Phase 17 P3: Factor Engine Wrapper (R14)
+from src.ml.factor_engine import (
+    FactorEngineWrapper,
+    FactorEngineStatus,
+    get_factor_engine,
+    KNOWN_FACTORS,
+)
+
+# Phase 21 Q5: Model Validation
+from src.ml.model_validation import (
+    ModelValidator,
+    ValidationReport,
+    DriftResult,
+    validate_from_arrays,
+)
+
+# Phase 21 D3: Structural Break Detection
+from src.ml.structural_break import (
+    StructuralBreakDetector,
+    StructuralBreakResult,
+    UnitRootResult,
+    Breakpoint,
+    adf_test,
+    kpss_test,
+    chow_test,
+    bai_perron_test,
+)
+
+# Phase 21 D10: Rolling ARIMA+GARCH Hybrid Forecaster
+from src.ml.arima_garch import (
+    ARIMAForecaster,
+    ARIMAGARCHForecaster,
+    ARIMAForecast,
+    ARIMAGARCHResult,
+)
+
+# Phase 21 D11: State Space Models
+from src.ml.state_space import (
+    LocalLinearTrend,
+    StateSpaceDecomposer,
+    KalmanSignal,
+    SSMDecomposition,
+)
+
+# Phase 21 Block B: Fixed Income Models (B1 Nelson-Siegel, B4 Credit Spreads, B5 Rate Models)
+from src.ml.fixed_income_models import (
+    NelsonSiegel,
+    NelsonSiegelResult,
+    CreditSpreadGate,
+    CreditSpreadResult,
+    VasicekModel,
+    CIRModel,
+    RateModelResult,
+    BondPricer,
+    BondResult,
+)
+
+# Phase 21 D9: Kalman Hedge Ratios
+from src.ml.kalman_hedge import (
+    KalmanHedgeEstimator,
+    KalmanHedgePair,
+    KalmanHedgeResult,
+    PortfolioHedgeEstimator,
+)
+
+# Phase 21 C10: Wavelet/FFT Signal Processing
+from src.ml.wavelet_signals import (
+    WaveletDenoiser,
+    DenoiseResult,
+    FFTCycleDetector,
+    CycleResult,
+    SignalDecomposer,
+    DecompositionResult,
+    FFTFilter,
+)
+
+# Phase 21 D6: VAR + Granger Causality
+from src.ml.var_granger import (
+    VARModel,
+    VARResult,
+    GrangerCausalityTest,
+    GrangerResult,
+    CrossAssetLeadLag,
+    LeadLagResult,
+)
+
+# Phase 21 Block A: Options Pricing (A1-A7)
+from src.ml.options_pricing import (
+    BlackScholes,
+    BlackScholesResult,
+    BinomialTree,
+    MonteCarloPricer,
+    HestonModel,
+    SABRModel,
+    VolSurface,
+    VolSurfaceSlice,
+    compute_greeks,
+    delta_hedge_ratio,
+)
+
+# Phase 21 B11: CDS Pricing
+from src.ml.cds_pricing import (
+    CDSPricer,
+    CDSCurveResult,
+    CDSSpread,
+)
+
+# Phase 21 A12: Options Visualization
+from src.ml.options_visualization import (
+    OptionsVisualizer,
+    OptionLeg,
+)
+
+# Phase 21 B7: Rate Derivatives Pricing
+from src.ml.rate_derivatives import (
+    DiscountCurve,
+    InterestRateSwap,
+    IRSResult,
+    SwaptionPricer,
+    SwaptionResult,
+    CapFloorPricer,
+    CapFloorResult,
+    RateDerivativeSignal,
+    compute_forward_curve_from_df,
+    swap_spread_signal,
 )
 
 __all__ = [
@@ -198,6 +373,8 @@ __all__ = [
     "compare_survival_models",
     "VolatilityForecaster",
     "VolForecastResult",
+    "GARCHForecaster",
+    "GARCHForecastResult",
     "BreakoutClassifier",
     "BreakoutResult",
     "EnsembleBuilder",
@@ -233,4 +410,129 @@ __all__ = [
     "GapFillPrediction",
     "GapFillTrainingResult",
     "GapDetection",
+    # C5: Circuit overfitting detection
+    "CircuitOverfitDetector",
+    "CircuitOverfitResult",
+    # C6: Adversarial overfitting detection
+    "AdversarialOverfitDetector",
+    "AdversarialOverfitResult",
+    # A+B: Regime-adaptive ML
+    "SimpleTrendRegimeDetector",
+    "SimpleVolRegimeDetector",
+    "CombinedSimpleRegimeDetector",
+    "RegimeRouter",
+    # Phase 17: HP Filter (R4)
+    "hp_filter",
+    "hp_forecast",
+    "hp_expected_return",
+    "HPFilter",
+    "HP_LAMBDA_DAILY",
+    "HP_LAMBDA_WEEKLY",
+    "HP_LAMBDA_MONTHLY",
+    "HP_LAMBDA_QUARTERLY",
+    # Phase 17 P1: Liquidity Factor (R6) + MAD Pipeline (R8)
+    "compute_cei",
+    "compute_liquidity_factor",
+    "compute_cei_dataframe",
+    "compute_amihud_illiquidity",
+    "compute_roll_spread",
+    "add_liquidity_features",
+    "CEI_WINDOW",
+    "MADOutlierClipper",
+    "RankStandardizer",
+    "mad_clip",
+    "rank_standardize",
+    "mad_rank_pipeline",
+    # Phase 17 P2: Default Risk Factor (R11)
+    "compute_dtd",
+    "compute_dtd_dataframe",
+    "add_dtd_features",
+    # Phase 17 P3: Factor Engine Wrapper (R14)
+    "FactorEngineWrapper",
+    "FactorEngineStatus",
+    "get_factor_engine",
+    "KNOWN_FACTORS",
+    # Phase 21 Q5: Model Validation
+    "ModelValidator",
+    "ValidationReport",
+    "DriftResult",
+    "validate_from_arrays",
+    # Phase 21 D3: Structural Break Detection
+    "StructuralBreakDetector",
+    "StructuralBreakResult",
+    "UnitRootResult",
+    "Breakpoint",
+    "adf_test",
+    "kpss_test",
+    "chow_test",
+    "bai_perron_test",
+    # Phase 21 D10: Rolling ARIMA+GARCH Hybrid Forecaster
+    "ARIMAForecaster",
+    "ARIMAGARCHForecaster",
+    "ARIMAForecast",
+    "ARIMAGARCHResult",
+    # Phase 21 D11: State Space Models
+    "LocalLinearTrend",
+    "StateSpaceDecomposer",
+    "KalmanSignal",
+    "SSMDecomposition",
+    # Phase 21 Block B: Fixed Income Models
+    "NelsonSiegel",
+    "NelsonSiegelResult",
+    "CreditSpreadGate",
+    "CreditSpreadResult",
+    "VasicekModel",
+    "CIRModel",
+    "RateModelResult",
+    "BondPricer",
+    "BondResult",
+    # Phase 21 D9: Kalman Hedge Ratios
+    "KalmanHedgeEstimator",
+    "KalmanHedgePair",
+    "KalmanHedgeResult",
+    "PortfolioHedgeEstimator",
+    # Phase 21 C10: Wavelet/FFT Signal Processing
+    "WaveletDenoiser",
+    "DenoiseResult",
+    "FFTCycleDetector",
+    "CycleResult",
+    "SignalDecomposer",
+    "DecompositionResult",
+    "FFTFilter",
+    # Phase 21 D6: VAR + Granger Causality
+    "VARModel",
+    "VARResult",
+    "GrangerCausalityTest",
+    "GrangerResult",
+    "CrossAssetLeadLag",
+    "LeadLagResult",
+    # Phase 21 Block A: Options Pricing
+    "BlackScholes",
+    "BlackScholesResult",
+    "BinomialTree",
+    "MonteCarloPricer",
+    "HestonModel",
+    "SABRModel",
+    "VolSurface",
+    "VolSurfaceSlice",
+    "compute_greeks",
+    "delta_hedge_ratio",
+    # Phase 21 B11: CDS Pricing
+    "CDSPricer",
+    "CDSCurveResult",
+    "CDSSpread",
+    # Phase 21 A12: Options Visualization
+    "OptionsVisualizer",
+    "OptionLeg",
+    # Phase 21 B7: Rate Derivatives Pricing
+    "DiscountCurve",
+    "InterestRateSwap",
+    "IRSResult",
+    "SwaptionPricer",
+    "SwaptionResult",
+    "CapFloorPricer",
+    "CapFloorResult",
+    "RateDerivativeSignal",
+    "compute_forward_curve_from_df",
+    "swap_spread_signal",
 ]

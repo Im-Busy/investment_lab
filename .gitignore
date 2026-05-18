@@ -85,16 +85,19 @@ mlruns/
 AutogluonModels/
 
 # Cloned repos (managed separately)
-useful_resources/useful_repos/autogluon/
-useful_resources/useful_repos/marker/
-useful_resources/useful_repos/Deep-Learning-in-Quantitative-Trading/
-useful_resources/useful_repos/paper2md/
+useful_resources/useful_repos/ml-dl-general/autogluon/
+useful_resources/useful_repos/document-processing/marker/
+useful_resources/useful_repos/quant-resources/Deep-Learning-in-Quantitative-Trading/
+useful_resources/useful_repos/research-tools/paper2md/
 
 # Kilo worktrees (copies of the repo, not source)
 .kilo/worktrees/
 
 # Marker PDF-to-MD output
 marker/
+
+# GitNexus code intelligence index (large, regenerable)
+.gitnexus/
 
 # Personal IDE/editor workspace files
 *.code-workspace
@@ -113,3 +116,63 @@ logs/
 *.fdb_latexmk
 *.synctex.gz
 *.fls
+
+# ===== PUBLIC REPO EXCLUSIONS (public branch only) =====
+# These directories contain private data, models, or generated artifacts
+
+# Market data
+/data/
+
+# ML models (binary/serialized)
+/models/
+
+# Generated outputs
+/outputs/
+
+# Experiment results
+/experiments/
+
+# Analysis reports (generated)
+/reports/
+
+# Jupyter notebooks (generated from .py scripts)
+/notebooks/
+
+# Logs (runtime output)
+/logs/
+
+# MLflow database
+/mlflow.db
+
+# MLflow run artifacts
+/mlruns/
+
+# CatBoost training artifacts
+/catboost_info/
+
+# Personal IDE/editor configs
+/.vscode/
+/.roo/
+/.ai_instructions/
+/.kilocode/
+
+# Alternative AI tooling config
+/.mypy_cache/
+/.ruff_cache/
+/.pytest_cache/
+/__pycache__/
+
+# Package egg-info (auto-generated)
+/src/investment_trying.egg-info/
+
+# Archived/obsolete scripts
+/scripts/_archived/
+/scripts/archive/
+
+# Cloned reference repos and papers (exclude everything except knowledge-graph files)
+/useful_resources/papers/
+/useful_resources/papers_md/
+/useful_resources/PDFs_Found_Online/
+/useful_resources/useful_repos/
+/useful_resources/repomix-output-*.xml
+/useful_resources/_repomix/

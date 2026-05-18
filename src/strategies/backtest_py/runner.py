@@ -383,33 +383,49 @@ class BacktestPyRunner:
         return files
 
     def _print_summary(self) -> None:
-        """Print backtest summary."""
+        """Print comprehensive backtest summary using PerformanceMetrics."""
         if self.results is None:
             return
 
         assert self.results is not None
 
-        print("\n" + "=" * 60)
-        print("BACKTEST SUMMARY")
-        print("=" * 60)
+        # Extract trades and equity curve for comprehensive metrics
+        try:
+            raw_trades = list(self.results._trades) if hasattr(self.results, "_trades") else []
+        except Exception:
+            raw_trades = []
 
-        # Key metrics
-        print(f"Start Date: {self.results['Start']}")
-        print(f"End Date: {self.results['End']}")
-        print(f"Duration: {self.results['Duration']}")
-        print(f"\nInitial Capital: ${self.cash:,.2f}")
-        print(f"Final Equity: ${self.results['Equity Final [$]']:,.2f}")
-        print(f"Final Return: {self.results['Return [%]']:.2f}%")
-        print(f"\nTotal Trades: {self.results['# Trades']}")
-        print(f"Win Rate: {self.results['Win Rate [%]']:.2f}%")
-        print(f"Best Trade: {self.results['Best Trade [%]']:.2f}%")
-        print(f"Worst Trade: {self.results['Worst Trade [%]']:.2f}%")
-        print(f"Avg Trade: {self.results['Avg. Trade [%]']:.2f}%")
-        print(f"\nMax Drawdown: {self.results['Max. Drawdown [%]']:.2f}%")
-        print(f"Sharpe Ratio: {self.results['Sharpe Ratio']:.2f}")
-        print(f"Sortino Ratio: {self.results['Sortino Ratio']:.2f}")
-        print(f"Calmar Ratio: {self.results['Calmar Ratio']:.2f}")
-        print("=" * 60 + "\n")
+        try:
+            eq_curve = (
+                self.results._equity_curve if hasattr(self.results, "_equity_curve") else None
+            )
+        except Exception:
+            eq_curve = None
+
+        from src.backtest.metrics import PerformanceMetrics
+
+        stats = self.get_stats()
+
+        # Build trades list with pnl column
+        trades_for_metrics: list[dict] = []
+        for t in raw_trades:
+            nt: dict = dict(t._asdict()) if hasattr(t, "_asdict") else dict(t)
+            nt["pnl"] = float(nt.get("PnL", nt.get("pnl", 0)))
+            nt["exit_time"] = nt.get("ExitTime", nt.get("exit_time"))
+            nt["entry_time"] = nt.get("EntryTime", nt.get("entry_time"))
+            trades_for_metrics.append(nt)
+
+        # Prepare equity curve
+        eq_df: pd.DataFrame | None = None
+        if eq_curve is not None:
+            eq_df = pd.DataFrame({"equity": eq_curve.values}, index=eq_curve.index)
+
+        metrics = PerformanceMetrics.calculate(
+            trades=trades_for_metrics,
+            equity_curve=eq_df,
+            initial_equity=self.cash,
+        )
+        print(PerformanceMetrics.format_report(metrics))
 
 
 def run_backtest(

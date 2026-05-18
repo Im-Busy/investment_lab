@@ -119,7 +119,7 @@ Present a dry-run plan as a table:
 | # | Source | Destination | Method | Revertible? |
 |---|--------|------------|--------|-------------|
 | 1 | `test_foo.py` | `tests/test_foo.py` | `git mv` | Yes |
-| 2 | `marker/` | `useful_resources/useful_repos/marker/` | `robocopy /MOV` | Yes (git stash) |
+| 2 | `marker/` | `useful_resources/useful_repos/document-processing/marker/` | `robocopy /MOV` | Yes (git stash) |
 
 Do NOT execute. Wait for the user to review and approve the plan.
 

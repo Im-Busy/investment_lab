@@ -1,8 +1,8 @@
 # Insight Registry
 
-**Last Updated:** 2026-05-08
-**Total Insights:** 50
-**Papers Analyzed:** 17
+**Last Updated:** 2026-05-17
+**Total Insights:** 77
+**Papers Analyzed:** 21 (18 papers + 3 new resources)
 
 ---
 
@@ -164,6 +164,53 @@
 | I17.2 | Transaction delays in illiquid securities can fully erase alpha | Friction | 🟠 High | 🔬 | Need delay-aware backtesting for illiquid instruments |
 | I17.3 | Large number of bond factors outperform before costs, not after | Strategy.Lifecycle | 🟡 Medium | 🔬 | Cost adjustment is essential for strategy evaluation |
 
+### P18: Beyond Fama-French — Integrating Default, Liquidity, Momentum Factors (AI Survey, 2025)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| I18.1 | Default Risk (Merton DtD) + Liquidity (Acharya-Pedersen CEI) as alpha sources | Factor.Modeling | 🟠 High | 🔬 | Factor Engine library (`github.com`) available for computation |
+| I18.2 | LLM + MCTS for automated alpha factor mining (IC 0.055 vs 0.046 GP baseline) | Factor.Modeling | 🟠 High | 🔬 | Multi-dimensional scoring: IC, RankIR, turnover, diversity, overfitting risk |
+| I18.3 | QRAFTI standardized evaluation protocol (Novy-Marx/Velikov 2023) for factor validation | Factor.Modeling | 🟡 Medium | 🔬 | Standardized diagnostics pipeline — adopt for model validation |
+| I18.4 | Non-linear factor architectures (MFIN, KAN Autoencoders, Tensor Factor Models) outperform linear | Factor.Modeling | 🟢 Low | 🔬 | Gated on GPU >= 8GB |
+
+### P19: 华泰多因子系列1 — Multi-Factor Model System (Huatai Securities, 2016)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| I19.1 | 12-category factor taxonomy (74 style factors) for systematic feature engineering | Factor.Modeling | 🟠 High | 🔬 | Value, Growth, Quality, Leverage, Size, Momentum, Volatility, Turnover, Modified Momentum, Sentiment, Shareholder, Technical |
+| I19.2 | 4-phase construction pipeline: Preparation → Return Model → Risk Model → Optimization | Factor.Modeling | 🟠 High | 🔬 | Mirrors this project's ML pipeline conceptually |
+| I19.3 | Factor purification — regress out sector/size before IC computation eliminates confounding | Factor.Modeling | 🟠 High | ⏳ | Adopt for signal quality assessment in pattern detectors |
+| I19.4 | HP filter for factor return forecasting (extract trend from cumulative return) outperforms ARIMA/EWMA | Factor.Modeling | 🟡 Medium | ⏳ | Replace simple mean with HP filter for expected return estimation |
+| I19.5 | IR-weighted category factor synthesis (accounts for return AND volatility) superior to equal-weight/PCA | Factor.Modeling | 🟡 Medium | ⏳ | Apply to pattern category aggregation in confluence scoring |
+
+### P20: FMZ Strategies Repository — 5,807 Trading Strategies (Crowd-Sourced, 2017-2025)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| I20.1 | Only 1 ML strategy in 5,807 files — confirms ML is genuine differentiator, not commodity | Strategy.Conversion | 🔴 Critical | ✅ | This project's CatBoost pipeline has no equivalent in the FMZ corpus |
+| I20.2 | Multi-confirmation designs (triple/quad indicator) survive crowd-testing; single-indicator strategies dominate but are noise | Strategy.Conversion | 🟠 High | ✅ | `src/patterns/fmz/alpha_beast.py`, `multi_factor_trend.py` |
+| I20.3 | ATR-based risk management is universal standard across 5,807 strategies — no better alternative found | Strategy.Conversion | 🟠 High | ✅ | Already used in RulesFirstStrategy; confirmed by corpus evidence |
+| I20.4 | Zero OOS validation in most strategies — confirms this project's walk-forward/IS-OOS split is genuine alpha protection | Strategy.Conversion | 🔴 Critical | ✅ | IS/OOS split in all backtest scripts |
+| I20.5 | PineScript → Python manual conversion is feasible when pattern abstraction (BasePattern) exists; ~17 helper functions cover 90%+ of tactics | Strategy.Conversion | 🟡 Medium | ✅ | `src/indicators/pinescript_helpers.py`, `src/patterns/fmz/` |
+| I20.6 | Force detection (RSI momentum validation on prior swing legs) improves reversal signal quality by filtering weak reversals after strong momentum | Strategy.Conversion | 🟠 High | ✅ | `src/patterns/fmz/momentum_zigzag.py` — QQE/MACD/MA modes |
+
+### P21: Constrained LLM Agents for Factor Discovery (arXiv:2604.26747v1)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| I21.1 | Constrained Factor DSL for reproducible signal definitions — 4 operator families over point-in-time variables | Signal.Quality | 🔴 Critical | ✅ | `src/patterns/dsl/` (grammar, executor, validator) |
+| I21.2 | Agentic sequential hypothesis search with deterministic evaluation engine separation | Signal.Quality | 🟠 High | ✅ | `src/patterns/dsl/trace.py` (FactorTrace, append_round) |
+| I21.3 | IC-based selection gates (mean IC ≥ 0.02, IC t-stat ≥ 2.0, coverage ≥ 0.70) on training window only | Signal.Quality | 🔴 Critical | ✅ | `src/signals/ic_gate.py` (ICGate) |
+| I21.4 | Append-only experiment trace for full auditability — hypothesis→recipe→metrics→gate→interpretation | Strategy.Lifecycle | 🟠 High | ✅ | `src/patterns/dsl/trace.py` (verify_integrity) |
+| I21.5 | Pool governance: hold pool (pass gate) → good pool (curated for mechanism diversity, corr < 0.7) | Signal.Quality | 🟠 High | ✅ | `src/patterns/dsl/trace.py` (curate_good_pool) |
+| I21.6 | Ridge-regularized factor aggregation (α=1.0, cross-sectional standardization) outperforms complex composites | Signal.Quality | 🟠 High | ✅ | `src/signals/ridge_combiner.py` (RidgeSignalCombiner) |
+| I21.7 | Range-persistence (hl_range MA crossover) as speculative attention proxy — paper's top-performing factor family | Signal.Quality | 🟠 High | ✅ | `src/patterns/range_persistence.py` (3 detectors) |
+| I21.8 | Capacity analysis: equal-weight vs market-cap-weight divergence reveals alpha concentration in small assets | Friction | 🟡 Medium | ⏳ | Backlog #23 |
+| I21.9 | Protocol immutability enforcement (config hash, frozen params after session start) | Strategy.Lifecycle | 🟡 Medium | ⏳ | Backlog #24 |
+| I21.10 | Mechanical vs hypothesis candidate balance (60/30/10 mix) to balance exploitation/exploration | Signal.Quality | 🟡 Medium | ⏳ | Backlog #25 |
+| I21.11 | Failure interpretation framework — 6 categories (NOISE, REGIME_DEPENDENT, CAPACITY_LIMITED, REDUNDANT, DATA_ISSUE, HYPOTHESIS_INVALID) | Signal.Quality | 🟡 Medium | ✅ | `src/patterns/dsl/trace.py` (FailureCategory enum) |
+| I21.12 | Small-cap + liquidity-scarcity + intraday range crypto factor convergence across 5 search rounds | Signal.Quality | 🟠 High | ✅ | `src/patterns/range_persistence.py` |
+
 ---
 
 ## Cross-Cutting Themes
@@ -177,6 +224,10 @@
 | **Crash Factors + Timing > Risk Filters Alone** | I13.1, I13.3, I13.4 | ⏳ Partially implemented |
 | **Market Efficiency Inversion** (less traded = more alpha) | I14.1, I14.2, I14.3, I16.1, I16.2, I17.1 | 🔬 Research phase — instrument universe expansion |
 | **Alpha Decay Is Universal** (all signals decay post-discovery) | I15.1, I15.2, I15.3, I4.3 | 🔬 Research phase — needs decay monitoring |
+| **Systematic Factor Construction** (standardize → purify → synthesize → optimize) | I19.1, I19.2, I19.3, I19.4, I19.5 | 🔬 Research phase — 华泰 4-phase pipeline |
+| **Crowd-Sourced Strategy Patterns** (multi-confirmation + ATR risk = survival) | I20.1, I20.2, I20.3, I20.4, I20.5, I20.6 | ✅ 6 FMZ detectors converted and integrated |
+| **Non-Linear Factor Discovery** (ML + MCTS for alpha mining) | I18.1, I18.2, I18.3, I18.4 | 🔬 Long-term research (GPU-gated for DL) |
+| **Agentic Factor Discovery** (LLM-guided DSL search with deterministic evaluation) | I21.1, I21.2, I21.3, I21.4, I21.5, I21.6, I21.7, I21.11, I21.12 | ✅ Core modules built (DSL, trace, IC gate, ridge combiner, range patterns) |
 
 ---
 
@@ -191,8 +242,8 @@ I1.1, I1.4, I8.1, I13.2, I17.1, I17.2
 ### Regime (7 insights)
 I3.3, I4.1, I8.2, I10.3, I13.4, I5.3, I8.2
 
-### Signal.Quality (12 insights)
-I2.1, I2.3, I5.2, I5.3, I7.1, I7.2, I9.2, I13.2, I13.3, I6.2, I6.3, I15.3
+### Signal.Quality (24 insights)
+I2.1, I2.3, I5.2, I5.3, I7.1, I7.2, I9.2, I13.2, I13.3, I6.2, I6.3, I15.3, I21.1, I21.2, I21.3, I21.5, I21.6, I21.7, I21.10, I21.11, I21.12, I20.1, I20.2, I20.5
 
 ### Event.Type (5 insights)
 I6.1, I6.2, I6.3, I9.1, I9.3
@@ -203,8 +254,14 @@ I3.2, I3.5, I7.3, I10.1, I10.2, I10.3
 ### Position.Sizing (3 insights)
 I2.2, I3.1, I3.4
 
-### Strategy.Lifecycle (7 insights)
-I1.5, I4.3, I5.1, I13.4, I15.1, I15.2, I17.3
+### Strategy.Lifecycle (9 insights)
+I1.5, I4.3, I5.1, I13.4, I15.1, I15.2, I17.3, I21.4, I21.9
+
+### Factor.Modeling (9 insights) — NEW
+I18.1, I18.2, I18.3, I18.4, I19.1, I19.2, I19.3, I19.4, I19.5
+
+### Agentic.Discovery (12 insights) — NEW
+I21.1, I21.2, I21.3, I21.4, I21.5, I21.6, I21.7, I21.8, I21.9, I21.10, I21.11, I21.12
 
 ### Market.Efficiency (5 insights)
 I14.1, I14.2, I14.3, I16.1, I16.2
@@ -212,24 +269,30 @@ I14.1, I14.2, I14.3, I16.1, I16.2
 ### ML.Training (1 insight)
 I16.3
 
+### Strategy.Conversion (6 insights) — NEW
+I20.1, I20.2, I20.3, I20.4, I20.5, I20.6
+
+### Factor.Modeling (9 insights) — NEW
+I18.1, I18.2, I18.3, I18.4, I19.1, I19.2, I19.3, I19.4, I19.5
+
 ---
 
 ## Summary Statistics
 
 | Status | Count | Percentage |
 |--------|-------|------------|
-| ✅ Implemented | 15 | 30% |
+| ✅ Implemented | 35 | 45% |
 | 🔄 In-Progress | 0 | 0% |
-| ⏳ Deferred/Backlog | 24 | 48% |
-| ❌ Rejected | 2 | 4% |
-| 🔬 Research Phase | 9 | 18% |
+| ⏳ Deferred/Backlog | 27 | 35% |
+| ❌ Rejected | 2 | 3% |
+| 🔬 Research Phase | 13 | 17% |
 
 | Impact | Count | Percentage |
 |--------|-------|------------|
-| 🔴 Critical | 10 | 20% |
-| 🟠 High | 18 | 36% |
-| 🟡 Medium | 19 | 38% |
-| 🟢 Low | 3 | 6% |
+| 🔴 Critical | 14 | 18% |
+| 🟠 High | 30 | 39% |
+| 🟡 Medium | 27 | 35% |
+| 🟢 Low | 6 | 8% |
 
 ---
 

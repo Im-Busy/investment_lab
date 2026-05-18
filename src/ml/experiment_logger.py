@@ -138,6 +138,79 @@ class ExperimentLogger:
         self.run_dir.mkdir(parents=True, exist_ok=True)
         return self.run_dir
 
+    def log_training_history(
+        self,
+        train_losses: list[float],
+        val_losses: list[float],
+        metric_name: str = "logloss",
+    ) -> None:
+        """Store per-epoch training and validation loss curves.
+
+        Persists to training_history.json in the run directory.
+        CatBoost evals_result_ dicts use iteration-indexed keys like
+        {'learn': {'Logloss': [0.693, 0.682, ...]}, 'validation': {'Logloss': [...]}}.
+
+        Args:
+            train_losses: Per-epoch training loss values.
+            val_losses: Per-epoch validation loss values.
+            metric_name: Name of the metric (e.g., 'logloss', 'accuracy').
+        """
+        history = {
+            "metric": metric_name,
+            "n_epochs": len(train_losses),
+            "train_losses": train_losses,
+            "val_losses": val_losses,
+        }
+        self._save_json("training_history.json", history)
+        logger.info(
+            "Logged training history: %d epochs, final train_loss=%.6f, final val_loss=%.6f",
+            len(train_losses),
+            train_losses[-1] if train_losses else float("nan"),
+            val_losses[-1] if val_losses else float("nan"),
+        )
+
+    def log_from_catboost(
+        self,
+        evals_result: dict,
+        metric_name: str = "Logloss",
+    ) -> None:
+        """Extract training history from CatBoost evals_result_ dict.
+
+        CatBoost stores results as:
+            {'learn': {'Logloss': [...]}, 'validation': {'Logloss': [...]}}
+
+        Args:
+            evals_result: Raw CatBoost evals_result_ dictionary.
+            metric_name: Metric key to extract (default: 'Logloss').
+        """
+        train_losses = []
+        val_losses = []
+        if "learn" in evals_result and metric_name in evals_result["learn"]:
+            train_losses = [float(v) for v in evals_result["learn"][metric_name]]
+        if "validation" in evals_result and metric_name in evals_result["validation"]:
+            val_losses = [float(v) for v in evals_result["validation"][metric_name]]
+        if train_losses and val_losses:
+            self.log_training_history(train_losses, val_losses, metric_name.lower())
+        else:
+            logger.warning(
+                "CatBoost evals_result_ missing learn/validation keys for %s", metric_name
+            )
+
+    def get_training_history(self) -> tuple[list[float], list[float]]:
+        """Retrieve stored training history.
+
+        Returns:
+            Tuple of (train_losses, val_losses) or ([], []) if no history exists.
+        """
+        filepath = self.run_dir / "training_history.json"
+        if not filepath.exists():
+            return [], []
+        import json
+
+        with open(filepath) as f:
+            data = json.load(f)
+        return data.get("train_losses", []), data.get("val_losses", [])
+
     def log_metadata(
         self,
         description: str = "",

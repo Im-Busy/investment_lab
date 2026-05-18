@@ -444,6 +444,299 @@ class CrashFactorFilter:
         }
 
 
+class BehavioralCrashDetector:
+    """Behavioral crash detection using indicators from the crash paper (Fang et al., 2022).
+
+    Adds three behavioral indicators to the base crash factor model:
+    1. Panic selling: volume spike (>3x avg) with sharp price decline (>2 ATR).
+    2. Herding behavior: rising cross-asset correlation, declining dispersion.
+    3. Volatility regime jump: sudden expansion in ATR (>2x of 60d median).
+
+    From the paper:
+    - Crash+Timing Strategy (CTS): RSI<30 for buying crash dips, momentum factor for selling.
+    - Crash+Momentum-Reversal (CMRS): stocks with high crash factor + low momentum
+      (underperformed) likely to rebound.
+    - Herding bias (Avery & Zemsky 1998) and overconfidence (Kim et al. 2016)
+      cause mispricing and bubble formation.
+
+    Output: crash probability score (0-1) that can gate entries.
+    """
+
+    def __init__(
+        self,
+        panic_volume_mult: float = 3.0,
+        panic_atr_mult: float = 2.0,
+        herding_window: int = 60,
+        vol_jump_window: int = 60,
+        vol_jump_mult: float = 2.0,
+        rsi_window: int = 14,
+        rsi_oversold: float = 30.0,
+        rsi_overbought: float = 70.0,
+        momentum_window: int = 5,
+    ) -> None:
+        self.panic_volume_mult = panic_volume_mult
+        self.panic_atr_mult = panic_atr_mult
+        self.herding_window = herding_window
+        self.vol_jump_window = vol_jump_window
+        self.vol_jump_mult = vol_jump_mult
+        self.rsi_window = rsi_window
+        self.rsi_oversold = rsi_oversold
+        self.rsi_overbought = rsi_overbought
+        self.momentum_window = momentum_window
+
+    def detect_panic_selling(
+        self,
+        prices: pd.DataFrame,
+    ) -> pd.DataFrame:
+        """Detect panic selling events from price and volume data.
+
+        Panic selling = volume spike (>3x 20d avg) AND price decline (>2 ATR).
+        """
+        close = prices["close"] if "close" in prices.columns else prices["Close"]
+        volume = (
+            prices["volume"]
+            if "volume" in prices.columns
+            else prices.get("Volume", pd.Series(0, index=prices.index))
+        )
+
+        returns = close.pct_change()
+        tr = pd.concat(
+            [
+                (
+                    prices.get("high", prices.get("High", close))
+                    - prices.get("low", prices.get("Low", close))
+                ).abs(),
+                (prices.get("high", prices.get("High", close)) - close.shift(1)).abs(),
+                (prices.get("low", prices.get("Low", close)) - close.shift(1)).abs(),
+            ],
+            axis=1,
+        ).max(axis=1)
+        atr = tr.rolling(14).mean()
+
+        avg_volume = volume.rolling(20).mean()
+        volume_spike = volume > (avg_volume * self.panic_volume_mult)
+        price_crash = returns < (-self.panic_atr_mult * atr / close.shift(1))
+
+        panic_signal = volume_spike & price_crash
+        panic_intensity = pd.Series(0.0, index=prices.index)
+        valid = volume_spike & (avg_volume > 0)
+        panic_intensity[valid] = (volume[valid] / avg_volume[valid] - self.panic_volume_mult).clip(
+            0, 5
+        ) / 5.0
+        panic_intensity[~price_crash] *= 0.3
+
+        return pd.DataFrame(
+            {
+                "panic_signal": panic_signal.astype(int),
+                "panic_intensity": panic_intensity,
+                "volume_spike": volume_spike.astype(int),
+                "price_crash": price_crash.astype(int),
+            }
+        )
+
+    def detect_herding_behavior(
+        self,
+        returns: pd.Series,
+        market_returns: Optional[pd.Series] = None,
+    ) -> pd.DataFrame:
+        """Detect herding behavior via dispersion and correlation metrics.
+
+        Herding manifests as:
+        - Rising correlation between individual stocks and the market.
+        - Declining cross-sectional dispersion (stocks move together).
+        - High R² in market model regression.
+
+        When market_returns is None, uses self-correlation and volatility compression
+        as proxy herding indicators.
+        """
+        n = len(returns)
+        result = pd.DataFrame(index=returns.index)
+
+        if market_returns is not None:
+            aligned_mkt = market_returns.reindex(returns.index).ffill()
+            # Rolling correlation with market
+            result["market_correlation"] = returns.rolling(self.herding_window).corr(aligned_mkt)
+
+            # Rolling beta (market sensitivity)
+            rolling_cov = returns.rolling(self.herding_window).cov(aligned_mkt)
+            rolling_mkt_var = aligned_mkt.rolling(self.herding_window).var()
+            result["market_beta"] = rolling_cov / rolling_mkt_var.replace(0, np.nan)
+
+            # R² from rolling regression
+            result["market_r2"] = result["market_correlation"] ** 2
+        else:
+            # Self-referencing herding proxies
+            # Herding = declining volatility + autocorrelation spike
+            result["vol_regime"] = returns.rolling(self.herding_window).std() * np.sqrt(252)
+            result["autocorr"] = returns.rolling(self.herding_window).apply(
+                lambda x: x.autocorr() if len(x) > 2 else 0, raw=False
+            )
+
+        # Dispersion proxy: declining range/mean ratio
+        roll_std = returns.rolling(self.herding_window).std()
+        roll_mean = returns.rolling(self.herding_window).mean().abs() + 1e-8
+        result["dispersion"] = roll_std / roll_mean
+
+        # Herding score: high correlation + low dispersion + high beta = herding
+        if market_returns is not None:
+            corr_score = result["market_correlation"].fillna(0).clip(0, 1)
+            beta_score = (result["market_beta"].fillna(0).abs() / 3).clip(0, 1)
+            disp_score = 1.0 - (
+                result["dispersion"].fillna(0.5) / result["dispersion"].quantile(0.75)
+            ).clip(0, 1)
+            result["herding_score"] = (corr_score * 0.4 + beta_score * 0.3 + disp_score * 0.3).clip(
+                0, 1
+            )
+        else:
+            vol_score = (
+                1.0 - result["vol_regime"].fillna(0) / result["vol_regime"].quantile(0.95)
+            ).clip(0, 1)
+            ac_score = result["autocorr"].fillna(0).abs().clip(0, 1)
+            result["herding_score"] = (vol_score * 0.5 + ac_score * 0.5).clip(0, 1)
+
+        return result
+
+    def detect_volatility_jumps(
+        self,
+        prices: pd.DataFrame,
+    ) -> pd.DataFrame:
+        """Detect sudden volatility regime jumps.
+
+        A vol jump is when current ATR exceeds N times the trailing median ATR.
+        This captures VIX-like expansion events that precede or accompany crashes.
+        """
+        close = prices["close"] if "close" in prices.columns else prices["Close"]
+        high = prices.get("high", prices.get("High", close))
+        low = prices.get("low", prices.get("Low", close))
+
+        tr = pd.concat(
+            [(high - low).abs(), (high - close.shift(1)).abs(), (low - close.shift(1)).abs()],
+            axis=1,
+        ).max(axis=1)
+
+        atr_short = tr.rolling(7).mean()
+        atr_median = tr.rolling(self.vol_jump_window).median()
+
+        vol_jump = atr_short > (atr_median * self.vol_jump_mult)
+        vol_jump_intensity = pd.Series(0.0, index=prices.index)
+        valid = vol_jump & (atr_median > 0)
+        vol_jump_intensity[valid] = (atr_short[valid] / atr_median[valid] - 1.0).clip(0, 5) / 5.0
+
+        # Persistence: a crash vol regime typically lasts multiple bars
+        vol_regime_enduring = vol_jump.rolling(5).mean() > 0.3
+
+        return pd.DataFrame(
+            {
+                "vol_jump": vol_jump.astype(int),
+                "vol_jump_intensity": vol_jump_intensity,
+                "vol_regime_enduring": vol_regime_enduring.astype(int),
+            }
+        )
+
+    def compute_crash_momentum_reversal(
+        self,
+        prices: pd.DataFrame,
+    ) -> pd.DataFrame:
+        """Compute Crash+Momentum-Reversal (CMRS) signal from the paper.
+
+        CMRS: stocks with HIGH crash factor AND LOW momentum are expected
+        to rebound (momentum reversal). The paper shows this strategy
+        outperforms pure momentum strategies.
+
+        Args:
+            prices: OHLCV data.
+
+        Returns:
+            DataFrame with cmrs_score (0-1, higher = more likely rebound).
+        """
+        close = prices["close"] if "close" in prices.columns else prices["Close"]
+
+        # RSI for crash dip detection (CTS buy signal)
+        delta = close.diff()
+        gain = delta.clip(lower=0)
+        loss = (-delta).clip(lower=0)
+        avg_gain = gain.rolling(self.rsi_window).mean()
+        avg_loss = loss.rolling(self.rsi_window).mean()
+        rs = avg_gain / avg_loss.replace(0, np.nan)
+        rsi = 100.0 - (100.0 / (1.0 + rs))
+
+        # Momentum factor (5-day, from paper)
+        momentum = close.pct_change(self.momentum_window)
+
+        # Crash dip: RSI oversold = potential buying opportunity (CTS)
+        crash_dip = rsi < self.rsi_oversold
+
+        # Momentum reversal: negative momentum suggests potential reversal
+        mom_reversal = momentum < momentum.rolling(60).quantile(0.3)
+
+        # CMRS composite: high crash risk + low momentum = rebound opportunity
+        result = pd.DataFrame(index=prices.index)
+        result["rsi"] = rsi
+        result["momentum_5d"] = momentum
+        result["crash_dip"] = crash_dip.astype(int)
+        result["momentum_reversal_signal"] = mom_reversal.astype(int)
+
+        # CMRS score: higher = more likely to be in crash dip + reversal zone
+        oversold_score = 1.0 - (rsi.clip(0, self.rsi_oversold) / self.rsi_oversold)
+        momentum_score = (
+            1.0 - (momentum.clip(momentum.quantile(0.05), 0) / momentum.quantile(0.05))
+            if momentum.quantile(0.05) < 0
+            else 0.0
+        )
+        result["cmrs_score"] = (oversold_score * 0.5 + momentum_score * 0.5).clip(0, 1)
+
+        return result
+
+    def aggregate_crash_risk(
+        self,
+        prices: pd.DataFrame,
+        market_returns: Optional[pd.Series] = None,
+    ) -> pd.DataFrame:
+        """Aggregate all behavioral crash indicators into a single crash risk score.
+
+        Args:
+            prices: OHLCV data.
+            market_returns: Optional market returns for herding calculation.
+
+        Returns:
+            DataFrame with columns: crash_risk_score (0-1), panic_risk,
+            herding_risk, vol_jump_risk, and combined signal.
+        """
+        panic = self.detect_panic_selling(prices)
+        vol = self.detect_volatility_jumps(prices)
+
+        close = prices["close"] if "close" in prices.columns else prices["Close"]
+        returns = close.pct_change()
+        herding = self.detect_herding_behavior(returns, market_returns)
+
+        cmrs = self.compute_crash_momentum_reversal(prices)
+
+        result = pd.DataFrame(index=prices.index)
+        result["panic_risk"] = panic["panic_intensity"].fillna(0).clip(0, 1)
+        result["herding_risk"] = herding["herding_score"].fillna(0).clip(0, 1)
+        result["vol_jump_risk"] = vol["vol_jump_intensity"].fillna(0).clip(0, 1)
+        result["cmrs_score"] = cmrs["cmrs_score"].fillna(0).clip(0, 1)
+
+        # Combined crash risk: weighted average
+        # Panic selling gets highest weight (direct crash signal)
+        # Vol jump gets second (precedes crashes)
+        # Herding gets third (structural risk)
+        result["crash_risk_score"] = (
+            result["panic_risk"] * 0.40
+            + result["vol_jump_risk"] * 0.30
+            + result["herding_risk"] * 0.20
+            + result["cmrs_score"] * 0.10
+        ).clip(0, 1)
+
+        result["is_crash_regime"] = result["crash_risk_score"] >= 0.50
+        result["panic_signal"] = panic["panic_signal"].fillna(0)
+        result["vol_jump"] = vol["vol_jump"].fillna(0)
+        result["crash_dip"] = cmrs["crash_dip"].fillna(0)
+        result["momentum_reversal"] = cmrs["momentum_reversal_signal"].fillna(0)
+
+        return result
+
+
 def run_batch_analysis(
     data_dir: str,
     output_dir: str,

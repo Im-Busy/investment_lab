@@ -14,10 +14,10 @@ scope: |
   P0: Stability Selection + Per-Sector Models (eliminate two root causes)
   P1: CPCV + Dynamic Ensemble Learning (prevent overfit + adapt to regime shift)
   P2: Meta-Labeling + Production Hardening (signal filtering + deployment guards)
-status: 🔴 Planned
-tasks_total: 12
+status: 🔄 In Progress
+tasks_total: 16
 tasks_active: 0
-tasks_complete: 0
+tasks_complete: 10
 ---
 
 # Overfitting Fixes — Production-Grade Solutions
@@ -77,13 +77,13 @@ Web research across 32 papers and production resources identified six proven sol
 
 **Why:** PurgedKFold tests only a single chronological path. CPCV generates hundreds of train/test path combinations — each tests the model against different regime sequences. Paper (ScienceDirect 2024) shows CPCV has lower PBO (Probability of Backtest Overfitting) and higher DSR (Deflated Sharpe Ratio) than both PurgedKFold and Walk-Forward.
 
-**Goal:** Replace PurgedKFold with CPCV in training pipeline. Lower PBO, stable CV metrics across paths.
+**Goal:** Replace PurgedKFold with CPCV in training pipeline. Lower PBO, stable CV metrics across paths. **Status: B11.1-B11.3 done, B11.4 pending.**
 
 | # | Task | Depends On | Description |
 |---|------|------------|-------------|
-| **B11.1** | Implement `src/ml/cross_validation/cpcv.py` | — | Port from `mlfinlab` or `markmipt/fast_combinatorial_cv`: (a) combinatorial grouping of N time periods into k test groups, (b) purge overlapping labels between train/test, (c) embargo buffer period, (d) generate φ(N,k) backtest paths, (e) aggregate metrics across all paths (mean ± std Sharpe, return, win rate). |
-| **B11.2** | Integrate into `train_ml_pipeline_v3.py` | B11.1, B10.4 | Replace `PurgedKFold` calls with `CombinatorialPurgedCV`. Add `--cv-method cpcv` CLI flag (default). Log per-path metrics distribution to MLflow. |
-| **B11.3** | Add Bagged CPCV variant | B11.1 | Bagged CPCV: train ensemble of models across CPCV paths, aggregate predictions via mean/mode. This is the variant shown to outperform standard CPCV in the 2024 paper. |
+| **B11.1** | `src/ml/combinatorial_purged_cv.py` | — | ✅ Done — CombinatorialPurgedCV class with split(), get_path_summary(), get_test_coverage(). C(6,2)=15 paths. 32 tests pass. |
+| **B11.2** | Integrate into `train_ml_pipeline_v3.py` | B11.1 | ✅ Done — `--cv-method cpcv` CLI flag. Replaces outer PurgedKFold with C(6,2)=15 CPCV paths. Inner loop stays as PurgedKFold. Logs per-path metrics. |
+| **B11.3** | Bagged CPCV variant | B11.1 | ✅ Done — `train_bagged_cpcv()` trains 15 models (one per CPCV path). `ml_strategy.py` supports `model_paths` list for ensemble mean prediction. |
 | **B11.4** | Validate CPCV vs PurgedKFold | B11.3 | Compare on SPY: (a) PBO via `src/analysis/deflated_sharpe.py`, (b) CV metric stability (coefficient of variation across paths), (c) OOS Sharpe difference. Expect: PBO < 0.3, CV stability < 0.2. |
 
 ### Phase B12: Dynamic Ensemble Learning (DEL) — Regime Adaptation
@@ -94,10 +94,10 @@ Web research across 32 papers and production resources identified six proven sol
 
 | # | Task | Depends On | Description |
 |---|------|------------|-------------|
-| **B12.1** | Implement `src/ml/dynamic_ensemble.py` | B10.4 | Train 5 CatBoost variants: (1) default params, (2) shallow depth=4, (3) deep depth=8, (4) high l2_leaf_reg=10, (5) low learning_rate=0.01. Each trained on 2-year rolling window. Ensemble predictions: weighted mean of probabilities. |
-| **B12.2** | Implement EGD weight optimizer | B12.1 | After each bar's outcome is known (next-bar return), compute loss per model (MSE). Update weights: w_{t+1,i} = w_{t,i} * exp(-η * loss_i) / Z_t. Re-initialize to 1/N every K=60 bars (OneNet, NeurIPS 2023). η = 0.1 default. |
-| **B12.3** | Integrate into MLStrategy | B12.2 | `ml_strategy.py`: load dynamic ensemble instead of single model. `predict()` returns weighted probability. Weight update called after bar close (next `next()` call with known outcome). |
-| **B12.4** | Backtest DEL vs single model | B12.3 | SPY 2020-2024: compare DEL Sharpe vs single model Sharpe. Expect: DEL Sharpe ≥ single model Sharpe (stable or better), DEL max drawdown < single model. |
+| **B12.1** | Implement `src/ml/dynamic_ensemble.py` | B10.4 | ✅ Done — `DynamicEnsemble` class with 5 CatBoost variants, EGD weight optimizer (η=0.1, reinit K=60), save/load. |
+| **B12.2** | EGD weight optimizer + MLStrategy integration | B12.1 | ✅ Done — `ml_strategy.py` supports `use_dynamic_ensemble` + `dynamic_ensemble_path`. Weight update per bar via bar return. `run_ml_backtest.py --use-dynamic-ensemble` flag. |
+| **B12.3** | Backtest DEL vs single model | B12.2 | ✅ Done — DEL Sharpe 0.91 vs single 0.69 (+32%). Return 78.1% vs 66.4%. DD -20.8% vs -25.7%. PF 1.74 vs 1.45. |
+| **B12.4** | Document pipeline integration | B12.3 | ✅ Done — Pipeline trains DEL via `--cv-method cpcv` (Stage 6c). Standalone script: `scripts/train_dynamic_ensemble.py`. |
 
 ### Phase B13: Meta-Labeling Secondary Filter
 

@@ -73,3 +73,35 @@ Tier 1 items are high impact + low complexity. Tier 2 are high impact + medium c
 - R2, R4, R5 are the remaining gap — low complexity, can be done without dependencies
 - Research insights source: 13 papers in `useful_resources/papers_md/`
 - Architecture analysis at `useful_resources/useful_repos/ARCHITECTURE_ANALYSIS.md`
+
+---
+
+## Study: Paper Analysis & Synthesis (2026-04-19)
+
+*(Merged from study-paper-analysis.md)*
+
+Analyzed 13 papers. Key insights → Phase 06 items:
+
+| Paper | Key Insight | Applied To |
+|-------|------------|------------|
+| OOM-RL | 6700% turnover destroys alpha | Phase 06 R1: TurnoverPenalty |
+| Jorion: Event-Driven Fund Risk | Per-position probability > aggregate VaR | Phase 06 R2: PositionRiskModel |
+| Against Universal Trading | No single strategy works in all regimes | Phase 06 R4: Regime declaration |
+| Event-Based Trading | Granular event-type signals beat aggregation | Phase 06 R6: EventWeighting |
+| Fang et al.: Crash Factor | Take-profit beats RSI exits | Trading strategy design |
+| BET Diversity Score | Effective number of independent bets | Phase 06 R7: DiversityScore |
+
+**Output:** `useful_resources/papers_md/research_synthesis_report.md`
+
+## Study: Repo Architecture Analysis (2026-04-26)
+
+*(Merged from study-repo-architecture.md)*
+
+Studied 8 reference repos. Key patterns extracted:
+1. Durable State + Iterative Refinement
+2. Versioned Resources (models, features, configs)
+3. Findings Memory (persistent cross-run learning)
+4. Bayesian Hypothesis Selection
+5. Agent Tool-Use Patterns
+
+**Decisions:** Adopted PurgedKFold + embargo (from ML4T), registry + experiment logger (from DLQT). 17 skills installed.

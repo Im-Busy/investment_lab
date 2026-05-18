@@ -75,6 +75,14 @@ from src.patterns.harmonic.bollinger import BollingerBands
 from src.patterns.harmonic.gartley import GartleyPattern
 from src.patterns.harmonic.symmetric_triangle import SymmetricTriangle
 
+# FMZ strategy conversions (PineScript/JS → Python)
+from src.patterns.fmz.adaptive_bollinger import AdaptiveBollinger
+from src.patterns.fmz.ai_volatility_breakout import AIVolatilityBreakout
+from src.patterns.fmz.alpha_beast import AlphaBeast
+from src.patterns.fmz.ema_macd_hf import EMAMACDHF
+from src.patterns.fmz.momentum_zigzag import MomentumZigZag
+from src.patterns.fmz.multi_factor_trend import MultiFactorTrend
+
 # Import confluence and regime detection
 from src.strategies.confluence import ConfluenceScorer
 
@@ -287,6 +295,18 @@ class MultiPatternStrategyOptimized(Strategy):
         elif self.exclude_patterns:
             exclude_set = {p.strip() for p in self.exclude_patterns.split(",")}
             patterns = [p for p in patterns if p.name not in exclude_set]
+
+        # FMZ strategy conversions (PineScript/JS → Python)
+        patterns.extend(
+            [
+                AlphaBeast(),
+                MultiFactorTrend(),
+                MomentumZigZag(),
+                EMAMACDHF(),
+                AdaptiveBollinger(),
+                AIVolatilityBreakout(),
+            ]
+        )
 
         return patterns
 

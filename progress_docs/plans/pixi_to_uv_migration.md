@@ -352,3 +352,21 @@ If issues arise:
 3. ✅ **requirements.txt**: Remove after migration
 4. ✅ **VS Code**: Configure VS Code for uv Python interpreter
 5. ✅ **uv installation**: Installed via scoop
+
+---
+
+## Migration Completion Status (from setup-pixi-migration.md — 2026-04-20) ✅ Complete
+
+**Changes:**
+| Before | After |
+|--------|-------|
+| `pixi.toml` | `pyproject.toml` (uv format) |
+| `requirements.txt` | Removed |
+| `environment_backup.yml` | Kept as reference |
+| pixi commands | uv commands |
+
+**New Convention:**
+- `uv run <command>` for all Python execution
+- `uv add <package>` for dependencies
+- `uv sync` for environment sync
+- NEVER use `python`, `pip`, or `pip3` directly

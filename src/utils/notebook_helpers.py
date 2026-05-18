@@ -527,12 +527,36 @@ def print_backtest_summary(stats: Dict[str, Any], title: str = "Backtest Results
     """
     Print formatted backtest statistics.
 
+    If stats contains _trades and _equity_curve keys, uses the comprehensive
+    PerformanceMetrics report. Otherwise falls back to basic summary.
+
     Args:
-        stats: Dictionary of backtest statistics
+        stats: Dictionary of backtest statistics (from backtesting.py)
         title: Title for the summary
     """
+    # Try comprehensive report first
+    if "_trades" in stats or "_equity_curve" in stats:
+        try:
+            from src.backtest.metrics import PerformanceMetrics
+
+            cash = float(stats.get("cash", stats.get("initial_equity", 100000)))
+            stats_copy = dict(stats)
+            stats_copy.setdefault("_trades", [])
+            stats_copy.setdefault("_equity_curve", None)
+            if "cash" not in stats_copy and "initial_equity" not in stats_copy:
+                stats_copy["cash"] = cash
+
+            metrics = PerformanceMetrics.from_backtesting_stats(stats_copy, initial_equity=cash)
+            print(f"\n{'=' * 62}")
+            print(f"  {title}")
+            print(PerformanceMetrics.format_report(metrics))
+            return
+        except Exception:
+            pass
+
+    # Fallback to basic summary
     print("=" * 60)
-    print(f"📈 {title}")
+    print(f"  {title}")
     print("=" * 60)
 
     # Returns section

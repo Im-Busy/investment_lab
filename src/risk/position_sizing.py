@@ -18,6 +18,7 @@ class SizingMethod(Enum):
     FIXED_FRACTIONAL = "fixed_fractional"
     FIXED_AMOUNT = "fixed_amount"
     KELLY = "kelly"
+    KELLY_INFORMATION = "kelly_information"  # C5: info-theoretic Kelly
     ATR_BASED = "atr"
     VOLATILITY_ADJUSTED = "volatility_adjusted"
     RISK_PARITY = "risk_parity"
@@ -156,6 +157,11 @@ class PositionSizer:
             result = self._kelly(
                 equity, entry_price, stop_price, risk_per_share, win_rate, avg_win_loss_ratio
             )
+        elif self.method == "kelly_information":
+            model_prob = kwargs.get("model_probability", 0.50)
+            result = self._kelly_information(
+                equity, entry_price, stop_price, risk_per_share, model_prob
+            )
         elif self.method == "atr":
             result = self._atr_based(equity, entry_price, atr, risk_per_share, direction=direction)
         elif self.method == "volatility_adjusted":
@@ -222,6 +228,9 @@ class PositionSizer:
             R = Average win / Average loss
 
         Uses kelly_fraction to reduce full Kelly for safety.
+
+        Also delegates to KellyAllocator (C5) for full information-theoretic
+        Kelly calculation when available.
         """
         # Default values if not provided
         if win_rate is None:
@@ -229,7 +238,7 @@ class PositionSizer:
         if avg_win_loss_ratio is None:
             avg_win_loss_ratio = 1.5
 
-        # Calculate Kelly percentage
+        # Calculate Kelly percentage (classic formula)
         kelly_pct = win_rate - ((1 - win_rate) / avg_win_loss_ratio)
 
         # Apply Kelly fraction for safety
@@ -250,6 +259,63 @@ class PositionSizer:
                 "avg_win_loss_ratio": avg_win_loss_ratio,
                 "full_kelly": kelly_pct,
                 "adjusted_kelly": adjusted_kelly,
+            },
+        )
+
+    def _kelly_information(
+        self,
+        equity: float,
+        entry_price: float,
+        stop_price: float,
+        risk_per_share: float,
+        model_probability: float,
+    ) -> PositionSizeResult:
+        """Calculate position size using information-theoretic Kelly (C5).
+
+        Uses KellyAllocator from kelly_allocator.py for full Kelly calculation
+        with edge estimation from model probability.
+
+        Args:
+            equity: Current account equity.
+            entry_price: Planned entry price.
+            stop_price: Stop loss price.
+            risk_per_share: Dollar risk per share.
+            model_probability: ML model probability of profitable outcome.
+
+        Returns:
+            PositionSizeResult.
+        """
+        from src.risk.kelly_allocator import KellyAllocator
+
+        allocator = KellyAllocator(
+            kelly_fraction=self.kelly_fraction,
+            max_allocation=self.max_risk_per_trade,
+            method="classic",
+        )
+        edge = allocator.estimate_edge_from_probability(
+            model_probability=model_probability,
+        )
+        allocation = allocator.compute(edge, equity)
+
+        risk_amount = equity * allocation.adjusted_fraction
+        size = risk_amount / risk_per_share if risk_per_share > 0 else 0
+
+        return PositionSizeResult(
+            size=size,
+            risk_amount=risk_amount,
+            risk_percent=allocation.adjusted_fraction,
+            stop_price=stop_price,
+            method="kelly_information",
+            metadata={
+                "full_kelly": allocation.full_kelly_fraction,
+                "adjusted_kelly": allocation.adjusted_fraction,
+                "model_probability": model_probability,
+                "edge": {
+                    "win_rate": allocation.edge.win_rate,
+                    "avg_win": allocation.edge.avg_win,
+                    "avg_loss": allocation.edge.avg_loss,
+                    "profit_factor": allocation.edge.profit_factor,
+                },
             },
         )
 

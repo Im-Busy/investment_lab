@@ -3,13 +3,13 @@
 # Summarize research papers using LLM (via paper2md tool)
 # Requires: OpenRouter API key
 # Model: deepseek/deepseek-v4-flash (DeepSeek V4 Flash - fastest and strongest)
-cd useful_resources\useful_repos\paper2md
-uv run python summarize_md_papers.py --papers-dir ..\..\papers_md --out output\SENTIMENT_ANALYSIS_SUMMARY.md
+cd useful_resources\useful_repos\research-tools\paper2md
+uv run python summarize_md_papers.py --papers-dir ..\..\..\papers_md --out output\SENTIMENT_ANALYSIS_SUMMARY.md
 
 # Clear cache and re-run (force re-summarization)
 uv run python summarize_md_papers.py --papers-dir ..\..\papers_md --out output\SENTIMENT_ANALYSIS_SUMMARY.md --clear-cache
 
-# Output location: useful_resources\useful_repos\paper2md\output\SENTIMENT_ANALYSIS_SUMMARY.md
+# Output location: useful_resources\useful_repos\research-tools\paper2md\output\SENTIMENT_ANALYSIS_SUMMARY.md
 # Copied to: useful_resources\papers_md\SENTIMENT_ANALYSIS_SUMMARY.md
 
 ## API CONFIGURATION
@@ -47,3 +47,24 @@ uv run python summarize_md_papers.py --papers-dir ..\..\papers_md --out output\S
 #   - ML Models & Results (with metrics)
 #   - Trading Applications & Takeaways
 #   - Limitations & Future Work
+
+## PDF TO MARKDOWN EXTRACTION & MERGE
+
+# Re-extract all project PDFs using markitdown and merge with existing .md files
+# Merge strategy:
+#   - Image-only PDFs (0 bytes extracted): keep old .md as base
+#   - Old .md has more content: use old as base, append raw extraction
+#   - Raw extraction has more content: use raw as base, add old supplements
+uv run scripts/re_extract_pdfs.py
+
+# Process only papers directory (papers/ -> papers_md/)
+uv run scripts/re_extract_pdfs.py --dir papers
+
+# Process only PDFs_Found_Online/
+uv run scripts/re_extract_pdfs.py --dir pdfs_found
+
+# Dry run (check PDF→MD mappings without writing files)
+uv run scripts/re_extract_pdfs.py --dry-run
+
+# Extract single PDF manually
+uv run markitdown input.pdf -o output.md

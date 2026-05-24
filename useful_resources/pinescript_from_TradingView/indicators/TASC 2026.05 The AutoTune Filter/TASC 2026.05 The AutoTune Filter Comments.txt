@@ -1,6 +1,0 @@
-There is an error in correlation:
-from your code numerator (_window*Syy - Sy*Sy) should be (_window*Sxy - Sx*Sy)
-correct is:
-Corr.set(lag,
-    (_window*Sxy - Sx*Sy)/math.sqrt(
-    (_window*Sxx - Sx*Sx)*(_window*Syy - Sy*Sy)))

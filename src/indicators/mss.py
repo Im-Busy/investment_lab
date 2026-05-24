@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from typing import List, Literal, Optional, Tuple
 
 import pandas as pd
+import numpy as np
 from loguru import logger
 
 
@@ -47,6 +48,7 @@ class MSSInfo:
     is_valid: bool
     swing_high: Optional[float]
     swing_low: Optional[float]
+    displacement_confirmed: bool = False
 
     def to_dict(self) -> dict:
         """Convert to dictionary."""
@@ -63,6 +65,7 @@ class MSSInfo:
             "is_valid": self.is_valid,
             "swing_high": self.swing_high,
             "swing_low": self.swing_low,
+            "displacement_confirmed": self.displacement_confirmed,
         }
 
 
@@ -216,6 +219,7 @@ def detect_mss(
         is_valid=False,
         swing_high=None,
         swing_low=None,
+        displacement_confirmed=False,
     )
 
     if df is None or len(df) < lookback * 2 + 3:
@@ -263,6 +267,7 @@ def detect_mss(
                         is_valid=True,
                         swing_high=swing_high,
                         swing_low=swing_low,
+                        displacement_confirmed=False,
                     )
             else:
                 # Check if high breaks above pivot high
@@ -284,6 +289,7 @@ def detect_mss(
                         is_valid=True,
                         swing_high=swing_high,
                         swing_low=swing_low,
+                        displacement_confirmed=False,
                     )
 
     # Check for bearish MSS (break below pivot low)
@@ -311,6 +317,7 @@ def detect_mss(
                         is_valid=True,
                         swing_high=swing_high,
                         swing_low=swing_low,
+                        displacement_confirmed=False,
                     )
             else:
                 # Check if low breaks below pivot low
@@ -332,6 +339,7 @@ def detect_mss(
                         is_valid=True,
                         swing_high=swing_high,
                         swing_low=swing_low,
+                        displacement_confirmed=False,
                     )
 
     # No MSS detected, return current state
@@ -348,6 +356,7 @@ def detect_mss(
         is_valid=False,
         swing_high=swing_high,
         swing_low=swing_low,
+        displacement_confirmed=False,
     )
 
 
@@ -505,3 +514,250 @@ def calculate_structure_quality(df: pd.DataFrame, mss_info: MSSInfo, lookback: i
             pass
 
     return min(1.0, max(0.0, score))
+
+
+@dataclass
+class BOSInfo:
+    """Break of Structure info (trend continuation, same direction as existing trend)."""
+
+    detected: bool
+    direction: Optional[str]  # 'bullish' or 'bearish'
+    swing_price: Optional[float]  # level broken
+    break_bar: Optional[int]
+    displacement_ratio: float  # move size / ATR
+    is_valid: bool
+
+    def to_dict(self) -> dict:
+        return {
+            "detected": self.detected,
+            "direction": self.direction,
+            "swing_price": self.swing_price,
+            "break_bar": self.break_bar,
+            "displacement_ratio": self.displacement_ratio,
+            "is_valid": self.is_valid,
+        }
+
+
+def detect_bos(
+    df: pd.DataFrame,
+    atr: "np.ndarray | pd.Series",
+    lookback: int = 10,
+    min_displacement_mult: float = 0.5,
+    end_bar: Optional[int] = None,
+) -> BOSInfo:
+    """Detect BOS (trend CONTINUATION, same direction as existing trend).
+
+    Different from MSS which detects reversal.
+
+    - Bullish BOS: close breaks above most recent confirmed swing high with full candle body (not wick).
+      Previous swing high must have been a HH relative to prior HH.
+    - Bearish BOS: close breaks below most recent confirmed swing low with full candle body.
+      Previous swing low must have been a LL relative to prior LL.
+    - Displacement check: move size must exceed min_displacement_mult * ATR.
+    """
+    import numpy as np
+
+    no_bos = BOSInfo(
+        detected=False,
+        direction=None,
+        swing_price=None,
+        break_bar=None,
+        displacement_ratio=0.0,
+        is_valid=False,
+    )
+
+    n = len(df)
+    if end_bar is None:
+        end_bar = n - 1
+    if end_bar < lookback * 2:
+        return no_bos
+
+    close = (
+        df["Close"].to_numpy(dtype=np.float64)
+        if hasattr(df["Close"], "to_numpy")
+        else np.array(df["Close"])
+    )
+    high = (
+        df["High"].to_numpy(dtype=np.float64)
+        if hasattr(df["High"], "to_numpy")
+        else np.array(df["High"])
+    )
+    low = (
+        df["Low"].to_numpy(dtype=np.float64)
+        if hasattr(df["Low"], "to_numpy")
+        else np.array(df["Low"])
+    )
+
+    if isinstance(atr, pd.Series):
+        atr_vals = atr.to_numpy(dtype=np.float64)
+    else:
+        atr_vals = atr
+    if len(atr_vals) != n:
+        atr_vals = np.full(n, atr_vals[-1] if len(atr_vals) > 0 else 0.01)
+
+    window = high[end_bar - lookback : end_bar + 1]
+    window_low = low[end_bar - lookback : end_bar + 1]
+
+    swing_high_idx = end_bar - lookback + int(np.argmax(window[-lookback // 2 :]))
+    swing_low_idx = end_bar - lookback + int(np.argmin(window[-lookback // 2 :]))
+    swing_high = float(window[-lookback // 2 :][swing_high_idx - (end_bar - lookback)])
+    swing_low = float(window[-lookback // 2 :][swing_low_idx - (end_bar - lookback)])
+
+    atr_val = float(atr_vals[end_bar])
+    if atr_val <= 0:
+        atr_val = float(close[end_bar]) * 0.01
+
+    for i in range(max(end_bar - 5, 0), end_bar + 1):
+        if close[i] > swing_high and (close[i] - swing_high) > min_displacement_mult * atr_val:
+            hh_before = np.max(high[max(0, i - lookback * 2) : i - lookback])
+            prev_hh = max(high[max(0, i - lookback) : i - 1]) if i - 1 >= 0 else swing_high
+            if swing_high > hh_before and prev_hh > hh_before:
+                ratio = float((close[i] - swing_high) / atr_val)
+                return BOSInfo(
+                    detected=True,
+                    direction="bullish",
+                    swing_price=swing_high,
+                    break_bar=i,
+                    displacement_ratio=ratio,
+                    is_valid=True,
+                )
+
+        if close[i] < swing_low and (swing_low - close[i]) > min_displacement_mult * atr_val:
+            ll_before = np.min(low[max(0, i - lookback * 2) : i - lookback])
+            prev_ll = min(low[max(0, i - lookback) : i - 1]) if i - 1 >= 0 else swing_low
+            if swing_low < ll_before and prev_ll < ll_before:
+                ratio = float((swing_low - close[i]) / atr_val)
+                return BOSInfo(
+                    detected=True,
+                    direction="bearish",
+                    swing_price=swing_low,
+                    break_bar=i,
+                    displacement_ratio=ratio,
+                    is_valid=True,
+                )
+
+    return no_bos
+
+
+@dataclass
+class FakeCHOCHInfo:
+    """Fake CHOCH detection result."""
+
+    detected: bool
+    direction: Optional[str]
+    break_level: Optional[float]
+    break_bar: Optional[int]
+    sweep_only: bool  # True if wick break but no body close
+    htf_contradicts: bool  # True if HTF bias contradicts
+    no_displacement: bool  # True if no displacement follows
+
+    def to_dict(self) -> dict:
+        return {
+            "detected": self.detected,
+            "direction": self.direction,
+            "break_level": self.break_level,
+            "break_bar": self.break_bar,
+            "sweep_only": self.sweep_only,
+            "htf_contradicts": self.htf_contradicts,
+            "no_displacement": self.no_displacement,
+        }
+
+
+def detect_fake_choch(
+    df: pd.DataFrame,
+    atr: "np.ndarray | pd.Series",
+    htf_bias: "np.ndarray | None" = None,
+    lookback: int = 3,
+    end_bar: Optional[int] = None,
+) -> FakeCHOCHInfo:
+    """Detect fake CHOCH (false reversal signals - liquidity sweeps that look like CHOCH but aren't).
+
+    Rules:
+    - Price breaks a swing level with a WICK (not body close) -> sweep, not structure break
+    - HTF context contradicts: if daily bullish and 15m prints bearish CHOCH -> likely fake
+    - No displacement follows -> likely fake
+    """
+    import numpy as np
+
+    no_fake = FakeCHOCHInfo(
+        detected=False,
+        direction=None,
+        break_level=None,
+        break_bar=None,
+        sweep_only=False,
+        htf_contradicts=False,
+        no_displacement=False,
+    )
+
+    n = len(df)
+    if end_bar is None:
+        end_bar = n - 1
+    if end_bar < lookback * 2 + 1:
+        return no_fake
+
+    close = (
+        df["Close"].to_numpy(dtype=np.float64)
+        if hasattr(df["Close"], "to_numpy")
+        else np.array(df["Close"])
+    )
+    high = (
+        df["High"].to_numpy(dtype=np.float64)
+        if hasattr(df["High"], "to_numpy")
+        else np.array(df["High"])
+    )
+    low = (
+        df["Low"].to_numpy(dtype=np.float64)
+        if hasattr(df["Low"], "to_numpy")
+        else np.array(df["Low"])
+    )
+
+    if isinstance(atr, pd.Series):
+        atr_vals = atr.to_numpy(dtype=np.float64)
+    else:
+        atr_vals = atr
+
+    atr_val = float(atr_vals[end_bar]) if end_bar < len(atr_vals) else 0.01
+    if atr_val <= 0:
+        atr_val = float(close[end_bar]) * 0.01
+
+    recent_pivot = find_pivot_high(df, end_bar, lookback)
+    if recent_pivot is not None:
+        for i in range(recent_pivot.bar_index + 1, end_bar + 1):
+            if high[i] > recent_pivot.price and close[i] <= recent_pivot.price:
+                sweep_only = True
+                displacement = abs(close[end_bar] - close[end_bar - 1])
+                no_disp = displacement < 0.3 * atr_val
+                htf_contradicts = False
+                if htf_bias is not None and end_bar < len(htf_bias) and htf_bias[end_bar] > 0:
+                    htf_contradicts = True
+                return FakeCHOCHInfo(
+                    detected=True,
+                    direction="bearish",
+                    break_level=recent_pivot.price,
+                    break_bar=i,
+                    sweep_only=sweep_only,
+                    htf_contradicts=htf_contradicts,
+                    no_displacement=no_disp,
+                )
+
+    recent_pivot_low = find_pivot_low(df, end_bar, lookback)
+    if recent_pivot_low is not None:
+        for i in range(recent_pivot_low.bar_index + 1, end_bar + 1):
+            if low[i] < recent_pivot_low.price and close[i] >= recent_pivot_low.price:
+                sweep_only = True
+                displacement = abs(close[end_bar] - close[end_bar - 1])
+                no_disp = displacement < 0.3 * atr_val
+                htf_contradicts = False
+                if htf_bias is not None and end_bar < len(htf_bias) and htf_bias[end_bar] < 0:
+                    htf_contradicts = True
+                return FakeCHOCHInfo(
+                    detected=True,
+                    direction="bullish",
+                    break_level=recent_pivot_low.price,
+                    break_bar=i,
+                    sweep_only=sweep_only,
+                    htf_contradicts=htf_contradicts,
+                    no_displacement=no_disp,
+                )
+
+    return no_fake

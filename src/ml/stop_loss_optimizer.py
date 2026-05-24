@@ -321,7 +321,7 @@ class StopLossOptimizer:
             l2_leaf_reg=self.l2_leaf_reg,
             random_seed=self.random_seed,
             verbose=100 if self.verbose else False,
-            loss_function="RMSE",
+            loss_function="Huber:delta=1.0",
             task_type="CPU",
             early_stopping_rounds=early_stopping_rounds,
         )

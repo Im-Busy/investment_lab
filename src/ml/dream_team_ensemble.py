@@ -550,7 +550,7 @@ class DreamTeamEnsemble:
                 l2_leaf_reg=self.config.l2_leaf_reg,
                 random_seed=self.config.random_state,
                 verbose=False,
-                loss_function="RMSE",
+                loss_function="Huber:delta=1.0",
                 task_type="CPU",
                 thread_count=self.config.n_jobs,
             )

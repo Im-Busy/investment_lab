@@ -637,56 +637,9 @@ Examples:
     smc_parser.add_argument("--report", action="store_true", help="Generate visualization report")
 
     if args.command == "smc":
-        from .strategies import SMCConfig, SMCReversalStrategy
-        from .visualization import ReportGenerator
-
-        # Configure SMC strategy
-        smc_config = SMCConfig(
-            risk_per_trade=args.risk, daily_loss_limit=0.03, max_trades_per_day=3
-        )
-
-        # Initialize
-        smc_strategy = SMCReversalStrategy(config=smc_config)
-        backtest_config = BacktestConfig(
-            initial_equity=args.equity, risk_per_trade=args.risk, max_open_positions=1
-        )
-
-        engine = BacktestEngine(
-            patterns=[smc_strategy],  # type: ignore[list-item]
-            config=backtest_config,
-        )
-
-        # Load data
-        df = load_data(args.datafile)
-        if args.start:
-            df = df[df.index >= args.start]
-        if args.end:
-            df = df[df.index <= args.end]
-
-        print(f"\nRunning SMC backtest on {len(df)} bars...")
-        result = engine.run(df)
-
-        # Print results
-        metrics = result.metrics or {}
-        print("\nSMC Backtest Results:")
-        print(f"  Total Trades: {metrics.get('total_trades', 0)}")
-        print(f"  Win Rate: {metrics.get('win_rate', 0):.2%}")
-        print(f"  Total Return: {metrics.get('total_return', 0):.2f}%")
-
-        # Generate report
-        if args.report:
-            report_gen = ReportGenerator(output_dir="reports")
-            files = report_gen.generate_full_report(
-                results=engine.get_visualization_data(), df=df, title="SMC Strategy"
-            )
-            print("\nGenerated reports:")
-            for name, path in files.items():
-                print(f"  {name}: {path}")
-
-        # Export
-        if args.output:
-            engine.export_for_visualization(output_dir="reports")
-            print("\nResults exported to reports/")
+        logger.info("SMC strategy: use 'uv run scripts/backtest_smc.py' for backtesting")
+        print("The 'smc' command has been replaced by the dedicated SMC backtest CLI.")
+        print("Usage: uv run scripts/backtest_smc.py --symbol BTC-USD --interval 1h")
 
         return
 

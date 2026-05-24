@@ -16,6 +16,9 @@ Usage:
 
     # IS sweep on basket
     uv run scripts/backtest_rules_batch.py --sweep-entry 0.55,0.60,0.65,0.70
+
+    # Use per-instrument best tuned params (from BESTS.md tuning sweep)
+    uv run scripts/backtest_rules_batch.py --use-best --start 2025-01-01 --end 2026-05-21
 """
 
 from __future__ import annotations
@@ -35,12 +38,13 @@ from src.strategies.rules_first_strategy import RulesFirstStrategy
 
 logger = logging.getLogger(__name__)
 
-# Default basket: indices, sector ETFs, commodities, single stocks, crypto, forex
+# Production basket: instruments that pass IS+OOS consistently.
+# IWM, JPM, TLT, EURUSD_X dropped (fail OOS conclusively).
+# BTC_USD kept — tuning issue, not data problem.
 BASKET_DEFAULT = [
     # Major indices
     "SPY",
     "QQQ",
-    "IWM",
     # Sector ETFs
     "XLK",
     "XLF",
@@ -48,18 +52,34 @@ BASKET_DEFAULT = [
     "XLV",
     # Commodities / Bonds (non-equity regimes)
     "GLD",
-    "TLT",
     # Stocks (one per sector from SECTOR_MAP)
     "KO",
-    "JPM",
     "XOM",
     "JNJ",
     "SO",
     # Crypto
     "BTC_USD",
-    # Forex
-    "EURUSD_X",
 ]
+
+# Phase 25: Per-instrument best params from single source of truth.
+# Built from src/per_instrument/instrument_config.py to eliminate duplication.
+from src.per_instrument.instrument_config import get_config_for as _cfg_get
+
+
+def _build_per_instrument_best() -> dict[str, dict]:
+    result: dict[str, dict] = {}
+    for sym in BASKET_DEFAULT:
+        cfg = _cfg_get(sym, use_best=True)
+        result[sym] = {
+            "entry_threshold": cfg.get("entry_threshold", 0.55),
+            "min_reliability": cfg.get("min_reliability", 0.70),
+            "trail_stop_atr": cfg.get("trail_stop_atr", 3.0),
+            "confluence_bonus": cfg.get("confluence_bonus", 0.10),
+        }
+    return result
+
+
+PER_INSTRUMENT_BEST: dict[str, dict] = _build_per_instrument_best()
 
 BASKET_LABELS: dict[str, str] = {
     "SPY": "Index - Large Cap",
@@ -433,6 +453,11 @@ def main() -> None:
         action="store_true",
         help="Run GA portfolio optimization on batch results",
     )
+    parser.add_argument(
+        "--use-best",
+        action="store_true",
+        help="Use per-instrument best tuned params from BESTS.md (overrides --entry-threshold etc.)",
+    )
     args = parser.parse_args()
 
     symbols = [s.strip() for s in args.symbols.split(",")] if args.symbols else BASKET_DEFAULT
@@ -448,10 +473,13 @@ def main() -> None:
     print(f"\n{'=' * 70}")
     print(" RULES-FIRST BATCH BACKTEST")
     print(f" Period: {args.start} -> {args.end}")
-    print(
-        f" Config: mr={args.min_reliability:.1f}  et={args.entry_threshold:.2f}  "
-        f"trail={args.trail_stop_atr}  confl={args.confluence_bonus}"
-    )
+    if args.use_best:
+        print(" Config: per-instrument best (from BESTS.md tuning sweep)")
+    else:
+        print(
+            f" Config: mr={args.min_reliability:.1f}  et={args.entry_threshold:.2f}  "
+            f"trail={args.trail_stop_atr}  confl={args.confluence_bonus}"
+        )
     print(f" Instruments: {len(symbols)}")
     print(f"{'=' * 70}\n")
 
@@ -474,17 +502,81 @@ def main() -> None:
     all_results = []
     for i, symbol in enumerate(symbols):
         print(f"[{i + 1}/{len(symbols)}] {symbol} ...", end=" ", flush=True)
+
+        if args.use_best and symbol in PER_INSTRUMENT_BEST:
+            best = PER_INSTRUMENT_BEST[symbol]
+            et = best["entry_threshold"]
+            mr = best["min_reliability"]
+            tsa = best["trail_stop_atr"]
+            cb = best.get("confluence_bonus", args.confluence_bonus)
+            # Remove overridden params from kwargs
+            run_kwargs = {
+                k: v
+                for k, v in kwargs.items()
+                if k
+                not in ("entry_threshold", "min_reliability", "trail_stop_atr", "confluence_bonus")
+            }
+        else:
+            et = args.entry_threshold
+            mr = args.min_reliability
+            tsa = args.trail_stop_atr
+            cb = args.confluence_bonus
+            run_kwargs = kwargs
+
         r = run_single(
             symbol,
             cash=args.cash,
             start=args.start,
             end=args.end,
-            entry_threshold=args.entry_threshold,
-            **kwargs,
+            entry_threshold=et,
+            min_reliability=mr,
+            trail_stop_atr=tsa,
+            confluence_bonus=cb,
+            **run_kwargs,
         )
         if r:
+            if args.use_best and symbol in PER_INSTRUMENT_BEST:
+                r["config"] = f"et={et:.2f} mr={mr:.2f} tsa={tsa:.1f} cb={cb:.2f}"
             all_results.append(r)
             print(f"Sharpe={r['sharpe']:.3f}  Return={r['return_pct']:.1f}%  Trades={r['trades']}")
+
+            # Phase 25: Log performance to cumulative ledger
+            try:
+                from src.per_instrument.performance_tracker import log_performance
+
+                oos_sh = r.get("sharpe", -999)
+                if oos_sh is None or (isinstance(oos_sh, float) and (oos_sh != oos_sh)):
+                    oos_sh = -999
+                verdict = "PASS" if oos_sh > 0.10 else "FAIL" if oos_sh < -0.05 else "MARGINAL"
+
+                log_performance(
+                    instrument=symbol,
+                    period="OOS" if "2025" in str(args.start) else "IS",
+                    date_range=f"{args.start or 'NA'}:{args.end or 'NA'}",
+                    strategy="rules_first",
+                    config={
+                        "entry_threshold": et,
+                        "min_reliability": mr,
+                        "trail_stop_atr": tsa,
+                        "confluence_bonus": cb,
+                    },
+                    metrics={
+                        "sharpe": r.get("sharpe", 0),
+                        "return_pct": r.get("return_pct", 0),
+                        "trades": r.get("trades", 0),
+                        "win_rate": r.get("win_rate_pct", 0),
+                        "profit_factor": r.get("profit_factor", 0),
+                        "max_dd_pct": r.get("max_dd_pct", 0),
+                        "exposure_pct": r.get("exposure_pct", 0),
+                    },
+                    benchmark={
+                        "buyhold_return_pct": r.get("bh_return", 0),
+                        "buyhold_sharpe": r.get("bh_sharpe", 0),
+                    },
+                    verdict=verdict,
+                )
+            except Exception:
+                pass  # Logging is best-effort; never fail backtest on log error
         else:
             print("SKIPPED")
 

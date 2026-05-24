@@ -1,8 +1,8 @@
 # Insight Registry
 
-**Last Updated:** 2026-05-17
-**Total Insights:** 77
-**Papers Analyzed:** 21 (18 papers + 3 new resources)
+**Last Updated:** 2026-05-22
+**Total Insights:** 88
+**Papers Analyzed:** 21 (18 papers + 3 new resources) + 66-paper Master Comparison Report Phase 25
 
 ---
 
@@ -213,6 +213,45 @@
 
 ---
 
+## Phase 25: Master Comparison Report — 66 Papers (2026-05-22)
+
+All missing implementable items from `useful_resources/papers_md/MASTER_COMPARISON_REPORT_2026-05-21.md` now implemented.
+
+### P25: Lock Box + Infrastructure Anti-Overfitting (C1, C2, C13)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| P25.1 | Lock Box methodology — blind holdout accessed exactly once after all decisions final | ML.Training | 🔴 Critical | ✅ | `src/ml/lock_box.py` (LockBox, create_lock_box, create_lock_box_chronological) |
+| P25.2 | Nested cross-validation — inner loop tunes, outer loop evaluates, never mix | ML.Training | 🔴 Critical | ✅ | `src/ml/nested_cv.py` (NestedPurgedCV, leave_one_group_out_cv) |
+| P25.3 | Blind analysis protocol — optimize on scrambled labels, evaluate once on true | ML.Training | 🟠 High | ✅ | `src/ml/blind_analysis.py` (run_blind_analysis) |
+| P25.4 | Label-shuffling baseline test — verify model doesn't exceed random on shuffled targets | ML.Training | 🟠 High | ✅ | `src/ml/label_shuffling.py` (run_label_shuffling_test) |
+
+### P25: SVM Regime + Dual Alpha/Beta (B34, E9)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| P25.5 | SVM market classifier using raw price sequences (82% precision) vs indicators (64%) | Regime | 🟠 High | ✅ | `src/ml/svm_regime.py` (SVMRegimeClassifier) |
+| P25.6 | Dual alpha/beta — separate bull/bear alpha+beta, Chow test for structural breaks | Portfolio | 🟡 Medium | ✅ | `src/analysis/dual_alpha_beta.py` (compute_dual_alpha_beta) |
+
+### P25: NLP Sentiment Pipeline (D1-D4)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| P25.7 | Distant supervision via emoticon labeling (80%+ accuracy, no hand-labeling) | Event.Type | 🟠 High | ✅ | `src/nlp/sentiment_pipeline.py` (label_via_emoticons, apply_distant_supervision) |
+| P25.8 | SVM + TF-IDF sentiment (82-94% accuracy across 4 papers, ngram(1,2)) | Event.Type | 🟠 High | ✅ | `src/nlp/sentiment_pipeline.py` (SVMTfidfSentiment) |
+| P25.9 | BiLSTM+LR architecture (128d embed→BiLSTM(64u)→dropout(0.25)→LR(C=10), 82.4%) | Event.Type | 🟡 Medium | ✅ | `src/nlp/sentiment_pipeline.py` (BiLSTMSentiment) |
+| P25.10 | Ensemble RF+SVM+DT via AdaBoost (93.4% accuracy) | Signal.Quality | 🟡 Medium | ✅ | `src/nlp/sentiment_pipeline.py` (SentimentEnsemble) |
+
+### P25: Fuzzy System + NSGA-II + Dynamic GA (B32, B33, B35)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| P25.11 | Fuzzy rule system with 5-state trapezoidal membership (Buy/Sell/Hold) | Signal.Quality | 🟠 High | ✅ | `src/signals/fuzzy_system.py` (FuzzyInferenceSystem) |
+| P25.12 | NSGA-II multi-objective optimization (Pareto front for conflicting objectives) | Portfolio | 🟡 Medium | ✅ | `src/optimization/nsga2_optimizer.py` (NSGA2Optimizer) |
+| P25.13 | Dynamic GA with associative memory per regime (hyper-mutation on regime shift) | Regime | 🟡 Medium | ✅ | `src/optimization/dynamic_ga.py` (DynamicGAOptimizer) |
+
+---
+
 ## Cross-Cutting Themes
 
 | Theme | Related Insights | Implementation Status |
@@ -272,8 +311,8 @@ I16.3
 ### Strategy.Conversion (6 insights) — NEW
 I20.1, I20.2, I20.3, I20.4, I20.5, I20.6
 
-### Factor.Modeling (9 insights) — NEW
-I18.1, I18.2, I18.3, I18.4, I19.1, I19.2, I19.3, I19.4, I19.5
+### Phase 25 Cross-Paper (13 insights) — NEW
+P25.1, P25.2, P25.3, P25.4, P25.5, P25.6, P25.7, P25.8, P25.9, P25.10, P25.11, P25.12, P25.13
 
 ---
 
@@ -281,19 +320,19 @@ I18.1, I18.2, I18.3, I18.4, I19.1, I19.2, I19.3, I19.4, I19.5
 
 | Status | Count | Percentage |
 |--------|-------|------------|
-| ✅ Implemented | 35 | 45% |
+| ✅ Implemented | 48 | 55% |
 | 🔄 In-Progress | 0 | 0% |
-| ⏳ Deferred/Backlog | 27 | 35% |
-| ❌ Rejected | 2 | 3% |
-| 🔬 Research Phase | 13 | 17% |
+| ⏳ Deferred/Backlog | 27 | 31% |
+| ❌ Rejected | 2 | 2% |
+| 🔬 Research Phase | 11 | 12% |
 
 | Impact | Count | Percentage |
 |--------|-------|------------|
-| 🔴 Critical | 14 | 18% |
-| 🟠 High | 30 | 39% |
-| 🟡 Medium | 27 | 35% |
-| 🟢 Low | 6 | 8% |
+| 🔴 Critical | 16 | 18% |
+| 🟠 High | 38 | 43% |
+| 🟡 Medium | 28 | 32% |
+| 🟢 Low | 6 | 7% |
 
 ---
 
-*Registry generated from 17 research papers. Insights extracted from research_synthesis_report.md, SENTIMENT_ANALYSIS_SUMMARY.md, and market_efficiency_and_instrument_selection.md.*
+*Registry updated 2026-05-22: Phase 25 added 11 new insights from 66-paper Master Comparison Report (Lock Box, Nested CV, Blind Analysis, Label Shuffling, SVM Regime, Dual Alpha/Beta, NLP Pipeline, Fuzzy System, NSGA-II, Dynamic GA). Total: 88 insights from 22 sources.*

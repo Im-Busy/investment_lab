@@ -7,14 +7,7 @@ and backtesting.py integration.
 """
 
 from .confluence import ConfluenceScorer, ConfluenceScore, PatternCompatibility
-from .smc_reversal import (
-    SMCReversalStrategy,
-    SMCConfig,
-    TradeSignal,
-    TradeDirection,
-    StrategyState,
-    DailyState,
-)
+from .smc_strategy import SMCStrategy
 
 # Influencer Framework (new modular system)
 from .multi_timeframe_bias import (
@@ -51,7 +44,7 @@ from .strategy_registry import (
     StrategyType,
     SignalQuality,
     PluginConfig,
-    SMCReversalPlugin,
+    SMCPlugin,
     InfluencerMTFPlugin,
     ConfluenceAggregatorPlugin,
 )
@@ -106,12 +99,7 @@ __all__ = [
     "ConfluenceScore",
     "PatternCompatibility",
     # SMC Strategy
-    "SMCReversalStrategy",
-    "SMCConfig",
-    "TradeSignal",
-    "TradeDirection",
-    "StrategyState",
-    "DailyState",
+    "SMCStrategy",
     # Multi-Timeframe Bias (Influencer Framework)
     "MultiTimeframeBiasDetector",
     "MTFConfig",
@@ -142,7 +130,7 @@ __all__ = [
     "StrategyType",
     "SignalQuality",
     "PluginConfig",
-    "SMCReversalPlugin",
+    "SMCPlugin",
     "InfluencerMTFPlugin",
     "ConfluenceAggregatorPlugin",
     # backtesting.py integration

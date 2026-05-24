@@ -131,9 +131,16 @@ class CombinedStrategy(Strategy):
     # ── Multi-TP exit (H1 Phase 20) ──
     use_multi_tp: bool = True
     tp1_atr: float = 1.5
-    tp2_atr: float = 3.0
     tp1_size: float = 0.5
     move_sl_to_be: bool = True
+
+    # ── Phase 21 new-tech gates (opt-in only — gates OFF by default) ──
+    use_vix_gate: bool = False
+    vix_gate_stress_mult: float = 0.30
+    vix_gate_elevated_mult: float = 0.75
+    use_yield_curve_gate: bool = False
+    yield_curve_inversion_mult: float = 0.50
+    yield_curve_near_inversion_mult: float = 0.75
 
     # ── Internal state ──
     _ml_probs: np.ndarray | None = None
@@ -148,6 +155,8 @@ class CombinedStrategy(Strategy):
     _trail_high: float = 0.0
     _tp1_hit: bool = False
     _entry_price: float = 0.0
+    _vix_mults: np.ndarray | None = None
+    _yield_curve_mults: np.ndarray | None = None
 
     def init(self) -> None:
         """Precompute all signals: ML probabilities, rules scores, ATR, regime."""
@@ -158,6 +167,7 @@ class CombinedStrategy(Strategy):
         self._precompute_atr()
         self._detect_regime()
         self._precompute_combined_scores()
+        self._init_new_tech_gates()
 
     # ── DataFrame construction ──
 
@@ -476,6 +486,54 @@ class CombinedStrategy(Strategy):
         ).max(axis=1)
         self._atr = tr.rolling(14).mean().bfill().fillna(close * 0.02).to_numpy()
 
+    # ── Phase 21: New-tech gates ──
+
+    def _init_new_tech_gates(self) -> None:
+        """Initialize VIX and yield curve macro regime gates."""
+        n = len(self._df)
+
+        if self.use_vix_gate:
+            try:
+                from src.signals.vix_regime_gate import VixRegimeGate
+
+                gate = VixRegimeGate(
+                    stress_mult=self.vix_gate_stress_mult,
+                    elevated_mult=self.vix_gate_elevated_mult,
+                )
+                gate.fit(start=str(self._df.index[0].date()))
+                self._vix_mults = np.ones(n, dtype=np.float64)
+                for i in range(n):
+                    d = self._df.index[i]
+                    if hasattr(d, "date"):
+                        d = d.date()
+                    self._vix_mults[i] = gate.multiplier(date=d)
+            except Exception:
+                logger.debug("VIX gate init failed", exc_info=True)
+                self._vix_mults = np.ones(n, dtype=np.float64)
+        else:
+            self._vix_mults = np.ones(n, dtype=np.float64)
+
+        if self.use_yield_curve_gate:
+            try:
+                from src.signals.yield_curve_gate import YieldCurveGate
+
+                gate = YieldCurveGate(
+                    inversion_mult=self.yield_curve_inversion_mult,
+                    near_inversion_mult=self.yield_curve_near_inversion_mult,
+                )
+                gate.fit(start=str(self._df.index[0].date()))
+                self._yield_curve_mults = np.ones(n, dtype=np.float64)
+                for i in range(n):
+                    d = self._df.index[i]
+                    if hasattr(d, "date"):
+                        d = d.date()
+                    self._yield_curve_mults[i] = gate.multiplier(date=d)
+            except Exception:
+                logger.debug("Yield curve gate init failed", exc_info=True)
+                self._yield_curve_mults = np.ones(n, dtype=np.float64)
+        else:
+            self._yield_curve_mults = np.ones(n, dtype=np.float64)
+
     # ── Per-bar execution ──
 
     def next(self) -> None:
@@ -489,6 +547,11 @@ class CombinedStrategy(Strategy):
             return
 
         score = float(self._combined_scores[idx])
+        # ── Phase 21: Apply macro regime gates ──
+        if self._vix_mults is not None and idx < len(self._vix_mults):
+            score *= self._vix_mults[idx]
+        if self._yield_curve_mults is not None and idx < len(self._yield_curve_mults):
+            score *= self._yield_curve_mults[idx]
         current_close = float(self.data.Close[-1])
         atr = float(self._atr[idx]) if idx < len(self._atr) else 0.0
         if atr <= 0:

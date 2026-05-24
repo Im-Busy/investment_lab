@@ -6,4 +6,40 @@
 # - Add commands with descriptions
 #
 # Category: Technical Indicators
-# Last Updated: 2026-04-21
+# Last Updated: 2026-05-24
+
+=================================================================================
+         TRADINGVIEW PINESCRIPT → PYTHON INDICATORS (2026-05-24)
+=================================================================================
+
+# Verify all 9 new indicator modules import
+uv run python -c "from src.indicators.fvg_profile import compute_fvg_profile; from src.indicators.autotune_filter import auto_tune_filter; from src.indicators.asian_sweep_composite import detect_asian_sweep_setup; from src.indicators.knn_pivots import compute_knn_pivots; from src.indicators.swing_forecast import forecast_next_swing; from src.indicators.whale_profile import compute_whale_profile; from src.indicators.microstructure import compute_microstructure; from src.indicators.nwo import compute_nwo; from src.indicators.structure_volume import compute_structure_cvd; print('All 9 modules OK')"
+
+# Quick smoke tests on each module:
+
+# 1. FVG Profile + Rolling POC - FVG histogram analysis
+uv run python -c "from src.indicators.fvg_profile import compute_fvg_profile; import numpy as np; h=np.cumsum(np.random.randn(500)*0.02)+100; l=h-np.abs(np.random.randn(500)*0.3); v=np.ones(500); r=compute_fvg_profile(h,l,v); print(f'Gaps:{r.total_gap_count} POC:{r.poc_price:.2f}')"
+
+# 2. TASC AutoTune Filter - Adaptive cycle-based band-pass filter
+uv run python -c "from src.indicators.autotune_filter import auto_tune_filter; import numpy as np; c=np.cumsum(np.random.randn(500)*0.01)+100; hp,mc,dc,bp=auto_tune_filter(c,window=20); print(f'Cycle:{dc[-1]:.1f} BP:{bp[-1]:.4f}')"
+
+# 3. KNN Pivot Points - KNN slope classification
+uv run python -c "from src.indicators.knn_pivots import compute_knn_pivots; import numpy as np; h=np.random.randn(200).cumsum()+100; l=h-0.3; c=h-0.15; r=compute_knn_pivots(h,l,c); print([x.classification for x in r[-5:]])"
+
+# 4. Swing Structure Forecast - Statistical swing projection
+uv run python -c "from src.indicators.swing_forecast import forecast_next_swing; import numpy as np; h=np.cumsum(np.random.randn(300)*0.02)+100; l=h-0.3; c=(h+l)/2; f=forecast_next_swing(h,l,c); print(f'Target:{f.target_price:.2f} Pct:{f.projected_pct:.2f}%')"
+
+# 5. Whale Liquidity & Absorption - Volume/delta/absorption profile
+uv run python -c "from src.indicators.whale_profile import compute_whale_profile; import numpy as np; n=200; c=np.cumsum(np.random.randn(n)*0.02)+100; h=c+0.3; l=c-0.3; o=np.roll(c,1); o[0]=c[0]; v=np.ones(n)*1000; r=compute_whale_profile(h,l,c,v,o); print(f'POC:{r.poc_index} MaxVol:{r.max_bin_volume:.0f}')"
+
+# 6. Market Microstructure Analytics - 7 academic spread models
+uv run python -c "from src.indicators.microstructure import compute_microstructure; import numpy as np; n=500; c=np.cumsum(np.random.randn(n)*0.01)+100; h=c+0.2; l=c-0.2; o=np.roll(c,1); o[0]=c[0]; v=np.ones(n)*1000; ms=compute_microstructure(h,l,c,v,o); print(f'LSI:{ms.lsi[-1]:.2f} Regime:{ms.regime_strs[-1]}')"
+
+# 7. Neural Weight Oscillator - BWM + adaptive learning
+uv run python -c "from src.indicators.nwo import compute_nwo; import numpy as np; n=300; c=np.cumsum(np.random.randn(n)*0.02)+100; h=c+0.3; l=c-0.3; osc,sig,hist,_=compute_nwo(h,l,c); print(f'OSC:{osc[-1]:.2f} SIG:{sig[-1]:.2f}')"
+
+# 8. Market Structure Volume Profiles - BoS/CHoCH-anchored volume
+uv run python -c "from src.indicators.structure_volume import compute_structure_cvd; import numpy as np; n=300; c=np.cumsum(np.random.randn(n)*0.02)+100; h=c+0.3; l=c-0.3; v=np.ones(n)*1000; cvd,atr,profs=compute_structure_cvd(h,l,c,v); print(f'Profiles:{len(profs)} CVD:{cvd[-1]:.2f}')"
+
+# 9. Asian Sweep Composite - Sweep+MSS+IFVG+HTF bias
+uv run python -c "from src.indicators.asian_sweep_composite import detect_asian_sweep_setup; import pandas as pd; import numpy as np; dates=pd.date_range('2024-01-01',periods=500,freq='5min'); df=pd.DataFrame({'High':np.cumsum(np.random.randn(500)*0.02)+100,'Low':np.cumsum(np.random.randn(500)*0.02)+99.5,'Close':np.cumsum(np.random.randn(500)*0.02)+99.8,'Volume':np.ones(500)*1000},index=dates); df['High']=df[['High','Low','Close']].max(axis=1); df['Low']=df[['High','Low','Close']].min(axis=1); sigs=detect_asian_sweep_setup(df); print(f'{len(sigs)} signals')"

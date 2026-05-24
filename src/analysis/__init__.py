@@ -98,6 +98,12 @@ from .deflated_sharpe import (
     dsr_significance,
 )
 
+from .dual_alpha_beta import (
+    DualAlphaBetaResult,
+    compute_dual_alpha_beta,
+    rolling_dual_alpha_beta,
+)
+
 __all__ = [
     # Statistical Significance Filter
     "StatisticalSignificanceFilter",
@@ -149,4 +155,8 @@ __all__ = [
     "benjamini_hochberg",
     "deflated_sharpe_batch",
     "dsr_significance",
+    # Dual Alpha/Beta
+    "DualAlphaBetaResult",
+    "compute_dual_alpha_beta",
+    "rolling_dual_alpha_beta",
 ]

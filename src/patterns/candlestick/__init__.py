@@ -11,6 +11,7 @@ Patterns:
 - Engulfing: Two-candle reversal pattern (body engulfs prior)
 - DarkCloudCover: Bearish reversal (pierces prior bullish body)
 - PiercingLine: Bullish reversal (pierces prior bearish body)
+- ICT Single Patterns: 12 ICT-named candlestick patterns (WM, CWM, OWM, WDD, WPU, BPU, BM, CBM, OBM, BGD, WSS, BSS)
 """
 
 from .doji import Doji
@@ -18,6 +19,7 @@ from .harami import Harami
 from .hammer import Hammer
 from .engulfing import Engulfing
 from .dark_cloud import DarkCloudCover, PiercingLine
+from .ict_single_patterns import detect_all_twelve
 
 __all__ = [
     "Doji",
@@ -26,4 +28,5 @@ __all__ = [
     "Engulfing",
     "DarkCloudCover",
     "PiercingLine",
+    "detect_all_twelve",
 ]

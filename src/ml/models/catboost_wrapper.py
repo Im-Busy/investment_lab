@@ -73,7 +73,7 @@ class CatBoostForecaster:
             l2_leaf_reg=self.l2_leaf_reg,
             random_seed=self.random_seed,
             verbose=self.verbose,
-            loss_function="RMSE",
+            loss_function="Huber:delta=1.0",
             task_type="GPU" if self._has_gpu() else "CPU",
         )
 

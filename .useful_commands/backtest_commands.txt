@@ -55,3 +55,44 @@ uv run src/risk/crash_factor.py --data-dir <stock_data_dir> --output-dir reports
 ```bash
 uv run src/risk/failure_set_analyzer.py --data-dir <strategy_returns_dir> --output-dir reports/failure_set
 ```
+
+## Rules-First Batch Tuning (2026-05-20)
+
+### Phase 1: IS Parameter Sweep (3 batches, run sequentially)
+
+```bash
+# Batch 1: Major indices + sector ETFs
+uv run scripts/tune_rules_params.py --symbols SPY,QQQ,IWM,XLK,XLF --fast --is-only --workers 5 \
+    --json-output outputs/tune_batch1.json --md-output reports/parameter_tuning/batch1.md
+
+# Batch 2: Sectors + commodities + bonds
+uv run scripts/tune_rules_params.py --symbols XLE,XLV,GLD,TLT,KO --fast --is-only --workers 5 \
+    --json-output outputs/tune_batch2.json --md-output reports/parameter_tuning/batch2.md
+
+# Batch 3: Stocks + crypto + forex
+uv run scripts/tune_rules_params.py --symbols JPM,XOM,JNJ,SO,BTC_USD,EURUSD_X --fast --is-only --workers 6 \
+    --json-output outputs/tune_batch3.json --md-output reports/parameter_tuning/batch3.md
+```
+
+### Phase 2: OOS Validation + Universal Best
+
+```bash
+uv run scripts/tune_rules_oos.py
+```
+
+### Quick Single-Instrument Tuning
+
+```bash
+# Fast grid
+uv run scripts/tune_rules_params.py --symbols SPY --fast --is-only
+
+# Ultra-mini (12 combos)
+uv run scripts/tune_rules_params.py --symbols SPY --mini --is-only
+```
+
+### Run Rules-First with Universal Best Config
+
+```bash
+uv run scripts/backtest_rules_first.py SPY --start 2025-01-01 --end 2026-05-16 \
+    --entry-threshold 0.60 --min-reliability 0.70 --trail-stop-atr 2.0 --confluence-bonus 0.10
+```

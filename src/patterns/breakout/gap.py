@@ -39,6 +39,7 @@ Warning: Gaps that fully "fill" (price returns through gap) invalidate signal
 
 from typing import Dict, Optional
 
+import enum
 import numpy as np
 import pandas as pd
 
@@ -614,3 +615,81 @@ class GapPattern(BasePattern):
                     "entry_type": "sell_stop",
                 },
             )
+
+
+# ── Gap type classification utilities ─────────────────────────
+
+
+class GapType(enum.Enum):
+    """Gap classification per Duddella 2007 / NCFE."""
+
+    COMMON = "common"
+    BREAKAWAY = "breakaway"
+    CONTINUATION = "measuring"
+    EXHAUSTION = "exhaustion"
+
+
+def classify_gap_type(ohlc: pd.DataFrame, gap_indices: np.ndarray) -> dict[int, GapType]:
+    """Classify each detected gap by type using context rules.
+
+    Rules (Duddella 2007, NCFE):
+    - Breakaway: gap at trendline penetration + volume surge + after consolidation
+    - Continuation: mid-trend, volume lower than breakaway
+    - Exhaustion: wide gap + heavy volume + near end of extended move
+    - Common: within trading range, low volume, narrow gap
+    """
+    classifications: dict[int, GapType] = {}
+    open_ = ohlc["Open"].to_numpy(dtype=np.float64)
+    close = ohlc["Close"].to_numpy(dtype=np.float64)
+    volume = ohlc["Volume"].to_numpy(dtype=np.float64)
+    n = len(close)
+
+    for gap_idx in gap_indices:
+        if gap_idx < 1 or gap_idx >= n:
+            continue
+        gap_size = abs(open_[gap_idx] - close[gap_idx - 1])
+        vol_ratio = volume[gap_idx] / (
+            float(np.mean(volume[max(0, gap_idx - 20) : gap_idx])) + 1e-10
+        )
+
+        prev_close = close[max(0, gap_idx - 10) : gap_idx]
+        if len(prev_close) < 5:
+            classifications[gap_idx] = GapType.COMMON
+            continue
+
+        price_range = float(np.max(prev_close)) - float(np.min(prev_close))
+        avg_price = float(np.mean(prev_close))
+        if avg_price <= 0:
+            classifications[gap_idx] = GapType.COMMON
+            continue
+
+        relative_gap = gap_size / avg_price
+
+        if vol_ratio > 1.8 and relative_gap > 0.02:
+            if relative_gap > 0.05 and vol_ratio > 3.0:
+                classifications[gap_idx] = GapType.EXHAUSTION
+            elif price_range / avg_price < 0.03:
+                classifications[gap_idx] = GapType.BREAKAWAY
+            else:
+                classifications[gap_idx] = GapType.CONTINUATION
+        elif vol_ratio > 1.2 and relative_gap > 0.01:
+            classifications[gap_idx] = GapType.CONTINUATION
+        else:
+            classifications[gap_idx] = GapType.COMMON
+
+    return classifications
+
+
+def is_gap_tradable(ohlc: pd.DataFrame, gap_idx: int, atr: np.ndarray) -> bool:
+    """Duddella gap validity check: gap must be <= 2.5x 10-day ATR."""
+    if gap_idx < 1 or gap_idx >= len(ohlc):
+        return False
+    gap_size = abs(ohlc.iloc[gap_idx]["Open"] - ohlc.iloc[gap_idx - 1]["Close"])
+    avg_atr_10 = (
+        float(np.mean(atr[max(0, gap_idx - 10) : gap_idx]))
+        if gap_idx >= 10
+        else float(atr[gap_idx])
+    )
+    if avg_atr_10 <= 0:
+        avg_atr_10 = gap_size
+    return gap_size <= 2.5 * avg_atr_10

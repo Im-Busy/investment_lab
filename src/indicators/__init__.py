@@ -12,6 +12,8 @@ from .asian_range import (
     detect_asian_range,
     get_asian_range_for_day,
 )
+from .cisd import CISDInfo, detect_cisd, detect_cisd_vectorized, find_recent_cisd
+from .crt import CRTSetup, detect_crt, find_crt_setups, get_crt_signal_for_bar
 from .fibonacci import fibonacci_extension, fibonacci_retracement
 from .ifvg import IFVG, IFVGProximity, detect_ifvg, find_nearest_unfilled_ifvg, update_ifvg_status
 from .indicator_cache import IndicatorCache
@@ -28,6 +30,14 @@ from .mss import (
     find_pivot_high,
     find_pivot_low,
     validate_mss_with_htf,
+)
+from .ote import OTEZone, OTEZoneType, calculate_ote_zone, detect_ote_entries
+from .power_of_3 import (
+    PO3Info,
+    PO3Phase,
+    detect_po3_daily,
+    detect_po3_intraday,
+    get_po3_phase_at_bar,
 )
 from .pivots import (
     calculate_pivot_points,
@@ -81,6 +91,13 @@ except ImportError:
 
 # VWAP indicator
 from .vwap import compute_vwap
+
+# P24: Novel Indicators
+from .hbar import compute_hbar, hbar_signal
+from .ivol import compute_ivol, ivol_signal
+
+# A2: Swing point detector (paper-driven)
+from .swing_point_detector import detect_swing_points, detect_swing_points_df
 
 # PineScript helper functions for strategy conversion
 from .pinescript_helpers import (
@@ -160,6 +177,27 @@ __all__ = [
     "validate_mss_with_htf",
     "MSSInfo",
     "PivotPoint",
+    # SMC/ICT Indicators - CISD
+    "detect_cisd",
+    "detect_cisd_vectorized",
+    "find_recent_cisd",
+    "CISDInfo",
+    # SMC/ICT Indicators - PO3 (Power of 3)
+    "detect_po3_daily",
+    "detect_po3_intraday",
+    "get_po3_phase_at_bar",
+    "PO3Info",
+    "PO3Phase",
+    # SMC/ICT Indicators - CRT (Candle Range Theory)
+    "detect_crt",
+    "find_crt_setups",
+    "get_crt_signal_for_bar",
+    "CRTSetup",
+    # SMC/ICT Indicators - OTE (Optimal Trade Entry)
+    "calculate_ote_zone",
+    "detect_ote_entries",
+    "OTEZone",
+    "OTEZoneType",
     # Numba-optimized indicators
     "sma_numba",
     "ema_numba",
@@ -194,4 +232,12 @@ __all__ = [
     "qqe",
     # Performance Optimization
     "IndicatorCache",
+    # P24: Novel Indicators
+    "compute_hbar",
+    "hbar_signal",
+    "compute_ivol",
+    "ivol_signal",
+    # A2: Swing point detector
+    "detect_swing_points",
+    "detect_swing_points_df",
 ]

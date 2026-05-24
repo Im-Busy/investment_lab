@@ -142,17 +142,23 @@ class PaperTradingHarness:
         from src.strategies.rules_first_strategy import RulesFirstStrategy
         from backtesting import Backtest
 
+        _strategy_ref: list = []
+
         bt = Backtest(df, RulesFirstStrategy, cash=100_000, commission=0.001)
-        stats = bt.run(
+        bt.run(
             entry_threshold=self.entry_threshold if hasattr(self, "entry_threshold") else 0.55,
             min_reliability=self.min_reliability,
             use_multi_tp=self.use_multi_tp,
             use_quality_registry=self.use_quality_registry,
             quality_registry_path=self.quality_registry_path,
             use_ir_weights=self.use_ir_weights,
+            _strategy_ref=_strategy_ref,
         )
 
-        strategy = bt._strategy
+        if not _strategy_ref:
+            raise RuntimeError("Strategy reference not captured during backtest")
+
+        strategy = _strategy_ref[0]
         last_idx = len(df) - 1
 
         signal_strength = strategy._compute_score(last_idx)

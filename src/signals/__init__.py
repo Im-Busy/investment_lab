@@ -75,6 +75,42 @@ from .bond_etf_proxy import (
     rate_sensitivity,
 )  # B9
 from .real_yield_analysis import RealYieldAnalyzer, RealYieldSnapshot  # B10
+from .combined_trend import (
+    TrendConfirmation,
+    four_indicator_trend,
+    trend_multiplication_factor,
+)  # P24-15
+from .signal_alignment import (
+    AlignmentResult,
+    check_signal_alignment,
+    compute_combined_fundamental_bias,
+)  # P24-16
+from .event_type_trading import (
+    EventCategory,
+    EventConfig,
+    EVENT_CONFIGS,
+    get_event_config,
+    event_aware_entry,
+    classify_event,
+)  # P24-20
+from .event_weighted_sentiment import (
+    WeightedSentimentEvent,
+    compute_time_weighted_sentiment,
+    decay_fn,
+    batch_weight_events,
+)  # P24-21
+from .indicator_voting import compute_voting_signals, compute_voting_signals_df  # B6
+from .cross_currency_signals import compute_cross_currency_signals, implied_signal_scalar  # B18
+from .divergence_detector import detect_divergences, detect_all_divergences  # B10
+from .rules_catalog import generate_rules_catalog  # B1
+from .fuzzy_system import (
+    FuzzyInferenceSystem,
+    FuzzyResult,
+    FuzzyState,
+    FuzzyRule,
+    FuzzyVariable,
+    TrapezoidMF,
+)  # B32
 
 __all__ = [
     "SignalGenerator",
@@ -148,4 +184,42 @@ __all__ = [
     # B10: Real Yield Analysis
     "RealYieldAnalyzer",
     "RealYieldSnapshot",
+    # P24-15: Combined 4-index Trend
+    "TrendConfirmation",
+    "four_indicator_trend",
+    "trend_multiplication_factor",
+    # P24-16: Signal Alignment
+    "AlignmentResult",
+    "check_signal_alignment",
+    "compute_combined_fundamental_bias",
+    # P24-20: Event-Type Trading
+    "EventCategory",
+    "EventConfig",
+    "EVENT_CONFIGS",
+    "get_event_config",
+    "event_aware_entry",
+    "classify_event",
+    # P24-21: Event-Weighted Sentiment
+    "WeightedSentimentEvent",
+    "compute_time_weighted_sentiment",
+    "decay_fn",
+    "batch_weight_events",
+    # B6: 6-Indicator Voting
+    "compute_voting_signals",
+    "compute_voting_signals_df",
+    # B18: Cross-Currency Signals
+    "compute_cross_currency_signals",
+    "implied_signal_scalar",
+    # B10: Divergence Detection
+    "detect_divergences",
+    "detect_all_divergences",
+    # B1: 35-Rule Catalog
+    "generate_rules_catalog",
+    # B32: Fuzzy Rule System
+    "FuzzyInferenceSystem",
+    "FuzzyResult",
+    "FuzzyState",
+    "FuzzyRule",
+    "FuzzyVariable",
+    "TrapezoidMF",
 ]

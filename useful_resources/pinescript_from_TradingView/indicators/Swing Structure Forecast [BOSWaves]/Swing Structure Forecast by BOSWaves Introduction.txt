@@ -1,0 +1,158 @@
+Swing Structure Forecast [BOSWaves] - Statistical Swing Projection System with Volatility-Adaptive Support and Resistance Detection
+
+Overview
+
+Swing Structure Forecast [BOSWaves] is a statistically-driven swing analysis system that maps directional price structure through confirmed pivot identification, where support and resistance zones construct automatically at each swing extreme and a probabilistic forecast beam projects the next swing leg using aggregated historical swing measurements.
+
+snapshot
+
+
+Rather than applying fixed price targets, universal extension ratios, or lagging directional filters, zone boundaries, forecast direction, and projection magnitude are governed by structural pivot confirmation, ATR-proportioned zone sizing, and rolling statistical measurement of completed swing history across a configurable sample window.
+
+This produces a continuously refreshed structural map alongside a data-grounded forward projection. Zones breathe with volatility cycles and forecasts are calibrated to the instrument's own measured behaviour rather than theoretical constants or fixed multiples.
+
+Price is therefore assessed against structurally-anchored zones derived from confirmed swing pivots, with directional expectations built from the statistical record of prior completed legs rather than external reference points.
+
+Conceptual Framework
+
+Swing Structure Forecast is built on the premise that genuine support and resistance originate at confirmed swing extremes, and that the statistical character of completed swing legs contains meaningful information about the magnitude and duration of the move that will follow.
+
+Standard projection methodologies apply predetermined ratios that treat every instrument and market condition as interchangeable. This framework instead extracts magnitude expectations from the instrument's own swing record, building an evidence base from recent completed legs and distilling it into a statistically-grounded projection originating at the current confirmed pivot.
+
+Three core principles shape the design:
+Support and resistance zones should originate at structurally confirmed swing highs and lows, not at indicator crossovers, arbitrary distances, or price patterns lacking pivot confirmation.
+Zone width must respond to prevailing volatility, expanding proportionally when ATR is elevated and compressing when market conditions quieten.
+Forecast targets and projection uncertainty should be derived from the distribution of the instrument's own recent swing history, with variability expressed visually rather than hidden behind a single projected level.
+
+This repositions price structure work from passive historical reference into an active, instrument-specific projection framework that updates with each new confirmed swing.
+
+Theoretical Foundation
+
+The indicator unifies structural pivot detection, ATR-responsive zone construction, rolling statistical aggregation, and Fibonacci extension mapping.
+
+Swing highs and lows are established through a rolling highest/lowest comparison across a configurable lookback window, accepting only pivots surrounded by sufficient structural confirmation on both sides. A 200-period ATR provides a slow-moving, stable volatility reference that scales zone thickness and beam width proportionately across varying instruments and timeframes. Completed swing percentages and durations populate a rolling sample array, with three aggregation modes — weighted, average, and median — giving users direct control over how heavily recent legs are weighted against older history. Standard deviation across this sample governs beam width, producing narrow projections when swing history is consistent and widening the beam when prior legs have varied significantly in magnitude.
+
+Four internal systems work in coordination:
+Pivot Detection Engine: Confirms swing highs and lows through multi-bar structural comparison, withholding confirmation until price movement validates the extreme and eliminating repainting.
+Zone Construction System: Builds dual-layer ATR-proportioned boxes at each confirmed pivot, applying progressive opacity reduction with age and monitoring for structural breach events.
+Forecast Engine: Processes the rolling swing sample through the selected statistical method and casts the next projected leg as a smoothed cone beam originating at the current pivot, scaled by historical variance.
+Fibonacci Extension System: Deploys individually toggleable extension levels beyond the primary forecast target, each with a fully configurable ratio for defining continuation objectives.
+
+This structure keeps the structural map and forward projection permanently coupled, refreshing in unison whenever a new swing confirms.
+
+How It Works
+
+Swing Structure Forecast processes price through a structured sequence of pivot-aware operations:
+Pivot Confirmation: Bar highs and lows are continuously compared against a rolling window of configurable length. A swing high locks in once price retreats sufficiently from the peak; a swing low locks in once price advances sufficiently from the trough, ensuring no repainting occurs.
+Zone Placement: A dual-layer box anchors at each confirmed pivot. An outer boundary encloses the broader reaction area and an inner zone concentrates the higher-probability interaction region.
+Age-Based Fading: Zone opacity diminishes progressively as elapsed bars accumulate since formation, weighting recent structural levels visually above older historical context.
+Breach Detection: A close beyond a zone's anchor level triggers conversion to a dotted outline and initiates an automatic removal sequence, purging invalidated structure from the chart.
+Swing Recording: Each completed leg is logged as a percentage magnitude and a bar duration into the rolling sample array, capped at the user-defined sample count with oldest entries discarded first.
+Statistical Aggregation: The selected method, weighted, average, or median, resolves the sample into an expected magnitude and duration for the forthcoming swing leg.
+Beam Construction: A three-layer cone extends forward from the current pivot anchor using smoothstep-eased interpolation, with width proportional to sample standard deviation and opacity grading across nested layers.
+Target Zone: A bounding box placed at the beam terminus presents the projected price level and expected percentage move, with box height communicating the degree of forecast uncertainty.
+Fibonacci Extensions: Configurable ratio levels project beyond the primary target, establishing pre-mapped objectives for continuation moves that exceed the base projection.
+
+These processes collectively sustain a live structural framework and a statistically-grounded projection that regenerates with every newly confirmed swing pivot.
+
+Interpretation
+
+Swing Structure Forecast should be read as a structural boundary map combined with a probabilistic directional projection:
+Support Zones (Green): Constructed at confirmed swing lows, marking price regions where prior downside pressure exhausted and upward reversals originated.
+Resistance Zones (Red): Established at confirmed swing highs, identifying areas where prior upside pressure stalled and downward reversals began.
+Zone Opacity: Communicates structural age. Vivid zones reflect recent pivot formation; subdued zones represent older levels retained for broader historical context.
+Broken Zones: Transition to faint dotted outlines on breach, preserved as reference markers without visually competing with structurally intact levels.
+Forecast Beam: Extends forward from the most recently confirmed pivot, projecting the statistically expected next leg. Cone width encodes uncertainty drawn from sample variance.
+Narrow Beam: Prior swing history shows consistent magnitude, indicating relatively high projection confidence.
+Wide Beam: Prior swing history shows significant variability, indicating greater uncertainty and warranting additional confirmation before acting.
+Target Zone and Label: Mark the statistically derived price destination alongside expected percentage move and absolute price level.
+Fibonacci Extensions: Pre-mapped levels beyond the primary target defining structured continuation objectives for extended directional moves.
+Path Markers: Dot markers positioned along the beam centerline with opacity fading toward the target, conveying projected trajectory and directional progression.
+
+Structural context, beam width, and sample consistency are more significant than any individual projected value in isolation.
+
+Signal Logic and Visual Cues
+
+Swing Structure Forecast operates through two principal visual frameworks:
+Structural Zones: Continuously maintained support and resistance boxes anchored at confirmed pivots. Intact zones carry unbroken structural relevance; broken zones document levels that price has already closed through and structurally dismissed.
+Forecast Beam: Repositions automatically on every new swing confirmation, simultaneously refreshing the beam geometry, target zone, path markers, and Fibonacci extensions to reflect the updated pivot origin and current statistical aggregation.
+
+Alert conditions trigger on confirmed swing high and swing low events, supporting systematic structural monitoring without requiring active chart observation.
+
+Strategy Integration
+
+Swing Structure Forecast applies across structure-based, mean-reversion, and trend-continuation trading methodologies:
+Structure-Referenced Entries: Treat intact zones as interaction boundaries for entry decisions, assigning greater weight to recently formed levels over aged, heavily faded structure.
+Instrument-Calibrated Targets: Use the statistical projection as a primary take-profit reference built from the instrument's own measured swing history rather than applied universal ratios.
+Beam Width Conviction Scaling: Adjust confirmation requirements relative to current beam width. Wide beams call for additional validation before committing; narrow beams reflect historically stable swing magnitude.
+Fibonacci Continuation Planning: Reference extension levels beyond the primary target when trending conditions suggest the initial projection may be exceeded.
+Broken Zone Flip Monitoring: Track recently breached zones as candidate reversal levels where former support may transition to resistance and vice versa following structural invalidation.
+Multi-Timeframe Structural Context: Reference higher-timeframe zones as macro boundaries while applying lower-timeframe forecast projections for entry precision and target identification.
+Sample Population Patience: Defer high-conviction treatment of projection outputs until the sample window has accumulated sufficient completed swings, particularly on instruments or timeframes with limited history.
+
+Technical Implementation Details
+Core Engine: Rolling highest/lowest pivot detection with configurable lookback and no-repaint confirmation logic
+Zone Construction: Dual-layer ATR-proportioned boxes with progressive opacity fading, breach detection, and automatic invalidation removal
+Statistical Model: Weighted, average, or median aggregation across configurable rolling sample with standard deviation uncertainty scaling
+Forecast Geometry: Smoothstep-eased three-layer polyline beam with standard deviation width scaling and graduated opacity
+Target Visualisation: Projection label with percentage move and price level enclosed by uncertainty-proportioned target box
+Fibonacci System: Five independently toggleable extension levels with fully configurable ratios
+Alert Coverage: Swing high confirmation and swing low confirmation events
+Performance Profile: Optimised for real-time execution across all timeframes with configurable zone capacity and sample limits
+
+Optimal Application Parameters
+
+Timeframe Guidance:
+1 - 15 min: Near-term swing structure with short-horizon projection for intraday approaches
+1H - 4H: Intraday to multi-session structural mapping with intermediate forecast range
+Daily - Weekly: Macro swing structure identification with extended projection targets
+
+Suggested Baseline Configuration:
+Swing Length: 16
+Zone Width (ATR): 0.3
+Max Level Age: 300 bars
+Samples: 20
+Method: Weighted
+Forecast Bars: 5
+Fib Extensions: 1.0, 1.272, 1.618 active
+
+These suggested parameters serve as a starting baseline; their effectiveness varies with the instrument's volatility profile, characteristic swing cadence, and preferred zone density, so incremental adjustment across multiple session types is recommended before drawing performance conclusions.
+
+Parameter Calibration Notes
+
+Apply the following refinements to adjust behaviour without modifying core logic:
+Zones too wide: Lower Zone Width (ATR) to narrow zone boundaries, particularly on lower timeframes where ATR values produce oversized zones relative to typical price movement.
+Too many zones forming: Raise Swing Length to impose stricter structural requirements before a pivot qualifies for zone creation.
+Beam excessively wide: Sample history contains high variance. Raise Samples to dilute outlier legs or switch to Median to limit their influence on the projected magnitude.
+Projection slow to reflect recent behaviour: Lower Samples or switch to Weighted method to concentrate projection weight on the most recently completed swing legs.
+Significant pivots going undetected: Lower Swing Length to increase sensitivity and qualify shorter structural moves as confirmed pivots.
+Forecast visual range misaligned with chart: Modify Forecast Bars to adjust how far projection visuals extend rightward without altering the underlying price target calculation.
+Stale levels persisting on chart: Reduce Max Level Age to accelerate removal of older unbroken zones, keeping structural reference anchored to recent pivot history.
+
+Adjustments should be applied incrementally and assessed across varied session conditions rather than calibrated against a single market period.
+
+Performance Characteristics
+
+High Effectiveness:
+Markets exhibiting rhythmic swing sequences with clearly defined structural turning points
+Instruments where volatility follows identifiable expansion and contraction patterns that ATR captures proportionately
+Trend-continuation approaches targeting measured extensions derived from the instrument's own swing record
+Mean-reversion strategies using confirmed structural zones as primary entry and exit reference boundaries
+
+Reduced Effectiveness:
+Directionless, low-conviction conditions generating frequent shallow pivots that populate the sample with structurally insignificant measurements
+Event-driven or gap-heavy sessions producing swing magnitudes that are unrepresentative of normal instrument behaviour
+Instruments with erratic or non-stationary volatility profiles where ATR-based proportioning loses consistency
+Early sessions on a given timeframe before sufficient completed swings have accumulated to produce statistically reliable projections
+
+Integration Guidelines
+Confluence: Pair with BOSWaves volume tools, order flow indicators, or broader market structure analysis to reinforce zone and forecast interpretation
+Sample Discipline: Reserve high-conviction treatment for projections generated once the sample window is fully populated with completed swings
+Breach Acceptance: Treat breached zones as structurally void and resist anchoring expectations to levels price has already invalidated with a closing breach
+Beam Width Respect: Read a wide beam as a requirement for additional confirmation before acting, not permission to disregard the projection entirely
+Directional Consistency: Sustain bias aligned with the current forecast direction until a newly confirmed swing pivot shifts the projection origin
+Timeframe Confluence: Highest-quality structural setups emerge when active zones and forecast direction correspond across multiple timeframes simultaneously
+
+Disclaimer
+
+Swing Structure Forecast [BOSWaves] is a professional-grade swing structure and statistical forecasting tool. All projections are derived from historical swing behaviour and represent probabilistic expectations rather than assured outcomes. Performance depends on the consistency of prior swing history, prevailing market conditions, parameter selection, and disciplined application. BOSWaves recommends deploying this indicator as one component within a comprehensive analytical framework incorporating trend context, volume analysis, and rigorous risk management practices.

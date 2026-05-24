@@ -60,6 +60,12 @@ def run_single(
     ml_model_path: str = "models/pattern_classifier_v3_SPY_20260514_195235.pkl",
     use_regime_router: bool = True,
     regime_router_config: str = "models/regime_router_SPY.json",
+    use_vix_gate: bool = False,
+    use_yield_curve_gate: bool = False,
+    use_multi_tp: bool = True,
+    tp1_atr: float = 1.5,
+    tp1_size: float = 0.5,
+    volume_confirm: bool = True,
 ) -> dict:
     from backtesting import Backtest
 
@@ -91,6 +97,12 @@ def run_single(
         trail_stop_atr=trail_stop_atr,
         min_reliability=min_reliability,
         confluence_bonus=confluence_bonus,
+        use_vix_gate=use_vix_gate,
+        use_yield_curve_gate=use_yield_curve_gate,
+        use_multi_tp=use_multi_tp,
+        tp1_atr=tp1_atr,
+        tp1_size=tp1_size,
+        volume_confirm=volume_confirm,
     )
 
     result = {
@@ -254,6 +266,16 @@ def main() -> None:
         help="Path to RegimeRouter JSON config",
     )
     parser.add_argument("--sweep-weight", help="Comma-separated weights to sweep")
+    parser.add_argument("--no-vix-gate", action="store_true", help="Disable VIX regime gate")
+    parser.add_argument(
+        "--no-yield-curve-gate", action="store_true", help="Disable yield curve macro gate"
+    )
+    parser.add_argument("--no-multi-tp", action="store_true", help="Disable multi-TP exit")
+    parser.add_argument("--tp1-atr", type=float, default=1.5, help="TP1 ATR distance")
+    parser.add_argument("--tp1-size", type=float, default=0.5, help="Portion to close at TP1")
+    parser.add_argument(
+        "--no-volume-confirm", action="store_true", help="Disable volume confirmation"
+    )
     parser.add_argument("--json-output", help="Path to save JSON results")
     args = parser.parse_args()
 
@@ -268,6 +290,12 @@ def main() -> None:
         regime_router_config=args.regime_router_config,
         rules_weight_min=args.rules_weight_min,
         rules_weight_max=args.rules_weight_max,
+        use_vix_gate=not args.no_vix_gate,
+        use_yield_curve_gate=not args.no_yield_curve_gate,
+        use_multi_tp=not args.no_multi_tp,
+        tp1_atr=args.tp1_atr,
+        tp1_size=args.tp1_size,
+        volume_confirm=not args.no_volume_confirm,
     )
 
     all_results: list[dict] = []

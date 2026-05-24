@@ -175,6 +175,8 @@ from src.ml.preprocessing import (
     mad_clip,
     rank_standardize,
     mad_rank_pipeline,
+    InstanceNormalizer,
+    instance_normalize,
 )
 
 # Phase 17 P3: Factor Engine Wrapper (R14)
@@ -191,6 +193,8 @@ from src.ml.model_validation import (
     ValidationReport,
     DriftResult,
     validate_from_arrays,
+    compute_mre_gap,
+    verify_causal_masking,
 )
 
 # Phase 21 D3: Structural Break Detection
@@ -303,6 +307,35 @@ from src.ml.rate_derivatives import (
     compute_forward_curve_from_df,
     swap_spread_signal,
 )
+
+# Phase 24 P0: Model Validation Extensions (P24-8, P24-11)
+from src.ml.model_validation import (
+    bootstrap_performance_ci,
+    PerformanceCI,
+    FeatureImportanceMonitor,
+    FeatureImportanceSnapshot,
+)
+
+# Phase 24 P1: Overfitting Detection + Profit Mirage
+from src.ml.overfitting_detector import (
+    TrainingHistoryOverfitDetector,
+    OverfittingDetection,
+    quick_overfitting_check,
+)
+from src.ml.profit_mirage import (
+    run_profit_mirage,
+    MirageReport,
+    MirageFeatureImpact,
+)
+
+# Phase 25: Anti-Overfitting Infrastructure (C1, C2, C13, C22)
+from src.ml.lock_box import LockBox, create_lock_box, create_lock_box_chronological
+from src.ml.nested_cv import NestedPurgedCV, NestedCVResult, leave_one_group_out_cv
+from src.ml.blind_analysis import BlindAnalysisResult, run_blind_analysis
+from src.ml.label_shuffling import LabelShufflingResult, run_label_shuffling_test
+
+# Phase 25: SVM Regime Classifier (B34)
+from src.ml.svm_regime import SVMRegimeClassifier, SVMRegimeResult
 
 __all__ = [
     # Part A infrastructure
@@ -443,6 +476,8 @@ __all__ = [
     "mad_clip",
     "rank_standardize",
     "mad_rank_pipeline",
+    "InstanceNormalizer",
+    "instance_normalize",
     # Phase 17 P2: Default Risk Factor (R11)
     "compute_dtd",
     "compute_dtd_dataframe",
@@ -535,4 +570,30 @@ __all__ = [
     "RateDerivativeSignal",
     "compute_forward_curve_from_df",
     "swap_spread_signal",
+    # Phase 24 P0: Model Validation Extensions (P24-8, P24-11)
+    "bootstrap_performance_ci",
+    "PerformanceCI",
+    "FeatureImportanceMonitor",
+    "FeatureImportanceSnapshot",
+    # Phase 24 P1: Overfitting Detection + Profit Mirage
+    "TrainingHistoryOverfitDetector",
+    "OverfittingDetection",
+    "quick_overfitting_check",
+    "run_profit_mirage",
+    "MirageReport",
+    "MirageFeatureImpact",
+    # Phase 25: Anti-Overfitting Infrastructure (C1, C2, C13, C22)
+    "LockBox",
+    "create_lock_box",
+    "create_lock_box_chronological",
+    "NestedPurgedCV",
+    "NestedCVResult",
+    "leave_one_group_out_cv",
+    "BlindAnalysisResult",
+    "run_blind_analysis",
+    "LabelShufflingResult",
+    "run_label_shuffling_test",
+    # Phase 25: SVM Regime Classifier (B34)
+    "SVMRegimeClassifier",
+    "SVMRegimeResult",
 ]

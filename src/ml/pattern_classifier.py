@@ -75,6 +75,7 @@ class PatternClassifier:
         bagging_temperature: float = 1.0,
         border_count: int = 128,
         min_data_in_leaf: int = 20,
+        loss_function: str = "Logloss",
     ):
         """
         Initialize pattern classifier.
@@ -94,6 +95,7 @@ class PatternClassifier:
             bagging_temperature: Bayesian bootstrap temperature (CatBoost)
             border_count: Number of splits for numeric features (CatBoost)
             min_data_in_leaf: Minimum training samples in leaf (CatBoost)
+            loss_function: CatBoost loss (Logloss default; Huber-compatible via RMSE)
         """
         if model_type not in self.SUPPORTED_MODELS:
             raise ValueError(
@@ -114,6 +116,7 @@ class PatternClassifier:
         self.bagging_temperature = bagging_temperature
         self.border_count = border_count
         self.min_data_in_leaf = min_data_in_leaf
+        self.loss_function = loss_function
 
         self.model = None
         self.feature_names_: Optional[List[str]] = None
@@ -145,7 +148,7 @@ class PatternClassifier:
                     min_data_in_leaf=self.min_data_in_leaf,
                     random_state=self.random_state,
                     verbose=False,
-                    loss_function="Logloss",
+                    loss_function=self.loss_function,
                     allow_writing_files=False,
                     task_type="GPU" if self._has_gpu() else "CPU",
                 )

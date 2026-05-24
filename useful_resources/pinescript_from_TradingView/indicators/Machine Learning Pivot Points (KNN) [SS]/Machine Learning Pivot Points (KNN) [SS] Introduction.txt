@@ -1,0 +1,52 @@
+Hey everyone,
+
+Been working on this one for a very long time.
+
+1. What It Is The Geometric DNA of a Pivot
+
+Machine Learning Pivot Points (KNN) is a predictive structural tool that moves away from traditional lag based oscillators. Instead of waiting for a moving average crossover, this system treats price action as a Geometric Slope. By utilizing a K-Nearest Neighbors (KNN) algorithm combined with regression, the script captures the mathematical DNA of the price leading into a pivot and compares it against a live updating database of previous market turns.
+
+2. The Science Linear Regression as a Signature
+If you know me well, you know I am into regression. ChatGPT even called me the Regression Whisperer in 2025 (not sure if that is a good thing). The core of this indicator is the Historical Slope Function, which provides data for KNN to actually make its prediction).
+
+The Training Unlike static models, this script trains itself in real-time on your specific chart. Every time a 10-bar pivot (High or Low) is confirmed, the script extracts the Linear Regression Slope of the 20 bars leading into that point.
+
+The Library These slopes are stored in dynamic arrays. This creates a localized memory of what a reversal looks like for the specific asset you are trading, and hence how the indicator learns.
+
+The Classification As the current price moves, its Rolling Slope is constantly calculated. The KNN algorithm then measures the distance (similarity) between the current slope and the stored signatures. If the current price curves in a way that matches past tops, the indicator flags an Approaching Pivot High.
+
+3. Decoding the Tables
+The indicator features a dual-table Cockpit designed for high-speed decision-making.
+
+A. The Directional Helper (Top Right) Live KNN Bias
+This is your real-time classification engine.
+
+The Neon Logic Neon Red ▼ The current price slope has a high mathematical similarity to historical Pivot Highs.
+
+Neon Lime ▲ The current price slope matches the signature of historical Pivot Lows.
+
+Confidence Metric This represents the Cluster Similarity. If the current slope is significantly closer to one group than the other, confidence spikes. A confidence level of 90%+ suggests the current price movement is almost identical to the most powerful reversals in the recent lookback.
+
+B. The Backtest Table (Bottom Right)
+This table provides a live-calculating Proof of Concept for the current ticker.
+
+Success Rate Measures how often the KNN's Approaching signal successfully resulted in an actual price reversal before the opposite signal appeared.
+
+Avg Low Move ($) The average dollarpoint drop achieved after a Pivot High was predicted.
+
+Avg High Move (%) The average percentage ROI gained after a Pivot Low was predicted.
+
+4. Visual Cues
+To differentiate from standard labels, this script uses v6 Polyline Geometry to create glowing pivots. I think we can all agree we are bored of those little basic triangles. However, because Pinescript limits at 100 polylines, the script will revert to those boring triangles over a designated history so that you can still see performance in the past with clear markers.
+
+5. Mastering the Logic Parameters for the Pro
+KNN Clusters (K) Set to 2 by default. This tells the script to average the distance to the 2 most similar past events. Increasing this makes the model stricter but less frequent.
+
+Pivot Window This controls the length of the signature. A 20-bar window captures the broader curve of the trend, while a shorter window focuses on micro-reversals.
+
+Bars LeftRight This defines the pivots themselves. It tells the script what counts as a confirmed pivot to be added to the memory bank.
+
+6. Concluding Remarks
+This indicator represents a bridge between Statistical Geometry and Machine Learning. By focusing on the Slope Signature rather than simple price levels, it allows you to see the market's intention before the pivot is fully formed. Whether you are scalping the 1-minute or swing trading the Daily, the KNN logic adapts to the volatility and DNA of the chart in front of you.
+
+I hope this provides a new edge to your trading workflow. Safe trades!

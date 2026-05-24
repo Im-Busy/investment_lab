@@ -121,7 +121,51 @@ Before considering a feature complete, verify:
 
 ---
 
-## Paper Analysis & Summarization
+## End-to-End Wiring Protocol (CRITICAL — MANDATORY CHECK BEFORE MARKING COMPLETE)
+
+**Every new parameter, feature flag, detector, indicator, risk module, or CLI argument MUST be wired end-to-end into the execution path.** A feature that compiles but doesn't affect scoring/entry/exit is invisible debt.
+
+### The Rule: Trace Every Parameter
+
+After implementing any new feature, you MUST trace its parameter from declaration → init → scoring → entry/exit gates. Use this checklist:
+
+| Check | Question |
+|-------|----------|
+| **Declaration** | Is the param on the class with a default? |
+| **Init gate** | Does `init()` conditionally precompute based on this param? |
+| **Scoring** | Does `_compute_score()` or equivalent read this param or its arrays? |
+| **Entry/Exit** | Does `next()` conditionally gate on this param's value? |
+| **CLI exposure** | Is there an argparse flag that passes to this param? |
+| **CLI-in-kwargs** | Does the script's kwargs dict include the flag? |
+
+### Anti-Patterns That Passed Code Review But Were Dead
+
+| Anti-Pattern | Real Example (2026-05-21 audit) | Consequence |
+|-------------|------|-------------|
+| Param declared but never read in scoring | `min_confluence=3` in SMC | Users think they're gating entries but zero effect |
+| Feature precomputes data but never scored | `use_smc_phl=True` computes 4 arrays, none read | Wasted CPU + user confusion |
+| Function exists but never called | `_calculate_size()` | Positions stay hardcoded 0.95 |
+| CLI flag not in kwargs dict | `--no-volume-pressure` flag declared but not mapped | Flag silently ignored |
+| Toggle gates precompute but not scoring | `use_breaker_blocks` blocks init but scoring always reads arrays | Misleading — appears wired when it's not |
+
+### Mandatory End-to-End Validation Script
+
+After implementing any new parameter, run this audit (or equivalent):
+
+```bash
+# Check if param is referenced in scoring
+uv run python -c "
+import inspect
+from src.strategies.smc_strategy import SMCStrategy
+# For each param with default, grep for usage in _compute_score and next()
+# Any param not found is a wiring gap
+"
+
+# Verify CLI flag maps into kwargs dict
+grep -n 'my_new_flag' scripts/backtest_smc.py  # should appear in BOTH argparse AND kwargs dict
+```
+
+**A feature is NOT complete until it produces a documented, measurable change in backtest output when toggled ON vs OFF.** If `--my-feature` and its absence produce identical backtest metrics, the feature is either dead or not contributing signal — fix or remove it.
 
 This project includes a paper summarization workflow using the **paper2md** tool:
 
@@ -232,8 +276,9 @@ This produces:
 1. **`MEMORY.md`** (project root) — Persistent handover state: current objective, system metrics, completed tasks, discovered issues, next session priorities. This is the "where were we" file.
 2. **`progress_docs/plans/full.md`** — Master plan with phase status, pending tasks, dependencies.
 3. **`progress_docs/current.md`** — Session log with timestamps and detailed action history.
-4. **`docs/research_logic_map/insight_registry.md`** — All research insights (65 from 20 sources), tagged by topic/impact/status. Source of truth for what is known and what remains to implement.
+4. **`docs/research_logic_map/insight_registry.md`** — All research insights (88 from 22 sources), tagged by topic/impact/status. Source of truth for what is known and what remains to implement.
 5. **`docs/BESTS_INSIGHTS.md`** — Distilled knowledge from every backtest in BESTS.md. Factor rankings, strategy tier list, anti-patterns, production configs. The "what works and what to never do" file.
+6. **Verify indexes**: `npx gitnexus status` + `cgc stats` — reindex if stale. Ensure CGC watcher is running (`Get-Job -Name "CGCWatcher"`).
 
 **IMPORTANT: After reading `BESTS_INSIGHTS.md`, check `BESTS.md` for its `last_updated` timestamp.** If BESTS.md changed significantly since BESTS_INSIGHTS.md was last synced (new top-3 results, new strategy categories, regime shift detected), re-evaluate the insights and update both files.
 
@@ -313,6 +358,8 @@ The current tool inventory is maintained in `docs/ML_TRAINING_GUIDE.md` Section 
 |-----|----------|
 | `docs/ML_TRAINING_GUIDE.md` | All ML components, optimizers, concepts, decision tree, data flow |
 | `docs/guide-ml-pipeline.md` | Standard 9-stage ML pipeline — every AI agent MUST read before training |
+| `docs/guide-anti-overfitting.md` | Lock Box, Nested CV, Blind Analysis, Label Shuffling (Phase 25) |
+| `docs/research_logic_map/insight_registry.md` | 88 research insights from 22 sources, tagged by topic/impact/status |
 | `COMMAND_CHEATSHEET.md` | CLI commands for every script |
 | `.useful_commands/` | Detailed command workflows by category |
 
@@ -362,6 +409,7 @@ The project exposes six primary workflows as Kilo agents and slash commands. The
 | **repo-syncer** | `.kilo/agent/repo-syncer.md` | Syncs curated files from private dev repo to public-facing repo. Merges main→public, strips private data, pushes only the clean public branch. |
 | **housekeeper** | `.kilo/agent/housekeeper.md` | Audits file system, flags misplaced files and duplicate dirs, produces safe migration plan. |
 | **researcher** | `.kilo/agent/researcher.md` | Searches Google Scholar, ArXiv, GitHub for papers, reference implementations, and benchmarks. Cross-references findings with project modules. Auto-activates when designing new algorithms or encountering unfamiliar methods. |
+| **batch-tuner** | `.kilo/agent/batch-tuner.md` | Runs parameter sweeps and backtests in parallelized batches across multiple instruments. Tunes Rules-First params, finds universal best config, auto-generates comparison reports. Use for any multi-instrument parameter optimization. |
 
 ### Slash Commands
 
@@ -373,6 +421,7 @@ The project exposes six primary workflows as Kilo agents and slash commands. The
 | `/repo-sync` | repo-syncer | Sync curated files to public repo. `/repo-sync check` for safety-only. |
 | `/housekeeper` | housekeeper | Audit file system, produce migration plan. |
 | `/research` | researcher | Search for papers, repos, benchmarks. `/research regime-switching HMM` |
+| `/batch-tune` | batch-tuner | Tune Rules-First params across instruments. `/batch-tune --fast` |
 
 ### When to Use Slash Commands vs Direct CLI
 
@@ -384,6 +433,7 @@ The project exposes six primary workflows as Kilo agents and slash commands. The
 | Syncing to public repo | `/repo-sync` — agent handles merge, safety check, and push |
 | Quick one-off script | Direct CLI — e.g., `uv run scripts/sweep_entry_thresholds.py SPY` |
 | Searching for papers/implementations | `/research` — agent knows search hierarchy and ingestion pipeline |
+| Tuning params across instruments | `/batch-tune` — agent batches, parallelizes, and validates OOS |
 
 ### Creating New Agents
 
@@ -408,12 +458,14 @@ root/
 ├── outputs/       # Generated outputs
 ├── logs/          # Log files
 ├── notebooks/     # Jupyter notebooks
-├── reports/       # Analysis reports
-├── pipeline/      # Pipeline definitions
-├── plans/         # Planning docs
-├── progress_docs/ # Progress tracking
-├── useful_resources/useful_repos/  # Cloned reference repos
-└── experiments/   # Experiment outputs
+  ├── reports/       # Analysis reports
+  ├── pipeline/      # Pipeline definitions
+  ├── plans/         # Planning docs
+  ├── progress_docs/ # Progress tracking
+  ├── useful_resources/useful_repos/  # Cloned reference repos
+  ├── useful_resources/useful_repos/CodeGraphContext/  # CGC Python graph intelligence
+  ├── useful_resources/useful_repos/GitNexus/  # GitNexus Node.js graph intelligence
+  └── experiments/   # Experiment outputs
 ```
 
 ### Anti-Patterns
@@ -424,10 +476,292 @@ root/
 - Full cloned repos at root → belongs in `useful_resources/useful_repos/`
 - ML artifacts at root (`catboost_info/`, `AutogluonModels/`) → belongs in `outputs/`
 
+
+## Batch Backtesting & Tuning Protocol (CRITICAL — for all sessions)
+
+When backtesting or tuning across multiple instruments, follow this protocol to avoid overcrowding and maximize throughput.
+
+### The Rule: Small Batches, Sequentially
+
+**NEVER** run all instruments in one monolithic command. Always split into batches of 5-6 instruments and run them one at a time.
+
+### Three-Phase Workflow
+
+**Phase 1 — IS Tuning (3 batches, sequential):**
+```bash
+# Batch 1: Major indices + sector ETFs
+uv run scripts/tune_rules_params.py --symbols SPY,QQQ,IWM,XLK,XLF --fast --is-only --workers 5 \
+    --json-output outputs/tune_batch1.json --md-output reports/parameter_tuning/batch1.md
+
+# Batch 2: Sectors + commodities + bonds
+uv run scripts/tune_rules_params.py --symbols XLE,XLV,GLD,TLT,KO --fast --is-only --workers 5 \
+    --json-output outputs/tune_batch2.json --md-output reports/parameter_tuning/batch2.md
+
+# Batch 3: Stocks + crypto + forex
+uv run scripts/tune_rules_params.py --symbols JPM,XOM,JNJ,SO,BTC_USD,EURUSD_X --fast --is-only --workers 6 \
+    --json-output outputs/tune_batch3.json --md-output reports/parameter_tuning/batch3.md
+```
+
+**Phase 2 — OOS Validation + Universal Best:**
+```bash
+uv run scripts/tune_rules_oos.py
+```
+
+**Phase 3 — Documentation:**
+- Results auto-saved to `reports/parameter_tuning/RULES_TUNING.md`
+- Update `BESTS.md` with new tuning section
+- Update `docs/COMMAND_CHEATSHEET.md` with commands
+
+### Grid Size Reference
+
+| Flag | Combos | Per-instrument time | Use case |
+|------|--------|---------------------|----------|
+| `--mini` | 12 | ~50s | Quick screening |
+| `--fast` | 60 | ~5 min | **Default** — good coverage |
+| *(none)* | 243 | ~20 min | Final exhaustive sweep |
+
+### Speed Settings (DO NOT REMOVE)
+
+These are baked into `tune_rules_params.py` and `tune_rules_oos.py`:
+- `TQDM_DISABLE=1` env var — eliminates progress bar I/O
+- All backtesting.py loggers silenced to ERROR
+- Data preloaded once before any backtest
+- `ProcessPoolExecutor` with `--workers N` for parallelism
+- Default 2026-05-20 baselines: universal best `et=0.60 mr=0.70 tsa=2.0 cb=0.10`
+
+### Anti-Patterns
+
+| Don't | Because |
+|-------|----------|
+| Run full grid (243) without multiprocessing | 4+ hours |
+| Skip `--is-only` in Phase 1 | Doubles runtime pointlessly |
+| Combine all instruments in one batch | ProcessPool saturates, harder to debug |
+| Skip OOS validation | IS results are meaningless without OOS |
+| Remove TQDM_DISABLE or logging suppression | Adds minutes of stderr I/O |
+
+---
+# GitNexus — Code Intelligence
+
+This project is indexed by GitNexus as **investment_trying_lab_private** (35,906 symbols, 54,953 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+
+> **Auto-update:** GitNexus does NOT auto-refresh. Re-run `npx gitnexus analyze` after significant file changes. Check freshness with `npx gitnexus status`.
+
+## Always Do
+
+- **MUST run impact analysis before editing any symbol.** Before modifying a function, class, or method, run `gitnexus_impact({target: "symbolName", direction: "upstream"})` and report the blast radius (direct callers, affected processes, risk level) to the user.
+- **MUST run `gitnexus_detect_changes()` before committing** to verify your changes only affect expected symbols and execution flows.
+- **MUST warn the user** if impact analysis returns HIGH or CRITICAL risk before proceeding with edits.
+- When exploring unfamiliar code, use `gitnexus_query({query: "concept"})` to find execution flows instead of grepping. It returns process-grouped results ranked by relevance.
+- When you need full context on a specific symbol — callers, callees, which execution flows it participates in — use `gitnexus_context({name: "symbolName"})`.
+
+## Never Do
+
+- NEVER edit a function, class, or method without first running `gitnexus_impact` on it.
+- NEVER ignore HIGH or CRITICAL risk warnings from impact analysis.
+- NEVER rename symbols with find-and-replace — use `gitnexus_rename` which understands the call graph.
+- NEVER commit changes without running `gitnexus_detect_changes()` to check affected scope.
+
+## Resources
+
+| Resource | Use for |
+|----------|---------|
+| `gitnexus://repo/investment_trying_lab_private/context` | Codebase overview, check index freshness |
+| `gitnexus://repo/investment_trying_lab_private/clusters` | All functional areas |
+| `gitnexus://repo/investment_trying_lab_private/processes` | All execution flows |
+| `gitnexus://repo/investment_trying_lab_private/process/{name}` | Step-by-step execution trace |
+
+## CLI
+
+| Task | Read this skill file |
+|------|---------------------|
+| Understand architecture / "How does X work?" | `.claude/skills/gitnexus/gitnexus-exploring/SKILL.md` |
+| Blast radius / "What breaks if I change X?" | `.claude/skills/gitnexus/gitnexus-impact-analysis/SKILL.md` |
+| Trace bugs / "Why is X failing?" | `.claude/skills/gitnexus/gitnexus-debugging/SKILL.md` |
+| Rename / extract / split / refactor | `.claude/skills/gitnexus/gitnexus-refactoring/SKILL.md` |
+| Tools, resources, schema reference | `.claude/skills/gitnexus/gitnexus-guide/SKILL.md` |
+| Index, status, clean, wiki CLI commands | `.claude/skills/gitnexus/gitnexus-cli/SKILL.md` |
+
+<!-- gitnexus:end -->
+
+---
+
+# CodeGraphContext — Complementary Graph Intelligence (相輔相成)
+
+This project is ALSO indexed by CodeGraphContext (CGC) — a Python-native MCP server that builds a queryable graph database of the codebase with different strengths than GitNexus. **Use BOTH together for defense-in-depth code intelligence.**
+
+> Location: `C:\Dev\useful_repos\CodeGraphContext` | CLI: `cgc` | MCP Server: 21 tools
+
+## GitNexus vs CGC — Complementary Roles
+
+| Axis | **GitNexus** (Node.js) | **CGC** (Python) |
+|------|----------------------|-------------------|
+| **Best for** | Impact analysis, rename safety, change detection | Code search, Cypher queries, visual graph |
+| **Core strength** | Execution flows (300 traced), blast radius | Multi-DB Cypher graph, 20 languages |
+| **Pre-edit guard** | `impact` — tells you WHAT breaks | `analyze_code_relationships` — shows WHO calls |
+| **Commit guard** | `detect_changes` — maps git diffs to symbols | N/A |
+| **Safe rename** | `rename` — graph-assisted multi-file rename | Manual via Cypher + find |
+| **Deep exploration** | `query` — hybrid BM25+vector semantic search | `find_code` — keyword search + fuzzy matching |
+| **Schema query** | `cypher` — raw Cypher | `execute_cypher_query` — read-only Cypher |
+| **Visualization** | Web UI graph explorer | Viz server + 2D/3D force graphs |
+| **Portability** | LadybugDB (Kuzu) embedded | 5 DB backends (Kuzu, FalkorDB, Neo4j, Nornic, LadybugDB) |
+| **Ecosystem** | npm/Node.js, TypeScript tooling | pip/Python, Typer CLI, SCIP deep indexers |
+| **Graph schema** | Symbols + Processes + Clusters | Classes, Functions, Variables, Files, Imports, Inheritance |
+
+## When to Use Each
+
+| Situation | Use |
+|-----------|-----|
+| "What breaks if I change this function?" | **GitNexus** `impact` (blast radius + risk level) |
+| "What files changed in the diff and which symbols are affected?" | **GitNexus** `detect_changes` |
+| "I need to rename `foo()` to `bar()` across the codebase" | **GitNexus** `rename` (dry_run) |
+| "Show me all callers of this function" | Either — GitNexus `context` or CGC `analyze_code_relationships` |
+| "Find all functions matching this pattern" | **CGC** `find_code` (fuzzy search) |
+| "Show me the class hierarchy for X" | **CGC** `analyze_code_relationships` (inheritance) |
+| "Write a custom Cypher query to find patterns" | Either — same graph query language |
+| "Who imports this module?" | **CGC** `analyze_code_relationships` (imports type) |
+| "Find dead code across the codebase" | **CGC** `find_dead_code` |
+| "Show me a visual graph of module dependencies" | **CGC** `visualize_graph_query` + viz server |
+| "Pre-indexed bundles for reference repos" | **CGC** `load_bundle` / `search_registry_bundles` |
+
+## CGC Quick Start
+
+```bash
+# Install (Python project — already in useful_repos)
+cd C:\Dev\useful_repos\CodeGraphContext
+pip install -e .
+
+# Index this project
+cgc index C:\Dev\projects\investment_trying
+
+# CLI queries
+cgc find "Huber"
+cgc analyze callers "compute_mre_gap"
+cgc analyze dead-code
+cgc query complexity
+
+# Start viz server
+cgc visualize
+```
+
+## Search Productivity — Use GitNexus/CGC Instead of Grep/Glob
+
+Both GitNexus and CGC index the entire codebase into knowledge graphs, enabling **concept-based search** that grep/glob cannot do. Agents in this project MUST prefer these tools for code discovery.
+
+| Task | Use | Example |
+|------|-----|---------|
+| Find where LockBox is used | **GitNexus** `query` or `context` | `npx gitnexus query "LockBox blind holdout"` |
+| Find all callers of a function | **GitNexus** `context` | `npx gitnexus context "create_lock_box"` |
+| What breaks if I change X? | **GitNexus** `impact` | `npx gitnexus impact "NestedPurgedCV"` |
+| Find all functions named "Huber" | **CGC** `find name` or `find pattern` | `cgc find name "Huber"` |
+| Fuzzy search for "fuzzy logic" | **CGC** `find content` | `cgc find content "fuzzy logic"` |
+| Find dead code | **CGC** `analyze dead-code` | `cgc analyze dead-code` |
+| Show class hierarchy | **CGC** `analyze` | `cgc analyze inheritance "BaseOptimizer"` |
+| which files changed and affected symbols | **GitNexus** `detect_changes` | `npx gitnexus detect_changes` |
+| Raw Cypher query | Either | `npx gitnexus cypher "MATCH (f:Function) RETURN f.name LIMIT 10"` |
+
+**This replaces:** `grep`, `rg`, `glob`, `codebase_search` for any search that involves understanding code structure, call relationships, or impact analysis.
+
+---
+
+## Keeping Indexes Fresh — MANDATORY Protocol
+
+**Neither GitNexus nor CGC auto-updates by default.** After creating, modifying, or deleting files, you MUST refresh the indexes.
+
+### Default: CGC Live Watcher (Auto)
+
+CGC's `watch` runs as a background process, monitoring `src/` for file changes and auto-updating the graph:
+
+```bash
+# Start once per machine reboot (already running as of 2026-05-22)
+cd C:\Dev\useful_repos\CodeGraphContext
+$env:PYTHONIOENCODING = "utf-8"
+uv run cgc watch C:\Dev\projects\investment_trying\src
+```
+
+**Agents:** verify the watcher is running with `Get-Job -Name "CGCWatcher"`. If missing, restart it.
+
+### After Significant Changes: Reindex Both
+
+After creating/deleting 5+ files, moving modules, or adding new packages:
+
+```bash
+# GitNexus: full reindex (~2 min)
+npx gitnexus analyze
+
+# CGC: force reindex of src/ (~1-4 min, tree-sitter parsing)
+cd C:\Dev\useful_repos\CodeGraphContext
+$env:PYTHONIOENCODING = "utf-8"
+uv run cgc index --force C:\Dev\projects\investment_trying\src
+```
+
+### Freshness Check
+
+```bash
+npx gitnexus status          # Shows indexed commit vs HEAD
+cgc stats C:\Dev\projects\investment_trying\src   # Shows file/function/class counts
+```
+
+### Auto-Refresh Checklist (Per-Session)
+
+| Check | Command |
+|-------|---------|
+| GitNexus up to date? | `npx gitnexus status` — must show "✅ up-to-date" |
+| CGC watcher alive? | `Get-Job -Name "CGCWatcher"` — must show "Running" |
+| CGC index fresh? | `cgc stats` — function count should grow with new code |
+
+---
+
+## Phase 25: 66-Paper Master Comparison Report — Fully Implemented (2026-05-22)
+
+All 42 implementable items from `useful_resources/papers_md/MASTER_COMPARISON_REPORT_2026-05-21.md` are now implemented.
+
+### Anti-Overfitting Infrastructure
+
+| Tool | File | Purpose | Paper |
+|------|------|---------|-------|
+| **LockBox** | `src/ml/lock_box.py` | Blind holdout, one-time access enforcement | C1 |
+| **NestedPurgedCV** | `src/ml/nested_cv.py` | Inner=hyperparams, Outer=evaluation, never mix | C2 |
+| **Blind Analysis** | `src/ml/blind_analysis.py` | Tune on scrambled labels, evaluate on true | C13 |
+| **Label Shuffling** | `src/ml/label_shuffling.py` | Verify model doesn't exploit noise structure | C22 |
+| **Huber Loss** | `src/ml/models/catboost_wrapper.py` + 2 others | `Huber:delta=1.0` replaces all RMSE regressors | A8 |
+
+### New ML/Analysis Modules
+
+| Tool | File | Purpose | Paper |
+|------|------|---------|-------|
+| **SVMRegimeClassifier** | `src/ml/svm_regime.py` | Raw price sequence SVM (82% precision) | B34 |
+| **Dual Alpha/Beta** | `src/analysis/dual_alpha_beta.py` | Bull/bear alpha-beta + Chow test | E9 |
+| **NSGA2Optimizer** | `src/optimization/nsga2_optimizer.py` | Pareto multi-objective optimization | B33 |
+| **DynamicGAOptimizer** | `src/optimization/dynamic_ga.py` | Per-regime GA with associative memory | B35 |
+| **FuzzyInferenceSystem** | `src/signals/fuzzy_system.py` | 5-state Mamdani fuzzy logic | B32 |
+
+### NLP Sentiment Pipeline
+
+| Tool | File | Purpose | Paper |
+|------|------|---------|-------|
+| **SVMTfidfSentiment** | `src/nlp/sentiment_pipeline.py` | SVM+TF-IDF (82-94% accuracy) | D3 |
+| **BiLSTMSentiment** | `src/nlp/sentiment_pipeline.py` | 128d embed → BiLSTM(64u) → dropout(0.25) → LR(C=10) | D4 |
+| **Distant Supervision** | `src/nlp/sentiment_pipeline.py` | :) / :( as noisy labels, 80%+ accuracy | D1 |
+| **SentimentEnsemble** | `src/nlp/sentiment_pipeline.py` | RF+SVM+DT via AdaBoost (93.4%) | D8 |
+
+### Mandatory Pre-Commit Checklist (UPDATED)
+
+Every commit must now pass these additional checks:
+
+| Check | Tool |
+|-------|------|
+| Blast radius for all edited symbols | `gitnexus_impact` before editing |
+| Change detection before commit | `gitnexus_detect_changes` |
+| GitNexus index fresh (stale → reindex) | `npx gitnexus status` |
+| CGC index fresh (reindex if file count mismatch) | `cgc stats` |
+| **NEW:** Label-shuffling test on new feature models | `src/ml/label_shuffling.py` |
+| **NEW:** MRE-gap for any new ML model | `src/ml/model_validation.py` |
+| **NEW:** Blind analysis for hyperparameter tuning | `src/ml/blind_analysis.py` |
+
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **investment_trying_lab_private** (28316 symbols, 43736 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **investment_trying_lab_private** (35906 symbols, 54953 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 

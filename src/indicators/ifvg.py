@@ -9,6 +9,7 @@ Reference: SMC-ICT-ML-Hybrid-Backtester Brief
 """
 
 import pandas as pd
+import numpy as np
 from typing import List, Optional, Tuple
 from dataclasses import dataclass
 
@@ -31,6 +32,8 @@ class IFVG:
         atr_at_creation: ATR value when gap formed
         gap_size: Size of the gap (high - low)
         created_at: Timestamp of gap creation
+        ce: Consequent Encroachment (50% midpoint of FVG)
+        zero_overlap: Whether strict ICT zero-wick-overlap rule is satisfied
     """
 
     high: float
@@ -43,11 +46,15 @@ class IFVG:
     atr_at_creation: float = 0.0
     gap_size: float = 0.0
     created_at: Optional[pd.Timestamp] = None
+    ce: float = 0.0
+    zero_overlap: bool = False
 
     def __post_init__(self):
-        """Calculate gap size after initialization."""
+        """Calculate gap size and CE after initialization."""
         if self.gap_size == 0.0:
             self.gap_size = self.high - self.low
+        if self.ce == 0.0:
+            self.ce = (self.high + self.low) / 2.0
 
     def to_dict(self) -> dict:
         """Convert to dictionary."""
@@ -62,6 +69,8 @@ class IFVG:
             "fill_bar": self.fill_bar,
             "atr_at_creation": self.atr_at_creation,
             "created_at": str(self.created_at) if self.created_at else None,
+            "ce": self.ce,
+            "zero_overlap": self.zero_overlap,
         }
 
     def contains_price(self, price: float) -> bool:
@@ -88,6 +97,8 @@ class IFVGProximity:
         edge_price: The IFVG edge price closest to current price
         is_bullish: Whether the IFVG is bullish
         within_proximity: Whether price is within proximity threshold
+        distance_to_ce: Distance from current price to CE (50% midpoint)
+        distance_ce_atr_ratio: CE distance normalized by ATR
     """
 
     nearest_ifvg: Optional[IFVG]
@@ -96,6 +107,8 @@ class IFVGProximity:
     edge_price: float
     is_bullish: bool
     within_proximity: bool
+    distance_to_ce: float = float("inf")
+    distance_ce_atr_ratio: float = float("inf")
 
     def to_dict(self) -> dict:
         """Convert to dictionary."""
@@ -176,7 +189,7 @@ def detect_ifvg(
         # bar1 high < bar3 low (gap between bar1 and bar3)
         bullish_gap = bar3["Low"] - bar1["High"]
         if bullish_gap > (atr_mult * atr_value):
-            # Valid bullish IFVG
+            zero_overlap = _validate_fvg_zero_overlap(df, i, "bullish")
             ifvg = IFVG(
                 high=bar3["Low"],
                 low=bar1["High"],
@@ -186,6 +199,7 @@ def detect_ifvg(
                 atr_at_creation=atr_value,
                 gap_size=bullish_gap,
                 created_at=df.index[i] if isinstance(df.index, pd.DatetimeIndex) else None,
+                zero_overlap=zero_overlap,
             )
             ifvgs.append(ifvg)
             logger.debug(
@@ -197,7 +211,7 @@ def detect_ifvg(
         # bar1 low > bar3 high (gap between bar1 and bar3)
         bearish_gap = bar1["Low"] - bar3["High"]
         if bearish_gap > (atr_mult * atr_value):
-            # Valid bearish IFVG
+            zero_overlap = _validate_fvg_zero_overlap(df, i, "bearish")
             ifvg = IFVG(
                 high=bar1["Low"],
                 low=bar3["High"],
@@ -207,6 +221,7 @@ def detect_ifvg(
                 atr_at_creation=atr_value,
                 gap_size=bearish_gap,
                 created_at=df.index[i] if isinstance(df.index, pd.DatetimeIndex) else None,
+                zero_overlap=zero_overlap,
             )
             ifvgs.append(ifvg)
             logger.debug(
@@ -247,6 +262,8 @@ def find_nearest_unfilled_ifvg(
             edge_price=0.0,
             is_bullish=False,
             within_proximity=False,
+            distance_to_ce=float("inf"),
+            distance_ce_atr_ratio=float("inf"),
         )
 
     current_price = df.iloc[current_bar]["Close"]
@@ -266,6 +283,8 @@ def find_nearest_unfilled_ifvg(
             edge_price=0.0,
             is_bullish=False,
             within_proximity=False,
+            distance_to_ce=float("inf"),
+            distance_ce_atr_ratio=float("inf"),
         )
 
     # Find nearest IFVG
@@ -298,9 +317,14 @@ def find_nearest_unfilled_ifvg(
             edge_price=0.0,
             is_bullish=False,
             within_proximity=False,
+            distance_to_ce=float("inf"),
+            distance_ce_atr_ratio=float("inf"),
         )
 
     distance_atr_ratio = min_distance / atr if atr > 0 else float("inf")
+
+    ce_dist = abs(current_price - nearest.ce) if nearest.ce > 0 else float("inf")
+    ce_atr_ratio = ce_dist / atr if atr > 0 else float("inf")
 
     return IFVGProximity(
         nearest_ifvg=nearest,
@@ -309,6 +333,8 @@ def find_nearest_unfilled_ifvg(
         edge_price=nearest_edge,
         is_bullish=nearest.direction == "bullish",
         within_proximity=distance_atr_ratio <= proximity_threshold,
+        distance_to_ce=ce_dist,
+        distance_ce_atr_ratio=ce_atr_ratio,
     )
 
 
@@ -381,6 +407,107 @@ def get_active_ifvgs(ifvgs: List[IFVG], current_bar: int, max_age: int = 50) -> 
 
     # Sort by distance (closest first)
     return sorted(active, key=lambda x: x.end_bar, reverse=True)
+
+
+def _validate_fvg_zero_overlap(df: pd.DataFrame, i: int, direction: str) -> bool:
+    """Validate strict ICT FVG zero-wick-overlap rule.
+
+    Bullish FVG: C1 high must NOT overlap C3 low — high[i-2] < low[i].
+    Bearish FVG: C1 low must NOT overlap C3 high — low[i-2] > high[i].
+
+    Returns True only if zero overlap exists.
+    """
+    if i < 2 or i >= len(df):
+        return False
+
+    if direction == "bullish":
+        return float(df.iloc[i - 2]["High"]) < float(df.iloc[i]["Low"])
+    else:
+        return float(df.iloc[i - 2]["Low"]) > float(df.iloc[i]["High"])
+
+
+def _compute_fvg_quality(
+    df: pd.DataFrame,
+    i: int,
+    fvg_direction: str,
+    atr: float,
+    bos_signals: "np.ndarray | None" = None,
+    htf_bias: "np.ndarray | None" = None,
+    half_life_bars: float = 20.0,
+) -> float:
+    """Compute per-bar FVG quality score 0.0-1.0 based on ICT quality filters.
+
+    Components:
+    1. BOS-triggered (0.0-0.3): FVG formed during BOS event
+    2. Freshness (0.0-0.3): exponential decay, half-life=20 bars
+    3. Premium/Discount alignment (0.0-0.4): FVG in correct zone for bias
+    4. Size significance (0.0-0.2): gap_size / ATR ratio
+    """
+    score = 0.0
+
+    if bos_signals is not None and i < len(bos_signals) and bos_signals[i] != 0:
+        score += 0.3
+
+    for lag in range(1, min(i, 50) + 1):
+        if _validate_fvg_zero_overlap(df, i - lag, fvg_direction):
+            freshness = float(np.exp(-lag * np.log(2) / half_life_bars))
+            score += 0.3 * freshness
+            break
+
+    if htf_bias is not None and i < len(htf_bias) and htf_bias[i] != 0.0:
+        bias_dir = "bullish" if htf_bias[i] > 0 else "bearish"
+        if fvg_direction == bias_dir:
+            score += 0.4
+
+    gap_size = abs(float(df.iloc[i - 2]["High"]) - float(df.iloc[i]["Low"]))
+    if atr > 0:
+        size_ratio = gap_size / atr
+        score += 0.2 * min(size_ratio / 2.0, 1.0)
+
+    return float(np.clip(score, 0.0, 1.0))
+
+
+def _compute_ce_proximity(
+    df: pd.DataFrame, i: int, atr: float, proximity_mult: float = 2.0
+) -> Tuple[float, float]:
+    """Compute proximity to nearest FVG's Consequent Encroachment (CE) midpoint.
+
+    Returns (ce_proximity_score, distance_ce_atr_ratio).
+    """
+    if i < 3:
+        return 0.0, float("inf")
+
+    close = float(df.iloc[i]["Close"])
+
+    for lag in range(1, min(i, 30)):
+        j = i - lag
+        if j < 2:
+            break
+
+        bullish_fvg = _validate_fvg_zero_overlap(df, j, "bullish")
+        bearish_fvg = _validate_fvg_zero_overlap(df, j, "bearish")
+
+        fvg_ce = None
+        fvg_dir = None
+        if bullish_fvg:
+            fvg_ce = (float(df.iloc[j - 2]["High"]) + float(df.iloc[j]["Low"])) / 2.0
+            fvg_dir = "bullish"
+        elif bearish_fvg:
+            fvg_ce = (float(df.iloc[j - 2]["Low"]) + float(df.iloc[j]["High"])) / 2.0
+            fvg_dir = "bearish"
+
+        if fvg_ce is not None and fvg_dir is not None:
+            distance = abs(close - fvg_ce)
+            threshold = proximity_mult * atr
+            if distance < threshold and atr > 0:
+                if (fvg_dir == "bullish" and close > fvg_ce) or (
+                    fvg_dir == "bearish" and close < fvg_ce
+                ):
+                    score = float(np.clip(1.0 - distance / threshold, 0.1, 1.0))
+                    return score, distance / atr
+        break
+
+    return 0.0, float("inf")
 
 
 def calculate_ifvg_entry_zones(

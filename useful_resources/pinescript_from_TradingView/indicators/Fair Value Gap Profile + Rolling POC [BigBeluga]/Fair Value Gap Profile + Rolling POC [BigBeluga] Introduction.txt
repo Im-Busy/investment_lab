@@ -1,0 +1,70 @@
+🔵 OVERVIEW
+FVG Profile [BigBeluga] builds a price-level profile based on detected Fair Value Gaps (FVGs) over a fixed lookback period.
+Instead of measuring traded volume alone, this tool aggregates bullish and bearish FVG occurrences into horizontal bins, allowing traders to see where price inefficiencies are most concentrated.
+
+Each profile level represents how many bullish and bearish FVGs formed near that price zone, along with their relative strength, imbalance, and delta volume.
+
+🔵 CONCEPTS
+FVG Detection —
+• Bullish FVG: when the high two bars back is below the current low.
+• Bearish FVG: when the low two bars back is above the current high.
+snapshot
+Price Binning — The full price range of the lookback period is divided into fixed bins.
+FVG Aggregation — Each detected FVG is mapped to its nearest price bin and counted.
+Directional Separation — Bullish and bearish FVGs are stored separately inside each bin.
+
+
+🔵 FEATURES
+Bull / Bear FVG Profile —
+• Green segments represent bullish FVG counts.
+snapshot
+
+• Orange segments represent bearish FVG counts.
+snapshot
+
+• Each bin visually shows how many FVGs occurred at that level.
+snapshot
+Strength Percentage —
+• Each bin displays a % value based on total FVG count.
+• The strongest bin is normalized to 100%.
+snapshot
+Delta Volume —
+• Calculates the difference between bullish and bearish FVG volume per bin.
+• Positive delta = bullish dominance.
+• Negative delta = bearish dominance.
+snapshot
+Heatmap Mode —
+• Colors profile levels by relative strength.
+• Color direction is driven by delta volume (bullish vs bearish).
+snapshot
+Live FVG Visualization — Optionally plots individual bullish and bearish FVG boxes on the chart.
+snapshot
+Profile Background — A background frame highlights the full analyzed price range.
+snapshot
+
+
+🔵 Rolling POC Logic
+Unlike a static profile, the Rolling POC moves with price.
+It continuously calculates the "peak imbalance level" for the last X bars, providing a moving average of where the market's most significant gaps are forming.
+snapshot
+
+
+🔵 Moving Average Integration
+The indicator features a customizable Moving Average (SMA, EMA, WMA, VWMA, etc.).
+This MA helps identify if the price is currently trending toward or away from high-density FVG zones.
+An "Auto" length feature is included that scales the MA based on the selected lookback period for optimal smoothing.
+snapshot
+
+
+🔵 HOW TO USE
+Identify FVG Clusters — Strong profile levels highlight prices where inefficiencies repeatedly formed.
+Directional Bias — Compare bullish vs bearish segments to determine dominance at each level.
+Delta Confirmation — Use delta volume to confirm whether bullish or bearish FVGs control the zone.
+Reaction Zones — High-strength bins often act as areas of interest for price reactions.
+snapshot
+Heatmap Context — Enable heatmap to quickly spot dominant imbalance zones across the range.
+
+
+🔵 CONCLUSION
+FVG Profile [BigBeluga] transforms Fair Value Gaps into a structured price-level profile, revealing where inefficiencies cluster and which side dominates those zones.
+By combining FVG count, directional balance, delta volume, and strength normalization, it provides a powerful way to analyze imbalance behavior beyond traditional volume profiles.

@@ -274,7 +274,7 @@ class VolatilityForecaster:
             l2_leaf_reg=self.l2_leaf_reg,
             random_seed=self.random_seed,
             verbose=self.verbose,
-            loss_function="RMSE",
+            loss_function="Huber:delta=1.0",
             task_type="CPU",
         )
         self._model.fit(X.values, y.values, cat_features=cat_features or [])
@@ -449,7 +449,7 @@ class VolatilityForecaster:
                 l2_leaf_reg=self.l2_leaf_reg,
                 random_seed=self.random_seed,
                 verbose=False,
-                loss_function="RMSE",
+                loss_function="Huber:delta=1.0",
                 task_type="CPU",
             )
             model.fit(X_arr[train_idx], y_arr[train_idx])
@@ -488,7 +488,7 @@ class VolatilityForecaster:
             l2_leaf_reg=self.l2_leaf_reg,
             random_seed=self.random_seed,
             verbose=False,
-            loss_function="RMSE",
+            loss_function="Huber:delta=1.0",
             task_type="CPU",
         )
         self._model.fit(X_arr, y_arr)

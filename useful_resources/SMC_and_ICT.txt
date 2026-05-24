@@ -1,0 +1,1749 @@
+Day 1: ICT vs SMC — What’s the Real Difference? (And Why It Matters to You)
+
+Hey Guys — We Know It’s Been a While. We’re Back.
+And honestly? We missed this.
+
+It’s been a few months since our last post, and if you’ve been waiting — thank you for sticking around. We didn’t disappear on you. We were heads down, studying, refining, and making sure that when we came back, we came back with something genuinely worth your time.
+
+So here’s what we’re doing. Over the next 21 days, we’re publishing a complete educational blog series on one of the most searched, most debated topics in trading right now: ICT vs SMC.
+
+Whether you’re just getting started or you’ve been at this for years, this series is going to give you a clear, no-fluff breakdown of both methodologies — side by side — so you can stop second-guessing and start trading with real direction.
+
+Let’s get into it.
+
+So You’ve Heard the Terms — But What Do They Actually Mean?
+If you’ve spent any time on trading YouTube lately, you’ve probably heard ICT and SMC thrown around constantly. Sometimes people use them interchangeably. Sometimes they argue about which one is “better.” And if you’re newer to this, you’re probably wondering — are these even different things?
+
+Let’s clear this up right now, in plain English.
+
+What Is ICT (Inner Circle Trader)?
+ICT stands for Inner Circle Trader, and it’s the methodology built by a trader named Michael J. Huddleston. He developed an entire trading education system based on one central idea: banks, hedge funds, and large institutions move markets in predictable ways — and retail traders can learn to follow that flow instead of being crushed by it.
+
+ICT is a complete framework. It includes specific trade entry models, time-based setups called Kill Zones, and precise tools like Optimal Trade Entry (OTE), Fair Value Gaps, and Order Blocks. Think of it as a fully structured system with its own philosophy, its own terminology, and its own rules for execution.
+
+The core belief? Price doesn’t move randomly. It moves to hunt liquidity — the stop-loss orders and pending positions placed by everyday retail traders like you and me.
+
+[smc_and_ict_day01_core_belief_hunt_liquidity.png]
+
+Liquidity Sweep Scenario
+What Is SMC (Smart Money Concepts)?
+Here’s where it gets interesting — and where most people get it wrong.
+
+SMC didn’t come from somewhere else. Huddleston himself coined the term Smart Money Concepts. Over time, the trading community adopted “SMC” as a shorthand for the simplified, more accessible version of his teachings. YouTube educators ran with it, Reddit communities built around it, and SMC took on its own identity as the beginner-friendlier entry point into the same institutional thinking.
+
+So the cleanest way to understand the relationship:
+
+ICT = the full original framework, directly from Huddleston, with deep complexity and time-specific rules
+SMC = the community’s streamlined interpretation of those same ideas, more accessible, more flexible
+Neither is fake. Neither is inferior. They’re the same tree — just different branches.
+
+[smc_and_ict_day01.png]
+
+Diagram Showing Ict And Smc Both Branching From Institutional Market Thinking, Converging At The Same Core Principle — Trading With Smart Money.
+The Key Differences at a Glance
+ICT	SMC
+Origin	Michael J. Huddleston	Community-derived from ICT
+Complexity	High — steep learning curve	Moderate — more accessible
+Time sensitivity	Very specific (Kill Zones, sessions)	More flexible
+Terminology	Unique, proprietary	Simplified, standardised
+Best for	Detail-oriented, committed traders	Beginners to intermediate traders
+A Real-World Analogy
+Think of it like learning to cook at a professional level.
+
+ICT is enrolling in a full culinary school — rigorous, precise, with a specific technique for every single situation. SMC is the well-produced YouTube cooking channel inspired by that same school — you get the essential principles and enough to cook excellent meals, without memorising every rule in the textbook.
+
+Neither is wrong. It depends on where you are in your journey right now.
+
+Why This Matters for Your Trading
+Both ICT and SMC share the same fundamental belief: institutions move markets, and retail traders can learn to follow that flow rather than be on the wrong side of it.
+
+The real question was never which one is “better.” The real question is which one fits you — your schedule, your patience, your current skill level, and your goals.
+
+Over the next 20 days, we’re breaking down every concept, every tool, and every strategy from both worlds — side by side — so you can make that call with real knowledge, not just YouTube hype.
+
+Up Next — Day 2
+Now that you understand what ICT and SMC actually are, the next natural question is: where did all of this really come from?
+
+Tomorrow on Day 2, we’re going straight into the origin story — from a Michigan kid servicing vending machines, to building one of the most-followed trading methodologies on the planet. Plus the older trading legend whose ideas quietly started it all.
+
+It’s a better story than you think.
+
+→ See you on Day 2.
+
+Day 2: ICT vs SMC Origin Story — Where Did Smart Money Concepts Come From?
+
+To truly appreciate the significance of the ICT vs SMC Origin Story, it’s essential to dive deep into its components.
+
+ICT vs SMC Origin Story
+Every Powerful Idea Has a Beginning
+Understanding the ICT vs SMC Origin Story is essential for grasping the evolution of trading strategies.
+
+The ICT vs SMC Origin Story illustrates how two distinct trading methodologies emerged from the same foundational principles.
+
+In this exploration of the ICT vs SMC Origin Story, we will uncover the key influences that shaped these methodologies.
+
+Welcome back to Day 2 of the ICT vs SMC series. Yesterday we broke down what these two methodologies actually are and how they relate to each other. Today we go deeper — into the story behind it all.
+
+Because before you mark up a single order block or draw a fair value gap, you should know where these ideas came from and who built them. Understanding the roots will change how you see everything on a chart.
+
+Let’s get into it.
+
+As we delve into the ICT vs SMC Origin Story, it’s crucial to recognize the impact of early experiences on the development of these strategies.
+
+The Man Behind It All: Michael J. Huddleston
+The entire ICT and SMC world traces back to one person — Michael J. Huddleston, born and raised in St. Joseph, Michigan. He didn’t come from money or finance. His uncle, who had found success trading commodities, consistently encouraged him to look into futures and options trading. Michael was skeptical at first — and his actual career started with servicing vending machines.
+
+That’s not an exaggeration. The man whose ideas now dominate trading YouTube, Reddit communities, and prop firm prep courses around the world started out servicing vending machines.
+
+This phase of the ICT vs SMC Origin Story highlights the trials faced by traders and the lessons learned from them.
+
+Ultimately, these experiences laid the groundwork for the comprehensive ICT vs SMC Origin Story that we discuss today.
+
+How It Actually Started — Getting the Timeline Right
+Here’s something most blogs get wrong about Huddleston’s story, and we want to give you the accurate version.
+
+His trading journey didn’t begin with Larry Williams. It began when he came across an advertisement for a trading course in Entrepreneur magazine. He enrolled, got into the markets, and suffered early, painful losses — including a 50% loss on Orange Juice Options that stung badly enough to send him back to the drawing board.
+
+It was after those early losses that he sought better education and enrolled in courses taught by Larry Williams. That improved his approach significantly. He developed a system using stochastic divergence to go long on the hourly timeframe — and in the raging bull market of the mid-1990s, it worked. He went on a nine-month winning streak and started believing he had cracked the market.
+
+Then conditions changed. And nearly everything he had built evaporated.
+
+That painful experience — gaining and losing — became the foundation of everything he would later teach. He spent years rebuilding, researching, and developing a completely different way of reading the market.
+
+[smc_and_ict_day02.png]
+
+Alt text: Timeline diagram showing Michael Huddleston’s trading journey from early life in Michigan through losses, Larry Williams courses, a 9-month winning streak, a market shift reversal, years of research, and the birth of the ICT framework in the early 2000s.
+
+How the “Inner Circle Trader” Name Was Born
+The understanding of this ICT vs SMC Origin Story is critical for anyone looking to master trading methodologies based on these principles.
+
+Here’s a detail most people don’t know. The name had no deep philosophical meaning behind it. Huddleston came across a course that Larry Williams ran called the “Inner Circle Workshop” — and simply liked the phrase. He took it, made it his own brand, and began presenting his work under the title Inner Circle Trader.
+
+That’s it. One of the most recognised names in retail trading was born because a phrase sounded cool to a Michigan trader rebuilding from losses.
+
+Richard Wyckoff’s influence is also a pivotal element in the ICT vs SMC Origin Story, showcasing the evolution of market analysis.
+
+What He Actually Built
+What Huddleston created was not just another set of indicators or patterns. He built a completely different explanation for why price moves. His argument: markets are not random, and they don’t move simply because of supply and demand pressure. Instead, institutional players — banks, hedge funds, large operators — algorithmically engineer price movement to hunt retail stop losses and accumulate liquidity before making their real move.
+
+Thus, the ICT vs SMC Origin Story is not just about techniques; it’s about the legacy of market understanding.
+
+As the ICT vs SMC Origin Story unfolds, we see how these methodologies became accessible to a broader audience.
+
+From this came the core ICT tools: Order Blocks, Fair Value Gaps, liquidity pools, market structure analysis, and his concept of the Interbank Price Delivery Algorithm (IPDA).
+
+Tomorrow, we will further explore the implications of the ICT vs SMC Origin Story on modern trading practices.
+
+Understanding the full context of the ICT vs SMC Origin Story will enhance your trading strategies significantly.
+
+Join us as we unravel the complexities of the ICT vs SMC Origin Story and its relevance in today’s market.
+
+Anticipate more insights from the ICT vs SMC Origin Story that will guide your trading journey.
+
+The Wyckoff Foundation
+No origin story for ICT or SMC is complete without mentioning Richard Wyckoff — a stock market analyst and educator from the early 1900s who was the first to formally map out how large operators move markets through predictable phases of accumulation, markup, distribution, and markdown.
+
+Huddleston built on those foundational ideas and modernised them with new terminology and precision tools. The connection is direct: what Wyckoff called a “Spring” — a false move below support to trap sellers — SMC traders today call a liquidity grab. Same concept, a century apart.
+
+Where SMC Fits In
+As Huddleston’s teachings spread through YouTube and trading communities, educators began simplifying and repackaging his ideas into what the community now broadly calls SMC. The core principles stayed the same — the terminology got cleaner, the learning curve got lower, and millions of beginner and intermediate traders found an entry point into institutional thinking they previously had no access to.
+
+Up Next — Day 3
+Now that you know the full origin story, tomorrow we tackle the concept that both ICT and SMC are built on — and the one thing every trader using either methodology must get right before anything else works: market structure.
+
+If your market structure reading is off, every order block, every FVG, every setup becomes noise. Day 3 will fix that.
+
+→ See you on Day 3.
+
+
+
+Day 3: SMC & ICT Market Structure Explained — BOS, CHoCH & Swing Points (2026)
+
+Welcome Back — This Is the One You Can’t Skip
+Day 3. If you’ve been following along since Day 1, you now know what ICT and SMC are, where they came from, and the story behind the man who built them. Today we get into the actual trading content — and we’re starting exactly where every serious SMC and ICT trader starts.
+
+Market structure.
+
+Not order blocks. Not fair value gaps. Not liquidity grabs. Market structure first. Because every single other concept in this series sits on top of what you’re about to learn today. Get this wrong, and nothing else works. Get this right, and suddenly the chart starts telling you a story instead of looking like random noise.
+
+Let’s build that foundation.
+
+What Is Market Structure?
+At its core, market structure is simply the sequence of swing highs and swing lows that price leaves behind as it moves. It tells you three things in plain terms:
+
+Is price going up — making higher highs and higher lows?
+Is price going down — making lower lows and lower highs?
+Is price going nowhere — consolidating sideways, building for the next move?
+That’s it. Three states. Every market, every timeframe, every asset — it’s always in one of those three phases.
+
+What makes SMC and ICT different from traditional analysis is how they use this structure. It’s not just about identifying a trend. It’s about understanding that every swing high and swing low is a pool of resting orders — stop losses placed by retail traders — that smart money will eventually target.
+
+Defining a Valid Swing Point
+Before you can read structure, you need to know what counts as a real swing point. In ICT and SMC, a valid swing high is a three-candle formation where the middle candle’s high is higher than the candles on both sides. A valid swing low is the opposite — the middle candle’s low is lower than both surrounding candles.
+
+Critically: a wick alone does not confirm a structure break. Price must close — full candle body — beyond the previous swing point. A wick through a level is treated as a liquidity sweep, not a structural shift. This one rule alone saves you from a huge number of false signals.
+
+Break of Structure (BOS) — Trend Continuation
+A Break of Structure is the market’s way of saying: the trend is still on.
+
+In an uptrend, a BOS is confirmed when price closes above the most recent swing high. In a downtrend, it’s confirmed when price closes below the most recent swing low. It tells you buyers or sellers are still in control and the trend is intact.
+
+[smc_and_ict_day03.png]
+
+Alt Text: Side-By-Side Diagram Showing A Bullish Uptrend With Bos Confirmations And A Choch Warning Of Reversal On The Left, And A Bearish Downtrend With Bos Confirmations And A Choch Warning Of Reversal On The Right.
+Change of Character (CHoCH) — The Reversal Warning
+If BOS says the trend continues, CHoCH says something has changed.
+
+In an uptrend, a CHoCH occurs when price closes below a recent higher low — breaking the sequence that kept the uptrend intact. In a downtrend, it occurs when price closes above a recent lower high. It doesn’t guarantee a full reversal, but it is the market’s earliest signal that the current momentum is weakening and smart money may be repositioning.
+
+A key rule most beginners miss: a valid CHoCH must break the swing that was created by the last BOS — not just any random swing inside the structure. Getting this wrong is the single most common source of misread structure.
+
+Internal vs External Structure — The Layer Underneath
+Here’s where SMC adds a layer that most traditional traders miss entirely. Structure actually exists on two levels simultaneously:
+
+External structure — the major swing highs and lows visible on your current timeframe. These define the overall trend direction and are where institutional intent is most clearly expressed.
+
+Internal structure — the smaller swings that form inside each leg of the external structure. These are lower-timeframe movements that can tempt traders into false signals if mistaken for the real trend.
+
+The rule is simple: always define trend from external structure first. Use internal structure only to time your entry. If external structure is bearish and internal structure bounces temporarily higher, the bias stays bearish — you’re looking for sells, not buys.
+
+How ICT and SMC Differ on Structure
+Both frameworks agree on the fundamentals — higher highs and higher lows for uptrends, lower lows and lower highs for downtrends. Where they diverge is in what they do with it.
+
+ICT places heavy emphasis on the timeframe hierarchy — the daily chart sets the bias, the four-hour or one-hour provides the structural context, and the five-minute or lower is used only for precision entries. Structure on the higher timeframe always wins over what you see on a lower one.
+
+SMC takes a similar approach but gives traders more flexibility — structure principles remain consistent but aren’t locked to specific timeframe combinations the way ICT prescribes. This makes SMC more accessible for traders who want the logic without the rigid timeframe rules.
+
+The One Thing You Must Walk Away With Today
+Before you ever look for an order block, a fair value gap, or a liquidity grab — you must know the structural context you’re operating in. Is the market bullish or bearish at the higher timeframe? Has there been a BOS or a CHoCH? Where are the relevant swing points?
+
+Every trade setup we cover in the rest of this series will start with exactly those questions.
+
+Up Next — Day 4
+Now that you understand how markets are structured, tomorrow we tackle the single concept that powers all of it: Liquidity. Why does price move the way it does? What is it actually chasing? Day 4 answers that completely — and once you see it, you’ll never look at a swing high or low the same way again.
+
+→ See you on Day 4.
+
+Day 4: Liquidity — The Real Reason Price Moves
+
+Welcome Back — Today Everything Clicks Into Place
+Day 4. If you’ve been following this series from the start, you’ve learned what ICT and SMC are, where they came from, and how to read market structure. Today we go one level deeper — into the concept that explains why price does what it does.
+
+Not patterns. Not indicators. Not support and resistance in the traditional sense.
+
+Liquidity.
+
+This is the engine behind every move you’ve ever seen on a chart. Once you understand it, you’ll stop asking “why did price fake out there?” — because you’ll already know.
+
+What Liquidity Actually Means in This Context
+In standard finance, liquidity means how easily an asset can be bought or sold. In ICT and SMC, it means something more specific and far more useful: liquidity is the pool of pending orders — stop losses and buy/sell stops — resting at predictable price levels.
+
+Here’s the crucial insight: large institutions cannot just click a button and enter a $500 million position like you or I can enter a trade. They need opposing orders on the other side to fill against. They need someone to sell to them when they buy, and someone to buy from them when they sell. That supply of opposing orders is liquidity — and retail traders, by placing their stops at predictable levels, create it constantly.
+
+This is why price doesn’t move randomly. It moves purposefully — toward where the orders are.
+
+Buy-Side Liquidity (BSL) and Sell-Side Liquidity (SSL)
+These are the two fundamental pools your charts are full of every single day.
+
+Buy-Side Liquidity (BSL) sits above recent highs. When a trader goes short, their stop loss is placed above that high — a buy stop order that triggers automatically if price moves against them. Stack enough of these together and you have a dense pool of buy orders resting above any significant swing high, equal high, or previous session high.
+
+Sell-Side Liquidity (SSL) sits below recent lows. When a trader goes long, their stop loss rests below that low — a sell stop order. Enough of these below any swing low, equal low, or key support level, and you have a pool of sell orders waiting to be triggered.
+
+Institutions target both of these pools. They drive price into these clusters, trigger the stops, absorb the orders created, and then reverse in the direction they always intended to go.
+
+The Stop Hunt — What It Looks Like in Real Time
+This is what a stop hunt looks like in practice. Price is ranging. Retail traders see a strong resistance level — an obvious double top or equal high — and go short, placing their stops just above. Price then spikes above that level, triggering every one of those stops. The shorts are forced to close, creating a flood of buy orders. Institutions absorb those buy orders to fill their short positions, and then price drops aggressively.
+
+You weren’t wrong about the direction. You were just positioned on the wrong side of the liquidity pool.
+
+[smc_and_ict_day04.png]
+
+Alt Text: Diagram Showing Buy-Side Liquidity Zone Above Price And Sell-Side Liquidity Zone Below, With Equal Highs And Lows Marked, A Bsl Sweep Stop Hunt Followed By A Bearish Reversal, And An Ssl Sweep Followed By A Bullish Reversal.
+Equal Highs and Equal Lows — The Traps Retail Traders Walk Into
+Equal highs and equal lows deserve special attention because they are magnets for institutional activity. When price forms two or more similar highs at the same level, retail traders see strong resistance and pile in short. When it forms two or more similar lows, they see strong support and pile in long.
+
+Institutions see something entirely different — they see a densely packed liquidity pool just waiting to be tapped. Equal highs are almost always swept before a true reversal. Equal lows are almost always swept before a genuine bullish continuation. The retail crowd is simply providing the fuel.
+
+Premium and Discount Zones — Where Should You Be Buying and Selling?
+This concept answers one of the most common beginner questions: is this a good price to enter?
+
+Every dealing range — the space between a swing low and a swing high — has a midpoint called equilibrium, found at the 50% level. Everything above that midpoint is the premium zone — price is considered expensive relative to the range. Everything below is the discount zone — price is considered cheap.
+
+The rule in both ICT and SMC is clean and intuitive: buy in discount, sell in premium. Institutions accumulate long positions in discount zones and distribute or sell in premium zones — it’s simply buying cheap and selling expensive at a structural level.
+
+Draw on Liquidity (DOL) — Where Is Price Actually Going?
+In ICT specifically, the concept of Draw on Liquidity answers the single most important question before any trade: where is price actually being pulled toward?
+
+The DOL is simply the nearest significant liquidity pool that price is gravitating toward — whether that’s a previous high with BSL resting above it, a previous low with SSL resting below it, or an old weekly level that hasn’t been swept yet. Every directional move has a target. Identifying the DOL before entering gives you a logical profit target that is grounded in where institutional order flow needs to go next.
+
+Up Next — Day 5
+Now that you understand liquidity — why it forms, where it sits, and how institutions use it — tomorrow we introduce the first entry tool that combines everything we’ve covered. Day 5 is all about Order Blocks: the institutional footprints that tell you exactly where smart money entered the market, and how to use them to time your own entries.
+
+It’s the concept that changes how you see every candlestick chart, forever.
+
+→ See you on Day 5.
+
+Day 5: Order Blocks Explained — ICT vs SMC Guide to Bullish & Bearish OBs
+
+Day 5 — This Is Where the Chart Starts Talking to You
+Welcome back. Over the last four days we’ve built a serious foundation:
+
+You know what ICT and SMC are and where they came from
+You understand market structure — BOS, CHoCH, swing points
+You understand liquidity — why price hunts stop losses before moving
+Today we put the first entry tool in your hands. The one concept that every ICT and SMC trader returns to again and again, on every timeframe, in every market.
+
+Order Blocks.
+
+Once you understand these, you’ll stop staring at candles wondering what they mean — and start reading them as institutional footprints.
+
+What Is an Order Block?
+An order block is a specific price zone on the chart where large institutions placed significant buy or sell orders just before a strong, impulsive market move. It is the last candle — or tight group of candles — before price accelerates sharply in one direction.
+
+Why does it matter? Because institutions cannot execute a $500 million position in a single click. They accumulate gradually, building positions over a range of prices. That accumulation leaves a mark on the chart. When price returns to that zone later, those unfilled institutional orders are still there — waiting — and the market tends to react strongly when it taps back into them.
+
+Think of an order block as an institutional bookmark. It marks where smart money was active, and it tells you where they’re likely to be active again.
+
+The Bullish Order Block
+A bullish order block forms during a downward move. Specifically, it is the last bearish candle before a strong bullish impulse — the final down candle before price launches upward aggressively.
+
+The logic: institutions were quietly accumulating long positions during that final bearish candle. Retail traders were selling. Smart money was absorbing every one of those sell orders to build their long position. Then, once enough orders were filled, price exploded upward.
+
+When price retraces back into that zone later, those same institutional buy orders are still resting there — creating a support level grounded in actual order flow, not just a drawn line on a chart.
+
+How to draw it: Mark the zone from the low to the high of that last bearish candle before the bullish impulse. Your entry is on the retest of this zone. Your stop loss goes below the low of the order block — if price closes below it, the institutional logic is invalidated.
+
+[smc_and_ict_day05_EURUSD_Showcase.png]
+
+The Bearish Order Block
+A bearish order block is the mirror. It is the last bullish candle before a strong bearish impulse — the final up candle before price drops sharply.
+
+Institutions were building short positions during that final bullish candle while retail traders were buying in excitement. Once enough sell orders were accumulated, price collapsed. When price retraces back up into that zone, it acts as resistance — the ceiling where institutional selling resumes.
+
+How to draw it: Mark the zone from the low to the high of that last bullish candle before the bearish impulse. Entry is on the retest. Stop goes above the high of the order block.
+
+[smc_and_ict_day05.png]
+
+Alt text: Side-by-side diagram showing a bullish order block on the left — the last bearish candle before an upward impulse, with a retracement entry zone and stop below — and a bearish order block on the right — the last bullish candle before a downward impulse, with retracement entry and stop above.
+
+What Makes an Order Block Valid? — Three Things to Check
+Not every candle before a move qualifies as a tradeable order block. Here is what separates a strong one from a weak one:
+
+1. A clear impulse must follow it. If the move away from the candle is weak or gradual, it wasn’t institutional. A valid OB is preceded by a sharp, energetic displacement — a candle or series of candles that moves fast and decisively.
+
+2. It should be accompanied by a Fair Value Gap. When institutional order flow is genuine, it moves price so quickly it leaves an imbalance — a gap on the chart where not all orders were filled. An OB with an FVG sitting next to it carries far more weight than one that doesn’t. We’ll cover FVGs fully in Day 6.
+
+3. It must align with higher timeframe structure. A bullish OB is only worth trading when the higher timeframe bias is bullish. Trading a bullish OB in a confirmed bearish trend is one of the most common and costly mistakes beginners make.
+
+The One Big Difference: How ICT and SMC Use Order Blocks Differently
+Both frameworks identify order blocks in the same way. The critical difference comes in when they trade them.
+
+SMC traders will set a limit order at an order block zone at any time of day, as long as the structure aligns.
+
+ICT traders add a third dimension: time. An order block retesting at 8:30am EST during the New York Kill Zone is a high-probability setup. That same order block retesting at 1:00pm EST during the dead mid-session is likely a trap. ICT treats the when as seriously as the where.
+
+This is one of the most practical distinctions in the entire ICT vs SMC debate — and it’s a major reason why many advanced traders combine both: SMC for structure and zone identification, ICT for timing the entry.
+
+When an Order Block Fails — The Breaker Block
+No setup works every time, and order blocks are no exception. When price doesn’t respect an OB and breaks through it instead, that failed order block becomes what ICT calls a breaker block — it flips polarity and starts working from the opposite side. A failed bullish OB becomes resistance. A failed bearish OB becomes support.
+
+Knowing this protects you from holding a losing position hoping an OB will eventually hold. When it’s broken with conviction, it’s no longer an OB — it’s a breaker — and you adjust accordingly.
+
+Up Next — Day 6
+Now that you can identify where institutions entered the market, tomorrow we cover the concept that almost always sits right next to a good order block — the one that tells you how fast institutions were moving and where price needs to return to restore balance.
+
+Day 6 is all about Fair Value Gaps — possibly the most searched SMC concept on the internet right now.
+
+→ See you on Day 6.
+
+Day 6: Fair Value Gaps Explained — ICT & SMC FVG Trading Guide
+
+Day 6 — The Concept That’s Everywhere Right Now
+Welcome back. If you’ve searched anything related to ICT or SMC on YouTube in the last two years, three letters have come up constantly: FVG.
+
+Fair Value Gap. It’s arguably the most searched SMC concept on the internet right now, and for good reason. Once you understand it, you start seeing it on every chart, in every market, on every timeframe.
+
+But most explanations make it sound more complicated than it is. Today we keep it clean, practical, and directly applicable to what you’re doing on the charts.
+
+What Is a Fair Value Gap?
+A Fair Value Gap is a price imbalance — a zone on the chart where price moved so fast, so aggressively, that it skipped over certain price levels entirely. No proper two-sided trading happened there. Buyers and sellers never met at those prices.
+
+The reason this matters is simple: markets naturally seek efficiency. When price leaves a zone untouched like that, it tends to come back and revisit it — filling in what it skipped — before deciding its next move. That return visit is your trading opportunity.
+
+In plain terms: a Fair Value Gap is the market’s IOU. It moved too fast and left an unfinished business zone. Price almost always comes back to settle the debt.
+
+How to Identify One — The Three-Candle Rule
+A Fair Value Gap forms within a three-candle sequence. The rule is precise:
+
+Bullish FVG: In a rising move, look at three consecutive candles. If the high of candle 1 does not overlap with the low of candle 3 — meaning there is a visible gap between them — that space between is a bullish Fair Value Gap. Candle 2 was the aggressive impulse that created the imbalance.
+
+Bearish FVG: In a falling move, if the low of candle 1 does not overlap with the high of candle 3, the space between them is a bearish Fair Value Gap.
+
+The critical test: if the wicks of candle 1 and candle 3 overlap at all — even slightly — there is no FVG. The gap must be clean with zero overlap between those two wicks.
+
+[smc_and_ict_day06.png]
+
+Consequent Encroachment — The Midpoint That Changes Everything
+Here is one of the most practical refinements in all of ICT methodology, and it comes directly from Huddleston’s teachings: price does not need to fill the entire FVG to react.
+
+The Consequent Encroachment (CE) is simply the 50% midpoint of the Fair Value Gap. It is found by applying a Fibonacci tool from the top to the bottom of the gap and marking the 0.5 level.
+
+Why does this matter for you practically? Because in a strong trend, price often only retraces to the midpoint of the FVG before reversing and continuing. If you’re waiting for the entire gap to be filled before entering, you’ll frequently miss the move. Experienced ICT traders enter at the CE — the midpoint — because that is the level where institutional orders are most likely to be waiting.
+
+In a bullish FVG: if price drops into the gap, reaches the CE, and closes back above it — that’s your entry signal. Stop goes below the FVG entirely. In a bearish FVG: if price rises into the gap, tags the CE, and closes back below — that’s your short entry. Stop goes above the FVG.
+
+FVG Inversion — When the Gap Flips
+Sometimes price doesn’t respect a Fair Value Gap. It blasts straight through. When this happens, the original FVG doesn’t become useless — it inverts.
+
+A bullish FVG that gets broken to the downside becomes a bearish zone — resistance. A bearish FVG that gets broken to the upside becomes a bullish zone — support. ICT traders call this a Fair Value Gap Inversion (IFVG), and it follows the same logic as a support-resistance flip in traditional analysis, just grounded in institutional order flow.
+
+How ICT and SMC Use FVGs Differently
+Both methodologies identify and trade FVGs in the same structural way. The divergence — as with order blocks — comes down to time and context.
+
+SMC traders use FVGs as standalone entry zones whenever price returns to them within a valid trend structure. Clean, flexible, accessible.
+
+ICT takes it further. Huddleston treats FVGs as part of a broader algorithmic framework — price delivery through imbalances follows what he calls an Interbank Price Delivery Algorithm. ICT traders only trade FVGs during specific Kill Zone windows, preferring those formed after a market structure shift on a lower timeframe within a higher timeframe discount or premium zone. The FVG must occur at the right time in the right context — not just when price happens to return to a gap.
+
+The practical takeaway: if you’re starting out, trade FVGs with structural context the SMC way. As you progress, layer in ICT timing to filter out the low-quality setups that form during dead sessions.
+
+The One Rule That Saves Most Beginners
+Not every FVG is worth trading. The ones that are carry these qualities: they form after a clear Break of Structure or Market Structure Shift, they sit in the correct premium or discount zone relative to the overall range, and they haven’t already been fully tested and filled on a lower timeframe. A gap that’s already been tapped once has far less magnetic pull than a fresh, untouched one.
+
+Up Next — Day 7
+You now have five foundational tools in your toolkit: structure, liquidity, order blocks, and fair value gaps. Tomorrow we bring the first week together with Day 7 — the concept that tells you when a trend is genuinely shifting versus when the market is simply faking you out.
+
+Day 7 is all about BOS vs CHoCH — and the crucial difference between a trend continuation signal and an early reversal warning. If you want to stop getting caught on the wrong side of the market, this one is essential.
+
+→ See you on Day 7.
+
+
+
+Day 7: BOS vs CHoCH — How to Tell if the Trend Is Continuing or Breaking Down
+
+We Close Out Week One With the Most Misread Concept in SMC
+Welcome back. You’ve made it through the full first week of this series — and what a week it’s been. You now understand what ICT and SMC are, where they came from, how to read market structure, what liquidity actually means, how to identify order blocks, and how to read fair value gaps.
+
+Today we close out Week 1 with the concept that ties all of it together — and the one that beginners consistently get wrong.
+
+BOS vs CHoCH.
+
+Two signals that look similar on the chart. Two signals that mean completely different things. Getting this distinction right separates traders who read markets clearly from traders who constantly feel like the market is “tricking” them.
+
+Let’s get into it.
+
+The Simple One-Line Distinction
+Before we go deep — here it is, clean and simple:
+
+BOS = The trend is still alive. Keep following it.
+
+CHoCH = Something may have changed. Pay attention.
+
+That’s the core of it. Everything else is detail.
+
+Break of Structure (BOS) — Trend Continuation
+A Break of Structure happens when price breaks a swing point in the same direction as the existing trend. In an uptrend, price is making higher highs and higher lows. Every time it breaks above the most recent swing high with a full candle close, that is a BOS. It confirms buyers are still in control and the structure is intact.
+
+In a downtrend, every new lower low confirmed by a candle close is a bearish BOS. It confirms sellers remain dominant.
+
+Three things make a BOS valid. First, it must be a full candle body close beyond the structural level — a wick does not count. Second, it must break the correct structural swing point that defined the current trend, not some minor internal level. Third — and this is the one most beginners skip — there should be displacement behind it. A genuine BOS leaves an imbalance, an energetic move that shows institutional commitment, not a slow grind through a level.
+
+Change of Character (CHoCH) — The Reversal Warning
+A Change of Character happens when price breaks a swing point against the direction of the existing trend. In an uptrend, a CHoCH occurs when price closes below the most recent higher low — the low that was protecting the uptrend. That break tells you buyers may be losing control.
+
+In a downtrend, a CHoCH occurs when price closes above the most recent lower high — the ceiling that had been capping every rally. That break suggests sellers may be weakening.
+
+Critical rule: a valid CHoCH must break the swing point that was created by the most recent BOS — not any random internal low or high. This is the most common mistake. Traders see price dip into an internal swing low during a normal pullback, label it a CHoCH, go short — and get stopped out as the trend continues. You are only reading a genuine CHoCH when price breaks the structural swing created by the last confirmed BOS.
+
+[smc_and_ict_day07.png]
+
+Alt Text: Full Market Cycle Diagram Showing An Uptrend With Two Bos Confirmations Building Higher Highs And Higher Lows, Then A Choch Breaking The Last Higher Low, Followed By A New Downtrend With Two Bearish Bos Confirmations Building Lower Lows And Lower Highs.
+The Fake CHoCH — The Trap Most Beginners Fall Into
+Here is the most costly mistake in SMC and ICT structure reading, and it happens to everyone at some point.
+
+Price is in a clear uptrend. It sweeps a liquidity pool below a higher low — triggering everyone’s stops — and in that moment it looks exactly like a CHoCH. Beginners flip short. Then price rockets back up, continues the uptrend, and those shorts are stopped out.
+
+What just happened? That was a fake CHoCH — or more accurately, a liquidity sweep. Price dipped below a structural low not to reverse the trend, but to grab the stop losses sitting there as fuel for the next leg higher.
+
+The way you separate a real CHoCH from a fake one comes down to two things. First: displacement. A real CHoCH is followed by a large, energetic candle that leaves a Fair Value Gap behind it. A fake one produces a wick, a brief dip, then immediate rejection. Second: higher timeframe context. If the daily or four-hour chart is still clearly bullish, a CHoCH on the 15-minute chart is almost always a liquidity sweep, not a genuine reversal. Always check the bias above before reading structure below.
+
+How to Use BOS and CHoCH to Build Your Trade Bias
+Here is the clean, practical workflow that both ICT and SMC traders use every day:
+
+Start on your higher timeframe — daily or four-hour. Identify the sequence of BOS events to confirm the active trend direction. That becomes your bias. You are only looking for trades in that direction.
+
+Drop to your execution timeframe — one-hour or 15-minute. Wait for price to pull back into a discount zone during a bullish bias, or a premium zone during a bearish bias. Look for a lower-timeframe CHoCH — a genuine one, confirmed by displacement and a Fair Value Gap — as your entry trigger.
+
+That CHoCH on the lower timeframe tells you the short-term retracement is over and the higher-timeframe trend is about to resume. That is your entry signal. Your stop goes below the low that created the CHoCH. Your target is the next draw on liquidity — the most recent BSL or SSL above or below current price.
+
+BOS vs CHoCH at a Glance
+BOS	CHoCH
+What it means	Trend continuation	Potential reversal warning
+Direction	Same as existing trend	Against the existing trend
+When it forms	Throughout an active trend	At the end of a trend
+Requires displacement?	Yes — strong move confirms	Yes — weak move = fake signal
+What breaks	Previous swing high / low (with trend)	Previous higher low / lower high (against trend)
+Risk if wrong	Low — trend was already established	Higher — reversals can fail
+Week 1 Complete — Here Is What You Now Know
+You have just finished the foundations week. In seven days you have built a complete structural understanding of how ICT and SMC read markets. You know the origin, the philosophy, market structure, liquidity, order blocks, fair value gaps, and now BOS vs CHoCH — the signal that tells you whether to continue following a trend or prepare for a potential shift.
+
+Starting from Day 8, we move into Week 2: Deep Dives. The topics get more specific, the tools get more refined, and the strategies get more actionable.
+
+Day 8 kicks off with one of the most misunderstood concepts in the entire SMC space — one that institutions use deliberately to trap retail traders before making their real move: Inducement and Stop Hunts.
+
+→ See you on Day 8.
+
+Day 8: Inducement and Stop Hunts — How Smart Money Traps You Before the Real Move
+
+Day 8 — Welcome to Week Two. The Concepts Get Sharper From Here.
+If Week 1 was about building your foundation — understanding structure, liquidity, order blocks, FVGs and BOS vs CHoCH — then Week 2 is about going deeper into how institutions actually engineer the setups you’re trading against.
+
+And nothing makes that clearer than today’s topic.
+
+Inducement. Stop hunts. The Power of Three.
+
+These aren’t conspiracy theories. They’re observable, repeating patterns that show up on every chart, every session, every day — in every market. And once you understand them, you’ll stop being the trader who gets stopped out right before the move you predicted. Because you’ll recognise the trap before it springs.
+
+What Is Inducement?
+Inducement is the process by which price is deliberately moved to encourage traders to enter positions that are designed to fail.
+
+Here’s the plain English version: institutions need liquidity to execute large orders. They don’t just buy into a rising market or sell into a falling one — they engineer conditions that create the opposing orders they need. They move price to where your stop losses and pending orders are sitting, trigger them, absorb that liquidity, and then move in their intended direction.
+
+The move that triggers your stop? That was the inducement. It wasn’t a failed setup — it was the market doing exactly what it was designed to do.
+
+The word “induce” is key. It means to persuade. Price is being moved specifically to persuade you — and thousands of other retail traders — to take a position at exactly the wrong moment.
+
+The Three Most Common Inducement Scenarios
+1. Support and Resistance Inducement A classic support level holds multiple times. Retail traders pile in long, stops just below. Price dips through the level, triggers every one of those stops — then immediately reverses and rockets higher. The support wasn’t broken. It was swept for liquidity.
+
+2. Equal Highs and Equal Lows Inducement As covered in Day 4, equal highs and lows are magnets. Retail traders see double tops as strong resistance and go short. Institutions push price through those equal highs, trigger the stops of every short position, collect that buy-side liquidity, then distribute short positions into the flood of buying. Price then falls aggressively.
+
+3. Post-BOS Inducement This one is particularly sneaky. After a Break of Structure, price pulls back and forms what looks like a perfect order block retest. Traders enter expecting the trend to continue. Instead, price pushes through the zone, sweeps the stops of everyone who entered there, and then continues in the original direction — just from a lower, more efficient entry that institutions preferred. The first OB after a BOS is frequently inducement. The real zone is usually deeper.
+
+The Power of Three — ICT’s Blueprint for Every Day
+Michael Huddleston formalised how these inducement patterns repeat every single trading day through a model he called the Power of Three — also known as AMD: Accumulation, Manipulation, Distribution.
+
+It describes every trading day in three phases:
+
+Phase 1 — Accumulation: The market opens and ranges quietly. Price is consolidating in a tight zone — often during the Asian session — while institutions are silently building positions. Retail traders see a range and either trade it back and forth, getting nowhere, or wait. Liquidity is building on both sides of the range as stop orders cluster above and below.
+
+Phase 2 — Manipulation: This is the inducement move. Price breaks out of the accumulation range — but in the wrong direction. On a bullish day, price drops below the accumulation range first, triggering the stop losses of everyone who bought the range lows and inducing breakout sellers to go short. On a bearish day, price spikes above the range, triggers stops of short traders and lures breakout buyers in. This manipulation phase typically unfolds during the London session open.
+
+Phase 3 — Distribution: After the liquidity has been swept and institutions have filled their positions at an efficient price, the real move begins. Price reverses aggressively and moves in the intended direction — which was the opposite of the manipulation. The New York session typically drives this phase home. This is the only phase you actually trade.
+
+[smc_and_ict_day08.png]
+
+Alt text: Power of Three diagram showing three phases from left to right — Accumulation (Asian session, price ranges with BSL and SSL zones), Manipulation (London open, fake drop below SSL that sweeps stops and traps shorts), and Distribution (New York session, real bullish move targeting BSL with entry point and FVG labelled).
+
+How SMC and ICT Differ on This Concept
+Both methodologies recognise inducement and the AMD cycle. The difference, again, is in the role that time plays.
+
+SMC traders identify the manipulation phase purely through price action — they wait for the sweep, look for a CHoCH and FVG on the lower timeframe, and enter the distribution. Clean and functional.
+
+ICT layers in session timing explicitly. The Asian session (roughly 8:00pm–2:00am EST) is the accumulation window. The London open (2:00am–5:00am EST) is where manipulation typically occurs. The New York session (7:00am–12:00pm EST) is where the distribution move runs. An ICT trader won’t just look for the manipulation pattern — they expect it to happen within a specific time window and treat setups outside those windows with far more scepticism.
+
+This makes ICT’s approach to the Power of Three more precise but also more demanding. You have to be available at the right times. SMC’s version is more flexible — applicable across all sessions, but with slightly less temporal precision.
+
+The Rule That Changes Everything
+Here is the one rule that ties inducement, stop hunts and the Power of Three together into a single actionable insight:
+
+Do not enter before the manipulation is complete.
+
+The single most common reason retail traders get stopped out on correct directional calls is that they enter during the accumulation phase, expecting the distribution to start immediately. They’re right about the direction. They’re wrong about the timing. The manipulation move hits their stop, takes them out, and then the price goes exactly where they said it would — without them.
+
+Wait for the sweep. Wait for the CHoCH that follows. Wait for displacement and an FVG to form. Then enter — into the distribution, not into the accumulation.
+
+Up Next — Day 9
+Tomorrow we go into one of ICT’s most specific and powerful contributions — the concept that sets it apart most clearly from SMC: Kill Zones and session-based trading. We’ll break down exactly when London and New York create their setups, why the Asian range matters so much, and how time precision can dramatically improve your win rate.
+
+If you’ve ever wondered why your perfectly structured setup failed simply because it happened at the wrong hour — Day 9 answers that completely.
+
+→ See you on Day 9.
+
+Day 9: ICT Kill Zones vs SMC Session Analysis — Why WhenYou Trade Matters as Much as Where
+
+The Missing Piece Most SMC Traders Skip
+Welcome back to Week 2. Yesterday we covered inducement and the Power of Three — the what and why behind institutional manipulation.
+
+Today we answer the question every trader asks eventually:
+
+Why does the same setup work brilliantly at 8am and fail completely at 2pm?
+
+The answer isn’t structure. It isn’t liquidity. It isn’t your order block or your fair value gap.
+
+It’s time.
+
+This is the single biggest differentiator between ICT and SMC. ICT insists that when you trade matters as much as what you trade. SMC is more flexible about timing. Today we break down both approaches — and you’ll walk away knowing exactly which trading hours deserve your full attention, and which ones to walk away from completely.
+
+Why Time Matters in Institutional Trading
+Large institutions — banks, hedge funds, sovereign wealth funds — don’t operate around the clock. They have specific trading desks that open at specific times. When those desks go live, order flow floods the market, volatility increases, and the setups you’ve been waiting for start printing.
+
+Outside those windows? You get choppy, directionless price action driven by thin liquidity and algorithmic noise. The structure looks identical. The zones are the same. But the probability of a clean follow-through is dramatically lower.
+
+ICT formalised this into what he calls Kill Zones — four specific time windows where institutional activity is highest and where high-probability setups are most likely to form and deliver.
+
+The Four ICT Kill Zones (All Times in EST)
+1. Asian Kill Zone — 8:00 PM to 10:00 PM EST
+
+This is the quietest window. The USD typically consolidates, and major moves rarely originate here. The Asian session’s real value is not in trading aggressively — it’s in building your range reference. The highs and lows that form during this session become the liquidity targets that London and New York will hunt.
+
+Best pairs: AUD/JPY, NZD/JPY, and other Asian-correlated crosses. Primary purpose: Range identification and bias preparation.
+
+2. London Kill Zone — 2:00 AM to 5:00 AM EST
+
+This is where the day’s direction is most often decided. European banks come online, order flow surges, and the Asian range — sitting quietly above and below — becomes the obvious liquidity pool for the manipulation move. On a bullish day, London frequently dips below the Asian lows first, sweeps sell-side liquidity, then reverses aggressively higher. On a bearish day, the opposite unfolds.
+
+Best pairs: EUR/USD, GBP/USD, EUR/GBP. Primary purpose: Manipulation sweep of the Asian range, followed by the start of the real directional move.
+
+3. New York Kill Zone — 7:00 AM to 10:00 AM EST (Forex) / 8:30 AM to 11:00 AM EST (Indices)
+
+The New York session often continues what London started, or reverses it entirely if London’s move was itself the manipulation. The 8:30 AM EST window is particularly volatile due to major economic data releases — NFP, CPI, and similar — which can create explosive Fair Value Gaps and displacement moves. This is the deepest liquidity window of the day.
+
+Best pairs: All major USD pairs, NAS100, S&P 500. Primary purpose: Distribution — the main directional move of the day.
+
+4. London Close Kill Zone — 10:00 AM to 12:00 PM EST
+
+European desks begin squaring positions. This creates counter-moves or continuation setups as the day’s earlier narrative plays out. Less predictable than London open or NY, but experienced traders find clean entries here as the day’s range consolidates before the afternoon.
+
+Best purpose: Managing existing positions, occasional continuation entries.
+
+[smc_and_ict_day09.png]
+
+Alt Text: 24-Hour Kill Zone Timeline Showing All Four Ict Sessions As Coloured Bands — Asian (8Pm–10Pm Est), London (2Am–5Am Est), New York (7Am–10Am Est), London Close (10Am–12Pm Est) — With Detail Cards Below Each Showing Timing, Purpose, And Best Instruments. Asian Range High And Low Reference Lines Shown. Dead Zones Marked At The Bottom.
+The Asian Range — Your Daily Roadmap
+Understanding the Asian session isn’t just about whether to trade it. It’s about what information it gives you for the sessions that follow.
+
+The high and low set during the Asian session create the two most important liquidity levels of the day. Above the Asian high sits buy-side liquidity — the stops of Asian session short sellers. Below the Asian low sits sell-side liquidity — the stops of Asian session long traders.
+
+When London opens at 2am EST, one of the first things institutional order flow does is target one of these two levels. Which one it targets tells you the directional bias for the day. If London sweeps the Asian low and reverses sharply upward — that’s your bullish day signal. If it sweeps the Asian high and drops aggressively — that’s your bearish signal. You don’t need to predict which way it goes. You wait to see which level gets swept, then trade in the direction of the reversal during the New York session.
+
+How ICT and SMC Differ on Session Analysis
+This is one of the clearest and most practical differences between the two methodologies.
+
+ICT is explicit and rigid about time. A Kill Zone is not just a preference — it’s a filter. An ICT trader will not enter a trade outside a Kill Zone, regardless of how clean the structure looks. If an order block retests at 1pm EST — dead session, no institutional participation — an ICT trader does not trade it. The setup may be textbook. The probability is still low. Time is treated as a non-negotiable variable.
+
+SMC is structurally aware but more flexible about time. An SMC trader recognises that London and New York produce the best setups, and many SMC practitioners do observe the same session logic — but they don’t enforce Kill Zone windows as strictly. They may take a valid setup at 6am EST if structure and liquidity align, where an ICT trader would not.
+
+Neither approach is wrong. ICT’s time discipline reduces overtrading dramatically and is particularly well-suited for traders who can be available at specific windows. SMC’s flexibility suits traders across different time zones who cannot always be at the screen during London or New York.
+
+The Practical Rule That Will Cut Your Losing Trades
+If you take nothing else from today, take this:
+
+Stop trading between 12pm and 7pm EST. That window — the dead afternoon session — is where retail traders grind accounts down chasing setups that never deliver. There is no institutional conviction. There is no directional mandate. There is only noise.
+
+Focus your attention on the two hours around the London open and the two to three hours around the New York open. Most of the week’s real price delivery happens in those windows. Everything outside them is optional at best and costly at worst.
+
+Up Next — Day 10
+Tomorrow we tackle multi-timeframe analysis — the framework that tells you how to use the daily chart for bias, the four-hour for structure, and the lower timeframes for precision entries. It’s the bridge between everything you’ve learned so far and actually executing trades with confidence.
+
+Day 10 is where the full ICT and SMC methodology starts working as a system rather than a collection of individual tools.
+
+→ See you on Day 10.
+
+Day 10: Multi-Timeframe Analysis ICT & SMC — The Top-Down Approach Explained
+
+The Framework That Makes Everything Else Work
+Welcome back. You’re now ten days into this series and you’ve built a genuinely impressive toolkit. Structure. Liquidity. Order blocks. Fair value gaps. BOS and CHoCH. Inducement. Kill zones.
+
+But here’s the problem most traders hit at this exact point: they have all the pieces but don’t know how to use them together.
+
+They find a beautiful order block on the 15-minute chart. They enter. They get stopped out. Then they zoom out and realise that the daily chart was pointing in the completely opposite direction.
+
+That is a multi-timeframe analysis failure. And today we fix it permanently.
+
+What Is Multi-Timeframe Analysis?
+Multi-timeframe analysis (MTF) is the practice of reading the market across several timeframes simultaneously — starting from the highest to confirm the overall direction, then stepping down progressively to find your entry.
+
+Think of it like planning a road trip. The weekly chart is the map of the entire country — it shows you where you’re ultimately heading. The daily chart is the map of the region — it shows you the terrain you’re driving through. The four-hour chart is the map of the city — it shows you which streets are available. The 15-minute chart is the GPS turn-by-turn instruction — it tells you exactly when to turn.
+
+You would never plan a cross-country drive using only the GPS turn-by-turn without knowing the overall route. That’s what trading on a single timeframe is. And that’s precisely what kills most retail accounts.
+
+The rule in both ICT and SMC is non-negotiable: the higher timeframe always has authority over the lower timeframe. Always.
+
+The Three-Layer Framework — Bias, Zone, Entry
+Both ICT and SMC operate on three functional layers, each served by a different timeframe group:
+
+Layer 1 — The Bias (Higher Timeframe: Weekly and Daily) This is where you determine the market’s overall directional intention. You are not looking for entries here. You are asking one question: is this market bullish or bearish right now?
+
+Look at the weekly chart first. Is price making higher highs and higher lows? Is there a clear BOS sequence pointing upward? Or is price forming lower lows and lower highs, with a series of bearish BOS events? That answer becomes your macro bias. You then drop to the daily chart to confirm — looking for the most recent BOS, the key swing points, any unmitigated order blocks or FVGs that price may be drawn toward, and where the nearest BSL or SSL targets sit.
+
+Everything you find on the daily becomes your narrative — the story of where this market is going and why.
+
+Layer 2 — The Zone (Mid Timeframe: 4-Hour and 1-Hour) Now that you know the direction, you need to identify where the market is likely to react. The four-hour and one-hour charts show you the institutional footprints — the order blocks, FVGs, and premium/discount zones — that are closest to where current price is trading. These are your Points of Interest (POIs) — the zones you’ll be watching for price to return to.
+
+At this layer you are not entering yet. You are drawing the zones on the chart and watching for price to approach them. A four-hour bullish order block inside a daily discount zone is a far higher-quality setup than a 15-minute order block with no higher-timeframe context.
+
+Layer 3 — The Entry (Lower Timeframe: 15-Minute and 5-Minute) Only when price reaches your higher-timeframe zone do you drop to the execution timeframe. Here you are looking for the CHoCH that confirms the short-term retracement is ending, the FVG or order block on the lower timeframe that gives you a precise entry, and the displacement candle that confirms institutional participation.
+
+This is the layer where your stop loss and your risk-reward ratio are defined. A tight entry from a 5-minute FVG inside a four-hour order block inside a daily discount zone — that is a confluent, high-probability setup. A naked 15-minute entry with no HTF context — that is gambling dressed up as trading.
+
+[smc_and_ict_day10.png]
+
+Alt Text: Three-Layer Top-Down Mtf Framework Diagram. Layer 1 (Bias) — Weekly And Daily Charts To Determine Bullish Or Bearish Direction. Layer 2 (Zone) — 4H And 1H Charts To Identify Points Of Interest (Order Blocks And Fvgs). Layer 3 (Entry) — 15M And 5M Charts For Choch Confirmation And Precise Fvg Or Ob Entry. Arrows Show The Top-Down Drill-Down Process Between Layers.
+The Recommended Timeframe Combinations
+Both ICT and SMC practitioners have settled on a few proven combinations depending on your trading style:
+
+Day trading (intraday): Daily for bias → 4H for zone → 15M for entry trigger → 5M for precision. This is the most common combination in the ICT and SMC community and works cleanly during Kill Zones.
+
+Swing trading: Weekly for direction → Daily for zone → 4H or 1H for entry. Stops are wider, targets are larger, and you can monitor less frequently.
+
+Position trading: Monthly and Weekly for macro direction → Daily for zone → 4H for entry. Designed for traders who hold positions for weeks or months.
+
+The timeframe numbers are less important than the principle — always read from the top down, never from the bottom up. A trader who starts on the 5-minute chart and then checks whether the daily agrees is doing it backwards. The bias is set on the daily. The daily does not need to agree with the 5-minute. The 5-minute needs to agree with the daily.
+
+How ICT and SMC Differ in Their MTF Approach
+Both frameworks fully embrace multi-timeframe analysis. The difference is in how rigidly the hierarchy is enforced.
+
+ICT prescribes a very specific top-down workflow. Huddleston instructs traders to establish their daily bias first — using the previous day’s high and low, the week’s opening price, and key PD arrays on the daily chart — before even looking at execution timeframes. The narrative must be written on the high timeframe before execution begins on the low. There is no flexibility in this sequencing.
+
+SMC follows the same principle but applies it with more adaptability. SMC traders may use a 1-hour chart as their “higher timeframe” for intraday context if their trading style is more aggressive, or skip the weekly entirely for shorter-term setups. The logic is the same — higher timeframe authority — but the specific combinations aren’t rigidly prescribed the way ICT defines them.
+
+For beginners, the SMC approach is more forgiving. For advanced traders seeking maximum precision, the ICT hierarchy produces cleaner setups with fewer false entries.
+
+The Mistake That Costs Most Traders Their Account
+Here it is plainly: most retail traders trade the entry timeframe without a bias timeframe. They open a 15-minute chart, see a beautiful order block, enter, get stopped — then notice the daily chart was in a clear downtrend the entire time.
+
+The setup wasn’t wrong. The context was wrong. And without context, even the most perfect-looking lower-timeframe setup has a coin-flip chance of working.
+
+The fix is simple, and it takes less time than you think. Before you touch a lower timeframe, spend five minutes on the daily chart. Write down the bias in plain language: “Daily is bullish. Last BOS was at X. I am looking for longs from the 4H discount zone near Y.” Then close the daily and don’t look at it again until tomorrow. Now you have a narrative. Now your 15-minute setups are filtered. Now your win rate starts to improve.
+
+Up Next — Day 11
+Tomorrow we tackle one of the most debated topics in the ICT vs SMC community: Supply and Demand zones vs Order Blocks. Are they the same thing? If not, what’s the actual difference — and does it matter to your trading? Day 11 answers that completely.
+
+→ See you on Day 11.
+
+Day 11: Supply & Demand Zones vs Order Blocks — ICT & SMC Compared
+
+One of the Most Debated Questions in the ICT/SMC Community
+Welcome back to Week 2. Today we tackle a debate that fills trading forums and YouTube comment sections every single day:
+
+Are supply and demand zones the same as order blocks?
+
+Some traders say yes — they’re just different names for the same thing. Others say no — they’re distinct tools that serve different purposes. The truth sits in the middle, and understanding exactly where they overlap and where they diverge will immediately sharpen how you mark up a chart.
+
+Let’s settle this once and for all.
+
+What Are Supply and Demand Zones?
+Supply and demand zones are broad price areas where the balance between buyers and sellers shifted dramatically enough to create a strong directional move. They originated from traditional technical analysis long before ICT or SMC existed, rooted in the simple economic principle that when demand exceeds supply, prices rise — and when supply overwhelms demand, prices fall.
+
+In trading terms, a demand zone is a price area where significant buying pressure was previously present — price launched upward from this area, suggesting institutional buyers were active there. If price returns, those buyers are expected to step in again.
+
+A supply zone is the opposite — a price area where significant selling pressure pushed price sharply lower. If price returns, sellers are expected to re-emerge.
+
+The key characteristic of both: they are identified by the base — the consolidation or pause in price action that occurred before the explosive move away.
+
+The Four Zone Patterns You Need to Know
+Supply and demand zones are classified by the structure that creates them. There are four patterns, and every zone on your chart falls into one of these categories:
+
+Rally-Base-Drop (RBD) — Supply Zone Price rallies upward, consolidates briefly in a base, then drops sharply away. The base becomes a supply zone. This is a reversal pattern — the market topped out here. It is the strongest type of supply zone.
+
+[smc_and_ict_day11_RBD.png]
+
+Drop-Base-Rally (DBR) — Demand Zone Price drops, consolidates in a base, then rallies sharply away. The base becomes a demand zone. This is a reversal pattern at a market bottom. Strongest type of demand zone.
+
+[smc_and_ict_day11_DBR.png]
+
+Rally-Base-Rally (RBR) — Demand Zone Price rallies, pauses briefly in a base during a pullback, then continues higher. The base forms a demand zone during a trending move — a continuation pattern, not a reversal. Reliable but less powerful than DBR zones.
+
+[smc_and_ict_day11_RBR.png]
+
+Drop-Base-Drop (DBD) — Supply Zone Price drops, pauses in a base mid-trend, then drops further. The base forms a supply zone during a trending move. Same logic — continuation, not reversal. Valid but less potent than RBD zones.
+
+[smc_and_ict_day11_DBD.png]
+
+What Is an Order Block Again?
+As covered in Day 5, an order block is the last single candle — or tight group of candles — immediately before an impulsive move. Specifically:
+
+A bullish order block = the last bearish candle before a strong bullish impulse. A bearish order block = the last bullish candle before a strong bearish impulse.
+
+It is precise, candle-specific, and tied directly to where institutional orders were placed in that final moment before price accelerated.
+
+So What Is the Actual Difference?
+Here is the cleanest way to think about it:
+
+Supply and demand zones capture the full base area — the entire consolidation before the impulse move, from the lowest to the highest point of that range. They are broader, more conservative, and easier to identify visually.
+
+Order blocks pinpoint the single most critical candle within or at the edge of that zone — the last candle before displacement. They are tighter, more precise, and require a sharper eye.
+
+In many cases the order block sits inside or at one edge of a supply or demand zone. The S&D zone gives you the general area of interest. The order block gives you the exact entry candle within that area.
+
+[smc_and_ict_day11.png]
+
+Alt Text: Side-By-Side Diagram. Left Panel Shows A Drop-Base-Rally Demand Zone With The Full Base Area Shaded In Green And The Bullish Order Block (Last Bearish Candle Before The Rally) Highlighted With A Green Border Inside The Zone. Right Panel Shows A Rally-Base-Drop Supply Zone With The Full Base Shaded And The Bearish Order Block (Last Bullish Candle Before The Drop) Highlighted In Red. Summary Boxes Show Using S&Amp;D Zone For Context And Ob For Precision Entry And Stop Placement.
+How SMC and ICT Each Position These Tools
+SMC uses both supply and demand zones and order blocks actively. SMC educators often draw the broader S&D zone first to identify the area of interest, then look for the order block candle within it to time the precise entry. Many SMC traders treat the two as complementary — S&D for the map, OB for the GPS.
+
+ICT is more focused on order blocks specifically and uses the term “supply and demand” differently. Huddleston’s framework de-emphasises the broader zone concept in favour of the specific PD array — the precise last candle or candle group. His view is that a broad zone is less useful than a specific candle, because institutions don’t re-enter at random points within a range — they return to the exact price level where their unfilled orders reside.
+
+In practice the distinction matters most for stop placement. An S&D zone-based stop sits beyond the edge of the full base. An OB-based stop sits just beyond the order block candle itself — tighter, with a better risk-reward ratio, but with slightly less buffer if price sweeps the OB before reversing.
+
+What Makes Either Zone High Quality?
+Whether you use S&D zones, order blocks, or both — these three quality filters apply equally:
+
+1. Freshness. A zone that has never been retested carries more unspent institutional orders than one that has already been visited. Fresh zones react more strongly. Tested zones often fail or only produce small bounces.
+
+2. Speed of departure. The stronger and more impulsive the move away from the zone, the more institutional activity was present. A zone that launched a 100-pip move in three candles is higher quality than one that produced a slow, grinding 20-pip move.
+
+3. Higher timeframe alignment. A daily demand zone inside a weekly discount area is far more powerful than a 15-minute demand zone with no higher timeframe context. Always confirm your zones are sitting in the right part of the higher-timeframe range.
+
+The Bottom Line — Use Both Together
+Here is the most practical takeaway from today’s lesson:
+
+Supply and demand zones and order blocks are not competitors. They are different layers of the same analysis. The S&D zone tells you where to look on the chart. The order block inside it tells you exactly where to enter and where to place your stop.
+
+A trader who uses only S&D zones gets wide stops and average risk-reward. A trader who finds the OB inside the zone gets a tighter stop, a better entry, and a meaningfully improved risk-reward ratio — while still having the broader zone as confirmation that the level matters.
+
+Use them together and you get the best of both worlds.
+
+Up Next — Day 12
+Tomorrow we go deeper into ICT’s advanced zone toolkit — Breaker Blocks and Mitigation Blocks. These are what happens when the first order block fails — and knowing how to read them is the difference between understanding why a setup didn’t work and getting blindsided every time a zone gets broken.
+
+→ See you on Day 12.
+
+Day 12: Breaker Blocks & Mitigation Blocks Explained — ICT & SMC Deep Dive
+
+Advanced Territory. This Is Where the Toolkit Gets Powerful.
+Welcome back. In Day 5 you learned about order blocks — the institutional footprints that form before a major move. But here’s what most beginners don’t account for: what happens when an order block fails?
+
+Does price just reverse for no reason and continue? Do you take the loss and move on? Or is there actually a new, potentially higher-quality setup forming right where the old one broke down?
+
+The answer is the latter. And today we cover the two concepts that explain exactly what that new setup is — Breaker Blocks and Mitigation Blocks. We also cover what happens when both are combined with a Fair Value Gap — a setup ICT traders call the Unicorn. Understanding these three concepts will fundamentally change how you manage losing setups and find re-entry opportunities.
+
+What Is a Breaker Block?
+A Breaker Block forms when a high-probability order block fails — price breaks through it — and that same zone then flips to operate from the opposite side.
+
+Here’s the sequence that creates one, using a bearish example:
+
+Price is in an uptrend. A bullish order block forms — the last bearish candle before a bullish impulse. Price later returns to that zone, but instead of bouncing, it sweeps through it and continues lower. The old bullish order block has been broken. But before reversing to the downside, price first made a new higher high — it swept the buy-side liquidity above the previous swing high, triggering retail long stops, collecting the fuel institutions needed to push lower.
+
+That original bullish order block — now broken and flipped — is the bearish breaker block. When price eventually retraces back up into that zone, it no longer acts as support. It acts as resistance. Institutions who were caught long at that level are now liquidating as price returns, and smart money is selling into that bounce.
+
+The mirror applies for bullish breaker blocks: a bearish order block gets broken to the upside (after sweeping sell-side liquidity first), and that zone flips to act as support when price pulls back.
+
+The critical detail that defines a breaker: price must have swept liquidity — made a new high or new low beyond the previous swing — before the reversal. That liquidity sweep is what elevates a breaker block above an ordinary failed OB and makes it a higher-probability zone.
+
+What Is a Mitigation Block?
+A Mitigation Block is the closely related — but distinctly different — cousin of the breaker block. It too forms when an order block fails. The difference lies in one critical detail: there is no liquidity sweep first.
+
+In a mitigation block scenario, price approaches a zone where a bullish order block should hold. Instead of bouncing, it forms a lower high — it never makes the new higher high that would define a liquidity sweep. Then it breaks below the previous swing low, shifting structure to the downside.
+
+The area between the broken swing low and the newly formed lower high becomes the bearish mitigation block. When price retraces into this zone, smart money uses it as an opportunity to add to or open short positions.
+
+The same logic applies in reverse for bullish mitigation blocks — price fails to make a new lower low from a bearish zone, forms a higher low instead, then breaks the previous lower high and shifts structure bullish.
+
+In plain terms: the breaker block took liquidity on the way to the reversal. The mitigation block did not. Both act as fresh institutional zones after a structural shift, but the breaker block is the higher-probability trade precisely because it confirms a genuine liquidity sweep occurred before the direction changed.
+
+[smc_and_ict_day12.png]
+
+Alt Text: Side-By-Side Diagram Comparing Bearish Breaker Block (Left) And Bearish Mitigation Block (Right). Left: Uptrend Hits Bullish Ob, Continues To A New Higher High Sweeping Buy-Side Liquidity, Then Sharp Reversal, And Pullback Into Old Ob Zone — Now Acting As Resistance (Breaker). Right: Uptrend Hits Bullish Ob, Forms A Lower High Without Sweeping Any Liquidity, Then Drops, And Pullback Into The Lower High Zone — Now Mitigation Block. Bottom Labels Confirm Breaker Is Higher Probability Due To The Liquidity Sweep.
+The Difference in One Sentence
+Breaker block = order block failed after sweeping liquidity first → higher probability. Mitigation block = order block failed without sweeping liquidity → valid but lower probability.
+
+Both create fresh institutional zones after a structural shift. Both are worth watching when price retraces. But if you can only choose one to build a trade around, the breaker block — with its confirmed liquidity sweep — gives you a stronger foundation.
+
+How to Trade a Breaker Block
+The entry process is straightforward once you understand the logic:
+
+First, identify the original order block and confirm it has been broken with a full candle close through it. Second, confirm that price made a new high or new low beyond the previous swing before reversing — the liquidity sweep must be present. Third, wait for price to retrace back into the zone of the old, now-flipped order block. Fourth, look for confirmation on a lower timeframe — a CHoCH or FVG forming inside the breaker zone. Enter there. Place your stop beyond the outer edge of the breaker block. Target the nearest draw on liquidity.
+
+The Unicorn Model — When a Breaker Meets a Fair Value Gap
+ICT traders gave a specific name to the highest-confluence version of this setup: the Unicorn. It occurs when a Fair Value Gap forms inside or overlapping a Breaker Block during the displacement move that created the reversal.
+
+The logic is powerful: the breaker block tells you where institutions flipped their position. The FVG inside it tells you exactly where price moved too fast and left unfilled orders. When price retraces into that zone, it faces two simultaneous pressures — the institutional demand of the breaker and the market’s efficiency drive to fill the FVG. That dual pressure makes the reaction fast, clean, and more reliable than either concept alone.
+
+The entry is simple: wait for price to retrace into the FVG that sits inside the breaker zone. Enter at the FVG — or at the consequent encroachment (50% midpoint) of the FVG for a tighter stop. Stop goes just beyond the breaker block’s outer edge. Target the next significant draw on liquidity.
+
+How SMC Treats These Concepts
+SMC traders use breaker blocks and mitigation blocks in the same structural way as ICT. The primary difference is in naming conventions and the degree of rule enforcement.
+
+In some SMC communities, the term “mitigation block” is used more loosely to describe any zone where institutional orders are being filled on a retracement — not strictly the failed-OB-without-sweep definition that ICT applies. This creates confusion between communities. The cleanest approach is to use the ICT definitions precisely: breaker = failed OB with a liquidity sweep, mitigation = failed OB without one.
+
+The Unicorn model is primarily an ICT concept but has been widely adopted by SMC practitioners as a high-confluence entry technique regardless of which methodology label they prefer.
+
+Up Next — Day 13
+Tomorrow we go into another cornerstone ICT entry model — Optimal Trade Entry (OTE) and the Fibonacci framework. This is the tool Huddleston built to pinpoint the highest-probability entry point within any retracement, using a specific set of Fibonacci levels that go beyond what most retail traders know.
+
+If you’ve been struggling to time entries — entering too early on pullbacks or missing the precise zone — Day 13 solves that.
+
+→ See you on Day 13.
+
+Day 13: ICT Optimal Trade Entry (OTE) Explained — Fibonacci Levels & Strategy
+
+The Tool That Tells You Where to Actually Enter
+Welcome back. Over the last twelve days you’ve learned to identify market direction, find key institutional zones, and read the chart like a professional. But there is one question every trader faces at the end of all that analysis:
+
+The trend is confirmed. The structure is clear. Price is retracing. But where exactly do I enter?
+
+The answer, in ICT methodology, is the Optimal Trade Entry. It is the most precisely defined entry framework in the entire ICT toolkit — and once you understand it, you’ll stop guessing at pull-back entries and start using a structured, repeatable approach that tells you exactly where the highest-probability entry sits on every retracement.
+
+What Is the Optimal Trade Entry (OTE)?
+The Optimal Trade Entry is the Fibonacci-based zone where price is considered most likely to reverse and resume the prevailing trend. Specifically, it is the range between the 62% and 79% retracement levels of the most recent impulse swing, with 70.5% as the precise sweet spot at the centre.
+
+The logic is elegant: when price makes an impulsive move and then retraces, it pulls back into a zone that is deep enough to offer a genuine discount (in an uptrend) or premium (in a downtrend) without invalidating the original move. The 62%–79% zone sits at a mathematically efficient point — deep enough that institutions can accumulate more orders at a favourable price, shallow enough that the structural bias hasn’t broken.
+
+The 70.5% level specifically is not a standard Fibonacci number. It is the algorithmic midpoint between 61.8% and 79%, and it represents the level where institutional pressure is considered highest within the retracement window. Think of it as the compression point — the spring loaded to its tightest point before releasing.
+
+How to Draw the ICT Fibonacci Tool Correctly
+This is where most traders go wrong — and wrong Fibonacci placement produces wrong OTE levels every time.
+
+For a bullish OTE: Identify the most recent clear swing low (the start of the impulse) and the swing high (the top of the impulse). Draw the Fibonacci tool from the swing low up to the swing high. The 0% level sits at the swing high, the 100% level sits at the swing low. The OTE zone — 62% to 79% — sits in the lower portion of the range, representing a discount area where you want to buy.
+
+For a bearish OTE: Identify the swing high (start of the bearish impulse) and swing low (bottom of the impulse). Draw the tool from the swing high down to the swing low. The OTE zone — 62% to 79% — sits in the upper portion of the range, representing a premium area where you want to sell.
+
+Critical tip: Draw Fibonacci from candle body to body — open to close — not wick to wick. Wicks are liquidity grabs and vary between brokers. Using candle bodies gives you the cleanest, most consistent OTE levels.
+
+The key levels to show on your Fibonacci tool in ICT settings: 0.5 (equilibrium), 0.62 (OTE start), 0.705 (sweet spot), 0.79 (OTE end), 1.0 (invalidation), and extensions at -0.27 and -0.62 for targets.
+
+[smc_and_ict_day13.png]
+
+Alt Text: Bullish Ict Ote Fibonacci Diagram. A Swing Low (100%) And Swing High (0%) Define The Impulse. Fibonacci Levels Show Equilibrium At 50%, Ote Zone Shaded Between 62% And 79% With The 70.5% Sweet Spot Highlighted In The Centre. A Dashed Red Retracement Enters The Ote Zone, And A Green Entry Candle At The Sweet Spot Launches The Continuation Move. Stop Placement Shown Below The 100% Level. Target 1 Shown At -0.27 Extension.
+The ICT Fibonacci Level Setup
+Standard Fibonacci tools show levels like 23.6%, 38.2%, 50%, and 61.8%. The ICT configuration uses a different set. Here is what you set on TradingView or MetaTrader to use the OTE correctly:
+
+Level	Label	Purpose
+0.0	Swing high (0%)	Impulse top — price target zone
+0.5	Equilibrium	Fair value midpoint — do not enter above this in a bullish retracement
+0.62	OTE entry start	Enter here for aggressive entries
+0.705	OTE sweet spot	Highest probability single entry level
+0.79	OTE entry end	Deepest valid entry — beyond here, the idea is weakening
+1.0	Swing low (100%)	Invalidation — stop below this
+-0.27	Target 1	Standard institutional profit target
+-0.62	Target 2	Deep expansion target for strong trend days
+The Key Rule Most Traders Miss — Equilibrium First
+Here is the filter that separates disciplined OTE traders from everyone else: price must retrace below equilibrium (50%) before you consider entering.
+
+If price pulls back only to 40% and reverses, it has not retraced deeply enough into discount territory. An entry from 40% retracement means your risk is larger relative to reward, and you’re entering before the institutional accumulation zone has been reached.
+
+Only when price has crossed below the 50% level and entered the 62%–79% band does the OTE setup become valid. This single filter eliminates the majority of false entries and keeps you aligned with where institutional order flow is actually concentrating.
+
+Stop Loss and Target Placement
+Stop loss: Just below the 100% level — the original swing low for a bullish trade, or just above the 100% level (original swing high) for a bearish trade. If price closes beyond the swing that anchored your Fibonacci, the entire structural logic of the setup is invalidated.
+
+Target 1 (-0.27): The standard institutional expansion target. This represents a symmetrical projection of the original impulse move and is where most intraday OTE setups reach their exhaustion point. Many ICT traders take partial profits here and move their stop to break-even.
+
+Target 2 (-0.62): The deep expansion target, reserved for high-conviction days — strong news catalysts, clean daily trend alignment, or Kill Zone confirmation. This is the level that produces the very high risk-reward ratios ICT is known for.
+
+How SMC Uses OTE Differently
+SMC traders use the 62%–79% Fibonacci zone as a confluence tool rather than a standalone entry model. An SMC practitioner might say: “I have a daily demand zone here — let me also check if the OTE retracement aligns with the order block inside that zone.” When the OTE level falls within or overlaps a higher-timeframe order block or FVG, it creates a multi-layered confluence that dramatically strengthens the setup.
+
+ICT treats OTE as a more rigid, time-confirmed framework — entries must happen during Kill Zones, the swing must have been formed by genuine displacement, and the Fibonacci anchor points are drawn with strict rules. For ICT, the 70.5% level is not just a guideline but the algorithmic re-entry point that Huddleston argues the market’s pricing algorithm is programmed to respect.
+
+Both uses are valid. For beginners, the SMC approach — using OTE as additional confluence — is easier to start with. For those going deeper into ICT, mastering the precise drawing and timing rules produces cleaner, higher-probability entries.
+
+The Five-Step OTE Checklist
+Before entering any OTE trade, run through these five steps:
+
+Confirm the higher-timeframe bias — daily or 4H showing clear trend direction.
+Identify a valid impulse swing — formed by displacement, not a slow drift.
+Draw Fibonacci body-to-body — from the swing low to swing high (bullish), or swing high to swing low (bearish).
+Wait for price to cross below equilibrium — confirm it reaches the 62%–79% zone.
+Look for confirmation at the OTE — a CHoCH or FVG on the lower timeframe, or a reaction candle at 70.5%.
+If all five align during a Kill Zone — you have an ICT-grade setup.
+
+Up Next — Day 14
+Tomorrow brings the final lecture of Week 2 — and one of the most important comparisons in this entire series. We put ICT’s PD Arrays side by side with SMC’s Points of Interest (POIs) in a full, detailed breakdown. Understanding the relationship between these two systems is what allows you to switch fluently between both methodologies — or combine them intelligently.
+
+→ See you on Day 14.
+
+Day 14: ICT PD Arrays vs SMC POIs — The Full Comparison
+
+Closing Out Week Two. The Comparison That Ties Everything Together.
+Welcome back. You’ve made it through fourteen days and two complete weeks of this series. You now understand market structure, liquidity, order blocks, FVGs, BOS and CHoCH, inducement, kill zones, multi-timeframe analysis, supply and demand zones, breaker blocks, mitigation blocks, OTE, and Fibonacci.
+
+Today we close out Week 2 with the concept that unifies how both ICT and SMC organise all of those tools into an actionable trading framework.
+
+ICT calls it the PD Array Matrix. SMC calls it Points of Interest.
+
+They are not identical — but they solve the same problem. And understanding both will let you move fluently between either methodology without confusion.
+
+The Problem Both Systems Are Solving
+You’ve spent days learning individual tools — order blocks, FVGs, breaker blocks. But when you sit down at a live chart, the question isn’t “what is an order block?” The question is: “Of all the zones I can see on this chart right now, which one do I actually trade from?”
+
+That is the problem PD Arrays and POIs both solve. They are filtering systems — ways of organising, ranking, and selecting the zones that matter most so you don’t waste time on the ones that don’t.
+
+ICT PD Arrays — Premium and Discount Arrangement
+The ICT PD Array — which stands for Premium and Discount Array — is a comprehensive map of all institutional reference points on a chart, organised by whether they sit in a premium or discount zone relative to the current dealing range.
+
+The name tells you everything: P = Premium (price is expensive, above the 50% equilibrium — sell here), D = Discount (price is cheap, below equilibrium — buy here), A = Array (the entire collection of tools and levels within that range).
+
+Every ICT concept you’ve learned is a component of the PD Array. When Huddleston says “look for a PD array in the discount zone,” he means: scan the lower half of the dealing range and find whichever of these tools is present — an order block, an FVG, a breaker block, a mitigation block, a rejection block, a liquidity void, an inversion FVG. The first one price reaches — starting from the current price and working toward the discount — is your target zone.
+
+The full PD Array component list, organised by priority (bullish setup, discount zone):
+
+PD Array Component	Description
+Old lows / equal lows	External liquidity pool targets
+Fair Value Gap (FVG)	Price imbalance — high probability fill zone
+Order Block (OB)	Last opposing candle before impulse
+Breaker Block	Failed OB after liquidity sweep — flipped
+Mitigation Block	Failed OB without sweep — still valid zone
+Rejection Block	Wick-dominant reversal zone
+Volume Imbalance	Gap between candle bodies — internal inefficiency
+Inversion FVG (IFVG)	Failed FVG now acting from opposite side
+In a bearish setup, the same list applies in the premium zone — above the 50% equilibrium.
+
+The key rule: buy from discount PD arrays, sell from premium PD arrays. Never enter a long from a premium zone or a short from a discount zone, regardless of how clean the individual setup looks.
+
+SMC Points of Interest — The Same Logic, Simpler Language
+The SMC community uses the term Point of Interest (POI) to describe any price zone where institutional activity is expected to have left an unfilled order — and where a meaningful market reaction is anticipated when price returns.
+
+In practical terms, an SMC POI is almost always one of the following: an order block, a fair value gap, a breaker block, or a supply and demand zone. The difference from ICT’s PD Array framework is not in the tools themselves — it’s in how they’re selected and prioritised.
+
+Where ICT uses a strict hierarchical matrix tied to the premium/discount framework, SMC uses a set of four quality criteria to decide whether a POI is worth trading:
+
+1. It must have triggered a market structure shift or BOS. A zone that produced an impulsive move confirming trend continuation or reversal is more significant than one that merely slowed price.
+
+2. It must be protected by liquidity. A strong POI usually has liquidity — equal highs, equal lows, or stop-loss clusters — resting just beyond it. That liquidity gives institutions a reason to defend the zone.
+
+3. It must be unmitigated. A POI that has already been revisited and fully tested has fewer unfilled orders remaining. Fresh, untouched zones react more reliably.
+
+4. It must be the closest to current price. Of all valid POIs on the chart, the one price encounters first as it retraces is the most immediately relevant.
+
+[smc_and_ict_day14.png]
+
+Alt Text: Side-By-Side Comparison Diagram. Left: Ict Pd Array Matrix Showing Premium Zone (Above 50% — Sell Tools Listed) And Discount Zone (Below 50% — Buy Tools Listed), With Equilibrium Line, Ict Selection Rule, And Kill Zone Time Filter. Right: Smc Points Of Interest Showing What Qualifies As A Poi, The Four Quality Criteria (Bos Trigger, Liquidity Protection, Unmitigated, Closest To Price), And The Smc Selection Rule With No Strict Time Filter.
+The Shared Toolkit — Where Both Systems Agree
+Despite the different names and organisational logic, both PD Arrays and POIs draw from the same underlying set of tools. Whether you call it a “bullish PD array in the discount zone” or a “bullish POI,” you’re describing the same thing: an order block or FVG sitting in a structurally significant location that price is likely to react from when it returns.
+
+The tools are identical. The filters are different.
+
+ICT filters by where the tool sits (premium or discount) AND by when price reaches it (Kill Zone).
+
+SMC filters by quality criteria — structure shift, liquidity protection, freshness, and proximity — without enforcing a strict time window.
+
+A Practical Example — Reading the Same Chart Both Ways
+Imagine EURUSD is in a bullish daily trend. Price has made a new high and is now pulling back. You open the chart and see:
+
+ICT approach: Draw the Fibonacci from the swing low to the swing high. Mark the 50% equilibrium. Scan the discount zone (below 50%) for the first PD array component. You find a bullish order block at 67% retracement inside the discount zone. You check the time — it’s 2:30am EST, London Kill Zone is open. You mark this as your target zone and wait for price to reach it.
+
+SMC approach: You scan the pullback and identify a bullish order block that: (a) caused a BOS when price originally launched from it, (b) has sell-side liquidity resting just below it, (c) has never been retested, and (d) is the first zone price will encounter on the current pullback. It meets all four quality criteria. You mark it as your POI and wait.
+
+Both traders are watching the same zone. One called it a discount-zone PD array. The other called it a high-probability POI. The zone is identical. The analysis process is slightly different. The trade — if it sets up — is the same.
+
+The Key Difference in One Line
+ICT: “Is this tool in the correct premium or discount zone, and is it a Kill Zone?” SMC: “Does this zone meet all four quality criteria — structure, liquidity, freshness, and proximity?”
+
+ICT adds time as a mandatory variable. SMC makes time optional but emphasises structural quality more explicitly. Advanced traders often apply both filters simultaneously — looking for a high-quality POI that also sits in the correct premium/discount zone AND forms during a Kill Zone. That triple confluence is where the highest-probability trades live.
+
+Week 2 Complete — Here’s What You Now Know
+Fourteen days. Two full weeks. You now have both the foundation and the advanced toolkit of ICT and SMC:
+
+Week 1 covered: Origins, market structure, liquidity, order blocks, FVGs, BOS vs CHoCH. Week 2 covered: Inducement and AMD, kill zones, MTF analysis, S&D zones vs OBs, breaker blocks, mitigation blocks, OTE Fibonacci, and now PD Arrays vs POIs.
+
+Starting from Day 15, we move into Week 3: Application. This is where everything comes together into actual trade plans — how to build a complete bullish or bearish trade narrative from the weekly chart down to the 5-minute entry. No more individual concepts in isolation. Full trade plans, start to finish.
+
+→ See you on Day 15.
+
+Day 15: How to Build an SMC Trade Plan (Step-by-Step Guide)
+
+Week Three Starts Here. Concepts End. Application Begins.
+Welcome back. For fourteen days you’ve been building a toolkit. Market structure. Liquidity. Order blocks. FVGs. BOS and CHoCH. Inducement. Kill zones. MTF analysis. Breaker blocks. OTE. PD arrays. POIs.
+
+That toolkit is now complete.
+
+Week 3 is different. We stop studying the tools in isolation and start using them together the way professional traders actually use them — as a single, end-to-end process that turns a blank chart into a structured, rule-based trade plan.
+
+Today is the SMC version. Day 16 covers the ICT version. The comparison will show you exactly where the two methodologies converge and where they diverge at the execution level.
+
+Let’s build the SMC trade plan from scratch.
+
+Why You Need a Trade Plan Before You Touch a Chart
+Most beginners open a chart and immediately start looking for something to trade. That is the wrong sequence entirely.
+
+Professional SMC traders start with a narrative — a written or mentally rehearsed story of what the market has done, what it is doing now, and what it is most likely to do next. The chart is consulted to confirm or deny that narrative, not to generate ideas spontaneously.
+
+Without a plan, every candle looks like an opportunity. With a plan, most of the chart becomes irrelevant — you are waiting patiently for one specific scenario to play out, and everything else gets ignored.
+
+Here is the complete SMC trade plan framework, step by step.
+
+Step 1 — Establish the Weekly Bias (Sunday or Monday Pre-Session)
+Before the week begins, open the weekly chart. Ask two questions:
+
+Where is price in the larger structure? Is it making higher highs and higher lows (bullish), lower lows and lower highs (bearish), or grinding sideways inside a range?
+
+Where is the nearest draw on liquidity? Scan for the closest BSL (buy-side liquidity above equal highs or a previous swing high) or SSL (sell-side liquidity below equal lows or a previous swing low). That is the most likely weekly target — the destination price is being pulled toward.
+
+Write it down in plain language: “Weekly structure is bullish. Price has swept last week’s low and created a CHoCH. Nearest draw on liquidity is the previous weekly high at X.”
+
+That sentence is your weekly narrative. Everything this week is filtered through it.
+
+Step 2 — Build the Daily Bias (Each Morning Pre-Session)
+Drop to the daily chart. This is where you make a go or no-go decision for the day.
+
+Confirm that price is moving in the direction your weekly narrative described. Look for the most recent BOS or CHoCH on the daily chart — is it aligned with the weekly? Identify where today’s key POIs sit. Are there any unmitigated daily order blocks, FVGs, or breaker blocks between current price and the weekly draw on liquidity?
+
+Also check: has price already reached the daily draw on liquidity? If so, the daily narrative may be exhausted — it is a day to stay out, not to force trades in a depleted range.
+
+Write your daily bias: “Daily is bullish. Last BOS was at X. Price is retracing. Nearest unmitigated bullish POI is the 4H order block at Y. Looking for longs.”
+
+Step 3 — Identify and Grade Your POI (4H / 1H)
+Drop to the 4H and 1H charts. Your job here is to identify the specific zone price is most likely to react from when the pullback completes.
+
+Apply the four SMC POI quality criteria from Day 14:
+
+Is it unmitigated? The zone must never have been fully retested since it formed. Did it cause a BOS or structural shift? The move away from this zone must have been impulsive and resulted in a break of structure. Is it protected by liquidity? There should be a pool of resting orders — equal lows, an inducement sweep — sitting just below the zone. That liquidity gives institutions a reason to defend it. Is it the closest POI to current price? Of all the zones that qualify, trade from the nearest one first.
+
+If the zone passes all four filters, it is your active POI for the session. If no zone passes, there is no trade today.
+
+Step 4 — Wait for the Liquidity Sweep
+This is the step that most beginners skip — and it is the most important one.
+
+Before price reacts from your POI, it will almost always make one final move to collect liquidity. That means dipping slightly below your zone’s low (in a bullish setup) to trigger the stop losses of traders who entered too early — then aggressively reversing.
+
+Do not enter when price first touches your POI. Wait. Watch for the wick below the zone, the aggressive rejection candle, the volume spike. That sweep is institutional confirmation that the zone is active and that the move is about to begin.
+
+If price slices cleanly through your POI without any rejection or sweep, the zone is invalidated. There is no trade. This discipline alone saves you from the majority of losing entries.
+
+Step 5 — Confirm on the Lower Timeframe (15M / 5M)
+Once the sweep has occurred and price is showing rejection at your POI, drop to the 15-minute or 5-minute chart. You are looking for one specific confirmation signal: a CHoCH.
+
+The CHoCH on the lower timeframe is the market telling you that the short-term retracement is finished and the higher-timeframe direction is resuming. It is the shift from bearish internal structure (the pullback) to bullish internal structure (the continuation) — visible only on the execution timeframe.
+
+The entry is placed at the FVG or order block that forms during or immediately after the LTF CHoCH. This is your precision entry — not at the top of the POI zone, not at a guess, but at the specific candle where institutional participation is confirmed.
+
+Step 6 — Place the Stop and Define the Target
+Stop loss: Below the low of the liquidity sweep candle. Not below the POI zone broadly — below the actual wick that swept the liquidity. This is the tightest valid stop placement and produces the best risk-reward ratio.
+
+If price returns below that sweep low, it means the institutional reaction failed. The zone has been mitigated. Your trade idea is wrong. The stop placement reflects that logic precisely.
+
+Target: The next draw on liquidity in the direction of the trade. In a bullish setup that means the nearest BSL — equal highs, a prior swing high, or the weekly liquidity target identified in Step 1. Never guess at a target. Always name it before you enter.
+
+Minimum risk-reward: SMC practitioners consistently recommend a minimum of 1:3 before taking any trade. If the distance from entry to stop is larger than one-third the distance from entry to target, the trade does not qualify.
+
+[smc_and_ict_day15.png]
+
+Alt Text: Six-Step Smc Trade Plan Flowchart. Step 1 (Weekly): Establish Bullish Or Bearish Bias And Nearest Draw On Liquidity. Step 2 (Daily): Confirm Bos Aligned With Weekly And Identify Unmitigated Pois. Step 3 (4H/1H): Grade The Poi Against Four Quality Criteria. Step 4 (1H/15M): Wait For Liquidity Sweep At The Zone Before Entering. Step 5 (15M/5M): Wait For Ltf Choch And Enter At The Fvg Or Ob. Step 6: Stop Below Sweep Low, Target The Next Bsl Or Ssl, Minimum 1:3 Risk-Reward.
+The Complete SMC Checklist — Print This and Use It
+Before pressing the buy or sell button, every one of these must be true:
+
+☐ Weekly bias is defined and written down
+☐ Daily BOS confirms the weekly direction
+☐ An unmitigated POI has been identified and graded
+☐ POI passes all four quality criteria
+☐ Price has swept liquidity at or below the POI before entry
+☐ A CHoCH has formed on the 15M or 5M chart at the POI
+☐ Entry is at the FVG or OB created during the CHoCH
+☐ Stop is below the sweep low — not below the zone broadly
+☐ Target is a named liquidity level — not a round number guess
+☐ Risk-reward is at least 1:3
+
+If any box is unchecked, there is no trade. You wait. The market will give you another opportunity. This is not a strategy of finding trades — it is a strategy of qualifying them.
+
+What Makes SMC Different From ICT in Trade Building
+The SMC trade plan works entirely off structural logic and the four POI quality criteria. Time is advisory — SMC traders are aware of London and New York sessions and prefer to enter during high-liquidity windows, but the plan does not require a Kill Zone to be valid.
+
+Tomorrow’s lecture builds the ICT version of the same trade plan. You’ll see exactly how Huddleston’s approach adds time-based mandatory filters — the Kill Zone, the daily bias tied to the Interbank Price Delivery Algorithm — that make the entry criteria stricter and in some cases more mechanical.
+
+Both plans are built on the same foundation. The ICT plan has more rules. The SMC plan gives more discretion. Neither is objectively better — it depends entirely on whether you thrive with rigid structure or prefer contextual flexibility.
+
+Up Next — Day 16
+Tomorrow: the ICT version of this exact trade plan. Same six-stage process, but you’ll see how Kill Zones, the daily bias framework, IPDA concepts, and specific Fibonacci confirmation change the entry workflow. If you’ve ever wondered why ICT traders talk about time so much — Day 16 answers that in full.
+
+→ See you on Day 16.
+
+Day 16: How to Build an ICT Trade Plan — Daily Bias, Kill Zones & Judas Swing
+
+The ICT Version. Same Foundation. Stricter Rules.
+Welcome back. Yesterday you built the SMC trade plan — a six-step framework from weekly narrative to LTF entry, driven by structural logic and four POI quality criteria, with time as an optional factor.
+
+Today you build the ICT version of the same plan. The concepts are familiar. The critical difference is that ICT treats time as mandatory, not optional. Every element of the ICT trade plan has both a price condition and a time condition that must be satisfied simultaneously. Miss either one and the setup doesn’t qualify — regardless of how clean it looks on the chart.
+
+This is the filter that makes ICT more mechanical, more precise, and — for many traders — more psychologically demanding to execute. Let’s build it.
+
+The Foundation: IPDA — Why Price Moves When It Does
+Before building the ICT trade plan, you need to understand the framework Huddleston uses to explain why price behaves the way it does. He calls it the Interbank Price Delivery Algorithm — IPDA.
+
+The core idea is that price movement is not random. It is a systematic, algorithmically delivered process designed to seek out liquidity and rebalance price inefficiencies. The algorithm has two primary objectives: hunt liquidity pools (stops resting above highs and below lows), and fill price imbalances (FVGs and volume voids left behind by fast moves).
+
+Practically, this means that every day, price is being delivered with a purpose. It is either hunting the previous high or low to collect stops, or it is returning to fill an imbalance before continuing. Your job as an ICT trader is to identify which objective the algorithm is currently pursuing — and position yourself in alignment with it.
+
+IPDA also operates on time-based cycles. Liquidity pools form approximately every 20 trading days, and the algorithm typically shifts its delivery direction at 20, 40, and 60-day intervals. While deep IPDA analysis is an advanced topic on its own, the practical takeaway for trade planning is simple: look at the highs and lows of the past 20, 40, and 60 trading days. Those external levels are the most likely draw on liquidity targets for the current move.
+
+Step 1 — Establish the IPDA Narrative (Weekly, Pre-Session)
+Open the weekly chart. Identify the 20-day, 40-day, and 60-day highs and lows. This tells you where price has been — and where the algorithm’s most likely targets sit.
+
+Ask: is price currently expanding away from a range, retracing after a move, or consolidating building for the next leg?
+
+Then identify the next draw on liquidity. In a bullish narrative, that is the nearest BSL — the 20-day high, a prior weekly swing high, or equal highs that have accumulated retail buy stops. In a bearish narrative, it is the nearest SSL — the 20-day low or prior swing lows.
+
+Write the IPDA narrative in plain language: “Price has swept the 20-day low. IPDA is now bullish. The 40-day high at X is the next probable draw on liquidity.”
+
+Step 2 — Set the Daily Bias (Each Morning, Before the London Open)
+Drop to the daily chart. The ICT daily bias is the anticipated direction of price delivery for that specific day — and it must be established before any Kill Zone begins. Traders who establish bias during a Kill Zone are already reacting, not planning.
+
+To establish daily bias in ICT, check three things:
+
+Where is price relative to yesterday’s high and low? If it opened above yesterday’s high, the algorithm may be distributing. If it opened below yesterday’s low, it may be accumulating for a push higher.
+
+Is there an unmitigated PD array between current price and the IPDA target? The first bullish PD array price encounters in the discount zone is your candidate entry zone for the day.
+
+Is there a Judas Swing setup brewing? This is the ICT-specific manipulation pattern that forms at session openings — and understanding it is the key to avoiding the single biggest trap in ICT trading.
+
+Write the daily bias: “Daily bias bullish. Price in discount. Unmitigated bullish OB at Y. Expecting Judas Swing below Asian low during London open, then expansion to Z.”
+
+Step 3 — Identify the Judas Swing (The Manipulation Phase)
+This is the concept that separates ICT traders from everyone else — and the one that trips up beginners most consistently.
+
+Huddleston named it the Judas Swing after the biblical betrayal narrative. Like Judas, it appears to be moving in one direction while actually leading price to be sacrificed in the opposite direction.
+
+Here is what it looks like in practice: your daily bias is bullish. London opens at 2am EST. Instead of immediately moving higher, price drops — sharply and aggressively — below the Asian session low. Retail traders who entered longs overnight get stopped out. Breakout traders short the move believing a bearish day is beginning.
+
+Then, within minutes, price reverses violently. The Asian low has been swept. Retail stop losses have been collected. The algorithm now has the liquidity it needed to fuel the true bullish move. The Judas Swing is complete.
+
+The Judas Swing forms between New York midnight and 5:00am EST, aligning with the London Kill Zone window. In a bullish day, the Judas Swing is a false move lower. In a bearish day, it is a false move higher. It is the manipulation phase of the AMD model (Accumulation → Manipulation → Distribution) applied at the intraday level.
+
+The rule: do not enter any trade during the Judas Swing. Wait for it to complete — confirmed by the liquidity sweep and a clear market structure shift in the direction of your daily bias.
+
+Step 4 — Wait for MSS With Displacement (Still in the Kill Zone)
+Once the Judas Swing has swept liquidity, you are watching for the Market Structure Shift (MSS) — a decisive break of the most recent lower high (in a bullish setup) with a large-bodied displacement candle that leaves an FVG behind.
+
+This is the algorithm confirming its true intention. The displacement candle — big-bodied, minimal wicking, and creating a clear FVG — is institutional order flow entering the market at scale. Without displacement, the MSS is weak. With displacement, it is a high-confidence signal.
+
+The displacement candle and the FVG it creates become your entry zone.
+
+Step 5 — Enter the PD Array During the Kill Zone
+This is where ICT’s mandatory time filter becomes critical. The FVG or OB formed during the displacement must be within the active Kill Zone window to be valid.
+
+An FVG that forms during the London Kill Zone (2am–5am EST) is a high-probability ICT entry. The identical FVG forming at 11am EST — outside any Kill Zone — is treated as low-probability and should be skipped regardless of how clean the structure looks.
+
+The entry itself is simple: when price retraces into the FVG created by the displacement candle, you enter in the direction of the daily bias. Alternatively, use the OTE framework from Day 13 — draw Fibonacci from the swing low of the Judas Swing to the displacement high, wait for the 62%–79% retracement, and enter at 70.5%.
+
+[smc_and_ict_day16.png]
+
+Alt Text: Six-Step Ict Trade Plan Flowchart. Step 1 (Weekly): Ipda Narrative — Mark 20/40/60-Day Highs And Lows, Identify Next Draw On Liquidity. Step 2 (Daily): Establish Daily Bias Before London Open — Discount/Premium, Locate Nearest Pd Array. Step 3 (5M/15M, London Kill Zone): Wait For The Judas Swing — False Move Below Asian Low (Bullish) Or Above Asian High (Bearish) — Do Not Enter During It. Step 4: Confirm Mss With Displacement And Fvg Entry Zone. Step 5 (Kill Zone): Enter The Pd Array — Fvg Retracement Or Ote 62–79%. Step 6: Stop Below Judas Swing Low, Target 1 At -0.27 Extension, Target 2 At Next Ipda Draw.
+Step 6 — Stop Placement and Targets
+Stop loss: Below the low of the Judas Swing for a bullish trade — the wick that swept the SSL. That level is the structural invalidation point. If price returns below it, the Judas Swing itself was not the manipulation phase — the entire bias was wrong.
+
+Target 1: The -0.27 Fibonacci extension of the Judas Swing leg. As covered in Day 13, this is the standard institutional profit target where most intraday ICT setups reach exhaustion. Many ICT traders take half their position here and move the stop to break-even.
+
+Target 2: The next IPDA draw on liquidity identified in Step 1 — the 20-day or 40-day high, or the prior swing high where BSL rests. This is the full expansion target reserved for days when the bias is confirmed, the Kill Zone produced clean displacement, and the daily structure is clearly trending.
+
+The Complete ICT Pre-Trade Checklist
+Before entering any ICT trade, every condition below must be satisfied:
+
+☐ IPDA narrative written — 20/40/60-day highs and lows marked
+☐ Daily bias established before London open — discount or premium confirmed
+☐ Nearest PD array identified and in the correct zone
+☐ Judas Swing has completed — liquidity swept, false move confirmed over
+☐ MSS formed with displacement — large-bodied candle, FVG visible
+☐ Entry zone (FVG or OTE) is inside an active Kill Zone
+☐ Stop is below the Judas Swing low — not below the POI broadly
+☐ Target 1 is at the -0.27 extension
+☐ Target 2 is the named IPDA draw on liquidity
+☐ Risk per trade does not exceed 1–2% of account
+
+If the Judas Swing has not yet formed — wait. If the MSS did not produce displacement — skip. If the setup forms outside a Kill Zone — do not enter it.
+
+ICT vs SMC Trade Plan — The Key Differences Side by Side
+Both plans use the same tools. Both start with a weekly narrative and drill down to an execution timeframe. But the differences at the execution level are significant enough to matter.
+
+SMC approach: Four POI quality criteria filter the zone. Time is advisory. Entry is the LTF CHoCH confirmation. No strict session requirement.
+
+ICT approach: PD array must be in the correct premium or discount zone. Kill Zone is mandatory. The Judas Swing must complete first. Displacement must accompany the MSS. OTE can replace the CHoCH as an entry trigger.
+
+The ICT plan has more mandatory conditions. Each condition that is added reduces the frequency of setups and increases the precision of those that remain. This is why ICT traders often take fewer trades per week than SMC traders — but target significantly higher risk-reward ratios per trade.
+
+Neither approach is superior in absolute terms. What matters is which set of rules you can follow with complete consistency — because inconsistency, not the strategy itself, is what destroys most traders.
+
+Up Next — Day 17
+Tomorrow we go into an area that most trading content glosses over but that determines whether any strategy — SMC or ICT — actually survives long-term: risk management. Position sizing, the 1% rule, moving stops to break-even, managing runners, and the psychology of cutting losses early. Without this, the best trade plan in the world still blows an account eventually.
+
+→ See you on Day 17.
+
+Day 17: Risk Management in ICT & SMC Trading — Position Sizing, Stop Loss & Drawdown
+
+The Lecture Most Traders Skip. The One That Actually Keeps You Alive.
+Welcome back. Today’s topic isn’t the most exciting lecture in this series. There are no diagrams of order blocks, no FVG examples, no breaker block comparisons. But of everything we have covered across seventeen days, this is the lecture that will most directly determine whether you are still trading a year from now.
+
+The hard truth is this: a trader with a mediocre strategy and excellent risk management will outlast a trader with an excellent strategy and mediocre risk management every single time. The market gives you unlimited chances to succeed — but only if you are still funded enough to take them.
+
+Let’s build your risk management framework from the ground up.
+
+The One Rule That Overrides Everything Else — The 1% Rule
+Before discussing any technique, any tool, or any setup — there is one rule that both ICT and SMC communities universally agree on:
+
+Never risk more than 1–2% of your trading account on a single trade.
+
+That’s it. One rule. Every other risk management principle flows from it.
+
+Here is why it matters in plain numbers. If you risk 1% per trade and you hit ten consecutive losses — an extreme but possible sequence — you have lost approximately 10% of your account. Painful, but survivable. Your account is still 90% intact. You can recover.
+
+If you risk 10% per trade and hit ten consecutive losses, your account is gone. No recovery possible. Game over.
+
+The 1% rule is not about being timid. It is about making sure that the inevitable losing streaks — and every trader, no matter how skilled, has them — never remove you from the game permanently. Professionals risk 1%. Beginners who blow accounts consistently risk far more.
+
+Position Sizing — The Formula Every ICT and SMC Trader Needs
+Knowing you will risk 1% per trade is meaningless if you don’t know how to convert that into an actual lot size. This is where position sizing comes in — and it is a calculation you must run on every single trade, without exception.
+
+The formula is:
+
+Position size = (Account balance × Risk %) ÷ Stop loss distance in pips (or points)
+
+A worked example: you have a $10,000 account. You want to risk 1% — that is $100. Your stop loss on the current setup is 50 pips away from your entry. A standard forex lot has a pip value of approximately $10 per pip. So:
+
+$100 ÷ (50 pips × $10 per pip) = $100 ÷ $500 = 0.20 lots
+
+You enter 0.20 lots. If your stop is hit, you lose exactly $100 — 1% of your account. Not more. Not less.
+
+The critical implication of this formula is that wider stop losses mean smaller position sizes. If the correct stop placement for a setup is 100 pips away, you take a smaller position — not a tighter stop. Never compress your stop loss to fit a desired position size. That inverts the logic entirely and will get you stopped out by normal price noise before the trade has a chance to work.
+
+Stop Loss Placement — The ICT and SMC Approach
+In both methodologies, the stop loss has one job: invalidate the trade idea. It is not placed at a round number. It is not placed at a “comfortable” distance. It is placed at the exact level where, if price reaches it, the entire analytical basis for the trade is proven wrong.
+
+In SMC: stop goes below the liquidity sweep low (for a long trade) — the wick that swept the SSL before price reversed. If price returns below that wick, the institutional reaction you traded from has failed.
+
+In ICT: stop goes below the low of the Judas Swing for a long trade. If price retraces past that point, the Judas Swing was not the manipulation phase — the narrative is broken.
+
+Neither methodology places stops below a zone broadly. They place stops at the specific structural point of invalidation. This keeps stops tight relative to the trade’s risk-reward, and it means that when you are stopped out, you know exactly why — not just that price moved against you.
+
+Moving to Break-Even — When and How
+One of the most common trade management decisions is moving the stop loss to the entry price once a trade has moved sufficiently in your favour. This converts a risk trade into a free trade — worst case, you exit at breakeven with zero loss.
+
+The standard ICT and SMC approach: move to break-even once price has cleared the first significant structural level in your direction. For an SMC trade, that is typically once price has swept the nearest internal liquidity and is approaching the first BSL target. For an ICT trade, it is once price clears the 0.0% level of the OTE Fibonacci — the original swing high — with momentum.
+
+The mistake most beginners make is moving to break-even too early — at the first sign of any move in their direction. Move it too soon and you will get break-evened out of trades that go on to hit full target. Patience here is as important as patience at entry.
+
+Partial Profits and Running the Rest
+Taking partial profits at an intermediate target while letting the remainder of the position run toward the full target is a widely used trade management technique in both frameworks.
+
+The standard approach: take 50% of the position off at Target 1 (the first draw on liquidity, or the -0.27 Fibonacci extension in ICT). Move the stop on the remaining 50% to break-even. Let that runner continue toward Target 2.
+
+This approach does three things simultaneously: it locks in real profit, it eliminates risk on the remainder of the trade, and it keeps you in the market for the full potential of the move. You have already won something — now you are playing with the market’s money on the runner.
+
+The Daily Loss Limit — Your Personal Circuit Breaker
+Position sizing protects you on each individual trade. The daily loss limit protects you across an entire session.
+
+A daily loss limit is a hard rule: if you lose more than X% of your account in a single trading day, you stop trading immediately and do not return until the next session. Most professional traders and prop firm evaluation frameworks set this at 3–5% of account equity.
+
+Here is why this rule is non-negotiable. After two or three consecutive losses in a session, most traders enter a psychological state sometimes described as “tilt” — where the desire to recover losses overrides disciplined analysis. Trades taken in this state violate every rule of the plan. Position sizes grow. Setups are forced. The sequence that began with two controlled 1% losses becomes a catastrophic 10–15% loss in a single afternoon of revenge trading.
+
+The daily loss limit is a firewall against that sequence. Once it is triggered, the session is over. No exceptions. Not even for “one more trade to get it back.”
+
+If you lose 3% today, come back tomorrow. The market will still be there.
+
+[smc_and_ict_day17.png]
+
+Alt Text: Risk Management Framework Diagram Showing Four Rules. Rule 1 (1% Rule): Risk 1–2% Per Trade — Shows That 10 Losses At 1% Leaves 90% Intact Versus Account Destruction At 10% Per Trade. Rule 2 (Position Sizing Formula): Account × Risk % ÷ Stop Distance — Wider Stop Means Smaller Position Size. Rule 3 (Break-Even + Partial Profits): Three-Step Process — Move Stop To Break-Even At First Structural Level, Take 50% Off At Target 1, Let 50% Run To Target 2. Rule 4 (Daily Loss Limit): 3–5% Hard Cap, Stop Immediately When Hit, Prevents Revenge Trading. Bottom Table Shows Drawdown Recovery Maths: 10% Loss Needs 11.1% Gain, 20% Needs 25%, 40% Needs 66.7%, 50% Needs 100%.
+The Drawdown Maths You Need to See Once
+The bottom of the diagram shows a table that changes how most traders think about losses permanently. Losing 50% of your account does not require a 50% gain to recover. It requires a 100% gain — because you are now working from a smaller base.
+
+This asymmetry is why capital preservation is always prioritised over aggressive profit-seeking in professional trading. It is mathematically easier to not lose 20% than it is to make 25% after you have lost 20%.
+
+Every time you break the 1% rule, every time you revenge trade, every time you ignore the daily loss limit — you are pushing yourself further up that recovery curve. The professionals who last in this business are not the ones who make the most on their best days. They are the ones who lose the least on their worst days.
+
+How ICT and SMC Approach Risk Differently
+Both methodologies share the same foundational risk rules — the 1% rule, position sizing from the stop, and logical invalidation-based stop placement. The difference lies in how tight the entries are.
+
+ICT: Because entries are refined through the Kill Zone, OTE, and Judas Swing confirmation, stop distances tend to be very tight — often 10–30 pips on forex pairs. Tight stops with 1% risk mean ICT traders can trade larger position sizes while keeping dollar risk fixed. This produces the high risk-reward ratios (1:5, 1:10) that ICT is known for, but demands precise entry execution.
+
+SMC: Entries are confirmed by the LTF CHoCH at the POI. Stop goes below the liquidity sweep low. Stop distances tend to be slightly wider than ICT’s tightest setups, but still structurally defined. SMC typically targets a minimum 1:3 risk-reward, which remains very compelling when applied consistently.
+
+Neither approach works without the 1% rule underneath it. The strategy provides the edge. The risk management ensures you survive long enough to let the edge compound.
+
+The Revenge Trading Trap — And How to Close It
+Every trader reading this will face a day where they take two or three losses in a row and feel the urge to immediately open another trade to recover. That urge is not ambition. It is a stress response — your brain attempting to eliminate the discomfort of a loss by taking action.
+
+The trade you take from that state is almost always the worst trade of the day. It is oversized. The setup is forced. The plan is bypassed. And it turns a 2% controlled loss into a 6% uncontrolled one.
+
+The fix is mechanical, not motivational: set your daily loss limit in writing before you begin every session. When it is hit, close the platform. No exceptions, no negotiations. The market will open again tomorrow. Your capital, once gone, will not come back on its own.
+
+Up Next — Day 18
+Tomorrow we tackle a question that beginners ask constantly: does ICT and SMC work on forex, crypto, and stocks equally? The answer is nuanced — and the differences matter significantly for how you apply the tools depending on what market you are trading.
+
+Day 18 covers exactly that.
+
+→ See you on Day 18.
+
+Day 18: ICT & SMC on Forex, Crypto & Stocks — Key Differences Explained
+
+Same Framework. Different Market. Here’s What Actually Changes.
+Welcome back. One of the most common questions across the ICT and SMC communities is a simple one: does this work on crypto? Does it work on stocks? Or is it just a forex thing?
+
+The short answer is that the core concepts — market structure, liquidity, order blocks, FVGs, BOS and CHoCH — work across every liquid market. Institutions operate in all of them. Liquidity is hunted in all of them. Price leaves the same structural footprints in all of them.
+
+But the application is not identical. Three things change meaningfully between markets: session structure, liquidity density, and the role of time. Getting those adaptations right is what separates traders who succeed across multiple asset classes from those who copy a forex setup onto Bitcoin and wonder why it keeps failing.
+
+Let’s go through each market systematically.
+
+Forex — The Home Market for ICT and SMC
+ICT concepts were built specifically for forex — and it shows. The Kill Zone times (London 2–5am EST, New York 7–10am EST) map directly to the two biggest institutional order flow windows in global currency markets. The Asian session range (built during 8–10pm EST) provides the daily liquidity reference points that London then hunts. The AMD model — Accumulation in Asia, Manipulation at London open, Distribution in New York — was designed around this exact session structure.
+
+In forex, this is why the Judas Swing concept is so clean and so consistent. The Asian session creates a tight, well-defined range. London opens, sweeps one side of it — the fake move — and New York delivers the true directional expansion. Three distinct sessions, three distinct functions, operating on a 24-hour cycle from Sunday evening to Friday evening EST.
+
+Best pairs for ICT and SMC in forex: EUR/USD and GBP/USD are the primary pairs — highest institutional volume, tightest spreads, cleanest structure. USD/JPY works well during the Asian Kill Zone. GBP/JPY has high volatility but wider spreads and noisier structure, making it more demanding to trade cleanly.
+
+The one complication in forex is the ICT Kill Zone time for indices versus pairs. For forex pairs, the New York Kill Zone runs 7–10am EST. For indices like the Nasdaq 100 (NAS100) and S&P 500 (SPX), it shifts to 8:30–11am EST, aligning with the US equity market open at 9:30am EST. This is a distinction worth memorising — confusing the two timeframes is a common beginner mistake.
+
+Gold (XAUUSD) — The Crossover Market
+Gold sits between forex and commodities, and it is arguably the most popular instrument in the ICT and SMC trading community after EUR/USD. It is traded as XAU/USD on the forex market, meaning it follows the same 24-hour Monday-to-Friday session structure as currency pairs.
+
+However, gold has its own behavioural characteristics that matter for ICT and SMC application. The most important: gold’s institutional volume is heavily concentrated during the London-New York overlap — roughly 8am–12pm EST — when physical gold pricing is established through the London bullion market’s twice-daily fix process. This window produces the clearest displacement moves, the most reliable FVG fills, and the strongest kill zone setups on XAUUSD.
+
+Gold also moves in larger absolute point values than most forex pairs, which affects position sizing (a 100-point move on XAUUSD is significant). The AMD model applies cleanly to gold — the Asian session builds the range, London manipulates, New York distributes. ICT’s Silver Bullet strategy (a specific 60-minute entry window at 10–11am EST) was originally developed with gold and indices in mind and works particularly well on XAUUSD during that New York AM window.
+
+Crypto — The 24/7 Adaptation
+Crypto is the market that requires the most deliberate adaptation of ICT and SMC concepts. The reason is fundamental: there is no session structure. Bitcoin trades around the clock, seven days a week, 365 days a year. There is no London open, no New York close, no overnight session. The Asian range that ICT relies on for the Judas Swing setup does not exist in the same clean way it does in forex.
+
+This does not mean the concepts fail — it means the time-based filters must be re-anchored.
+
+The adaptation that has become standard in the ICT and SMC crypto community: use the US equity market open at 9:30am EST as the primary Kill Zone anchor. This is when institutional crypto volume peaks, because the vast majority of US institutional participants — hedge funds, family offices, crypto ETF operators — become fully active at the NYSE open. Bitcoin and Ethereum consistently show their sharpest displacement moves and clearest FVG formations during the 9:30am–11:30am EST window.
+
+The Asian session low and high on crypto charts (approximately 8pm–4am EST) still function as daily liquidity reference points, even without a formal session close. Price regularly sweeps the Asian range highs or lows before the US session begins — a recognisable Judas Swing equivalent that experienced crypto traders watch for.
+
+What does not change in crypto: market structure, order blocks, FVGs, BOS and CHoCH identification, and the premium/discount framework all apply directly. The structural concepts are asset-class agnostic. The time-based rules require recalibration.
+
+One critical caution for crypto: the smaller and less liquid the coin, the less reliable the ICT and SMC concepts become. On Bitcoin and Ethereum — where institutional participation is now substantial and well-documented — the concepts work well. On mid-cap altcoins, liquidity is fragmented across exchanges, institutional footprints are less consistent, and news events can invalidate technical structure instantly. Stick to the majors.
+
+Stocks — The Sessioned Equity Adaptation
+US stocks present a different set of constraints. Unlike forex and crypto, equities trade only during defined market hours — 9:30am to 4:00pm EST for the regular session — with pre-market (4am–9:30am) and after-hours (4pm–8pm) trading available but structurally less reliable for ICT and SMC setups.
+
+The Kill Zone equivalent in stocks is the market open window: 9:30–11:00am EST. This is when institutional volume peaks, opening-range liquidity is swept, and the daily directional move is typically established. ICT’s AMD model applies directly to the US equity session: the pre-market range is the Asian equivalent (Accumulation), the opening sweep in the first 30–60 minutes is the Manipulation phase, and the 10:30am–12:00pm EST range is the Distribution.
+
+Order blocks, FVGs, BOS, and CHoCH all work on major liquid stocks and indices like the NAS100, SPX500, and large-cap tech names with sufficient daily volume. The caveat is that individual stocks are far more vulnerable to fundamental events — earnings reports, FDA decisions, regulatory filings — that can instantly invalidate any technical structure. ICT and SMC work best on individual stocks when they are used on index ETFs or the index futures themselves (ES, NQ), where institutional footprints are cleaner and less subject to single-company news disruptions.
+
+Pre-market order blocks require special caution: zones formed during pre-market tend to be less reliable because liquidity is thinner and the participants active during those hours are different from the institutional flow that drives regular session moves. Always anchor your primary analysis to regular-session price action.
+
+[smc_and_ict_day18.png]
+
+Alt Text: Cross-Market Comparison Table For Ict And Smc. Five Rows Covering Session Structure, Primary Kill Zone, Manipulation Reference, Core Concepts, And Key Caveats — Across Three Columns: Forex (Eur/Usd, Gbp/Usd), Crypto (Btc, Eth), And Stocks &Amp; Indices. A Bottom Banner Highlights Everything That Stays Constant Across All Markets: Market Structure, Liquidity Logic, Order Blocks, Fvgs, Bos And Choch, Premium/Discount Framework, And Risk Management.
+The One Thing That Never Changes
+The diagram above shows what differs. This section covers what is identical — and it is the more important list.
+
+Market structure — higher highs, higher lows, lower lows, lower highs, BOS, and CHoCH — is a universal language that any liquid price chart speaks. Whether you are reading a EUR/USD daily chart or a Bitcoin 4H chart or an NAS100 15-minute chart, structure is structure.
+
+Liquidity logic — the principle that price seeks out stop-loss clusters above swing highs and below swing lows before reversing — operates in every market where participants place orders with stops. Which is every market.
+
+Order blocks and FVGs — the last opposing candle before an impulse, and the three-candle price imbalance — form identically across all markets. The structure of the pattern does not change because the underlying mechanism (institutional order placement leaving a structural footprint) is the same.
+
+Premium and discount — the 50% equilibrium logic, buy from discount, sell from premium — applies anywhere you can draw a Fibonacci tool.
+
+Risk management — the 1% rule, position sizing formula, stop at structural invalidation — is completely market-agnostic.
+
+What changes is the timing layer — specifically which hours produce the highest institutional participation and therefore the most reliable ICT and SMC patterns. Get that timing layer right for your chosen market, and the rest of the framework transfers directly.
+
+The Practical Recommendation
+If you are new to ICT and SMC, start with forex — specifically EUR/USD or GBP/USD. The session structure is the clearest, the Kill Zone windows are the most well-defined, and the concepts were built for this market. The feedback loop between analysis and outcome is the fastest.
+
+Once the framework is solid on forex, expanding to gold is the natural next step — it behaves most similarly to forex with the session-based Kill Zone structure largely intact. From there, crypto (with the US open anchor) and indices (with the NYSE open anchor) are straightforward adaptations rather than new methodologies entirely.
+
+What you should never do is attempt to run the strict ICT time-based filters — Judas Swing at London open, Kill Zone mandatory entries — on a 24/7 crypto market without adjustment. The pattern will exist but the timing will not. Adapt the time layer. Keep everything else.
+
+Up Next — Day 19
+Tomorrow we tackle the mistakes that cost beginners the most money — and the most time. Day 19 is a direct, no-filler breakdown of the most common errors traders make when learning ICT and SMC, why each one happens, and the specific fix for each. This one will save you months of expensive trial and error.
+
+→ See you on Day 19.
+
+Day 19: 7 Common ICT & SMC Trading Mistakes Beginners Make (And How to Fix Them)
+
+This One Will Save You Months.
+
+Welcome back. You have spent nineteen days building a comprehensive understanding of ICT and SMC. The concepts are inside your head. The framework is mapped. The trade plan structure is clear.
+
+And yet — if you are like most traders at this stage — you are still losing money on live charts. Or you are demo trading profitably but falling apart when real capital is involved. Or you understand every concept individually but cannot seem to string them together into consistent, profitable execution.
+
+The reason is almost never the concepts themselves. It is the same seven execution mistakes, made in the same order, by virtually every beginner in this space. Today we name them, diagnose them, and fix them — one by one.
+
+Mistake 1 — Overcomplicating the Chart
+What it looks like: The trader marks every swing high and low on the chart. Every potential order block is highlighted. Every FVG is annotated. Every liquidity pool is boxed. The chart looks like a wall of coloured rectangles and arrows, and the trader genuinely cannot identify a clear trade from within it.
+
+This is one of the most common ICT and SMC mistakes at every skill level. The methodology contains dozens of tools — and beginners try to use all of them simultaneously. The result is analysis paralysis: too many confluences, too many conflicts, and an inability to act with conviction even when a genuinely high-quality setup appears.
+
+The fix: Pick three tools and use only those for the first six months. Market structure (BOS/CHoCH), the nearest unmitigated order block or FVG, and liquidity (BSL/SSL). That is all you need to build a competent trade plan. Add tools only after you have demonstrated consistency with the basics. A clean chart with two zones marked is more tradeable than a chart covered in fifty annotations.
+
+Mistake 2 — Ignoring the Higher Timeframe Bias
+What it looks like: The trader finds a beautiful bullish order block on the 15-minute chart, enters long with a tight stop, and immediately gets stopped out. They then check the daily chart and see that it has been in a clear downtrend for three weeks with a series of bearish BOSes.
+
+The 15-minute setup was technically correct. The daily bias made it the wrong trade.
+
+This mistake is responsible for more losses in the SMC and ICT community than almost any other single error. Traders fall in love with lower-timeframe patterns and forget that the higher timeframe always has authority. A perfect order block in the wrong direction relative to the daily bias is not a high-probability trade — it is a counter-trend gamble.
+
+The fix: Write the daily bias down in plain language before you open a single lower-timeframe chart. Stick it at the top of your trading journal entry. If your 15-minute setup contradicts that one sentence, it does not exist. You are not allowed to trade it.
+
+Mistake 3 — Trading Outside Kill Zones (ICT) or Outside High-Volume Sessions (SMC)
+What it looks like: The trader spots a clean FVG on EUR/USD at 2:00pm EST. They enter. Price does nothing for two hours, grinds sideways, eventually taps the stop, then moves in the original direction at the 7:00am open the next morning.
+
+The setup was right. The time was wrong.
+
+Both ICT and SMC concepts produce their most reliable signals when institutional volume is highest — during the London Kill Zone (2–5am EST), the New York Kill Zone (7–10am EST for forex, 8:30–11am for indices), and around key session transitions. Outside these windows, spreads are wider, volume is thin, and price movement is dominated by smaller players and algorithmic noise rather than genuine institutional order flow.
+
+The fix: Only execute during high-volume windows. An FVG that forms at 2:00pm EST is not the same trade as the identical FVG forming at 2:30am during the London open. The pattern is the same. The probability is not. If there is no setup during the Kill Zone today — there is no trade today. Full stop.
+
+Mistake 4 — Chasing Price After the Move Has Already Started
+What it looks like: Price sweeps a liquidity level, shifts structure, and begins a strong expansion move. The trader sees it happening in real time, feels FOMO, and enters mid-move at market price — no order block, no FVG, no defined entry — because they are afraid to miss it.
+
+The entry has no clear invalidation level. The stop has to be placed far away. The risk-reward is poor. Price makes a brief retracement, stops them out, then continues in the original direction.
+
+Chasing price is the market’s most efficient way of extracting money from impatient traders. Smart money runs precisely because there is a crowd of retail traders who will enter late, provide the liquidity for professionals to distribute into, and then absorb the retracement.
+
+The fix: Accept this as a law: if you missed the entry, you missed that trade. The next setup will come. Never enter mid-move at market price without a defined structural basis. Wait for a retracement into an FVG or order block formed during the expansion. If price does not retrace and hits the target directly — that is a missed trade, not a failed discipline. Missed trades cost nothing. Chased trades cost real money.
+
+Mistake 5 — Placing the Stop Loss at a Round Number or “Comfortable” Distance
+What it looks like: The trader calculates their ideal position size, finds that the structurally correct stop is 40 pips away, but decides that feels too far — so they tighten the stop to 20 pips to increase position size and improve the R:R ratio on paper.
+
+The stop at 20 pips sits at a level that has no structural meaning. It is inside the normal noise of price action at that timeframe. The trade gets stopped out within minutes. Price then moves 120 pips in the correct direction.
+
+The fix: Stop loss placement is determined by the chart — specifically by the structural level at which the trade idea is invalidated. In SMC, that is below the liquidity sweep low. In ICT, that is below the Judas Swing low. That distance is what it is. If it makes the position size uncomfortably small — good. That means you are sizing correctly for your account. Never compress the stop to fit a desired position size. Always adjust the position size to fit the required stop.
+
+Mistake 6 — No Trading Journal
+What it looks like: The trader takes twenty trades over two weeks. Some win, some lose. At the end of the fortnight they have a vague sense of whether they are profitable — but they cannot identify which setups worked, which failed, at what times, on which pairs, or why any of it happened the way it did. They adjust their approach based on feelings rather than data.
+
+Without a journal, trading improvement is essentially random. You cannot identify patterns in your mistakes because you have not recorded the data needed to find them. You cannot build confidence in your winning setups because you have no evidence base to point to.
+
+The fix: Record every trade — entry, stop, target, timeframe, pair, session, the setup type, the reasoning, and the outcome — with a screenshot of the chart before and after. Review the journal weekly. Look for patterns: Are you losing consistently during one session? Are certain setup types underperforming? Are you winning on one pair and losing on another? The answers to those questions are worth more than any additional concept you could learn.
+
+Mistake 7 — Strategy-Hopping
+What it looks like: The trader spends three weeks learning ICT order blocks. They take five live trades and lose three of them. Immediately they conclude that order blocks “don’t work” and switch to learning FVG-only strategies. After another two weeks and another losing streak, they abandon that for breaker blocks. Then OTE. Then PD arrays. After six months they have surface-level familiarity with ten concepts and genuine mastery of none.
+
+This is perhaps the single most career-limiting mistake in trading education. The beginner phase produces losing streaks regardless of the strategy — because the losses come from execution errors, not concept errors. Switching strategies does not fix execution errors. It just resets the learning curve at zero.
+
+The fix: Choose one complete setup — for example, the six-step SMC trade plan from Day 15, or the ICT Kill Zone entry model from Day 16 — and commit to it for a minimum of ninety trading days with a journal. Do not evaluate the strategy after five trades or even twenty. After ninety journalled trades you will have the data to make an informed assessment. Until then, the problem is almost certainly execution, not methodology.
+
+[smc_and_ict_day19.png]
+
+The Pattern Underneath All Seven Mistakes
+Read back through that list and notice what every mistake has in common. None of them are conceptual failures. Nobody is struggling because they misunderstood what a breaker block is. Nobody is losing because they calculated the OTE zone incorrectly.
+
+Every single mistake is an execution or patience failure:
+
+Marking too much instead of waiting for clarity. Trading at the wrong time instead of waiting for the Kill Zone. Chasing instead of waiting for the retracement. Tightening the stop instead of accepting the correct position size. Switching strategy instead of waiting for the ninety-day data set to build.
+
+The solution to all seven mistakes is the same underlying discipline: slow down, do less, wait longer. The market rewards patience more consistently than it rewards knowledge. You can know every concept in this series and still lose money if you cannot sit on your hands when conditions are not perfect.
+
+That patience is harder to learn than any PD array or Fibonacci level. But it is the actual edge. And it is available to everyone who commits to building it.
+
+Up Next — Day 20
+Tomorrow we tackle the question that everyone in this community has asked at some point: can you combine ICT and SMC? Or does using one invalidate the other?
+
+Day 20 gives you a direct, practical answer — and a specific framework for how the two methodologies actually complement each other rather than conflict.
+
+→ See you on Day 20.
+
+Day 20: Combining ICT and SMC Trading — The Hybrid Approach That Works
+
+ICT VS SMC
+The Question You’ve Been Asking Since Day 1.
+Welcome back. Twenty days in. One day to go.
+
+Throughout this series we have consistently presented ICT and SMC side by side — sometimes in agreement, sometimes highlighting real differences, always noting that they share the same foundational toolkit. Which has inevitably led to the question that shows up in every ICT and SMC community:
+
+Can you actually combine them? Or does using one invalidate the other?
+
+The answer is direct: not only is combining them possible — it is what many of the most effective traders in this space already do. The methodologies do not conflict. They complement. And today we give you the specific hybrid framework that shows exactly how.
+
+First — Why People Think They Conflict
+The perception of conflict almost always traces back to terminology. ICT and SMC use different words for the same things — or similar words for subtly different things. This creates the impression that the two systems are more distinct than they actually are.
+
+A few examples you have already encountered throughout this series:
+
+What ICT calls a PD Array in the discount zone, SMC calls a bullish Point of Interest. Same zone, different label. What ICT calls a Market Structure Shift, SMC calls a Change of Character. Same event, different name. ICT’s Judas Swing is SMC’s liquidity sweep / manipulation phase within the AMD model. Same mechanism. What ICT prescribes as a mandatory Kill Zone filter, SMC recommends as a preferred but not required high-volume session window. Same concept — one enforced, one advisory.
+
+The tools underneath the labels are identical. The structural concepts are the same. The logic of institutional order flow, liquidity hunting, and price imbalance filling does not change between the two systems. What changes is the strictness of the rules around how and when you apply those tools.
+
+Understanding this resolves the conflict entirely. You are not choosing between two different theories of how markets work. You are choosing between two different operating procedures for applying the same theory.
+
+The Legitimate Difference — And Why It Creates the Hybrid Opportunity
+There is one genuine, substantive difference between ICT and SMC that matters for trade execution: ICT adds a mandatory time dimension. SMC does not.
+
+ICT insists that the Kill Zone is non-negotiable. A setup that forms outside a Kill Zone is not traded, regardless of how structurally perfect it looks. The Judas Swing must complete. Displacement must occur. The FVG must form inside the Kill Zone window. These are mandatory conditions, not guidelines.
+
+SMC leaves time as advisory. The four POI quality criteria — BOS trigger, liquidity protection, freshness, proximity — are structural filters, not time filters. An SMC trader can enter a valid setup at 11am EST if the structure is clean enough, whereas a strict ICT trader would pass on the identical setup because the Kill Zone ended at 10am.
+
+This difference creates the opportunity for a hybrid: use SMC’s structural clarity to build the narrative and identify the zone, then use ICT’s time filter to decide when to enter within that zone.
+
+The result is a framework with SMC’s flexibility at the analysis level and ICT’s precision at the execution level. It is arguably the most complete approach available from either methodology alone.
+
+The Hybrid Framework — Three Layers
+Layer 1 — SMC for the Weekly and Daily Narrative
+
+Start every week the way the SMC trade plan from Day 15 instructs. Open the weekly chart. Define the structural bias — are we in a bullish or bearish phase? Where is the nearest draw on liquidity? Identify whether the current market is in an expansion, retracement, or consolidation phase.
+
+Drop to the daily. Confirm the BOS sequence. Identify the most significant unmitigated bullish or bearish POI between current price and the weekly draw on liquidity. Apply the four SMC quality criteria. Write the narrative in plain language.
+
+You are now operating with SMC’s broader, flexible structural thinking — which is excellent at defining the where and the why without locking you into rigid timing requirements before you even have a setup.
+
+Layer 2 — SMC for Zone Identification (4H and 1H)
+
+Drop to the 4H and 1H charts. Use SMC’s POI framework to identify the specific order block, FVG, or breaker block that price is most likely to react from when the pullback occurs. Grade it against all four quality criteria. Mark the zone boundaries — the entry level, the stop level, and the target.
+
+At this point you know what you are looking for and where it is. You are not yet inside any trade. You are positioned and ready.
+
+Layer 3 — ICT for Kill Zone Entry
+
+Now apply ICT’s time filter. You have your SMC zone marked. Your job is to wait — not just for price to reach it, but for price to reach it during a Kill Zone.
+
+If price enters the zone at 1pm EST, you do not enter. The volume is thin, institutional participation is low, and the setup has a lower probability of follow-through. You wait.
+
+When London opens the next morning and begins engineering the session’s liquidity sweep, you watch your marked zone. If the Judas Swing takes price into your SMC POI — sweeping the liquidity sitting below it — and the 5-minute chart then prints an MSS with displacement and a clear FVG, that is your entry. You are inside a Kill Zone, at a structurally graded SMC POI, with an ICT-confirmed entry signal.
+
+That is the hybrid at full execution.
+
+[📸 IMAGE PROMPT FOR PUBLISHER: Insert a three-panel annotated chart. Panel 1 (Daily): SMC narrative — bullish trend, pullback in progress, unmitigated bullish POI (OB/FVG zone) marked and labelled. Panel 2 (4H/1H): POI graded — zone boundaries, stop and target labelled. Panel 3 (5M): London Kill Zone active — Judas Swing sweeps below the SMC POI, MSS forms, FVG entry candle highlighted. Label each panel with its layer. Use EURUSD or XAUUSD.]
+
+Why This Works Better Than Either Alone
+The SMC-only trader has a strong structural framework but no mandatory time filter. This means they sometimes enter structurally valid setups during low-volume periods and get chopped out by noise before the actual move materialises. The setup was right. The timing was not.
+
+The pure ICT trader has strong time discipline but sometimes finds that the SMC structural context — particularly the four POI quality criteria — would have helped them avoid entering zones that were technically inside a Kill Zone but structurally weak.
+
+The hybrid combines both strengths. SMC’s structural quality filter reduces the frequency of entering weak zones. ICT’s time filter reduces the frequency of entering valid zones at invalid times. The intersection — structurally graded SMC zones entered during ICT Kill Zones — produces the highest-probability subset of setups from either methodology.
+
+[smc_and_ict_day20.png]
+
+Alt Text: Three-Layer Hybrid Ict And Smc Framework Diagram. Layer 1 (Smc — Teal): Weekly And Daily Narrative — Structural Bias, Dol Identification, Plain-Language Narrative Output. Layer 2 (Smc — Purple): Poi Zone Identification On 4H And 1H — Identify The Ob, Fvg, Or Breaker, Grade Using Four Criteria, Output Is A Marked Zone With Entry, Stop, And Target Defined. Layer 3 (Ict — Coral): Kill Zone Entry — Wait For London Or New York Kill Zone, Judas Swing Into The Smc Zone Produces Mss And Fvg, Enter At The Fvg With Stop Below The Sweep. Bottom Bar: Smc Structural Quality Filter Plus Ict Time Filter Equals Highest-Probability Subset Of Setups.
+The Warning About Combination
+Here is the one thing that can make the hybrid approach dangerous rather than powerful: using it as an excuse to add complexity rather than precision.
+
+Some traders combine ICT and SMC not because they have genuinely integrated both frameworks but because they cannot decide which one to follow. They use SMC when an ICT rule inconveniently disqualifies a setup, and they invoke ICT terminology when an SMC setup needs justification. The result is a system with no consistent rules — which is worse than either methodology alone.
+
+The hybrid only works when the rules of each layer are applied unconditionally. SMC POI criteria are applied in full at Layers 1 and 2 — no shortcuts, no accepting a zone that fails one of the four criteria because it “feels strong.” ICT Kill Zone timing is applied in full at Layer 3 — if the setup forms outside the Kill Zone, it does not qualify, regardless of how clean the SMC zone is.
+
+Both sets of filters must be applied rigorously in every session, or the hybrid collapses into the same inconsistency that strategy-hopping produces.
+
+The Terminology Translation You Need
+Since SMC and ICT share concepts under different names, here is the direct translation map that prevents confusion when you move between layers:
+
+SMC term	ICT equivalent
+Point of Interest (POI)	PD Array in premium or discount zone
+Change of Character (CHoCH)	Market Structure Shift (MSS)
+Liquidity sweep	Stop hunt / inducement
+Manipulation phase (AMD)	Judas Swing
+Draw on liquidity (DOL)	IPDA draw on liquidity target
+LTF CHoCH confirmation	Displacement + FVG after MSS
+Bullish POI in discount	Discount-zone bullish PD array
+When you read “enter at the LTF CHoCH at the POI during London” in an SMC context, and “enter at the FVG formed by MSS displacement during the London Kill Zone” in an ICT context — those are describing the same entry. Knowing this translation removes all ambiguity between the two systems.
+
+Which Combination Suits Which Trader
+The hybrid is not the only valid approach. Two pure approaches also work — and for some traders, simplicity beats the additional filtering that the hybrid requires.
+
+Pure SMC suits traders who value flexibility above precision. Those who trade across multiple timeframes and markets without fixed session restrictions. Swing traders who may hold positions overnight or across multiple days where Kill Zone timing is less relevant. Beginners who want to master structural concepts before adding time-based filters.
+
+Pure ICT suits traders who thrive on explicit, non-negotiable rules. Those who trade forex and indices during defined Kill Zones and have the patience to wait for the full sequence — IPDA narrative, Judas Swing, MSS, displacement, FVG — before entering. Traders who want a more mechanical system with fewer discretionary judgements.
+
+The hybrid suits traders who have learned both systems well enough to apply both layers rigorously — and who want the additional confluence that comes from satisfying both structural and timing filters simultaneously. It produces fewer setups than either system alone, but those setups carry higher average probability when all conditions align.
+
+One combination that rarely works: treating SMC and ICT as interchangeable labels for the same thing without understanding the genuine differences. That produces neither the structural clarity of SMC nor the time-based precision of ICT. It produces noise dressed up as analysis.
+
+Up Next — Day 21
+Tomorrow is the final lecture of this series. Day 21 delivers what this entire twenty-day build has been pointing toward: which should you actually use? ICT, SMC, or the hybrid — and how do you make that decision based on your specific situation, schedule, personality, and goals?
+
+The final verdict. With a complete action plan.
+
+Day 21: ICT vs SMC — Which Should You Use? The Final Verdict
+
+The Last Lecture. The Most Important One.
+Welcome back. Twenty days of concepts, frameworks, trade plans, risk management, market adaptations, common mistakes, and hybrid approaches.
+
+Today we answer the question this entire series was built to answer.
+
+Which should you use — ICT, SMC, or the hybrid?
+
+And more importantly: what do you actually do tomorrow morning when you open TradingView for the first time with serious intent?
+
+First — The Honest Answer to the Big Question
+There is no universally correct answer. That is not a cop-out. It is the most useful thing you can hear before choosing a path, because every trader who wastes months on the wrong methodology does so because they were told one was objectively better than the other without any reference to who they actually are.
+
+The right methodology for you is the one that:
+
+Fits your available trading hours. Matches your tolerance for explicit rules versus discretionary judgement. Aligns with your primary market and trading style. You can follow with complete consistency for at least ninety days.
+
+Everything else is noise.
+
+The Decision Framework — Four Questions
+Answer these four questions honestly and the choice becomes clear.
+
+Question 1: What are your available trading hours?
+
+If you can trade during the London Kill Zone (2–5am EST) or the New York Kill Zone (7–10am EST for forex) consistently and regularly — ICT is available to you at full effectiveness. The time-based filter that makes ICT so precise only works if you are actually present during those windows. If you are in a timezone or working schedule that makes those hours unreliable — you will be forced to trade outside Kill Zones or skip trades entirely, and ICT’s edge is significantly reduced.
+
+If your trading hours are irregular, or you trade during Asian hours, or you prefer swing trading positions held over days rather than intraday setups — SMC’s session-flexible framework suits your reality far better.
+
+Question 2: How do you respond to explicit rules versus contextual judgement?
+
+Some traders thrive when given a clear, non-negotiable ruleset. “No Kill Zone, no trade” removes a decision that many discretionary traders make badly under pressure. If you know yourself to be someone who benefits from firm guardrails — someone who, without explicit rules, will rationalise entering weak setups — ICT’s mandatory filters are an asset for you, not a constraint.
+
+Other traders find rigid rules suffocating. They understand the logic of Kill Zones but find that forcing every decision through a strict time filter creates stress and causes them to second-guess valid setups that form just outside the window. If you trust your structural reading and prefer to let the quality of the setup — rather than the clock — be the final arbiter, SMC’s quality-criteria framework suits your temperament better.
+
+Question 3: What market and trading style are you targeting?
+
+If you are primarily trading forex pairs (EUR/USD, GBP/USD) or indices (NAS100, SPX) intraday during the major sessions — ICT was built specifically for this combination and the Kill Zone framework aligns naturally with how those markets move.
+
+If you are trading crypto, commodities, or equities — or if you swing trade with multi-day holding periods across markets — SMC’s timeframe-agnostic structural framework adapts more cleanly to those environments without requiring the session-specific timing adjustments that ICT demands.
+
+Question 4: Where are you in your learning journey?
+
+If you are genuinely new to institutional trading concepts — market structure, liquidity, order blocks, FVGs — SMC is the recommended starting point. It teaches the foundational principles in a more accessible way, without the additional layer of ICT’s proprietary terminology, time-theory framework, and IPDA cycle analysis. SMC gives you a working model of institutional behaviour that you can actually trade within months.
+
+ICT, applied fully and correctly, is a deeper system with a longer mastery curve. Consistent profitability in pure ICT typically requires 6–12 months of focused study and backtesting before going live, and 12–24 months before execution becomes truly reliable. The learning curve is longer because the ruleset is more complex — but the precision on the other side of that curve is correspondingly higher.
+
+The Verdict — By Trader Type
+You should start with SMC if:
+
+You are new to institutional trading concepts
+Your trading hours are irregular or you prefer swing trading
+You want to trade crypto, stocks, or multiple asset classes from day one
+You prefer contextual, quality-based filters over rigid time rules
+You want to be executing real setups within weeks rather than months
+You should start with ICT if:
+
+You can commit to trading during London or New York Kill Zones consistently
+You want a more mechanical, rule-based system with fewer discretionary judgements
+You are primarily trading forex pairs or major indices intraday
+You are patient enough to spend 6–12 months in education and backtesting before live trading
+You have previous trading experience and want to refine entry timing rather than learn structure from scratch
+You should use the hybrid if:
+
+You have already worked through both systems to a competent level
+You want SMC’s structural clarity at the analysis layer with ICT’s timing precision at the entry layer
+You are comfortable managing two distinct sets of filters simultaneously without confusing them
+You understand that the hybrid only works when both layers are applied fully and rigorously — not selectively
+The 90-Day Action Plan — Starting Tomorrow
+Regardless of which path you choose, the next ninety days look almost identical. The methodology determines what you study. The process is universal.
+
+Days 1–30: Study and mark-up only. No live trading.
+
+Pick your methodology. Work through the foundational concepts — structure, liquidity, order blocks, FVGs — until you can identify them on a chart without hesitation. Open TradingView every day. Mark up the previous session’s charts after the fact. Identify where the setups formed. Label every BOS, CHoCH, OB, FVG, and liquidity sweep. Write what you see in plain language. Do this for thirty consecutive trading days. You are building pattern recognition, not trying to make money yet.
+
+Days 31–60: Backtesting. Still no live capital.
+
+Use TradingView’s bar replay feature. Choose one specific entry model — for SMC, use the six-step trade plan from Day 15. For ICT, use the Kill Zone entry model from Day 16. Walk through historical charts, one session at a time, and execute the model as if live. Record every trade in a journal: setup type, entry, stop, target, outcome, what you did right, what you did wrong. Complete a minimum of fifty replayed sessions. You are building a data set that tells you whether your execution of the model is producing positive expectancy.
+
+Days 61–90: Demo trading. Still no live capital.
+
+Move to demo trading with real-time price action. Same model. Same journal. Same rules — no modifications. The only difference from backtesting is that you no longer know what happens next. Track your demo results with the same rigour you applied to backtesting. After ninety days of journalled trades, you will have the data to answer the question that matters: is my execution of this model profitable when applied consistently? If yes — move to a small live account. If not — the journal will show you precisely which step in the process is breaking down.
+
+[smc_and_ict_day21.png]
+
+Alt Text: Final Verdict And Action Plan Diagram. Top Section: Three Columns — Smc (When To Choose: New Trader, Irregular Hours, Crypto/Stocks/Swing, Contextual Rules Preference), Ict (When To Choose: Kill Zone Availability, Strict Rules Preference, Forex/Indices Intraday, Prior Experience, Patient Study), Hybrid (When To Use: Competent In Both, Smc For Htf, Ict For Entry, Both Layers Applied Rigorously). Centre Bar: All Three Paths Share The Same Foundation. Bottom Section: 90-Day Action Plan In Three Phases — Days 1–30 (Chart Mark-Up, Pattern Recognition), Days 31–60 (Backtesting With Bar Replay, 50+ Sessions, Expectancy Data), Days 61–90 (Demo Trading, Real-Time Execution, Live Or Refine Decision).
+The Rule That Applies to All Three Paths
+Whatever you choose today, one rule applies unconditionally:
+
+Pick one. Commit to it. Do not switch for ninety days.
+
+The methodology you choose matters far less than the consistency with which you apply it. There are profitable ICT traders and profitable SMC traders and profitable hybrid traders. There are also losing traders in all three camps — and their losses almost never trace back to the methodology. They trace back to inconsistency, impatience, and strategy-hopping when the first losing streak arrives.
+
+Losing streaks will arrive. They are not a signal that your methodology is wrong. They are a signal that your execution needs refinement. That refinement only becomes visible in your journal data after you have accumulated enough consistent trades to identify a pattern. You cannot find a pattern in a sample of ten inconsistent trades taken across three different methodologies.
+
+Choose. Commit. Journal. Review. Refine. That is the entire process.
+
+What You Now Know — The Full Picture
+Twenty-one days ago you started with a question: what is the real difference between ICT and SMC?
+
+Today you have the complete answer — not as a label or a preference, but as a deep understanding of every concept, every tool, every trade plan, and every practical consideration that separates, connects, and ultimately unifies these two methodologies.
+
+You know how markets move — not from indicators or patterns, but from the institutional order flow logic that underlies every swing high, every liquidity sweep, every FVG, every BOS and CHoCH in any liquid market anywhere in the world.
+
+You know how to build a complete trade plan from the weekly chart down to the 5-minute entry — in both SMC and ICT formulations — with a defined stop, a named target, and a position size that reflects correct risk management.
+
+You know the seven mistakes that cost most beginners months of unnecessary losses — and the specific fix for each one.
+
+You know how markets differ across forex, crypto, and stocks — and what adjustments the concepts require when applied to each.
+
+You know how to combine the two methodologies in a way that uses the strongest feature of each without the confusion that comes from using them as interchangeable labels.
+
+That is a genuinely complete foundation. What happens next depends entirely on what you do with it.
+
+The Last Word on ICT vs SMC
+After twenty-one days of examining every concept, every tool, every difference, and every parallel — here is the final, honest verdict:
+
+They are not rivals. They are not alternatives. They are two expressions of the same understanding about how markets work — one more rigid and time-specific, one more flexible and structure-first. The traders who succeed with either one are not defined by their methodology label. They are defined by the discipline with which they apply it, the rigour with which they journal it, and the patience with which they let it compound over time.
+
+The market does not care what you call your framework. It only rewards those who read it clearly, enter precisely, manage risk diligently, and show up to do the same thing consistently the next day.
+
+That is the edge. It has always been the edge. And now you have the knowledge to build it.

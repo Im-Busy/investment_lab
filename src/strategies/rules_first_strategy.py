@@ -133,7 +133,6 @@ class RulesFirstStrategy(Strategy):
     ir_weighting_mode: str = "scalar"
     use_multi_tp: bool = True
     tp1_atr: float = 1.5
-    tp2_atr: float = 3.0
     tp1_size: float = 0.5
     move_sl_to_be: bool = True
 
@@ -154,8 +153,46 @@ class RulesFirstStrategy(Strategy):
     yield_curve_inversion_mult: float = 0.50
     yield_curve_near_inversion_mult: float = 0.75
 
+    # RF3.1: GARCH dynamic ATR trail
+    use_garch_atr: bool = False
+    garch_model: str = "egarch"
+    garch_window: int = 252
+    garch_trail_mult_min: float = 2.0
+    garch_trail_mult_max: float = 4.0
+
+    # RF3.2: Options sentiment signal modifier
+    use_options_sentiment: bool = False
+    options_sentiment_weight: float = 0.10
+
+    # RF3.3: Kelly dynamic position sizing
+    use_kelly_sizing: bool = False
+    kelly_fraction: float = 0.5
+    kelly_max_allocation: float = 0.25
+
+    # RF3.4: Order book microstructure signals
+    use_order_book: bool = False
+    order_book_weight: float = 0.05
+
+    # P24-17: Signal-strength dynamic position sizing
+    use_signal_strength_sizing: bool = False
+    use_voting_signal: bool = False
+    voting_signal_weight: float = 0.15
+    use_rules_catalog: bool = False
+    rules_catalog_weight: float = 0.10
+    use_divergence: bool = False
+    divergence_weight: float = 0.20
+    use_wm_bollinger: bool = False
+    wm_bollinger_weight: float = 0.15
+    signal_strength_min_size: float = 0.5
+    signal_strength_max_size: float = 1.0
+
+    _strategy_ref: Optional[list] = None
+
     def init(self) -> None:
         """Precompute pattern signals and indicators for all bars."""
+        if self._strategy_ref is not None:
+            self._strategy_ref.append(self)
+
         self._patterns = self._init_patterns()
         self._reliability = {p.name: PATTERN_RELIABILITY.get(p.name, 0.55) for p in self._patterns}
         self._reliability = {
@@ -168,6 +205,15 @@ class RulesFirstStrategy(Strategy):
 
         self._precompute_signals()
         self._precompute_atr()
+
+        if self.use_voting_signal:
+            self._init_voting_signal()
+        if self.use_rules_catalog:
+            self._init_rules_catalog()
+        if self.use_divergence:
+            self._init_divergence()
+        if self.use_wm_bollinger:
+            self._init_wm_bollinger()
 
         self._quality_registry: PatternQualityRegistry | None = None
         self._quality_mults: dict[str, float] = {}
@@ -189,6 +235,22 @@ class RulesFirstStrategy(Strategy):
         self._yield_curve_mults: np.ndarray | None = None
         if self.use_yield_curve_gate:
             self._init_yield_curve_gate()
+
+        self._garch_trail_mults: np.ndarray | None = None
+        if self.use_garch_atr:
+            self._init_garch_trail()
+
+        self._options_sentiment_mults: np.ndarray | None = None
+        if self.use_options_sentiment:
+            self._init_options_sentiment()
+
+        self._kelly_alloc = None
+        if self.use_kelly_sizing:
+            self._init_kelly_sizing()
+
+        self._order_book_mult: float | np.ndarray = 1.0
+        if self.use_order_book:
+            self._init_order_book()
 
         self._trail_high: float = 0.0
         self._trail_low: float = float("inf")
@@ -383,6 +445,12 @@ class RulesFirstStrategy(Strategy):
         if self._yield_curve_mults is not None and idx < len(self._yield_curve_mults):
             score *= self._yield_curve_mults[idx]
 
+        if self._options_sentiment_mults is not None and idx < len(self._options_sentiment_mults):
+            score *= self._options_sentiment_mults[idx]
+
+        if self.use_order_book and idx < len(self._order_book_mult):
+            score *= float(self._order_book_mult[idx])
+
         return np.tanh(score)
 
     def _precompute_atr(self) -> None:
@@ -507,6 +575,161 @@ class RulesFirstStrategy(Strategy):
             logger.warning("Yield curve gate init failed, disabling", exc_info=True)
             self._yield_curve_mults = np.ones(self._n_bars, dtype=np.float64)
 
+    def _init_garch_trail(self) -> None:
+        """RF3.1: Precompute GARCH-volatility-scaled trail multipliers."""
+        try:
+            from src.ml.garch_forecaster import GARCHForecaster
+
+            close = self._df["Close"]
+            returns = close.pct_change().dropna()
+            forecaster = GARCHForecaster(
+                model=self.garch_model, window=self.garch_window, retrain_every=63
+            )
+            forecaster.fit(returns)
+            forecasts = forecaster.forecast(horizon=1)
+            aligned = forecasts.reindex(self._df.index).fillna(method="ffill").fillna(0.02)
+            median_vol = np.median(aligned[aligned > 0]) if (aligned > 0).any() else 0.02
+            vol_ratio = np.clip(aligned / max(median_vol, 1e-6), 0.5, 2.0)
+            self._garch_trail_mults = self.garch_trail_mult_min + (
+                self.garch_trail_mult_max - self.garch_trail_mult_min
+            ) * (1 - vol_ratio)
+            low_garch = np.sum(aligned < median_vol * 0.8)
+            logger.info(
+                "GARCH trail: %d bars vol<80%% median → wider trail",
+                low_garch,
+            )
+        except Exception:
+            logger.warning("GARCH trail init failed, disabling", exc_info=True)
+            self._garch_trail_mults = None
+
+    def _init_options_sentiment(self) -> None:
+        """RF3.2: Precompute options sentiment signal modifiers."""
+        try:
+            from src.signals.options_sentiment import OptionsSentimentProvider
+
+            provider = OptionsSentimentProvider()
+            dates = self._df.index
+            start_str = str(dates[0].date())
+            provider.fit(start=start_str)
+            sentiment = provider.get_sentiment(dates)
+            self._options_sentiment_mults = (
+                (1.0 + self.options_sentiment_weight * sentiment.fillna(0.0))
+                .clip(0.8, 1.2)
+                .to_numpy(dtype=np.float64)
+            )
+            logger.info(
+                "Options sentiment: mean=%.3f, range=[%.3f, %.3f]",
+                float(sentiment.mean()),
+                float(sentiment.min()),
+                float(sentiment.max()),
+            )
+        except Exception:
+            logger.warning("Options sentiment init failed, disabling", exc_info=True)
+            self._options_sentiment_mults = None
+
+    def _init_kelly_sizing(self) -> None:
+        """RF3.3: Initialize Kelly allocator for dynamic position sizing."""
+        try:
+            from src.risk.kelly_allocator import KellyAllocator
+
+            self._kelly_alloc = KellyAllocator(
+                kelly_fraction=self.kelly_fraction,
+                max_allocation=self.kelly_max_allocation,
+                method="classic",
+            )
+            self._kelly_signal_history: list[float] = []
+            logger.info(
+                "Kelly allocator: fraction=%.2f, max=%.2f",
+                self.kelly_fraction,
+                self.kelly_max_allocation,
+            )
+        except Exception:
+            logger.warning("Kelly allocator init failed, disabling", exc_info=True)
+            self._kelly_alloc = None
+
+    def _init_order_book(self) -> None:
+        """RF3.4: Precompute order book microstructure features."""
+        try:
+            from src.signals.order_book_features import OrderBookFeatures
+
+            ob = OrderBookFeatures()
+            features = ob.compute(self._df)
+            bai = features.get("bai", pd.Series(0.0, index=self._df.index))
+            self._order_book_mult = np.clip(
+                1.0 + self.order_book_weight * bai.fillna(0.0).to_numpy(), 0.85, 1.15
+            )
+            logger.info("Order book features: BAI mean=%.4f", float(bai.mean()))
+        except Exception:
+            logger.warning("Order book features init failed, disabling", exc_info=True)
+            self._order_book_mult = 1.0
+
+    def _init_voting_signal(self) -> None:
+        """B6: Precompute 6-indicator voting signals and cache as a signal source."""
+        try:
+            from src.signals.indicator_voting import compute_voting_signals
+
+            close_arr = self._df["Close"].to_numpy(dtype=np.float64)
+            vote = compute_voting_signals(close_arr)
+            self._signals_cache["voting_6indicator"] = vote.astype(np.int8)
+            self._reliability["voting_6indicator"] = self.voting_signal_weight
+            n_signals = int(np.sum(np.abs(vote)))
+            logger.info(
+                "Voting signal: %d non-zero bars, weight=%.2f", n_signals, self.voting_signal_weight
+            )
+        except Exception:
+            logger.warning("Voting signal init failed, disabling", exc_info=True)
+
+    def _init_rules_catalog(self) -> None:
+        """B1: Precompute 35-rule catalog signals and cache as signal sources."""
+        try:
+            from src.signals.rules_catalog import generate_rules_catalog
+
+            close = self._df["Close"].to_numpy(dtype=np.float64)
+            rules = generate_rules_catalog(close)
+            n_added = 0
+            for name, sig in rules.items():
+                if int(np.sum(np.abs(sig))) > 0:
+                    self._signals_cache[name] = sig.astype(np.int8)
+                    self._reliability[name] = self.rules_catalog_weight
+                    n_added += 1
+            logger.info(
+                "Rules catalog: %d active rules, weight=%.2f", n_added, self.rules_catalog_weight
+            )
+        except Exception:
+            logger.warning("Rules catalog init failed, disabling", exc_info=True)
+
+    def _init_divergence(self) -> None:
+        """B10: Precompute divergence signals and cache as signal sources."""
+        try:
+            from src.signals.divergence_detector import detect_all_divergences
+
+            divs = detect_all_divergences(self._df)
+            for name, sig in divs.items():
+                if int(np.sum(np.abs(sig))) > 0:
+                    self._signals_cache[name] = sig.astype(np.int8)
+                    self._reliability[name] = self.divergence_weight
+            logger.info(
+                "Divergence signals: %d types, weight=%.2f", len(divs), self.divergence_weight
+            )
+        except Exception:
+            logger.warning("Divergence init failed, disabling", exc_info=True)
+
+    def _init_wm_bollinger(self) -> None:
+        """B2: Precompute W/M-Bollinger signals and cache as signal sources."""
+        try:
+            from src.patterns.bollinger.wm_patterns import detect_wm_bollinger
+
+            wm = detect_wm_bollinger(self._df)
+            if "w_bottom" in wm.columns and int(np.sum(np.abs(wm["w_bottom"].to_numpy()))) > 0:
+                self._signals_cache["w_bottom"] = wm["w_bottom"].to_numpy(dtype=np.int8)
+                self._reliability["w_bottom"] = self.wm_bollinger_weight
+            if "m_top" in wm.columns and int(np.sum(np.abs(wm["m_top"].to_numpy()))) > 0:
+                self._signals_cache["m_top"] = wm["m_top"].to_numpy(dtype=np.int8)
+                self._reliability["m_top"] = self.wm_bollinger_weight
+            logger.info("W/M Bollinger: weight=%.2f", self.wm_bollinger_weight)
+        except Exception:
+            logger.warning("W/M Bollinger init failed, disabling", exc_info=True)
+
     def next(self) -> None:
         """Execute trading logic for current bar."""
         idx = len(self.data) - 1
@@ -523,10 +746,14 @@ class RulesFirstStrategy(Strategy):
         if atr <= 0:
             atr = current_close * 0.02
 
+        trail_atr_mult = self.trail_stop_atr
+        if self._garch_trail_mults is not None and idx < len(self._garch_trail_mults):
+            trail_atr_mult = float(self._garch_trail_mults[idx])
+
         if self.position:
             if self.position.is_long:
                 self._trail_high = max(self._trail_high, current_close)
-                trail_sl = self._trail_high - self.trail_stop_atr * atr
+                trail_sl = self._trail_high - trail_atr_mult * atr
 
                 if self.use_multi_tp and not self._tp1_hit:
                     tp1_price = self._entry_price + self.tp1_atr * atr
@@ -551,7 +778,7 @@ class RulesFirstStrategy(Strategy):
                         self._trail_high = 0.0
             else:
                 self._trail_low = min(self._trail_low, current_close)
-                trail_sl = self._trail_low + self.trail_stop_atr * atr
+                trail_sl = self._trail_low + trail_atr_mult * atr
 
                 if self.use_multi_tp and not self._tp1_hit:
                     tp1_price = self._entry_price - self.tp1_atr * atr
@@ -575,18 +802,51 @@ class RulesFirstStrategy(Strategy):
                         self.position.close()
                         self._trail_low = float("inf")
         else:
+            kelly_size = self._compute_kelly_size(score) if self._kelly_alloc else 1.0
+            kelly_size = self._compute_signal_strength_size(score, kelly_size)
             if score >= self.entry_threshold:
-                self.buy()
+                self.buy(size=kelly_size)
                 self._trail_high = current_close
                 self._trail_low = float("inf")
                 self._entry_price = current_close
                 self._tp1_hit = False
                 self._tp2_hit = False
             elif self.use_short and score <= -self.entry_threshold:
-                self.sell()
+                self.sell(size=kelly_size)
                 self._trail_low = current_close
                 self._trail_high = 0.0
                 self._entry_price = current_close
                 self._tp1_hit = False
                 self._tp2_hit = False
                 self._trail_high = current_close
+
+    def _compute_kelly_size(self, score: float) -> float:
+        """RF3.3: Compute Kelly-derived position size fraction from signal strength."""
+        if self._kelly_alloc is None:
+            return 1.0
+        prob = max(0.30, min(0.80, 0.50 + float(score) * 0.25))
+        edge = self._kelly_alloc.estimate_edge_from_probability(prob)
+        alloc = self._kelly_alloc.compute(edge)
+        return max(0.25, alloc.adjusted_fraction)
+
+    def _compute_signal_strength_size(self, score: float, base_size: float) -> float:
+        """P24-17: Signal-strength position sizing — magnitude → lot scaling.
+
+        |abs(score)| ≥ 0.45 → 3 lots, 0.05-0.15 → 2 lots, < 0.05 → 1 lot.
+        Maps into a size multiplier on base position size.
+        """
+        if not self.use_signal_strength_sizing:
+            return base_size
+        abs_score = abs(float(score))
+        if abs_score >= 0.45:
+            lots = 3
+        elif abs_score >= 0.15:
+            lots = 2
+        else:
+            lots = 1
+        multiplier = float(lots) / 3.0
+        return float(
+            np.clip(
+                base_size * multiplier, self.signal_strength_min_size, self.signal_strength_max_size
+            )
+        )

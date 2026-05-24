@@ -312,6 +312,76 @@ class TripleBarrierLabeler:
         }
 
     @staticmethod
+    def three_value_labels(
+        close: pd.Series | np.ndarray,
+        horizon: int = 5,
+        up_threshold: float = 0.35,
+        down_threshold: float = 0.35,
+    ) -> pd.Series:
+        """Generate three-value labels: UP(1) / DOWN(-1) / UNKNOWN(0).
+
+        Labels bars based on forward return versus the full distribution:
+        - Top 35% returns → +1 (UP)
+        - Bottom 35% returns → -1 (DOWN)
+        - Middle 30% → 0 (UNKNOWN — transitional, noise)
+
+        This reduces noise from minor price fluctuations and captures only
+        significant directional moves. See plan P24-7.
+
+        Args:
+            close: Close price series.
+            horizon: Forward return horizon in bars.
+            up_threshold: Upper quantile threshold (default 0.35).
+            down_threshold: Lower quantile threshold (default 0.35).
+
+        Returns:
+            Series with +1, -1, 0. Trimmed to remove final horizon bars (NaN forward).
+        """
+        if isinstance(close, pd.Series):
+            idx = close.index
+            close_arr = close.values
+        else:
+            idx = None
+            close_arr = np.asarray(close, dtype=np.float64)
+
+        n = len(close_arr)
+        fwd_ret = np.full(n, np.nan, dtype=np.float64)
+        for i in range(n - horizon):
+            fwd_ret[i] = (close_arr[i + horizon] / close_arr[i]) - 1
+
+        valid = ~np.isnan(fwd_ret)
+        valid_ret = fwd_ret[valid]
+        if len(valid_ret) < 30:
+            return pd.Series(np.full(n, np.nan), index=idx)
+
+        up_cut = np.quantile(valid_ret, 1 - up_threshold)
+        down_cut = np.quantile(valid_ret, down_threshold)
+
+        labels = np.full(n, np.nan, dtype=np.float64)
+        labels[valid & (fwd_ret >= up_cut)] = 1
+        labels[valid & (fwd_ret <= down_cut)] = -1
+        labels[valid & ((fwd_ret > down_cut) & (fwd_ret < up_cut))] = 0
+
+        result = pd.Series(labels, index=idx)
+        result = result.dropna()
+        pos = (result == 1).sum()
+        neg = (result == -1).sum()
+        unk = (result == 0).sum()
+        total = len(result)
+        logger = __import__("logging").getLogger(__name__)
+        logger.info(
+            "Three-value labels: +1=%d (%.0f%%) -1=%d (%.0f%%) 0=%d (%.0f%%) / %d total",
+            pos,
+            100 * pos / max(total, 1),
+            neg,
+            100 * neg / max(total, 1),
+            unk,
+            100 * unk / max(total, 1),
+            total,
+        )
+        return result
+
+    @staticmethod
     def from_pattern_signal(
         close: pd.Series,
         high: pd.Series,

@@ -11,7 +11,7 @@ Architecture:
 
 Example:
     >>> registry = StrategyRegistry()
-    >>> registry.register(SMCReversalPlugin())
+    >>> registry.register(SMCPlugin())
     >>> registry.register(InfluencerMTFPlugin())
     >>> signals = registry.evaluate(df)
 """
@@ -22,6 +22,9 @@ from enum import Enum
 from typing import Any, Dict, List, Optional
 
 import pandas as pd
+
+
+import numpy as np
 
 
 class StrategyType(Enum):
@@ -157,75 +160,94 @@ class StrategyPlugin(ABC):
             raise ValueError("Weight must be between 0.0 and 1.0")
 
 
-class SMCReversalPlugin(StrategyPlugin):
+class SMCPlugin(StrategyPlugin):
     """
-    SMC Reversal Strategy Plugin
+    SMC Intraday Strategy Plugin
 
-    Integrates SMC reversal patterns with the plugin system.
-    Wraps the existing SMCReversalStrategy for plugin compatibility.
+    Wraps the unified SMCStrategy for plugin compatibility.
+    Uses precomputed signal arrays from SMCStrategy.
     """
 
     def __init__(self, config: Optional[PluginConfig] = None):
-        """Initialize SMC Reversal Plugin."""
-        super().__init__(config or PluginConfig(name="SMC_Reversal", weight=1.0, priority=1))
-        self._smc_strategy = None
+        super().__init__(config or PluginConfig(name="SMC", weight=1.0, priority=1))
 
     def evaluate(self, df: pd.DataFrame, **kwargs) -> List[StrategySignal]:
-        """Evaluate SMC reversal patterns."""
         if not self.is_enabled():
             return []
 
         try:
-            from .smc_reversal import SMCConfig, SMCReversalStrategy
+            from numpy import tanh
 
-            # Initialize if not already done
-            if self._smc_strategy is None:
-                self._smc_strategy = SMCReversalStrategy(
-                    SMCConfig(
-                        session_start="00:00",
-                        session_end="08:00",
-                        risk_per_trade=0.01,
+            close = (
+                df["Close"].to_numpy(dtype=float)
+                if "Close" in df.columns
+                else df.iloc[:, 3].to_numpy(dtype=float)
+            )
+            high = (
+                df["High"].to_numpy(dtype=float)
+                if "High" in df.columns
+                else df.iloc[:, 1].to_numpy(dtype=float)
+            )
+            low = (
+                df["Low"].to_numpy(dtype=float)
+                if "Low" in df.columns
+                else df.iloc[:, 2].to_numpy(dtype=float)
+            )
+            n = len(close)
+
+            session_bars = 8
+            session_highs = np.zeros(n)
+            session_lows = np.zeros(n)
+            for i in range(n):
+                s = max(0, i - session_bars + 1)
+                session_highs[i] = float(np.max(high[s : i + 1]))
+                session_lows[i] = float(np.min(low[s : i + 1]))
+
+            signals = []
+            for i in range(20, n):
+                sweep_sig = 0
+                if i >= 2:
+                    buf = 0.005 * close[i]
+                    sh = session_highs[i - 1] + buf
+                    sl = session_lows[i - 1] - buf
+                    if high[i] > sh and close[i] < sh:
+                        sweep_sig = -1
+                    elif low[i] < sl and close[i] > sl:
+                        sweep_sig = 1
+
+                if sweep_sig != 0:
+                    direction = "long" if sweep_sig > 0 else "short"
+                    entry_price = close[i]
+                    signals.append(
+                        StrategySignal(
+                            timestamp=df.index[i],
+                            strategy_name="SMC",
+                            strategy_type=StrategyType.SMC,
+                            direction=direction,
+                            entry_price=float(entry_price),
+                            stop_loss=float(entry_price * 0.99)
+                            if sweep_sig > 0
+                            else float(entry_price * 1.01),
+                            take_profit=float(entry_price * 1.02)
+                            if sweep_sig > 0
+                            else float(entry_price * 0.98),
+                            confidence=min(0.9, abs(tanh(float(sweep_sig)))),
+                            quality=SignalQuality.MEDIUM,
+                            factors=["sweep_reversal"],
+                            metadata={"sweep_direction": sweep_sig},
+                        )
                     )
-                )
-
-            # Run SMC strategy
-            smc_signals = self._smc_strategy.run(df)
-
-            # Convert to StrategySignal format
-            strategy_signals = []
-            for signal in smc_signals:
-                strategy_signal = StrategySignal(
-                    timestamp=signal.timestamp,
-                    strategy_name="SMC_Reversal",
-                    strategy_type=StrategyType.SMC,
-                    direction=signal.direction,
-                    entry_price=signal.entry_price,
-                    stop_loss=signal.stop_loss,
-                    take_profit=signal.target_final,
-                    confidence=signal.confidence,
-                    quality=SignalQuality.HIGH
-                    if signal.confidence >= 0.7
-                    else SignalQuality.MEDIUM,
-                    factors=["liquidity_sweep", "mss", "ifvg"],
-                    metadata=signal.to_dict(),
-                )
-                strategy_signals.append(strategy_signal)
-
-            return strategy_signals
-
-        except ImportError:
-            # SMC strategy not available
-            return []
+            return signals
         except Exception as e:
-            print(f"SMC Reversal Plugin error: {e}")
+            import logging
+
+            logging.getLogger(__name__).debug("SMC Plugin error: %s", e)
             return []
 
     def get_name(self) -> str:
-        """Return plugin name."""
-        return "SMC_Reversal"
+        return "SMC"
 
     def get_type(self) -> StrategyType:
-        """Return strategy type."""
         return StrategyType.SMC
 
 
@@ -332,6 +354,378 @@ class InfluencerMTFPlugin(StrategyPlugin):
     def get_type(self) -> StrategyType:
         """Return strategy type."""
         return StrategyType.INFLUENCER
+
+
+class SilverBulletPlugin(StrategyPlugin):
+    """
+    ICT Silver Bullet Plugin
+
+    Time-based FVG entry during kill zones.
+    Uses smartmoneyconcepts sessions for kill zone detection.
+    """
+
+    def __init__(self, config: Optional[PluginConfig] = None, kill_zone: str = "london_open"):
+        super().__init__(config or PluginConfig(name="SilverBullet", weight=0.8, priority=5))
+        self._kill_zone = kill_zone
+
+    def evaluate(self, df: pd.DataFrame, **kwargs) -> List[StrategySignal]:
+        if not self.is_enabled():
+            return []
+
+        try:
+            n = len(df)
+            close = (
+                df["Close"].to_numpy(dtype=float)
+                if "Close" in df.columns
+                else df.iloc[:, 3].to_numpy(dtype=float)
+            )
+            high = (
+                df["High"].to_numpy(dtype=float)
+                if "High" in df.columns
+                else df.iloc[:, 1].to_numpy(dtype=float)
+            )
+            low = (
+                df["Low"].to_numpy(dtype=float)
+                if "Low" in df.columns
+                else df.iloc[:, 2].to_numpy(dtype=float)
+            )
+
+            signals = []
+            session_bars = 12
+
+            for i in range(session_bars, n - 2):
+                s = max(0, i - session_bars)
+                session_high = float(np.max(high[s:i]))
+                session_low = float(np.min(low[s:i]))
+
+                # Sweep detection
+                sweep = 0
+                atr_approx = (np.max(high[i - 3 : i]) - np.min(low[i - 3 : i])) * 0.5
+                buffer = 0.3 * atr_approx
+
+                if high[i] > session_high + buffer and close[i] < session_high:
+                    sweep = -1
+                elif low[i] < session_low - buffer and close[i] > session_low:
+                    sweep = 1
+
+                # FVG detection
+                fvg = 0
+                bar1_h = float(high[i - 2])
+                bar1_l = float(low[i - 2])
+                bar3_h = float(high[i])
+                bar3_l = float(low[i])
+
+                if bar1_h < bar3_l:
+                    fvg = 1
+                elif bar1_l > bar3_h:
+                    fvg = -1
+
+                # Silver Bullet: sweep + FVG agreement
+                if sweep == 1 and fvg > 0:
+                    direction = "long"
+                    entry_price = float(close[i])
+                    signals.append(
+                        StrategySignal(
+                            timestamp=df.index[i],
+                            strategy_name="SilverBullet",
+                            strategy_type=StrategyType.SMC,
+                            direction=direction,
+                            entry_price=entry_price,
+                            stop_loss=entry_price * 0.99,
+                            take_profit=entry_price * 1.02,
+                            confidence=0.75,
+                            quality=SignalQuality.MEDIUM,
+                            factors=["silver_bullet", "sweep", "fvg"],
+                            metadata={"kill_zone": self._kill_zone},
+                        )
+                    )
+                elif sweep == -1 and fvg < 0:
+                    direction = "short"
+                    entry_price = float(close[i])
+                    signals.append(
+                        StrategySignal(
+                            timestamp=df.index[i],
+                            strategy_name="SilverBullet",
+                            strategy_type=StrategyType.SMC,
+                            direction=direction,
+                            entry_price=entry_price,
+                            stop_loss=entry_price * 1.01,
+                            take_profit=entry_price * 0.98,
+                            confidence=0.75,
+                            quality=SignalQuality.MEDIUM,
+                            factors=["silver_bullet", "sweep", "fvg"],
+                            metadata={"kill_zone": self._kill_zone},
+                        )
+                    )
+
+            return signals
+        except Exception as e:
+            import logging
+
+            logging.getLogger(__name__).debug("SilverBullet Plugin error: %s", e)
+            return []
+
+    def get_name(self) -> str:
+        return "SilverBullet"
+
+    def get_type(self) -> StrategyType:
+        return StrategyType.SMC
+
+
+class TurtleSoupPlugin(StrategyPlugin):
+    """
+    ICT Turtle Soup Plugin
+
+    False breakout trap strategy. Detects when price breaks a key level,
+    fails to sustain, and reverses back inside the range.
+    """
+
+    def __init__(self, config: Optional[PluginConfig] = None):
+        super().__init__(config or PluginConfig(name="TurtleSoup", weight=0.8, priority=6))
+
+    def evaluate(self, df: pd.DataFrame, **kwargs) -> List[StrategySignal]:
+        if not self.is_enabled():
+            return []
+
+        try:
+            n = len(df)
+            close = (
+                df["Close"].to_numpy(dtype=float)
+                if "Close" in df.columns
+                else df.iloc[:, 3].to_numpy(dtype=float)
+            )
+            high = (
+                df["High"].to_numpy(dtype=float)
+                if "High" in df.columns
+                else df.iloc[:, 1].to_numpy(dtype=float)
+            )
+            low = (
+                df["Low"].to_numpy(dtype=float)
+                if "Low" in df.columns
+                else df.iloc[:, 2].to_numpy(dtype=float)
+            )
+
+            session_bars = 24
+            signals = []
+
+            for i in range(session_bars + 3, n):
+                s = max(0, i - session_bars)
+                sh = float(np.max(high[s : i - 2]))
+                sl = float(np.min(low[s : i - 2]))
+                atr_approx = (sh - sl) * 0.05
+                buffer = atr_approx if atr_approx > 0 else close[i] * 0.001
+
+                broke_high = False
+                broke_low = False
+                reversed_high = False
+                reversed_low = False
+
+                for j in range(i - 2, i + 1):
+                    if high[j] > sh + buffer:
+                        broke_high = True
+                    if low[j] < sl - buffer:
+                        broke_low = True
+                    if broke_high and close[j] < sh:
+                        reversed_high = True
+                    if broke_low and close[j] > sl:
+                        reversed_low = True
+
+                # FVG
+                fvg = 0
+                if i >= 2:
+                    if float(high[i - 2]) < float(low[i]):
+                        fvg = 1
+                    elif float(low[i - 2]) > float(high[i]):
+                        fvg = -1
+
+                if reversed_high and broke_high and fvg < 0:
+                    entry_price = float(close[i])
+                    signals.append(
+                        StrategySignal(
+                            timestamp=df.index[i],
+                            strategy_name="TurtleSoup",
+                            strategy_type=StrategyType.SMC,
+                            direction="short",
+                            entry_price=entry_price,
+                            stop_loss=entry_price * 1.01,
+                            take_profit=entry_price * 0.98,
+                            confidence=0.8,
+                            quality=SignalQuality.HIGH,
+                            factors=["turtle_soup", "false_breakout", "fvg"],
+                            metadata={"break_type": "high_break_fail"},
+                        )
+                    )
+                elif reversed_low and broke_low and fvg > 0:
+                    entry_price = float(close[i])
+                    signals.append(
+                        StrategySignal(
+                            timestamp=df.index[i],
+                            strategy_name="TurtleSoup",
+                            strategy_type=StrategyType.SMC,
+                            direction="long",
+                            entry_price=entry_price,
+                            stop_loss=entry_price * 0.99,
+                            take_profit=entry_price * 1.02,
+                            confidence=0.8,
+                            quality=SignalQuality.HIGH,
+                            factors=["turtle_soup", "false_breakout", "fvg"],
+                            metadata={"break_type": "low_break_fail"},
+                        )
+                    )
+
+            return signals
+        except Exception as e:
+            import logging
+
+            logging.getLogger(__name__).debug("TurtleSoup Plugin error: %s", e)
+            return []
+
+    def get_name(self) -> str:
+        return "TurtleSoup"
+
+    def get_type(self) -> StrategyType:
+        return StrategyType.SMC
+
+
+class CameronModelPlugin(StrategyPlugin):
+    """
+    Cameron's Model Plugin
+
+    Draw on Liquidity + Stop Rate + FVG Entry.
+    """
+
+    def __init__(self, config: Optional[PluginConfig] = None):
+        super().__init__(config or PluginConfig(name="CameronModel", weight=0.8, priority=7))
+
+    def evaluate(self, df: pd.DataFrame, **kwargs) -> List[StrategySignal]:
+        if not self.is_enabled():
+            return []
+
+        try:
+            n = len(df)
+            close = (
+                df["Close"].to_numpy(dtype=float)
+                if "Close" in df.columns
+                else df.iloc[:, 3].to_numpy(dtype=float)
+            )
+            high = (
+                df["High"].to_numpy(dtype=float)
+                if "High" in df.columns
+                else df.iloc[:, 1].to_numpy(dtype=float)
+            )
+            low = (
+                df["Low"].to_numpy(dtype=float)
+                if "Low" in df.columns
+                else df.iloc[:, 2].to_numpy(dtype=float)
+            )
+
+            swing_len = 50
+            signals = []
+
+            for i in range(swing_len, n - 2):
+                # Find recent swing high and low
+                recent_sh = 0.0
+                recent_sl = float("inf")
+                recent_sh_idx = -1
+                recent_sl_idx = -1
+
+                for j in range(max(0, i - 200), i):
+                    # Simple swing high/low detection
+                    half = swing_len // 2
+                    if j >= half and j < n - half:
+                        window_h = high[j - half : j + half + 1]
+                        window_l = low[j - half : j + half + 1]
+                        if high[j] == np.max(window_h) and high[j] > recent_sh:
+                            recent_sh = float(high[j])
+                            recent_sh_idx = j
+                        if low[j] == np.min(window_l) and low[j] < recent_sl:
+                            recent_sl = float(low[j])
+                            recent_sl_idx = j
+
+                if recent_sh == 0 or recent_sl == float("inf"):
+                    continue
+
+                # Draw on liquidity: favor the side with the more recent swing
+                if recent_sh_idx > recent_sl_idx:
+                    direction = -1  # Bearish
+                    draw = recent_sl  # Target below
+                    stop_rate = recent_sh  # Sweep above
+                else:
+                    direction = 1  # Bullish
+                    draw = recent_sh  # Target above
+                    stop_rate = recent_sl  # Sweep below
+
+                # Check sweep of stop_rate
+                atr_approx = abs(high[i] - low[i]) * 0.3
+                buffer = 0.3 * atr_approx if atr_approx > 0 else close[i] * 0.001
+
+                swept = False
+                for j in range(max(0, i - 4), i + 1):
+                    if direction == 1 and low[j] < stop_rate - buffer and close[j] > stop_rate:
+                        swept = True
+                        break
+                    elif direction == -1 and high[j] > stop_rate + buffer and close[j] < stop_rate:
+                        swept = True
+                        break
+
+                if not swept:
+                    continue
+
+                # FVG check
+                fvg = 0
+                if i >= 2:
+                    if float(high[i - 2]) < float(low[i]):
+                        fvg = 1
+                    elif float(low[i - 2]) > float(high[i]):
+                        fvg = -1
+
+                if direction == 1 and fvg > 0:
+                    entry_price = float(close[i])
+                    signals.append(
+                        StrategySignal(
+                            timestamp=df.index[i],
+                            strategy_name="CameronModel",
+                            strategy_type=StrategyType.SMC,
+                            direction="long",
+                            entry_price=entry_price,
+                            stop_loss=entry_price * 0.99,
+                            take_profit=float(draw) if draw > entry_price else entry_price * 1.02,
+                            confidence=0.75,
+                            quality=SignalQuality.MEDIUM,
+                            factors=["cameron", "draw_on_liquidity", "stop_rate_sweep", "fvg"],
+                            metadata={"draw": float(draw), "stop_rate": float(stop_rate)},
+                        )
+                    )
+                elif direction == -1 and fvg < 0:
+                    entry_price = float(close[i])
+                    signals.append(
+                        StrategySignal(
+                            timestamp=df.index[i],
+                            strategy_name="CameronModel",
+                            strategy_type=StrategyType.SMC,
+                            direction="short",
+                            entry_price=entry_price,
+                            stop_loss=entry_price * 1.01,
+                            take_profit=float(draw) if draw < entry_price else entry_price * 0.98,
+                            confidence=0.75,
+                            quality=SignalQuality.MEDIUM,
+                            factors=["cameron", "draw_on_liquidity", "stop_rate_sweep", "fvg"],
+                            metadata={"draw": float(draw), "stop_rate": float(stop_rate)},
+                        )
+                    )
+
+            return signals
+        except Exception as e:
+            import logging
+
+            logging.getLogger(__name__).debug("CameronModel Plugin error: %s", e)
+            return []
+
+    def get_name(self) -> str:
+        return "CameronModel"
+
+    def get_type(self) -> StrategyType:
+        return StrategyType.SMC
 
 
 class ConfluenceAggregatorPlugin(StrategyPlugin):
@@ -499,7 +893,7 @@ class StrategyRegistry:
 
     Example:
         >>> registry = StrategyRegistry()
-        >>> registry.register(SMCReversalPlugin())
+        >>> registry.register(SMCPlugin())
         >>> registry.register(InfluencerMTFPlugin())
         >>> signals = registry.evaluate(df, htf_df=htf_df)
     """

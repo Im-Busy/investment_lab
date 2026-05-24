@@ -264,3 +264,47 @@ def mad_rank_pipeline(
     """
     clipped = mad_clip(x, n_mad=n_mad)
     return rank_standardize(clipped, output_distribution=output_distribution)
+
+
+# ── P24-23: Instance Normalization for financial data ──
+
+
+class InstanceNormalizer:
+    """Z-score each input feature independently. Preserves relative shape.
+
+    Removes scale bias across features. Transparent wrapper around sklearn
+    StandardScaler with per-feature epsilon for numeric stability.
+    """
+
+    def __init__(self, eps: float = 1e-8):
+        self.eps = eps
+        self._means: np.ndarray | None = None
+        self._stds: np.ndarray | None = None
+
+    def fit(self, x: np.ndarray) -> InstanceNormalizer:
+        self._means = np.mean(x, axis=0)
+        self._stds = np.std(x, axis=0)
+        return self
+
+    def transform(self, x: np.ndarray) -> np.ndarray:
+        if self._means is None or self._stds is None:
+            raise RuntimeError("InstanceNormalizer not fitted")
+        safe_std = np.where(self._stds < self.eps, 1.0, self._stds)
+        return (x - self._means) / safe_std
+
+    def fit_transform(self, x: np.ndarray) -> np.ndarray:
+        return self.fit(x).transform(x)
+
+
+def instance_normalize(x: np.ndarray, eps: float = 1e-8) -> np.ndarray:
+    """Z-score normalize each feature column independently.
+
+    Args:
+        x: (N, M) feature matrix.
+        eps: Numerical stability constant.
+
+    Returns:
+        Z-scored array preserving shape.
+    """
+    normalizer = InstanceNormalizer(eps=eps)
+    return normalizer.fit_transform(x)

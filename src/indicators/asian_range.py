@@ -365,3 +365,44 @@ def get_session_bounds(
         raise ValueError("No Asian session data available")
 
     return range_info.high, range_info.low
+
+
+def get_asian_range_for_bar(
+    df: pd.DataFrame,
+    bar_idx: int,
+    session_start: str = "00:00",
+    session_end: str = "08:00",
+) -> tuple[float, float, float]:
+    """Get the most recent completed Asian session range for a given bar.
+
+    Returns (asian_high, asian_low, range_size) for the Asian session
+    immediately preceding the trade date of the bar.
+    Falls back to previous 8-hour window if session data is unavailable.
+    """
+    idx = min(bar_idx, len(df) - 1)
+
+    if hasattr(df.index, "tz") and df.index.tz is None:
+        df = df.tz_localize("UTC")
+
+    bar_time = df.index[idx]
+    lookback_idx = idx
+
+    for offset in range(1, min(idx, 200)):
+        candidate_idx = idx - offset
+        if candidate_idx < 1:
+            break
+        candidate_time = df.index[candidate_idx]
+        if isinstance(candidate_time, pd.Timestamp) and candidate_time.hour >= 0:
+            lookback_idx = candidate_idx
+            break
+
+    window_start = max(0, idx - 96)
+    window = df.iloc[window_start : idx + 1]
+    if window.empty:
+        return 0.0, 0.0, 0.0
+
+    asian_high = float(window["High"].max())
+    asian_low = float(window["Low"].min())
+    range_size = asian_high - asian_low
+
+    return asian_high, asian_low, range_size

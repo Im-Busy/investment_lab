@@ -150,3 +150,13 @@ for i in range(30):
     sig = acc.add_trade(TradeTick(side='buy' if i%3!=0 else 'sell', qty=1.0, price=100.0+i))
 print(f'Alpha={sig.alpha}, BuyRatio={sig.buy_ratio}, SellRatio={sig.sell_ratio}')
 "
+
+=================================================================================
+         TRADINGVIEW PINESCRIPT → PYTHON CONVERSIONS (2026-05-24)
+=================================================================================
+
+# Verify all 9 converted modules import correctly
+uv run python -c "from src.indicators.fvg_profile import compute_fvg_profile; from src.indicators.autotune_filter import auto_tune_filter; from src.indicators.asian_sweep_composite import detect_asian_sweep_setup; from src.indicators.knn_pivots import compute_knn_pivots; from src.indicators.swing_forecast import forecast_next_swing; from src.indicators.whale_profile import compute_whale_profile; from src.indicators.microstructure import compute_microstructure; from src.indicators.nwo import compute_nwo; from src.indicators.structure_volume import compute_structure_cvd; from src.strategies.asian_sweep_strategy import run_asian_sweep_strategy; print('OK')"
+
+# Full smoke test — all 8 indicators + 1 strategy on synthetic data
+uv run python -c "import numpy as np; np.random.seed(42); n=500; c=np.cumsum(np.random.randn(n)*0.02)+100; h=c+np.abs(np.random.randn(n)*0.3); l=c-np.abs(np.random.randn(n)*0.3); o=np.roll(c,1); o[0]=c[0]; v=np.abs(np.random.randn(n)*1000)+100; from src.indicators.fvg_profile import compute_fvg_profile; r=compute_fvg_profile(h,l,v); print(f'FVG: {r.total_gap_count} gaps'); from src.indicators.autotune_filter import auto_tune_filter; hp,mc,dc,bp=auto_tune_filter(c); print(f'AutoTune: dc={dc[-1]:.1f}'); from src.indicators.knn_pivots import compute_knn_pivots; res=compute_knn_pivots(h,l,c); sigs=[r for r in res if r.transition]; print(f'KNN: {len(sigs)} transitions'); from src.indicators.whale_profile import compute_whale_profile; w=compute_whale_profile(h,l,c,v,o); print(f'Whale: max_vol={w.max_bin_volume:.0f}'); from src.indicators.microstructure import compute_microstructure; ms=compute_microstructure(h,l,c,v,o); print(f'Micro: lsi={ms.lsi[-1]:.2f} {ms.regime_strs[-1]}'); from src.indicators.nwo import compute_nwo; osc,sig,hist,_=compute_nwo(h,l,c); print(f'NWO: osc={osc[-1]:.2f}'); from src.indicators.structure_volume import compute_structure_cvd; cvd,atr,profs=compute_structure_cvd(h,l,c,v); print(f'StructVol: {len(profs)} profiles'); from src.indicators.swing_forecast import forecast_next_swing; f=forecast_next_swing(h,l,c); print(f'SwingFcast: {f.projected_pct:.1f}%' if f else 'SwingFcast: not enough data'); print('All smoke tests passed')"

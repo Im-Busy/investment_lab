@@ -242,7 +242,7 @@ class EnsembleBuilder:
                 l2_leaf_reg=l2_leaf_reg,
                 random_seed=self.random_state,
                 verbose=False,
-                loss_function="RMSE",
+                loss_function="Huber:delta=1.0",
                 task_type="CPU",
                 **kwargs,
             )

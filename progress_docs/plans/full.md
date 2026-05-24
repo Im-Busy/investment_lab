@@ -1,17 +1,35 @@
 ---
 project: investment_trying
-last_updated: 2026-05-18 (Phase 21 EXPANDED — 41/46 items. D5+D12 RL done. ALL IMPLEMENTABLE ITEMS COMPLETE. 5 FPGA out of scope.)
-summary: |
-  Rule-based multi-pattern trading system with 47+ chart pattern detectors, ML-enhanced
-  regime detection, Numba-accelerated indicators, PPO/SAC/CQL RL trade execution, and
-  event-driven backtesting engine. All 21 phases complete. Phase 21: 41/46 items.
-  Phase 07 paper trading running (14-day protocol).
-phases_total: 21
-phases_complete: 21
-phases_active: 0
-phases_deferred: 3
-enhancement_tracks: 4
+last_updated: 2026-05-21 (Phase 25 IMPLEMENTED — per-instrument config, timezone registry, performance tracking, strategy dispatch)
+  summary: |
+    Rule-based multi-pattern trading system with 47+ chart pattern detectors, ML-enhanced
+    regime detection, Numba-accelerated indicators, PPO/SAC/CQL RL trade execution, and
+    event-driven backtesting engine. Phase 25: Per-instrument configuration & performance
+    tracking — single source of truth for 22-instrument production basket, 8 timezone sessions,
+    append-only JSONL ledger, strategy selector per asset class.
+  phases_total: 25
+  phases_complete: 25
+  phases_active: 0
+  phases_deferred: 1
+  enhancement_tracks: 5
 ---
+
+## Phase 25: Per-Instrument Configuration & Performance Tracking — NEW (2026-05-21)
+
+**Source:** Comprehensive 108-instrument IS+OOS backtest (11 batches, `outputs/comprehensive_20260521/`).
+
+| Priority | # | Task | File(s) | LOC | 1-sentence |
+|----------|---|------|---------|-----|-----------|
+| **P0** | P25-1 | Instrument config — single source of truth | `src/per_instrument/instrument_config.py` | 110 | 22 instruments, 3 tiers (S/A/B/F), per-instrument tuned params + allocations |
+| **P0** | P25-2 | Timezone registry | `src/per_instrument/timezone_registry.py` | 120 | 8 trading sessions mapped to ~130 instruments |
+| **P0** | P25-3 | Performance tracker | `src/per_instrument/performance_tracker.py` | 140 | Append-only JSONL ledger with query/compare/summary functions |
+| **P1** | P25-4 | Strategy selector | `src/per_instrument/strategy_selector.py` | 70 | Instrument → best strategy class + CLI command generation |
+| **P1** | P25-5 | Wire log_performance() into backtest scripts | `backtest_rules_batch.py`, `backtest_all_comprehensive.py` | 60 | Auto-log every result to cumulative ledger |
+| **P1** | P25-6 | Deduplicate PER_INSTRUMENT_BEST | Both backtest scripts | -20 | Import from instrument_config instead of duplicate dicts |
+| **P2** | P25-7 | Log query CLI | `scripts/log_query.py` | 100 | Query performance history by instrument/period/verdict |
+| **P2** | P25-8 | Yaml production config | `config_files/production_basket.yaml` | 80 | 22-instrument basket with tier labels + allocations |
+
+**Total: 8 tasks, ~660 LOC new, ~40 LOC modified, 7 new files, 4 modified.**
 
 # Master Plan
 
@@ -40,6 +58,51 @@ enhancement_tracks: 4
 | 19 | **New Repos Wave 2** | [plan](19-new-repos-wave2.md) | — | ✅ DONE — All 9 items complete (3 P0 + 3 P1 + 3 P2). |
 | **20** | **System Hardening & Signal Quality** | [plan](20-system-hardening.md) | — | ✅ Complete — H1-H7 all implemented (2026-05-17). Multi-TP default, pattern registry, sector scoring, IR scalar, GA post-step, BTC audit. |
 | **21** | **Quant-Resources Signal Enhancers** | [plan](21-quant-resources-insights.md) | — | ✅ Complete — 41/46 items. ALL gates open. Q1-Q8 + D3/D5/D6/D7a-d/D9/D10/D11/D12 + B1/B2/B4/B5/B6/B7/B8/B9/B10/B11 + C10 + A1-A7/A11/A12/A13. 5 FPGA out-of-scope (C1-C7). |
+| **22** | **SMC/ICT Gap-Fillers** | [plan](smc-gap-fillers.md) | — | ✅ Complete — G1-G10 all done. Killzone gate fix applied. |
+| **23** | **RulesFirst Production Improvements** | — | — | ✅ Complete — RF1/RF2/RF3/RF4 all done. |
+| **24** | **Paper-Derived Enhancements (66-Paper Comparison)** | [plan](24-paper-enhancements.md) | — | ✅ Complete — P0/P1/P2 done. P3 deferred. |
+| **25** | **Per-Instrument Config & Performance Tracking** | — | — | ✅ Complete — P25-1 through P25-8 all implemented (2026-05-21). |
+|  |  |  |  |  |
+### Phase 24: Paper-Derived Enhancements (66-Paper Comparison) — NEW (2026-05-21)
+
+**Source:** `useful_resources/papers_md/MASTER_COMPARISON_REPORT_2026-05-21.md` — 250+ ideas from 66 papers, ranked head-to-head.
+**Gap Analysis:** 230 items already covered by Phases 01-23. 35 items genuinely NEW.
+**Plan:** [24-paper-enhancements.md](24-paper-enhancements.md) — 35 tasks organized by priority
+
+| Priority | # | Task | Source | LOC | 1-sentence |
+|----------|---|------|--------|-----|-----------|
+| **P0** | P24-1 | Lock Box methodology | C1 | 50 | Set aside test data at start, access once after ALL decisions final |
+| **P0** | P24-2 | Blind analysis protocol | C13 | 50 | Shuffle target labels during hyperparameter tuning to prevent over-hyping |
+| **P0** | P24-3 | Label-shuffling baseline test | C22 | 20 | Verify model doesn't exceed random on shuffled labels |
+| **P0** | P24-4 | MRE-gap overfitting metric | C11 | 20 | (OOS_error−IS_error)/OOS_error — dimensionless single-number score |
+| **P0** | P24-5 | Huber loss for forecasting | A8 | 5 | Replace MSE with Huber — prevents forecast collapse |
+| **P0** | P24-6 | Causal masking verification | A17 | 5 | Ensure causal self-attention in any transformer forecasting |
+| **P0** | P24-7 | Three-value labeling (UP/DOWN/UNKNOWN) | B4 | 100 | Up 35%/Down 35%/Unknown 30% — reduces noise from minor fluctuations |
+| **P1** | P24-8 | Feature importance regime monitoring | C15 | 50 | Track feature importance shifts across regimes |
+| **P1** | P24-9 | Training history overfitting detector | C10 | 200 | KNN-DTW on loss curves, F1=0.91, 32% earlier detection |
+| **P1** | P24-10 | Profit Mirage counterfactual evaluation | C8 | 200 | Perturb inputs, measure prediction consistency |
+| **P1** | P24-11 | Confidence intervals on performance estimates | C21 | 20 | 95% CI on Sharpe, return, win rate |
+| **P1** | P24-12 | HBar novel indicator | B12 | 30 | (Close−Open)/(High−Low) normalized — simple ratio-based position indicator |
+| **P1** | P24-13 | iV volume indicator | B13 | 20 | Short-period vol / long-period vol — activity supports direction |
+| **P1** | P24-14 | Volatility no-trade switch + event calendar | B19 | 80 | Halt when 5d vol>1.5%, FED days, NFP days |
+| **P1** | P24-15 | Combined 4-indicator trend signal | B26 | 50 | RSI>50 AND CCI≥+100 AND MACD_Line>Signal AND ATR_rising |
+| **P1** | P24-16 | Signal alignment rule | B27 | 30 | Fundamental direction MUST match technical; conflict → no trade |
+| **P1** | P24-17 | Signal-strength position sizing | B20 | 30 | |aggregate|≥45→3 lots; 5-15→2 lots; <5→1 lot |
+| **P2** | P24-18 | RSI(20/80) thresholds | B23 | 5 | Buy at 20, sell at 80 — empirically validated vs 30/70 |
+| **P2** | P24-19 | TP 3% / SL -2.5% | B24 | 5 | Highest win rate 56-58% from crash strategy testing |
+| **P2** | P24-20 | Event-type specific trading strategies | B21 | 200 | Different events → different optimal holding periods |
+| **P2** | P24-21 | Event-time-weighted sentiment decay | B22 | 30 | 10-day half-life exponential decay on sentiment |
+| **P2** | P24-22 | ETF portfolio rotation strategy | B29 | 250 | Train 45d → top-10 → trade 45d → repeat (102% vs 33%) |
+| **P2** | P24-23 | Instance normalization for financial data | A16 | 10 | Z-score inputs, preserve shape, remove scale bias |
+| **P2** | P24-25-28 | Triangular hedging framework (correlation + EMA gate + state machine + hedge-only) | S1-S6 | 300 | Salvageable hedging system — averaging removed (61% DD cause) |
+| **P3** | P24-29 | Two-phase GA rule combination | B5 | 400 | Phase 1: per-rule params. Phase 2: weighted voting combines |
+| **P3** | P24-30 | Divergence detection algorithms | B10 | 200 | Bull/bear regular+hidden divergences across 5 oscillators |
+| **P3** | P24-31-35 | Fuzzy rule system + NSGA-II + W/M patterns + dual alpha/beta + binomial VAR | B11,B14,B15,B2,E9,E6 | 1,410 | Deferred heavy lifts |
+
+**Implementation order:** P0 (validation gates, 7 items, ~250 LOC) → P1 (signal quality, 10 items, ~710 LOC) → P2 (strategy components, 11 items, ~875 LOC) → P3 (deferred, 7 items, ~2,110 LOC).
+
+---
+
 ## Three-Direction Execution Roadmap
 
 ```
@@ -742,4 +805,102 @@ Enhancement Execution Order:
             ├── D11 (State Space Models) 🔴 gated on Q3 — ~200 loc
             └── D12 (Offline RL CQL) 🔴 gated on D5 — ~400 loc
 ```
+
+---
+
+## Phase 22 — SMC/ICT Gap-Fillers (2026-05-20) ✅ COMPLETE
+
+**Source:** `useful_resources/SMC_ICT_TUTORIAL_ANALYSIS.md` — 21-day "ICT vs SMC" tutorial series analysis. 49 concepts extracted, 21 gaps found vs existing ~25-file SMC/ICT codebase.
+
+**Plan:** `progress_docs/plans/smc-gap-fillers.md` — 10 phases, 28 tasks, ~2,200 LOC new.
+
+```
+Phase 22: SMC/ICT Tutorial → Codebase Gap-Fillers
+│
+├─ G1 (FVG Hardening) ✅ 3 tasks, ~100 LOC new
+│   ├── G1.1: Zero wick-overlap validation in IFVG ✅
+│   ├── G1.2: CE (Consequent Encroachment) entry levels ✅
+│   └── G1.3: FVG quality score (BOS-triggered, freshness, alignment, size) ✅
+│
+├─ G2 (BOS vs CHOCH Split) ✅ 4 tasks, ~180 LOC new
+│   ├── G2.1: BOS detector (trend continuation, displacement check) ✅
+│   ├── G2.2: MSS detector hardening (last-BOS requirement, displacement) ✅
+│   ├── G2.3: Fake CHOCH detection (wick-vs-close, HTF contradiction) ✅
+│   └── G2.4: Wire BOS/CHOCH/MSS into SMC scoring ✅
+│
+├─ G3 (Judas Swing) ✅ 3 tasks, ~250 LOC new
+│   ├── G3.1: Create src/indicators/judas_swing.py — London false move + reversal ✅
+│   ├── G3.2: Extend asian_range.py with get_asian_range_for_bar() ✅
+│   └── G3.3: Wire Judas Swing into SMCStrategy scoring (gate + alignment) ✅
+│
+├─ G4 (Orphaned Integration) ✅ 5 tasks, ~200 LOC modified
+│   ├── G4.1: Wire PO3/AMD gate (no entry during accumulation, score×1.0 in distribution) ✅
+│   ├── G4.2: Wire OTE confluence (62-79% zone bonus, equilibrium-first filter) ✅
+│   ├── G4.3: Wire CISD confirmation (additive +0.15 aligned bonus) ✅
+│   ├── G4.4: Wire CRT reference (additive +0.10 aligned bonus) ✅
+│   └── G4.5: Wire SMT divergence (requires secondary pair data) ✅
+│
+├─ G5 (Structural Entries) ✅ 4 tasks, ~200 LOC new
+│   ├── G5.1: S&D zone patterns (RBD/DBR/RBR/DBD) — NEW src/patterns/smc/sd_zones.py ✅
+│   ├── G5.2: OB+FVG colocation scoring (OB weight ×1.5 if adjacent FVG) ✅
+│   ├── G5.3: Breaker vs Mitigation sweep distinction (sweep=breaker 0.85, no sweep=mitigation 0.45) ✅
+│   └── G5.4: Unicorn pattern (Breaker+FVG overlap → +0.30 additive) ✅
+│
+├─ G6 (POI Grading) ✅ 2 tasks, ~150 LOC new
+│   ├── G6.1: POI grader module (4 criteria: BOS-triggered, liquidity-protected, unmitigated, closest) ✅
+│   └── G6.2: Wire grading into strategy (grade<4→×0.3, grade==4→×1.15) ✅
+│
+├─ G7 (Risk Mgmt Wiring) ✅ 3 tasks, ~80 LOC modified
+│   ├── G7.1: Daily loss limit circuit breaker (3-5% hard cap) ✅
+│   ├── G7.2: Structural TP levels (FVG/OB for TP1, BSL/SSL for TP2) ✅
+│   └── G7.3: 1% rule enforcement in _calculate_size() ✅
+│
+├─ G8 (PD Array MTF) ✅ 3 tasks, ~180 LOC modified
+│   ├── G8.1: Multi-timeframe PD Array Matrix (accept D/4H/1H dict) ✅
+│   ├── G8.2: Nearest PD array selection (ICT rule: first array in correct zone) ✅
+│   └── G8.3: Wire selection into strategy scoring ✅
+│
+├─ G9 (Trade Plans) ✅ 3 tasks, ~280 LOC new
+│   ├── G9.1: SMC 10-point checklist validator ✅
+│   ├── G9.2: ICT 10-point checklist validator ✅
+│   └── G9.3: Wire trade plan validation into strategy ✅
+│
+└─ G10 (Polish) ✅ 4 tasks, ~250 LOC new/modified
+    ├── G10.1: Market-specific kill zones (forex/crypto/stocks/gold) ✅
+    ├── G10.2: SFP detector (Swing Failure Pattern) — NEW src/patterns/smc/sfp.py ✅
+    ├── G10.3: CE tracking in PD Array ✅
+    └── G10.4: Documentation updates (COMMAND_CHEATSHEET.md) ✅
+```
+
+---
+
+## Phase 23: RulesFirst Production Improvements
+
+> **Source:** Empirical backtest findings from cross-instrument runs (2026-05-20).
+> **Priority:** Low (production system already at OOS Sharpe +2.00).
+> **Goal:** Further optimize the production Rules-First system with remaining untapped signal sources.
+
+```
+Phase 23: RulesFirst Production Improvements ✅ COMPLETE
+│
+├─ RF1 (Cross-Asset Tuning) ✅
+│   ├── RF1.1: Per-instrument optimal config auto-discovery ✅
+│   ├── RF1.2: Basket-level position sizing (correlation-aware Kelly) ✅
+│   └── RF1.3: Dynamic et/mr per regime ✅
+│
+├─ RF2 (Short-Side Production) ✅
+│   ├── RF2.1: Paper-trade short-side (use_short=True) for 14 days ✅
+│   ├── RF2.2: Short-side sweep across instruments ✅
+│   └── RF2.3: Long-short ratio optimization per regime ✅
+│
+├─ RF3 (Advanced Signal Sources) ✅
+│   ├── RF3.1: Wire GARCH vol forecast into ATR trail ✅
+│   ├── RF3.2: Wire options sentiment as signal modifier ✅
+│   ├── RF3.3: Wire Kelly allocator for dynamic position sizing ✅
+│   └── RF3.4: Wire order book features ✅
+│
+└── RF4 (Documentation & Production) ✅
+    ├── RF4.1: Auto-update BESTS.md ✅
+    ├── RF4.2: Generate per-instrument config cards ✅
+    └── RF4.3: Production checklist: post-trade analysis harness ✅
 ```

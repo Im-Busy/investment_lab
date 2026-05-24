@@ -1,0 +1,190 @@
+█ Overview
+The Neural Weight Oscillator (Zeiierman) is an adaptive multi-factor oscillator that combines structured decision-making with dynamic market learning.
+
+The script analyzes three core market behaviors: Trend, Mean Reversion, and Momentum. Instead of treating these components equally, the oscillator uses the Best-Worst Method (BWM) to determine which market behavior should have the greatest influence under current market conditions.
+snapshot
+
+An adaptive training layer then studies historical market reactions and gradually amplifies the features that have recently produced the strongest directional behavior.
+
+The result is a hybrid oscillator that blends:
+Human-defined market logic
+Adaptive feature weighting
+Multi-factor momentum analysis
+Dynamic market learning
+
+Unlike traditional oscillators that rely on static formulas, the Neural Weight Oscillator continuously adjusts its internal structure based on both trader-defined weighting preferences and changing market behavior.
+snapshot
+
+█ How It Works
+
+⚪ Market Structure Engine
+The oscillator builds its analysis from three independent behavioral models: Trend, Mean Reversion, and Momentum.
+
+The Trend component measures structural direction by comparing the fast EMA against the slow EMA, then adds the EMA slope to capture acceleration.
+Pine Script®
+
+trendSpread = (emaFast - emaSlow) / atr
+trendSlope  = (emaFast - emaFast[1]) / atr
+trendScore  = normalize(trendSpread + trendSlope, -2.5, 2.5)
+
+The Mean Reversion component measures stretched conditions using RSI exhaustion and statistical deviation from the market mean.
+Pine Script®
+
+zScore = dev == 0 ? 0 : (close - basis) / dev
+meanScore = (100 - rsi) * 0.5 + normalize(-zScore, -2.5, 2.5) * 0.5
+
+The Momentum component measures directional acceleration using ROC, RSI momentum, and EMA velocity.
+Pine Script®
+
+rocNorm = normalize(close / close[lenMomentum] - 1.0, -0.05, 0.05)
+momentumScore = rocNorm * 0.45 + rsi * 0.35 + emaMomentum * 0.20
+
+Each component produces its own normalized score before being blended into the final oscillator.
+
+⚪ Best-Worst Method (BWM)
+The core weighting system in the oscillator is based on the Best-Worst Method (BWM), a structured decision-making framework that creates balanced weighting relationships among multiple factors.
+Pine Script®
+
+bestIdx  = criterionIndex(bestCriterion)
+worstIdx = criterionIndex(worstCriterion)
+
+array.set(bo, bestIdx, 1.0)
+array.set(ow, worstIdx, 1.0)
+
+Instead of assigning arbitrary percentages manually, BWM allows the trader to define which market behavior matters most and which matters least. The script then automatically calculates balanced internal weights.
+
+The process begins by selecting:
+The “Best” factor → the market behavior trusted most
+The “Worst” factor → the market behavior trusted least
+
+Pine Script®
+
+relWeight = math.sqrt((aBW / boVal) * owVal)
+
+The oscillator then compares all remaining factors relative to those two extremes and converts those relationships into normalized internal weights.
+
+⚪ How To Think About The BWM Weights
+The easiest way to think about BWM is:
+“What type of market behavior do I trust most in the current environment?”
+
+Different market conditions naturally favor different behaviors.
+
+In strong directional trends, traders often prioritize Trend because structural continuation becomes the dominant force.
+
+In choppy or range-bound markets, Mean Reversion may become more important because the market repeatedly returns back toward equilibrium.
+
+During aggressive breakout environments, Momentum may deserve the highest weighting because acceleration becomes the primary driver.
+
+The goal is not to find a “perfect” weight configuration, but rather to align the oscillator with the type of behavior currently dominating the market.
+
+⚪ Adaptive Neural Training Layer
+The oscillator includes an adaptive learning layer that learns how the market has recently reacted to the model’s internal features.
+
+The script looks back at prior Trend, Mean Reversion, and Momentum feature values, then compares them to the future price reaction.
+Pine Script®
+
+target = close / close[targetLen] - 1.0
+targetDirection = target > 0 ? 1.0 : target < 0 ? -1.0 : 0.0
+
+High-quality samples are ranked by how strong the move was relative to volatility.
+Pine Script®
+
+sampleScore = math.abs(target) / qualityVol
+
+The model then compares its internal prediction against the actual market direction and adjusts the learned feature weights over time.
+Pine Script®
+
+pred = twTrend * s.trend + twMean * s.mean + twMomentum * s.momentum + tbias
+err  = pred - s.target
+
+This allows the oscillator to gradually learn which features are producing the strongest directional behavior.
+
+⚪ Adaptive Feature Amplification
+The learned weights are converted into feature amplifiers.
+Pine Script®
+
+trendAmplifier    = 1.0 + learnTrend * blend
+meanAmplifier     = 1.0 + learnMean * blend
+momentumAmplifier = 1.0 + learnMomentum * blend
+
+This allows stronger features to gain more influence, while weaker features receive less influence.
+
+█ How to Use
+
+⚪ Reading the Oscillator
+The oscillator operates between 0 and 100.
+
+Values above 50 suggest bullish pressure dominates the market, while values below 50 suggest bearish pressure dominates.
+snapshot
+
+As the oscillator moves farther away from the neutral 50 level, directional imbalance becomes stronger.
+
+Readings above 70 typically indicate strong bullish expansion, while readings below 30 indicate strong bearish pressure. Extreme zones above 80 or below 20 may signal exhaustion conditions where reversals become more likely.
+snapshot
+
+⚪ Using the BWM Weighting System
+The BWM system allows traders to align the oscillator with current market behavior by controlling how much influence Trend, Mean Reversion, and Momentum should have inside the model.
+
+Imagine the market is trending strongly upward.
+
+You may believe:
+Trend is the dominant market behavior.
+Mean Reversion still matters during pullbacks.
+Momentum should have the least influence.
+
+In this case, you could choose:
+Best = Trend
+Worst = Momentum
+
+snapshot
+
+You then control how strongly Trend dominates the other factors through the comparison inputs.
+
+For example:
+Best-to-Others:
+Trend = 1
+Mean = 3
+Mom = 6
+
+Relative-to-Worst:
+Trend = 4
+Mean = 2
+Mom = 1
+
+snapshot
+
+This tells the oscillator:
+Trend is selected as the strongest market behavior.
+Momentum is selected as the weakest market behavior.
+Trend is 3x more important than Mean Reversion.
+Trend is 6x more important than Momentum.
+Mean Reversion is 2x more important than Momentum.
+
+The script automatically converts these relationships into balanced internal weights.
+
+As a result, the oscillator becomes more trend-sensitive while reducing the influence of short-term momentum fluctuations and weak counter-trend behavior.
+
+If the market becomes highly rotational or range-bound, traders may instead increase the importance of Mean Reversion so the oscillator becomes more responsive to exhaustion and reversal conditions.
+
+During aggressive breakout environments, increasing Momentum weighting can help the oscillator react faster to acceleration phases.
+
+The weighting system is designed to adapt the oscillator’s personality to different market environments rather than forcing one static interpretation onto every condition.
+snapshot
+
+█ Settings
+Fast EMA: controls the responsiveness of the Trend and Momentum calculations.
+Slow EMA: controls the structural trend baseline used throughout the oscillator.
+Smoothing: controls the smoothness of the final oscillator line.
+The Best and Worst: determine how the BWM weighting model prioritizes market behaviors.
+Best-to-Others: define how strongly the selected Best factor dominates the remaining components.
+Relative-to-Worst: define how much stronger each component is compared to the selected Worst factor.
+Use Training: enables the adaptive learning layer.
+Influence: controls how strongly the learned model amplifies features.
+Line Impact: controls how much the adaptive model can directly influence the oscillator line itself.
+
+-----------------
+Disclaimer
+
+The content provided in my scripts, indicators, ideas, algorithms, and systems is for educational and informational purposes only. It does not constitute financial advice, investment recommendations, or a solicitation to buy or sell any financial instruments. I will not accept liability for any loss or damage, including without limitation any loss of profit, which may arise directly or indirectly from the use of or reliance on such information.
+
+All investments involve risk, and the past performance of a security, industry, sector, market, financial product, trading strategy, backtest, or individual's trading does not guarantee future results or returns. Investors are fully responsible for any investment decisions they make. Such decisions should be based solely on an evaluation of their financial circumstances, investment objectives, risk tolerance, and liquidity needs.

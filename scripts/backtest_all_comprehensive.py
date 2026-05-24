@@ -40,7 +40,36 @@ PRODUCTION_CONFIG = dict(
     use_multi_tp=True,
     use_quality_registry=True,
     quality_registry_path="reports/pattern_gate/all_patterns.json",
+    use_vix_gate=False,
+    use_yield_curve_gate=False,
 )
+
+# Phase 25: Per-instrument best params from single source of truth.
+from src.per_instrument.instrument_config import (
+    get_config_for as _cfg_get,
+    INSTRUMENT_CONFIG as _INSTR_CFG,
+)
+
+PER_INSTRUMENT_BEST: dict[str, dict] = {
+    sym: {
+        "entry_threshold": c.get("et", cfg.get("entry_threshold", 0.55)),
+        "min_reliability": c.get("mr", cfg.get("min_reliability", 0.70)),
+        "trail_stop_atr": c.get("tsa", cfg.get("trail_stop_atr", 3.0)),
+        "confluence_bonus": c.get("cb", cfg.get("confluence_bonus", 0.10)),
+    }
+    for sym, c in _INSTR_CFG.items()
+    for cfg in [_cfg_get(sym, use_best=True)]
+    if c.get("tier") in ("S", "A", "B")
+}
+
+
+def _get_config_for(symbol: str, use_best: bool = False) -> dict:
+    if use_best and symbol in PER_INSTRUMENT_BEST:
+        cfg = dict(PRODUCTION_CONFIG)
+        cfg.update(PER_INSTRUMENT_BEST[symbol])
+        return cfg
+    return dict(PRODUCTION_CONFIG)
+
 
 IS_PERIOD = ("2016-01-01", "2024-12-31")
 OOS_PERIOD = ("2025-01-01", None)
@@ -197,7 +226,6 @@ BATCHES: dict[str, list[str]] = {
     "1_indices_etfs": [
         "SPY",
         "QQQ",
-        "IWM",
         "D",
         "EEM",
         "XLK",
@@ -207,7 +235,6 @@ BATCHES: dict[str, list[str]] = {
         "GLD",
         "SLV",
         "IAU",
-        "TLT",
         "CL",
         "BTC_USD",
         "ETH_USD",
@@ -304,7 +331,7 @@ BATCHES: dict[str, list[str]] = {
         "HK_HKEX",
         "HK_Mixue",
     ],
-    "12_forex_extra": ["EURUSD_X", "GBPJPY_X"],
+    "12_forex_extra": [],
 }
 
 
@@ -352,9 +379,10 @@ def safe_float(value: Any, default: float = 0.0) -> float:
         return default
 
 
-def run_ticker(symbol: str, cash: float = 100_000) -> TickerResult | None:
+def run_ticker(symbol: str, cash: float = 100_000, use_best: bool = False) -> TickerResult | None:
     """Run IS + OOS for a single ticker using production config."""
     cat = CATEGORY_MAP.get(symbol, "Other")
+    config = _get_config_for(symbol, use_best)
 
     # IS
     try:
@@ -363,7 +391,7 @@ def run_ticker(symbol: str, cash: float = 100_000) -> TickerResult | None:
             cash=cash,
             start=IS_PERIOD[0],
             end=IS_PERIOD[1],
-            **PRODUCTION_CONFIG,
+            **config,
         )
     except Exception as e:
         print(f"    IS FAIL: {e}")
@@ -376,7 +404,7 @@ def run_ticker(symbol: str, cash: float = 100_000) -> TickerResult | None:
             cash=cash,
             start=OOS_PERIOD[0],
             end=OOS_PERIOD[1],
-            **PRODUCTION_CONFIG,
+            **config,
         )
     except Exception as e:
         print(f"    OOS FAIL: {e}")
@@ -419,6 +447,51 @@ def run_ticker(symbol: str, cash: float = 100_000) -> TickerResult | None:
         oos_delta_sharpe=oos_sharpe - is_sharpe,
         status="ok",
     )
+    # Phase 25: Log performance to cumulative ledger
+    try:
+        from src.per_instrument.performance_tracker import log_performance
+
+        def _verdict(sh: float) -> str:
+            if sh > 0.10:
+                return "PASS"
+            if sh < -0.05:
+                return "FAIL"
+            return "MARGINAL"
+
+        for period, stats in [("IS", is_stats), ("OOS", oos_stats)]:
+            if not stats:
+                continue
+            s = safe_float(stats.get("sharpe"))
+            date_range = (
+                f"{stats.get('start', '?')}:{stats.get('end', '?')}"
+                if stats.get("start")
+                else f"{IS_PERIOD[0]}:{IS_PERIOD[1]}"
+                if period == "IS"
+                else f"{OOS_PERIOD[0]}:today"
+            )
+            log_performance(
+                instrument=symbol,
+                period=period,
+                date_range=date_range,
+                strategy="rules_first",
+                config={k: v for k, v in config.items()},
+                metrics={
+                    "sharpe": s,
+                    "return_pct": safe_float(stats.get("return_pct")),
+                    "trades": int(stats.get("trades", 0)),
+                    "win_rate": safe_float(stats.get("win_rate_pct")),
+                    "profit_factor": safe_float(stats.get("profit_factor")),
+                    "max_dd_pct": safe_float(stats.get("max_dd_pct")),
+                    "exposure_pct": safe_float(stats.get("exposure_pct")),
+                    "sortino": safe_float(stats.get("sortino")),
+                    "calmar": safe_float(stats.get("calmar")),
+                },
+                benchmark={"buyhold_return_pct": 0, "buyhold_sharpe": 0},
+                verdict=_verdict(s),
+            )
+    except Exception:
+        pass  # Logging is best-effort
+
     return r
 
 
@@ -426,14 +499,18 @@ def result_to_dict(r: TickerResult) -> dict:
     return {k: v for k, v in r.__dict__.items()}
 
 
-def print_batch_header(batch_name: str, batch_tickers: list[str]) -> None:
+def print_batch_header(batch_name: str, batch_tickers: list[str], use_best: bool = False) -> None:
     print(f"\n{'=' * 140}")
     print(f" BATCH: {batch_name}  ({len(batch_tickers)} tickers)")
-    print(
-        f" Config: mr={PRODUCTION_CONFIG['min_reliability']}  et={PRODUCTION_CONFIG['entry_threshold']}  "
-        f"trail={PRODUCTION_CONFIG['trail_stop_atr']}  multi_tp={PRODUCTION_CONFIG['use_multi_tp']}  "
-        f"quality_registry={PRODUCTION_CONFIG['use_quality_registry']}"
-    )
+    if use_best:
+        print(" Config: per-instrument best (from BESTS.md tuning sweep)")
+    else:
+        print(
+            f" Config: mr={PRODUCTION_CONFIG['min_reliability']}  et={PRODUCTION_CONFIG['entry_threshold']}  "
+            f"trail={PRODUCTION_CONFIG['trail_stop_atr']}  multi_tp={PRODUCTION_CONFIG['use_multi_tp']}  "
+            f"quality_registry={PRODUCTION_CONFIG['use_quality_registry']}  "
+            f"vix_gate={PRODUCTION_CONFIG['use_vix_gate']}  yield_gate={PRODUCTION_CONFIG['use_yield_curve_gate']}"
+        )
     print(f" IS: {IS_PERIOD[0]} -> {IS_PERIOD[1]}   OOS: {OOS_PERIOD[0]} -> today")
     print(f"{'=' * 140}\n")
 
@@ -701,6 +778,11 @@ def main() -> None:
     )
     parser.add_argument("--cash", type=float, default=100_000, help="Initial cash")
     parser.add_argument("--period", default="both", choices=["is", "oos", "both"])
+    parser.add_argument(
+        "--use-best",
+        action="store_true",
+        help="Use per-instrument best tuned params from BESTS.md",
+    )
     args = parser.parse_args()
 
     if args.list_batches:
@@ -738,14 +820,14 @@ def main() -> None:
     processed = 0
 
     for batch_name, tickers in batch_list:
-        print_batch_header(batch_name, tickers)
+        print_batch_header(batch_name, tickers, use_best=args.use_best)
         batch_results: list[TickerResult] = []
 
         for i, symbol in enumerate(tickers):
             processed += 1
             t0 = time.time()
             print(f"  [{processed}/{total_tickers}] {symbol:>14s} ... ", end="", flush=True)
-            r = run_ticker(symbol, cash=args.cash)
+            r = run_ticker(symbol, cash=args.cash, use_best=args.use_best)
             elapsed = time.time() - t0
             if r:
                 batch_results.append(r)

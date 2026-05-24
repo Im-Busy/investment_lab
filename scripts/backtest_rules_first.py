@@ -70,6 +70,22 @@ def run_single(
     use_yield_curve_gate: bool = False,
     yield_curve_inversion_mult: float = 0.50,
     yield_curve_near_inversion_mult: float = 0.75,
+    use_garch_atr: bool = False,
+    garch_model: str = "GARCH",
+    use_options_sentiment: bool = False,
+    options_sentiment_weight: float = 0.3,
+    use_kelly_sizing: bool = False,
+    kelly_fraction: float = 0.5,
+    use_order_book: bool = False,
+    use_signal_strength_sizing: bool = False,
+    use_voting_signal: bool = False,
+    voting_signal_weight: float = 0.15,
+    use_rules_catalog: bool = False,
+    rules_catalog_weight: float = 0.10,
+    use_divergence: bool = False,
+    divergence_weight: float = 0.20,
+    use_wm_bollinger: bool = False,
+    wm_bollinger_weight: float = 0.15,
 ) -> dict:
     from backtesting import Backtest
 
@@ -111,6 +127,22 @@ def run_single(
         use_yield_curve_gate=use_yield_curve_gate,
         yield_curve_inversion_mult=yield_curve_inversion_mult,
         yield_curve_near_inversion_mult=yield_curve_near_inversion_mult,
+        use_garch_atr=use_garch_atr,
+        garch_model=garch_model,
+        use_options_sentiment=use_options_sentiment,
+        options_sentiment_weight=options_sentiment_weight,
+        use_kelly_sizing=use_kelly_sizing,
+        kelly_fraction=kelly_fraction,
+        use_order_book=use_order_book,
+        use_signal_strength_sizing=use_signal_strength_sizing,
+        use_voting_signal=use_voting_signal,
+        voting_signal_weight=voting_signal_weight,
+        use_rules_catalog=use_rules_catalog,
+        rules_catalog_weight=rules_catalog_weight,
+        use_divergence=use_divergence,
+        divergence_weight=divergence_weight,
+        use_wm_bollinger=use_wm_bollinger,
+        wm_bollinger_weight=wm_bollinger_weight,
     )
 
     # Buy & Hold comparison
@@ -128,6 +160,8 @@ def run_single(
         "symbol": symbol,
         "start": str(df.index[0].date()) if len(df) > 0 else "N/A",
         "end": str(df.index[-1].date()) if len(df) > 0 else "N/A",
+        "entry_threshold": entry_threshold,
+        "min_reliability": min_reliability,
         "return_pct": stats["Return [%]"],
         "sharpe": stats["Sharpe Ratio"],
         "sortino": stats.get("Sortino Ratio", 0),
@@ -140,7 +174,6 @@ def run_single(
         "bh_return_pct": round(bh_return, 2),
         "bh_sharpe": round(bh_sharpe, 3),
         "bh_max_dd_pct": round(bh_max_dd, 2),
-        "_trades": getattr(stats, "_trades", None),
     }
     return result
 
@@ -254,7 +287,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Backtest rules-first pattern strategy")
     parser.add_argument("symbol", help="Ticker symbol (e.g., SPY)")
     parser.add_argument("--start", default="2016-01-01", help="Start date")
-    parser.add_argument("--end", default="2024-12-31", help="End date")
+    parser.add_argument("--end", default=None, help="End date")
     parser.add_argument("--cash", type=float, default=10_000, help="Initial cash")
     parser.add_argument(
         "--entry-threshold", type=float, default=0.55, help="Entry signal threshold"
@@ -344,6 +377,85 @@ def main() -> None:
         default=0.75,
         help="Multiplier when 0 < 2s10s < 0.5%%",
     )
+    # RF3.1: GARCH dynamic ATR trail
+    parser.add_argument(
+        "--use-garch-atr", action="store_true", help="RF3.1: Use GARCH vol for dynamic trail width"
+    )
+    parser.add_argument(
+        "--garch-model", type=str, default="egarch", help="GARCH model (garch/egarch/gjr-garch)"
+    )
+    # RF3.2: Options sentiment
+    parser.add_argument(
+        "--use-options-sentiment",
+        action="store_true",
+        help="RF3.2: Use PC ratio + GEX sentiment modifier",
+    )
+    parser.add_argument(
+        "--options-sentiment-weight",
+        type=float,
+        default=0.10,
+        help="Sentiment modifier weight [0-1]",
+    )
+    # RF3.3: Kelly sizing
+    parser.add_argument(
+        "--use-kelly-sizing", action="store_true", help="RF3.3: Use Kelly dynamic position sizing"
+    )
+    parser.add_argument(
+        "--kelly-fraction", type=float, default=0.5, help="Kelly fraction (0.5=half-Kelly)"
+    )
+    # RF3.4: Order book
+    parser.add_argument(
+        "--use-order-book", action="store_true", help="RF3.4: Use order book microstructure signals"
+    )
+    parser.add_argument(
+        "--use-signal-strength-sizing",
+        action="store_true",
+        help="P24-17: Signal-strength dynamic position sizing (|score|>=0.45→3 lots, <0.15→2 lots, <0.05→1)",
+    )
+    parser.add_argument(
+        "--use-voting-signal",
+        action="store_true",
+        help="B6: Enable 6-indicator voting signal (RSI/ROC/SMA/EMA/WMA/MACD majority voting)",
+    )
+    parser.add_argument(
+        "--voting-signal-weight",
+        type=float,
+        default=0.15,
+        help="B6: Weight of voting signal in confluence scoring (default 0.15)",
+    )
+    parser.add_argument(
+        "--use-rules-catalog",
+        action="store_true",
+        help="B1: Enable 35-rule catalog signals (22 crossover + 6 BB + 7 divergence)",
+    )
+    parser.add_argument(
+        "--rules-catalog-weight",
+        type=float,
+        default=0.10,
+        help="B1: Weight of rules catalog signals (default 0.10)",
+    )
+    parser.add_argument(
+        "--use-divergence",
+        action="store_true",
+        help="B10: Enable RSI/MFI divergence detection signals",
+    )
+    parser.add_argument(
+        "--divergence-weight",
+        type=float,
+        default=0.20,
+        help="B10: Weight of divergence signals (default 0.20)",
+    )
+    parser.add_argument(
+        "--use-wm-bollinger",
+        action="store_true",
+        help="B2: Enable W-bottom/M-top Bollinger pattern signals",
+    )
+    parser.add_argument(
+        "--wm-bollinger-weight",
+        type=float,
+        default=0.15,
+        help="B2: Weight of W/M Bollinger signals (default 0.15)",
+    )
     parser.add_argument("--sweep-entry", help="Comma-separated entry thresholds to sweep")
     parser.add_argument(
         "--sweep-reliability", help="Comma-separated min reliability values to sweep"
@@ -372,6 +484,22 @@ def main() -> None:
         use_yield_curve_gate=args.use_yield_curve_gate,
         yield_curve_inversion_mult=args.yield_inversion_mult,
         yield_curve_near_inversion_mult=args.yield_near_inversion_mult,
+        use_garch_atr=args.use_garch_atr,
+        garch_model=args.garch_model,
+        use_options_sentiment=args.use_options_sentiment,
+        options_sentiment_weight=args.options_sentiment_weight,
+        use_kelly_sizing=args.use_kelly_sizing,
+        kelly_fraction=args.kelly_fraction,
+        use_order_book=args.use_order_book,
+        use_signal_strength_sizing=args.use_signal_strength_sizing,
+        use_voting_signal=args.use_voting_signal,
+        voting_signal_weight=args.voting_signal_weight,
+        use_rules_catalog=args.use_rules_catalog,
+        rules_catalog_weight=args.rules_catalog_weight,
+        use_divergence=args.use_divergence,
+        divergence_weight=args.divergence_weight,
+        use_wm_bollinger=args.use_wm_bollinger,
+        wm_bollinger_weight=args.wm_bollinger_weight,
     )
     all_results: list[dict] = []
 

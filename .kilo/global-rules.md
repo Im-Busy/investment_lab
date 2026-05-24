@@ -111,3 +111,10 @@ The following excuses are INVALID. If you think any of them apply, stop and re-e
 | "The pattern worked on SPY" | Single-instrument results don't generalize. Validate across 5+ instruments. |
 | "I'll add tests after it works" | Untested strategy code is production debt. At minimum: smoke test + OOS backtest. |
 | "Regime shift won't happen again" | Regime shifts (like 2025) are the norm, not the exception. Every strategy must survive them. |
+| "I'll average down to recover the loss" | Averaging/martingale causes catastrophic drawdowns. Confirmed destructive by 2+ papers (61% DD empirical). NEVER implement. |
+| "Random K-fold is fine for time series" | Time series requires temporal ordering. Random shuffle inflates performance by 22-40%. Walk-forward or nested CV only. |
+| "I already ran cross-validation so it's not overfit" | CV alone does NOT prevent over-hyping. Iterative optimization on the same data fits noise. Lock box or blind analysis required. |
+| "The profit looks great, I don't need accuracy checks" | Profit ≠ accuracy. A lower-accuracy model can produce higher profit. Optimize the right metric. |
+| "One more hyperparameter tweak won't hurt" | Even 1-shot hyperparameter selection introduces ~1.6% measurement bias. Pre-register all params before evaluation. |
+| "MSE loss is standard so it's fine" | MSE-only training causes forecast collapse in financial data. Always combine with distributional objectives (Huber, quantile). |
+| "The strategy works on this 3-month window" | 3.5 months with 433 trades is not statistically sufficient. Minimum: 5+ years, 1000+ trades, cross-regime testing. |

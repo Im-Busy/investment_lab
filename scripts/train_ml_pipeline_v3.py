@@ -111,14 +111,28 @@ def generate_labels(
     horizon: int = DEFAULT_HORIZON,
     use_triple_barrier: bool = True,
     label_type: str = "triple_barrier",
+    three_value_up: float = 0.35,
+    three_value_down: float = 0.35,
 ) -> pd.Series:
-    """Generate forward-looking labels using triple-barrier or next-bar method."""
+    """Generate forward-looking labels using triple-barrier, three-value, or next-bar method."""
     if label_type == "next_bar":
         labels = (df["Close"].shift(-1) > df["Close"]).astype(int)
         labels = labels.dropna()
         pos_pct = labels.sum() / max(len(labels), 1) * 100
         logger.info(f"Next-bar labels: {len(labels)} samples, {pos_pct:.1f}% positive")
         return labels
+
+    if label_type == "three_value":
+        labels = TripleBarrierLabeler.three_value_labels(
+            df["Close"],
+            horizon=horizon,
+            up_threshold=three_value_up,
+            down_threshold=three_value_down,
+        )
+        binary = (labels == 1).astype(int)
+        pos_pct = binary.sum() / max(len(binary), 1) * 100
+        logger.info(f"Three-value labels: {len(binary)} samples, {pos_pct:.1f}% positive")
+        return binary
 
     if use_triple_barrier:
         labeler = TripleBarrierLabeler(atr_mult_tp=1.5, atr_mult_sl=1.0)
@@ -143,6 +157,99 @@ def generate_labels(
     pos_pct = labels.sum() / max(len(labels), 1) * 100
     logger.info(f"Thresholded binary labels (+2%): {pos_pct:.1f}% positive")
     return labels
+
+
+def run_label_shuffling_test(
+    X: pd.DataFrame, y: pd.Series, n_models: int = 3, random_state: int = 42
+) -> dict:
+    """P24-3: Label-shuffling baseline — verify model doesn't exceed random.
+
+    Compares model AUC against AUC achieved on randomly shuffled labels.
+    If model AUC is close to shuffled AUC, the model is effectively random.
+    Acceptable delta: AUC − shuffled_AUC ≥ 0.05.
+
+    Args:
+        X: Feature matrix.
+        y: True labels.
+        n_models: Number of shuffled-label models to average (default 3).
+        random_state: Base random seed.
+
+    Returns:
+        Dict with true_auc, shuffled_auc, delta, and pass/fail status.
+    """
+    from sklearn.metrics import roc_auc_score
+
+    classifier = PatternClassifier(n_estimators=100, max_depth=4, random_state=random_state)
+    result = classifier.train(X, y)
+    true_auc = result.test_auc
+
+    shuffled_aucs = []
+    for i in range(n_models):
+        y_shuffled = y.sample(frac=1, random_state=random_state + i).reset_index(drop=True)
+        shuffled = PatternClassifier(n_estimators=100, max_depth=4, random_state=random_state + i)
+        try:
+            s_result = shuffled.train(X.reset_index(drop=True), y_shuffled)
+            shuffled_aucs.append(s_result.test_auc)
+        except Exception:
+            shuffled_aucs.append(0.50)
+
+    mean_shuffled = float(np.mean(shuffled_aucs)) if shuffled_aucs else 0.50
+    delta = true_auc - mean_shuffled
+    passed = delta >= 0.05
+
+    logger.info(
+        "Label-shuffling test: true AUC=%.4f, shuffled AUC=%.4f, delta=%.4f — %s",
+        true_auc,
+        mean_shuffled,
+        delta,
+        "PASS" if passed else "FAIL",
+    )
+    return {
+        "true_auc": true_auc,
+        "shuffled_auc": mean_shuffled,
+        "delta": delta,
+        "n_models": n_models,
+        "passed": passed,
+    }
+
+
+_LOCK_BOX_ACCESSED = False
+
+
+def lock_box_open(path: str) -> bool:
+    """P24-1: Access Lock Box data — permitted ONCE after all decisions final.
+
+    Raises RuntimeError on second access to prevent test-data overuse.
+    """
+    global _LOCK_BOX_ACCESSED
+    if _LOCK_BOX_ACCESSED:
+        raise RuntimeError("Lock Box already accessed — test data must not be reused.")
+    _LOCK_BOX_ACCESSED = True
+    logger.info("Lock Box opened: %s (ONCE only)", path)
+    return True
+
+
+def blind_analysis_labels(y: pd.Series, random_state: int = 42) -> tuple[pd.Series, dict]:
+    """P24-2: Shuffle target labels during hyperparameter tuning phase.
+
+    This prevents over-hyping by ensuring the tuning process cannot
+    memorize label patterns. Labels are restored after final param selection.
+
+    Args:
+        y: True labels.
+        random_state: Seed for reproducibility.
+
+    Returns:
+        Tuple of (shuffled_labels, mapping_info) — mapping_info
+        encodes the true↔shuffled relationship for later restoration.
+    """
+    np_rng = np.random.RandomState(random_state)
+    n = len(y)
+    perm = np_rng.permutation(n)
+    y_shuffled = y.iloc[perm].reset_index(drop=True) if hasattr(y, "iloc") else y[perm]
+    mapping = {"random_state": random_state, "permutation": perm.tolist(), "n_samples": n}
+    logger.info("Blind analysis: shuffled %d labels (seed=%d)", n, random_state)
+    return y_shuffled, mapping
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -424,6 +531,7 @@ def train_final_model(
     cv_results: dict | None = None,
     gwo_params: dict | None = None,
     model_type: str = "catboost",
+    loss_function: str = "Logloss",
 ) -> tuple[PatternClassifier, dict[str, Any]]:
     """Train final model with best params from CV/GWO, using eval_set monitoring."""
     best_params = {
@@ -443,6 +551,7 @@ def train_final_model(
         "subsample": 0.8,
         "colsample_bytree": 0.8,
         "random_state": 42,
+        "loss_function": loss_function,
     }
     kwargs.update(best_params)
     clf = PatternClassifier(**kwargs)
@@ -904,6 +1013,8 @@ def run_pipeline(
     strict_wf: bool = False,
     pbo_gate: bool = False,
     hold_out: bool = False,
+    run_shuffling_test: bool = False,
+    loss_function: str = "Logloss",
 ) -> dict[str, Any]:
     """Execute the full 9-stage ML pipeline.
 
@@ -913,7 +1024,8 @@ def run_pipeline(
         end: End date for data.
         horizon: Forward return horizon for labels.
         label_type: Label generation method — 'triple_barrier' (forward horizon)
-            or 'next_bar' (no look-ahead: 1 if tomorrow's close > today's, else 0).
+            or 'next_bar' (no look-ahead: 1 if tomorrow's close > today's, else 0)
+            or 'three_value' (UP/DOWN/UNKNOWN tiers).
         fast: Skip ARO + GWO for fast iterations.
         use_cross_asset: Add cross-asset features.
         skip_tuning: Skip ARO + GWO even in non-fast mode.
@@ -924,6 +1036,11 @@ def run_pipeline(
         cv_method: 'purged' (5-fold PurgedKFold) or 'cpcv' (C(6,2)=15 paths CPCV).
         sector: If set, filter tickers to this sector only, disable cross-asset,
             and name model with sector prefix.
+        strict_wf: Enforce strict walk-forward invariants.
+        pbo_gate: Enable PBO + DSR statistical gates.
+        hold_out: Run final untouched hold-out validation.
+        run_shuffling_test: Run label-shuffling baseline (P24-3) after training.
+        loss_function: CatBoost loss function (Logloss default).
 
     Returns:
         Dict with pipeline summary.
@@ -1103,7 +1220,11 @@ def run_pipeline(
     logger.info("[7/9] Final Model Training")
     logger.info("=" * 60)
     final_model, final_results = train_final_model(
-        X_filtered, y_all, cv_results=cv_results, gwo_params=gwo_params
+        X_filtered,
+        y_all,
+        cv_results=cv_results,
+        gwo_params=gwo_params,
+        loss_function=loss_function,
     )
 
     # ── Stage 8: Walk-Forward Validation ──
@@ -1322,6 +1443,17 @@ def run_pipeline(
 
     if shap_report and shap_report.get("suspicious"):
         logger.warning(f"SHAP: {len(shap_report['suspicious'])} suspicious features need review")
+
+    # ── P24-3: Label-Shuffling Baseline Test ──
+    shuffling_result: dict | None = None
+    if run_shuffling_test:
+        shuffling_result = run_label_shuffling_test(X_filtered, y_all)
+        if not shuffling_result["passed"]:
+            logger.warning("LABEL-SHUFFLING FAILED — model may be fitting noise")
+    # Save shuffling result
+    if shuffling_result:
+        with open(run_dir / "label_shuffling.json", "w") as f:
+            json.dump(shuffling_result, f, indent=2)
 
     # ── B14.1: Strict Walk-Forward Invariant Enforcement ──
     if strict_wf:
@@ -1672,6 +1804,24 @@ def main():
         help="Run final untouched hold-out validation (2025-01-01 to 2026-05-13). "
         "Only evaluated ONCE, after all development is complete. (B14.3)",
     )
+    parser.add_argument(
+        "--label-shuffling",
+        action="store_true",
+        help="Run label-shuffling baseline test — verify model doesn't exceed random. (P24-3)",
+    )
+    parser.add_argument(
+        "--label-type",
+        type=str,
+        default="triple_barrier",
+        choices=["triple_barrier", "next_bar", "three_value"],
+        help="Label generation method. 'three_value' uses UP/DOWN/UNKNOWN tiers. (P24-7)",
+    )
+    parser.add_argument(
+        "--loss-function",
+        type=str,
+        default="Logloss",
+        help="CatBoost loss function (default Logloss).",
+    )
 
     args = parser.parse_args()
 
@@ -1700,6 +1850,9 @@ def main():
                 strict_wf=args.strict_wf,
                 pbo_gate=args.pbo_gate,
                 hold_out=args.hold_out,
+                run_shuffling_test=args.label_shuffling,
+                label_type=args.label_type,
+                loss_function=args.loss_function,
             )
     else:
         run_pipeline(
@@ -1719,6 +1872,9 @@ def main():
             strict_wf=args.strict_wf,
             pbo_gate=args.pbo_gate,
             hold_out=args.hold_out,
+            run_shuffling_test=args.label_shuffling,
+            label_type=args.label_type,
+            loss_function=args.loss_function,
         )
 
 

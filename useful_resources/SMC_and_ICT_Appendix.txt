@@ -1,0 +1,934 @@
+Here are the detailed descriptions of the three illustrations provided.
+
+### `"smc_and_ict_day01_core_belief_hunt_liquidity.png"`
+
+**Overview:**
+This is a screenshot of a financial candlestick chart from the platform TradingView. It displays the price action of the U.S. Dollar against the Canadian Dollar (USDCAD) on a 4-hour timeframe. The chart is annotated with technical analysis markings, specifically highlighting a "Liquidity Sweep" and a subsequent price drop.
+
+**Header Information:**
+*   **Top Left:** "FindBetterTrades created with TradingView.com, Mar 23, 2026 16:02 UTC-4".
+*   **Instrument:** "U.S. Dollar / Canadian Dollar · 4h · OANDA".
+*   **OHLC Data:** "O1.37242 H1.37358 L1.37134 C1.37258 +0.00023 (+0.02%)". The text is green, indicating a slight bullish close.
+*   **Top Right:** A small label "CAD".
+
+**Chart Elements & Annotations:**
+*   **Y-Axis (Right Side):** Displays price levels ranging from roughly 1.35200 at the bottom to 1.37600 at the top.
+*   **Current Price Label:** A green box on the right axis reads "USDCAD 1.37258 57:01". Below it is a hollow green box outline with the price "1.36636".
+*   **"LIQUIDITY SWEEP" Annotation:** Near the top of the chart, around the 1.37400 price level, there is a horizontal green dotted line. Above this line, the text "LIQUIDITY SWEEP" is written in black capital letters. This line marks a previous high that was briefly breached.
+*   **Grey Support Zone:** At the bottom of the chart, spanning the entire width, is a thick, solid grey horizontal rectangle. This zone covers the price area roughly between 1.35400 and 1.35550.
+*   **Black Trend Arrow:** A long, thin black arrow is drawn on the chart. It originates from the highest point of the recent price action (a wick around March 3rd/4th near 1.37600) and points diagonally downwards to the right, ending near a swing low around March 11th (near 1.35800). This indicates a significant bearish move.
+
+**Price Action (Candlesticks):**
+*   **Left Side:** The chart begins with a sharp downtrend (red candles), followed by a consolidation and then a strong uptrend (green candles).
+*   **Middle:** The price moves sideways with volatility, creating higher highs and higher lows.
+*   **The Sweep:** The price spikes up to touch the "LIQUIDITY SWEEP" line (the green dotted line), creating a long upper wick, before reversing.
+*   **The Drop:** Following the sweep, a series of large red candles appears, corresponding to the black arrow's direction, driving the price down towards the grey support zone.
+*   **Right Side:** After tapping near the grey zone, the price reverses again, showing a series of green candles moving back up towards the current price level.
+
+**X-Axis (Time):**
+*   The timeline at the bottom shows dates: 6, 9, 10, 11, 12, 13, 16, 17, 18, 19, 20, 23, 24, 25, 26, Mar, 3, 4, 5, 6, 9, 10, 11, 12, 1.
+
+***
+
+### `"smc_and_ict_day01.png"`
+
+**Overview:**
+This is a flowchart diagram illustrating the relationship and lineage between "ICT" (Inner Circle Trader) and "SMC" (Smart Money Concepts). It uses colored boxes and arrows to show a hierarchy and convergence.
+
+**Structure:**
+*   **Top Node:** A dark grey rounded rectangle at the top center.
+    *   **Text:** "Institutional market thinking" (White, Bold).
+    *   **Subtext:** "Wyckoff → Huddleston → ICT / SMC" (Light Grey).
+*   **Branching:** Two grey arrows point downwards and outwards from the top node.
+*   **Left Node (ICT):** A purple rounded rectangle.
+    *   **Text:** "ICT" (White, Large/Bold).
+    *   **Description:** "Full framework by Huddleston" (White).
+    *   **Attributes:** "Complex · time-specific · deep" (White).
+*   **Right Node (SMC):** A dark green rounded rectangle.
+    *   **Text:** "SMC" (White, Large/Bold).
+    *   **Description:** "Community-simplified version" (Light Green/White).
+    *   **Attributes:** "Accessible · flexible · popular" (Light Green/White).
+*   **Convergence:** Two grey arrows point downwards and inwards from the bottom of the ICT and SMC boxes.
+*   **Bottom Node:** A brown rounded rectangle at the bottom center.
+    *   **Text:** "Same core: trade with smart money" (White).
+
+***
+
+### `"smc_and_ict_day02.png"`
+
+**Overview:**
+This is a horizontal timeline graphic detailing the history and development of the ICT trading methodology. It features six distinct phases connected by a grey line.
+
+**Timeline Elements (Left to Right):**
+1.  **Phase 1:**
+    *   **Box:** Dark Grey.
+    *   **Text:** "Early life", "Michigan".
+    *   **Date (Below):** "1980s–90s" (Light Grey).
+2.  **Phase 2:**
+    *   **Box:** Dark Grey.
+    *   **Text:** "Magazine ad", "First losses".
+    *   **Date (Below):** "Early 90s" (Light Grey).
+3.  **Phase 3:**
+    *   **Box:** Purple.
+    *   **Text:** "L. Williams", "9-month streak".
+    *   **Date (Below):** "Mid-90s" (Light Grey).
+4.  **Phase 4:**
+    *   **Box:** Brown.
+    *   **Text:** "Market shift", "Losses again".
+    *   **Date (Below):** "Late 90s" (Light Grey).
+5.  **Phase 5:**
+    *   **Box:** Green.
+    *   **Text:** "Years of R&D", "New framework".
+    *   **Date (Below):** "Late 90s–00s" (Light Grey).
+6.  **Phase 6:**
+    *   **Box:** Purple.
+    *   **Text:** "ICT born", "Early 2000s".
+    *   **Date (Below):** "2000s+" (Light Grey).
+
+**Visual Style:**
+The boxes are rounded rectangles. The connecting line is a thin grey horizontal stroke. The text inside the boxes is white. The dates below the line are in a lighter, faded grey font.
+
+This document provides a comprehensive textual description of four educational illustrations related to "Smart Money Concepts" (SMC) in financial trading. Each section details the visual components, labels, and conceptual meaning intended for an LLM analysis.
+
+---
+
+### **smc_and_ict_day03.png**
+
+**Description:** This illustration is a technical diagram on a black background, divided into two halves by a vertical dashed gray line. It explains price action terminology for trend continuation and reversal.
+
+*   **Left Half (Uptrend):**
+    *   **Header:** "Uptrend — BOS confirms continuation, CHoCH warns of reversal" (contained in a purple pill-shaped box).
+    *   **Visuals:** A solid green line moves diagonally upward in a "zig-zag" pattern.
+    *   **Labels:** The peaks are labeled **HH** (Higher High) and the troughs are labeled **HL** (Higher Low).
+    *   **BOS (Break of Structure):** Small green shaded boxes with the text "BOS" appear at the points where the price breaks above a previous HH to create a new one.
+    *   **CHoCH (Change of Character):** After the final HH, a dashed orange line breaks downward through the previous HL. This move is labeled with an orange box titled "CHoCH," indicating a potential trend reversal.
+*   **Right Half (Downtrend):**
+    *   **Header:** "Downtrend — BOS confirms continuation, CHoCH warns of reversal" (contained in a brown pill-shaped box).
+    *   **Visuals:** A solid orange line moves diagonally downward in a zig-zag pattern.
+    *   **Labels:** The peaks are labeled **LH** (Lower High) and the troughs are labeled **LL** (Lower Low).
+    *   **BOS (Break of Structure):** Small orange shaded boxes with the text "BOS" appear at the points where the price breaks below a previous LL to create a new one.
+    *   **CHoCH (Change of Character):** After the final LL, a dashed green line breaks upward through the previous LH. This move is labeled with a green box titled "CHoCH," indicating a potential trend reversal.
+*   **Legend (Bottom):**
+    *   Solid Green line: "Bullish move"
+    *   Dashed Orange line: "Potential reversal"
+    *   Solid Orange line: "Bearish move"
+    *   Dashed Green line: "Potential reversal"
+
+---
+
+### **smc_and_ict_day04.png**
+
+**Description:** This illustration depicts a complex price path moving between two horizontal zones of "liquidity" on a black background.
+
+*   **Zones:**
+    *   **Top Zone:** A horizontal purple bar labeled "Buy-Side Liquidity (BSL) — stop losses of short sellers resting here."
+    *   **Bottom Zone:** A horizontal brown bar labeled "Sell-Side Liquidity (SSL) — stop losses of long traders resting here."
+*   **Price Path (from left to right):**
+    *   **Initial Move:** A green solid line labeled "Up" leads into a consolidation phase.
+    *   **Consolidation:** The price bounces between horizontal dashed lines. The peaks are labeled **EQH** (Equal Highs) and the troughs are labeled **EQL** (Equal Lows).
+    *   **Stop Hunt (Up):** A sharp purple solid line shoots upward, piercing the BSL zone. A dashed purple arrow points away from this peak, labeled "BSL sweep → reversal."
+    *   **Stop Hunt (Down):** An orange solid line labeled "Down" crashes through the entire middle area, piercing the SSL zone at the bottom. A dashed orange arrow points away from this trough, labeled "SSL sweep → reversal."
+    *   **Institutional Move:** A green solid line labeled "Up" begins a strong, sustained move upward out of the SSL zone.
+*   **Legend (Bottom):**
+    *   Purple Box: "BSL zone"
+    *   Brown Box: "SSL zone"
+    *   Purple Line: "Stop hunt sweep"
+    *   Green Line: "Institutional move"
+
+---
+
+### **smc_and_ict_day05.png**
+
+**Description:** This illustration explains how to identify entry points using candlestick patterns. It is divided into two halves by a vertical dashed line.
+
+*   **Left Half (Bullish Order Block):**
+    *   **Header:** "Bullish order block — institutions accumulate longs" (Green pill-shaped box).
+    *   **Visuals:** A series of four orange (downward) rectangular candles followed by four green (upward) rectangular candles.
+    *   **Identification:** The very last orange candle before the upward move is highlighted with a green dashed border. A label below it reads "Bullish OB zone."
+    *   **Trade Setup:** An arrow points to the bottom of the OB candle, labeled "Stop below OB." A small upward arrow marks the "Impulse" move. A gray dashed line shows the price returning to the top of the green dashed box, labeled "Retest," representing an entry point.
+*   **Right Half (Bearish Order Block):**
+    *   **Header:** "Bearish order block — institutions accumulate shorts" (Brown pill-shaped box).
+    *   **Visuals:** A series of four green (upward) candles followed by four orange (downward) candles.
+    *   **Identification:** The very last green candle before the downward move is highlighted with an orange dashed border. A label above it reads "Bearish OB zone."
+    *   **Trade Setup:** A dashed line at the top of the OB candle is labeled "Stop above OB." A downward arrow marks the "Impulse" move. A gray dashed line shows price returning to the bottom of the orange dashed box, labeled "Retest."
+*   **Footer Text:** "price drops → last bearish candle = Bullish OB → impulse up → retest for entry / price rises → last bullish candle = Bearish OB → impulse down → retest for entry"
+
+---
+
+### **smc_and_ict_day05_EURUSD_Showcase.png**
+
+**Description:** A screenshot of a real trading chart for the Euro / U.S. Dollar (EURUSD) on a 4-hour timeframe, created on TradingView.
+
+*   **Header Info:** "Euro / U.S. Dollar · 4h · FXCM". Date: "Mar 27, 2026".
+*   **Price Action:** The center of the chart shows "EURUSD" in large white text. The candlesticks (red and green) show a period of volatility followed by an uptrend.
+*   **Markups:**
+    *   **Bullish OB:** A gray horizontal rectangular box is drawn around the 1.15577 price level. It captures a specific area of previous price consolidation.
+    *   **Resistance Levels:** Two horizontal gray lines are drawn at the top, around 1.17500 and 1.17800.
+    *   **Trade Execution Box:** A large translucent "Long Position" tool is visible. It has a large **green section** (target profit) extending from the Bullish OB up to the resistance levels, and a small **red section** (stop loss) extending slightly below the Bullish OB.
+    *   **Outcome:** The candlesticks are seen entering the green zone and hitting the upper resistance lines.
+*   **Price Scale:** The right Y-axis shows prices ranging from 1.15259 to 1.18400. The current price (at the time of the shot) is highlighted in green at 1.15326 and a red label at 1.17199.
+*   **Bottom Branding:** "TradingView" logo in the bottom left.
+
+Here are the detailed, highly descriptive textual representations of the provided illustrations, designed for an LLM that cannot process images.
+
+***
+
+### `"smc_and_ict_day06.png"`
+
+This illustration provides a schematic definition of Fair Value Gaps (FVG) in financial trading, split into two side-by-side diagrams: one Bullish and one Bearish.
+
+**Left Diagram (Bullish FVG):**
+*   **Header:** A dark green rounded rectangle at the top contains the white text: "Bullish FVG — gap between candle 1 high and candle 3 low".
+*   **Visual Structure:** Below the header are three vertical candlesticks, labeled below their respective wicks as "C1", "C2 (impulse)", and "C3". They are colored in shades of green.
+*   **Candle 1 (C1):** A small green candlestick. A thin, solid horizontal line extends to the left from the absolute top of its upper wick. This line is labeled "C1 high" in grey text.
+*   **Candle 2 (C2):** Labeled "C2 (impulse)". This is a very tall, large green candlestick positioned higher than C1.
+*   **Candle 3 (C3):** A medium-sized green candlestick positioned higher than C2. A thin, solid horizontal line extends to the right from the absolute bottom of its lower wick. This line is labeled "C3 low" in grey text.
+*   **The Gap (FVG Zone):** There is a distinct vertical gap between the top wick of C1 ("C1 high") and the bottom wick of C3 ("C3 low"). This gap is highlighted by a light, translucent green shaded rectangular box stretching horizontally behind candle C2. The text "FVG zone" is written in the center of this shaded box.
+*   **Additional Details:** Through the exact horizontal center of the shaded "FVG zone" box, there is a dashed green line labeled "CE (50%)". A curved, dashed grey line with an arrowhead points from the right side of the image, looping back and pointing directly into the "FVG zone" box. Beside this arrow is the text: "Price returns to fill gap".
+
+**Right Diagram (Bearish FVG):**
+*   **Header:** A dark brown/red rounded rectangle at the top contains the white text: "Bearish FVG — gap between candle 1 low and candle 3 high".
+*   **Visual Structure:** Below the header are three vertical candlesticks, labeled below their respective wicks as "C1", "C2 (impulse)", and "C3". They are colored in shades of orange/red.
+*   **Candle 1 (C1):** A medium orange candlestick. A thin, solid horizontal line extends to the left from the absolute bottom of its lower wick. This line is labeled "C1 low" in grey text.
+*   **Candle 2 (C2):** Labeled "C2 (impulse)". This is a very tall, large dark orange candlestick extending downwards.
+*   **Candle 3 (C3):** A medium orange candlestick positioned lower than C2. A thin, solid horizontal line extends to the right from the absolute top of its upper wick. This line is labeled "C3 high" in grey text.
+*   **The Gap (FVG Zone):** There is a distinct vertical gap between the bottom wick of C1 ("C1 low") and the top wick of C3 ("C3 high"). This gap is highlighted by a light, translucent pink/red shaded rectangular box stretching horizontally behind candle C2. The text "FVG zone" is written in the center of this shaded box.
+*   **Additional Details:** Through the exact horizontal center of the shaded "FVG zone" box, there is a dashed red line labeled "CE (50%)". A curved, dashed grey line with an arrowhead points from the bottom right of the image, looping upwards and pointing directly into the "FVG zone" box. Beside this arrow is the text: "Price returns to fill gap".
+
+***
+
+### `"smc_and_ict_day07.png"`
+
+This illustration shows a continuous line graph demonstrating market structure trends, specifically Uptrend, Reversal, and Downtrend, moving from left to right.
+
+*   **Header:** Across the top is a wide dark grey banner with white text: "Full market cycle — BOS confirms trend, CHoCH warns of reversal, new BOS confirms new trend".
+
+**Left Section (Uptrend):**
+*   The graph begins on the left with a solid green line moving diagonally upwards to a peak. This peak is labeled "HH" in green text (Higher High).
+*   The line then moves downwards to a trough, labeled "HL" in grey text (Higher Low).
+*   The line moves up again. A horizontal dashed green line extends to the right from the first "HH" peak. When the solid green upward line crosses and breaks above this dashed line, there is a light green box at the intersection with the text "BOS" (Break of Structure).
+*   The line continues up to form a new, higher peak, again labeled "HH".
+*   It drops to a new trough, labeled "HL".
+*   It rises again, breaking above a dashed green line extending from the second "HH". This intersection also has a light green "BOS" box. It culminates in the highest peak on the chart, labeled "HH".
+*   **Footer for this section:** Green text at the bottom reads "Uptrend — BOS confirms continuation".
+
+**Middle Section (Reversal):**
+*   From the highest "HH" peak, the line turns solid orange and drops sharply downwards. It drops lower than the level of the previous "HL".
+*   A horizontal dashed orange line extends to the right from that previous "HL" trough. The text below this dashed line reads "HL broken".
+*   Where the sharply dropping solid orange line crosses this dashed orange line, there is a light pink/orange box labeled "CHoCH" (Change of Character).
+*   The downward line finally stops at a low trough, labeled "LL" in orange text (Lower Low).
+*   **Footer for this section:** Orange text at the bottom reads "CHoCH — reversal warning".
+
+**Right Section (Downtrend):**
+*   From the first "LL", the solid orange line moves upwards to a lower peak, labeled "LH" in grey text (Lower High).
+*   The line then moves down. A horizontal dashed orange line extends right from the first "LL". When the solid descending line crosses below it, there is a light pink/orange box labeled "BOS".
+*   The line continues down to a new trough, labeled "LL".
+*   It moves up to a new "LH".
+*   It moves down again, breaking below a dashed orange line extending from the second "LL", marked with another "BOS" box. It ends at the lowest trough on the chart, labeled "LL".
+*   **Footer for this section:** Orange text at the bottom reads "Downtrend — BOS confirms new trend".
+
+***
+
+### `"smc_and_ict_day08.png"`
+
+This illustration depicts a three-phase market cycle over time, divided into three vertical columns separated by faint, dotted grey vertical lines.
+
+**Column 1 (Left):**
+*   **Headers:** At the top is a dark grey box with the text "Phase 1 — Accumulation". Below it is lighter grey text reading "Asian session".
+*   **Visuals:** In the center is a dark grey rectangle. Inside this rectangle are three small, blocky candlesticks (green, red, green) representing sideways price movement. Superimposed over these candles is the text: "Price ranges quietly" and below it, "Liquidity builds on both sides".
+*   **Annotations:** Directly above the dark grey rectangle is a light blue rounded box with purple text: "BSL — stop losses rest here". Directly below the dark grey rectangle is a light pink rounded box with brown text: "SSL — stop losses rest here".
+*   **Footer:** At the very bottom of the column is light grey text: "Quiet. Wait. Watch."
+
+**Column 2 (Center):**
+*   **Headers:** At the top is a brown box with the text "Phase 2 — Manipulation". Below it is lighter grey text reading "London open".
+*   **Visuals:** This section uses line graphs instead of candles. A flat grey horizontal line (extending from Phase 1) suddenly drops sharply downwards as a solid orange line.
+*   **Annotations:** Next to the sharp orange drop is the text: "Fake drop induces shorts". The orange line hits a sharp bottom point. From that lowest point, a dashed orange line extends horizontally to the right. Next to this dashed line is the text: "SSL swept" and below it "Trap triggered".
+*   **Footer:** At the very bottom of the column is brown text: "Liquidity swept. Shorts trapped."
+
+**Column 3 (Right):**
+*   **Headers:** At the top is a dark green box with the text "Phase 3 — Distribution". Below it is lighter grey text reading "New York session".
+*   **Visuals:** From the lowest point of the orange drop in Phase 2, a solid green line extends sharply upwards and diagonally to the top right corner of the chart, representing a strong uptrend.
+*   **Annotations:** Near the beginning of this green upward line, there is dark green text stating "Trade this phase only", accompanied by a small grey arrow pointing exactly to where the green line begins its ascent. Further up the green line, there is a light green box resting on the line with the text "FVG". At the very top end of the green line, there is purple text reading "BSL target", with a short dashed blue line indicating the target area.
+*   **Footer:** At the very bottom of the column is dark green text: "Real move. Enter here."
+
+***
+
+### `"smc_and_ict_day09.png"`
+
+This illustration is a timeline mapping specific trading "kill zones" to hours of the day.
+
+*   **Header:** A dark grey banner at the top reads: "ICT kill zones — 24-hour institutional trading cycle (all times EST)".
+*   **The Timeline Bar:** Below the header is a thick horizontal bar divided into colored segments representing time blocks. Below the bar is a time scale in grey text: 8pm, 10pm, 12am, 2am, 5am, 7am, 10am, 12pm, 2pm, 4pm, 6pm, 8pm.
+    *   *Colors on the bar left to right:* Light blue (8pm-10pm), Black (10pm-2am), Light purple (2am-5am), Black (5am-7am), Light green (7am-10am), Tan (10am-12pm), Light brown (12pm-2pm), Black (2pm-8pm).
+
+*   **Detailed Boxes:** Below the timeline are four colored boxes, each connected to a specific segment on the timeline bar by a dashed line of matching color.
+    *   **Box 1 (Dark Blue):** Connected by a blue dashed line to the 8pm-10pm light blue segment. Text inside: "Asian kill zone" (bold), "8:00pm – 10:00pm EST", "Range building", "AUD, NZD, JPY pairs".
+    *   **Box 2 (Dark Purple):** Connected by a purple dashed line to the 2am-5am light purple segment. Text inside: "London kill zone" (bold), "2:00am – 5:00am EST", "Manipulation sweep", "EUR, GBP pairs".
+    *   **Box 3 (Dark Green):** Connected by a green dashed line to the 7am-10am light green segment. Text inside: "New York kill zone" (bold), "7:00am – 10:00am EST", "Distribution / real move", "All USD pairs + indices".
+    *   **Box 4 (Brown):** Connected by a yellow/brown dashed line to the 10am-12pm tan segment. Text inside: "London close kill zone" (bold), "10:00am – 12:00pm EST", "Position squaring", "Continuation setups".
+
+*   **Annotations below boxes:** There are two horizontal dashed light-blue lines running across the width of the chart beneath the boxes. The top line is labeled on the right as "Asian high". The bottom line is labeled on the right as "Asian low".
+*   **Footer:** A dark grey banner at the bottom contains white text: "Dead zones — avoid trading: 11pm–1am EST (pre-London) · 5am–7am EST (London–NY gap) · 12pm–8pm EST (afternoon chop)". Below that is smaller text: "Note: adjust times by 1 hour during Daylight Saving periods (US and UK DST transitions do not always align)".
+
+***
+
+### `"smc_and_ict_day10.png"`
+
+This illustration is a vertical flowchart detailing a top-down, multi-timeframe chart analysis strategy broken into three layers.
+
+*   **Header:** A dark grey bar at the top with white text: "Top-down multi-timeframe analysis — three layers, one direction".
+
+**Layer 1 (Top Block):**
+*   A large purple rectangle encompasses this layer. The title is "Layer 1 — Bias" centered at the top.
+*   Inside this purple block are three smaller distinct boxes arranged horizontally:
+    *   **Left box (dark grey):** Text reads "**Weekly chart**" and below it "Long-term direction".
+    *   **Middle box (dark grey):** Text reads "**Daily chart**" and below it "Confirm bias + draw on liquidity".
+    *   **Right box (dark purple outline):** Text reads "**Ask: Is this market bullish or bearish?**" and below it "BOS sequence? Major swing points? DOL target?".
+*   A grey arrow points straight down from the bottom of Layer 1 to Layer 2. Next to the arrow is the grey text "Drill down".
+
+**Layer 2 (Middle Block):**
+*   A large dark green rectangle encompasses this layer. The title is "Layer 2 — Zone (Point of Interest)" centered at the top.
+*   Inside this green block are three smaller distinct boxes arranged horizontally:
+    *   **Left box (dark grey):** Text reads "**4-hour chart**" and below it "Mark OBs, FVGs, key levels".
+    *   **Middle box (dark grey):** Text reads "**1-hour chart**" and below it "Refine POI, session structure".
+    *   **Right box (dark green outline):** Text reads "**Ask: Where will price react?**" and below it "OB or FVG in discount/premium zone?".
+*   A grey arrow points straight down from the bottom of Layer 2 to Layer 3. Next to the arrow is the grey text "Wait for price to reach zone".
+
+**Layer 3 (Bottom Block):**
+*   A large dark brown/orange rectangle encompasses this layer. The title is "Layer 3 — Entry (Execution)" centered at the top.
+*   Inside this brown block are three smaller distinct boxes arranged horizontally:
+    *   **Left box (dark grey):** Text reads "**15-minute chart**" and below it "CHoCH confirmation".
+    *   **Middle box (dark grey):** Text reads "**5-minute chart**" and below it "FVG / OB entry trigger".
+    *   **Right box (dark brown outline, wider than the others):** Text reads "**Ask: Has price confirmed at my zone?**" and below it "CHoCH + FVG + displacement = entry".
+
+Below is an extremely detailed textual description of each illustration. I will quote each file name exactly as provided.
+
+---
+
+## `"smc_and_ict_day11.png"`
+
+### Overall Layout
+This is a two-panel educational infographic on a black background explaining the relationship between Supply & Demand (S&D) zones and Order Blocks (OB). The graphic is split vertically down the center by a thin dashed white line. The left half is themed in green (bullish/demand context), and the right half is themed in red/orange (bearish/supply context).
+
+At the very top, centered across the entire width, there is a rounded rectangular header banner in dark gray with white text that reads:
+
+**“Supply and demand zone vs order block — the zone gives context, the OB gives precision”**
+
+---
+
+### Left Panel (Green Theme – Bullish Context)
+
+At the top of the left side is a green rounded rectangular label with white text:
+
+**“Drop-Base-Rally — demand zone contains bullish OB”**
+
+#### Candlestick Illustration (Left Side)
+Below this header is a simplified stylized candlestick sequence:
+- On the far left are red bearish candles (vertical rectangular bodies with small wicks), indicating a drop.
+- Then a horizontal cluster of smaller candles (a “base”) appears. These candles are inside a semi-transparent green rectangular area with dotted border.
+- After the base, tall green bullish candles rise upward, indicating a rally.
+
+#### Demand Zone
+A larger semi-transparent green rectangle surrounds the entire base area. To the left of it is green text:
+
+**“Supply & demand demand zone (full base width)”**
+
+This implies the entire sideways consolidation (base) is the demand zone.
+
+#### Bullish Order Block (OB)
+Inside the larger green zone is a smaller, more tightly drawn green dashed rectangle highlighting one specific candle. A small arrow points upward from below toward this smaller highlighted candle.
+
+Underneath this smaller box is green text:
+
+**“Bullish OB (last bearish candle)”**
+
+This indicates that within the broader demand zone, the specific last bearish candle before the rally is defined as the bullish order block.
+
+#### Bottom-Left Instructional Box
+At the bottom left is a large rounded green box with white text:
+
+**“Use S&D zone for context
+Wide zone confirms the area matters
+Use OB inside zone for precise entry”**
+
+This emphasizes:
+- The wide green zone = contextual area of interest.
+- The smaller OB = precise execution point.
+
+---
+
+### Right Panel (Red/Orange Theme – Bearish Context)
+
+At the top of the right half is a red/orange rounded rectangular label with white text:
+
+**“Rally-Base-Drop — supply zone contains bearish OB”**
+
+#### Candlestick Illustration (Right Side)
+Below this header:
+- Tall green bullish candles rise upward first (rally).
+- Then small clustered candles form a base.
+- After the base, large red bearish candles drop downward.
+
+#### Supply Zone
+A large semi-transparent red/orange rectangle highlights the entire base. To the right side of it is red/orange text:
+
+**“S&D supply zone (full base)”**
+
+This indicates the entire base is the supply zone.
+
+#### Bearish Order Block
+Inside the larger red zone is a smaller red dashed rectangle highlighting one candle. An arrow points upward toward that specific candle.
+
+Below it is red text:
+
+**“Bearish OB (last bullish candle)”**
+
+This communicates:
+- In a Rally-Base-Drop structure,
+- The last bullish candle before the drop is the bearish order block.
+
+#### Bottom-Right Instructional Box
+At the bottom right is a large rounded red/orange box with white text:
+
+**“Use OB for stop placement
+Stop below OB low (bullish) or above high (bearish)
+Tighter stop = better risk-reward ratio”**
+
+This emphasizes:
+- OB defines precise stop-loss placement.
+- Bullish trades → stop below OB low.
+- Bearish trades → stop above OB high.
+- Tighter stops improve R:R.
+
+---
+
+## `"smc_and_ict_day11_RBD.png"`
+
+### Instrument & Layout
+A dark-themed TradingView chart of **British Pound / Japanese Yen (GBP/JPY)** on the **4-hour timeframe** (OANDA feed).
+Top-left text reads something like:
+“FindBetterTrades created with TradingView.com, Apr 07, 2026 13:10 UTC-4”
+
+Price scale on the right ranges roughly from 209 to 215 JPY.
+
+Candles:
+- Green candles represent bullish movement.
+- Red candles represent bearish movement.
+
+### Chart Structure
+Price rises steadily from the left side into a peak near ~215.
+Then forms a distribution-like structure.
+Then begins a strong bearish decline with consecutive large red candles.
+
+Near the upper-middle-right area, white text reads:
+
+**“RBD”**
+
+This stands for Rally-Base-Drop.
+
+The chart visually demonstrates:
+- Rally upward.
+- A short base near the top.
+- Strong drop afterward.
+
+A large semi-transparent gray rectangular zone appears toward the left-middle portion of the chart around ~210–211 area. This likely marks a demand zone from earlier price action.
+
+The rightmost side shows current price around 211.9.
+
+This image demonstrates a real-market Rally-Base-Drop structure (supply concept).
+
+---
+
+## `"smc_and_ict_day11_DBR.png"`
+
+### Instrument & Layout
+Dark-themed TradingView chart of **Euro / U.S. Dollar (EUR/USD)** on the **1-hour timeframe** (FXCM feed).
+
+Top-left:
+“FindBetterTrades created with TradingView.com, Apr 07, 2026 13:09 UTC-4”
+
+Right price scale ranges approximately 1.1410 to 1.1620.
+
+### Chart Structure
+The market first trends downward.
+Then forms a rounded bottom-like base.
+Then rallies sharply upward with strong consecutive green candles.
+Then consolidates and pulls back.
+
+Near the center-bottom area is large white text:
+
+**“DBR”**
+
+This stands for Drop-Base-Rally.
+
+This visually demonstrates:
+- A drop.
+- A base (sideways cluster).
+- A strong rally.
+
+This is a bullish demand structure example.
+
+---
+
+## `"smc_and_ict_day11_RBR.png"`
+
+### Instrument & Layout
+Dark-themed TradingView chart of **West Texas Intermediate (WTI) Crude Oil Cash** on the **1-hour timeframe** (BlackBull Markets).
+
+Top-left shows creation time and source.
+Right price scale ranges roughly from 82 to 109 USD.
+
+### Chart Structure
+Price:
+- Rallies upward strongly.
+- Forms a small base.
+- Then rallies again.
+
+In the center is white text:
+
+**“RBR”**
+
+This stands for Rally-Base-Rally.
+
+This structure:
+- Rally.
+- Base.
+- Continuation rally.
+
+This is a bullish continuation pattern.
+
+The current price is around 104.7 USD on the right.
+
+---
+
+## `"smc_and_ict_day11_DBD.png"`
+
+### Instrument & Layout
+Dark-themed TradingView chart of **Gold Spot / U.S. Dollar (XAU/USD)** on the **1-hour timeframe** (OANDA).
+
+Right-side price scale ranges approximately 4,120 to 5,040 USD.
+
+### Chart Structure
+The market trends downward heavily.
+Then forms a base.
+Then continues dropping.
+
+Centered near upper-middle area is white text:
+
+**“DBD”**
+
+This stands for Drop-Base-Drop.
+
+It demonstrates:
+- Initial drop.
+- Short consolidation (base).
+- Further strong bearish continuation.
+
+Two gray rectangular zones are drawn:
+1. One near the middle marking the base (supply zone).
+2. Another lower gray zone marking a later consolidation.
+
+The price sharply drops through the upper base and continues downward strongly before later minor consolidation.
+
+This illustrates a bearish continuation supply structure.
+
+---
+
+# Conceptual Summary Across All Day 11 Images
+
+The five images together demonstrate:
+
+- Theoretical explanation of Supply & Demand vs Order Blocks.
+- Bullish structure: Drop-Base-Rally (DBR).
+- Bearish structure: Rally-Base-Drop (RBD).
+- Bullish continuation: Rally-Base-Rally (RBR).
+- Bearish continuation: Drop-Base-Drop (DBD).
+- How S&D zones provide broader context.
+- How OBs give precise entry and stop placement.
+
+The first image is purely instructional/diagrammatic.
+The remaining four are real chart examples applying those structural concepts in live markets.
+
+### "smc_and_ict_day12.png"
+
+This image is a side-by-side comparison of two trading chart patterns, split vertically.
+
+**Left Side:**
+*   **Header:** A navy blue rounded rectangle containing white text: "Bearish breaker block — liquidity sweep BEFORE reversal".
+*   **Chart Visuals:**
+    *   A line graph starts at the bottom left, moving up in a green line.
+    *   It dips slightly (grey line), then rises sharply in a purple line to a peak.
+    *   Above the peak, text reads "Sweep" (purple), "BSL swept" (blue), and "New HH" (blue).
+    *   From the peak, a thick red line drops sharply downwards, labeled "Reversal" (orange text) near the bottom.
+    *   On the initial green upward slope, there is a small vertical red rectangle labeled "Bullish OB" (brown text).
+    *   A large, light pink horizontal rectangular zone is drawn across the middle. It is labeled "Breaker block — now resistance" (brown text). The red downward line cuts through this zone.
+    *   After the sharp drop, a dashed grey line moves upward into the pink "Breaker block" zone, labeled "Rejection" (orange text).
+    *   From the rejection point, a red line moves downward again.
+*   **Footer:** A navy blue rounded rectangle at the bottom containing white text: "Breaker: swept liquidity → higher probability. Price made a new high/low BEFORE reversing".
+
+**Right Side:**
+*   **Header:** A dark brown rounded rectangle containing white text: "Bearish mitigation block — NO liquidity sweep".
+*   **Chart Visuals:**
+    *   A line graph starts at the bottom left, moving up in a green line to a peak.
+    *   The peak is lower than the hypothetical previous high (implied). It is labeled "LH — no sweep" (grey text on a light grey pill background).
+    *   From the peak, a thick red line drops sharply.
+    *   On the green upward slope, there is a small vertical red rectangle labeled "Bullish OB" (brown text).
+    *   A light pink horizontal rectangular zone is drawn under the peak, labeled "Mitigation block" (brown text).
+    *   To the right of the chart, orange text reads: "No liquidity sweep = lower probability".
+    *   After the sharp drop, a dashed grey line moves upward to touch the "Mitigation block" zone.
+    *   From there, a red line moves downward.
+*   **Footer:** A dark brown rounded rectangle at the bottom containing white text: "Mitigation: no sweep → valid but lower odds. Price reversed WITHOUT making a new high/low".
+
+***
+
+### "smc_and_ict_day13.png"
+
+This image displays a trading chart setup on a dark background.
+
+*   **Header:** A dark grey rounded rectangle at the top with white text: "ICT Optimal Trade Entry — bullish OTE with Fibonacci levels and targets".
+*   **Chart Area:**
+    *   The background is dark grey/black.
+    *   A thick green line starts at the bottom left corner at a point labeled "LL" (orange text). An orange dashed horizontal line runs across the bottom here. An annotation "Stop loss here" (orange text) points to an orange dot at the LL.
+    *   The green line ascends diagonally to the top center, reaching a peak labeled "HH" (green text) with a green dot. A green dashed horizontal line runs across the top here.
+    *   A white dashed vertical arrow on the left points from the bottom LL level to the top HH level, labeled "Draw fib low → high".
+    *   From the HH peak, a dashed orange line descends diagonally to the right.
+    *   There is a purple shaded horizontal zone in the lower middle area labeled "OTE zone 62-79%" in a purple box.
+    *   The dashed orange line enters this zone and terminates at a green rectangular box. Text below the box reads "Entry at OTE" (green text).
+    *   From the green entry box, a thick green line ascends sharply to the right.
+*   **Levels (Right Side):** Horizontal dashed lines extend from the chart to the right margin, labeled with Fibonacci levels:
+    *   Top (Green dashed line): "0.27 — Target 1" (green text).
+    *   At HH level (Green dashed line): "0% — Swing high (impulse top)" (green text).
+    *   Middle (Grey dashed line): "50% — Equilibrium (fair value)" (grey text).
+    *   Below middle (Purple dashed line): "62% — OTE start" (purple text).
+    *   Below that (Purple dashed line): "70.5% — Sweet spot" (purple text).
+    *   Below that (Purple dashed line): "79% — OTE end" (purple text).
+    *   Bottom (Orange dashed line): "100% — Swing low (stop below here)" (orange text).
+
+***
+
+### "smc_and_ict_day14.png"
+
+This image is a comparison chart split into two columns.
+
+*   **Header:** A dark grey rounded rectangle at the top with white text: "ICT PD Arrays vs SMC Points of Interest — same tools, different organisation systems".
+
+**Left Column (ICT):**
+*   **Header:** Blue rounded rectangle: "ICT — PD Array Matrix".
+*   **Box 1 (Beige background):** "Premium zone (above 50%) → Sell from here in a downtrend. OB · FVG · Breaker · Mitigation block. Rejection block · IFVG · Volume imbalance".
+*   **Divider:** A grey dashed line with text "50% Equilibrium — never enter here".
+*   **Box 2 (Light cyan background):** "Discount zone (below 50%) → Buy from here in an uptrend. OB · FVG · Breaker · Mitigation block. Rejection block · IFVG · Volume imbalance".
+*   **Box 3 (Blue background, white text):** "ICT selection rule. Find the first PD array price encounters within the correct premium/discount zone".
+*   **Box 4 (Dark grey background, white text):** "ICT time filter. Only trade during Kill Zones. London · New York · London Close".
+
+**Right Column (SMC):**
+*   **Header:** Green rounded rectangle: "SMC — Points of Interest (POI)".
+*   **Box 1 (Dark grey background, white text):** "What counts as a POI. Order block · Fair value gap. Breaker · S&D zone · Liquidity pool".
+*   **Box 2 (Green background, white text):** "Four quality criteria for a valid POI. ① Triggered a BOS or market structure shift. ② Protected by liquidity above or below. ③ Unmitigated — never fully retested. ④ Closest to current price. All four = highest probability POI". (The numbers are circled).
+*   **Box 3 (Green background, white text):** "SMC selection rule. Find the zone closest to price that meets all four quality criteria. No strict time filter — structural priority".
+
+***
+
+### "smc_and_ict_day15.png"
+
+This image is a vertical flowchart describing a 6-step trading plan.
+
+*   **Header:** A dark grey rounded rectangle at the top with white text: "SMC Trade Plan — six steps from weekly narrative to entry and exit".
+*   **Step 1 (Blue box):**
+    *   Title: "Step 1 — Weekly bias (Sunday / Monday pre-session)".
+    *   Right side label: "Weekly".
+    *   Text: "Weekly chart → Is structure bullish or bearish? → Where is the nearest draw on liquidity (BSL or SSL)?".
+    *   An arrow points down to Step 2.
+*   **Step 2 (Green box):**
+    *   Title: "Step 2 — Daily bias (each morning pre-session)".
+    *   Right side label: "Daily".
+    *   Text: "Daily chart → Confirm BOS aligned with weekly → Identify unmitigated POIs between price and weekly target".
+    *   An arrow points down to Step 3.
+*   **Step 3 (Grey box):**
+    *   Title: "Step 3 — Grade the POI (4H / 1H)".
+    *   Right side label: "4H / 1H".
+    *   Text: "Must pass all 4 criteria: caused BOS · protected by liquidity · unmitigated · closest to price".
+    *   An arrow points down to Step 4.
+*   **Step 4 (Brown box):**
+    *   Title: "Step 4 — Wait for the liquidity sweep at the POI".
+    *   Right side label: "1H / 15M".
+    *   Text: "Do NOT enter on first touch → Wait for wick below zone (sweep) → Aggressive rejection candle confirms zone is active".
+    *   An arrow points down to Step 5.
+*   **Step 5 (Green box):**
+    *   Title: "Step 5 — LTF CHoCH confirmation (15M / 5M)".
+    *   Right side label: "15M / 5M".
+    *   Text: "Drop to 15M or 5M → Wait for CHoCH → Entry at the FVG or OB formed during or after the CHoCH".
+    *   An arrow points down to Step 6.
+*   **Step 6 (Blue box):**
+    *   Text: "Step 6 — Stop below sweep low · Target = next BSL or SSL · Minimum 1:3 R:R before entry".
+
+### **"smc_and_ict_day16.png"**
+
+This image is a vertical flowchart titled **"ICT Trade Plan — six steps from IPDA narrative to Kill Zone entry and exit"** displayed in a dark grey horizontal bar at the very top with white text. The chart outlines a six-step trading strategy, with each step represented by a colored rectangular block connected by downward-pointing grey arrows.
+
+*   **Step 1 (Purple Block):**
+    *   **Header:** "Step 1 — IPDA narrative (weekly, before the week begins)"
+    *   **Tag (Top Right):** A rounded rectangle outline containing the word "Weekly".
+    *   **Content:** "Weekly chart → Mark 20 / 40 / 60-day highs and lows → Identify the next draw on liquidity (BSL or SSL)"
+*   **Step 2 (Dark Green Block):**
+    *   **Header:** "Step 2 — Daily bias (each morning BEFORE the London open)"
+    *   **Tag (Top Right):** "Daily"
+    *   **Content:** "Daily chart → Is price in discount (buy) or premium (sell)? → Locate nearest unmitigated PD array aligned with IPDA target"
+*   **Step 3 (Brown/Rust Block):**
+    *   **Header:** "Step 3 — Wait for the Judas Swing (00:00–05:00 AM EST · London Kill Zone)"
+    *   **Tag (Top Right):** "5M / 15M"
+    *   **Content:**
+        *   "Bullish day → price drops below Asian low (false move) · Bearish day → price rises above Asian high (false move)"
+        *   "DO NOT ENTER during the Judas Swing → Wait for it to complete with a liquidity sweep"
+*   **Step 4 (Dark Grey Block):**
+    *   **Header:** "Step 4 — Confirm MSS with displacement (still inside Kill Zone)"
+    *   **Tag (Top Right):** "5M / 15M"
+    *   **Content:** "Large-bodied candle breaks the last lower high (bullish) or higher low (bearish) → FVG left behind = your entry zone"
+*   **Step 5 (Dark Green Block):**
+    *   **Header:** "Step 5 — Enter the PD array inside the Kill Zone (mandatory time filter)"
+    *   **Tag (Top Right):** "Kill Zone"
+    *   **Content:** "Price retraces into FVG created by displacement → Enter · OR use OTE 62–79% retracement with 70.5% sweet spot"
+*   **Step 6 (Purple Block):**
+    *   **Header:** "Step 6 — Stop below Judas Swing low · Target 1 = -0.27 extension · Target 2 = next IPDA draw on liquidity (BSL or SSL)"
+    *   (Note: This block spans the full width and acts as the final step).
+
+***
+
+### **"smc_and_ict_day17.png"**
+
+This image is an infographic titled **"ICT & SMC Risk Management — the four rules that protect your account"** in a dark grey header bar. Below the title, there are four colored boxes arranged in a 2x2 grid, followed by a wide table at the bottom.
+
+*   **Rule 1 (Top Left, Purple Box):**
+    *   **Title:** "Rule 1 — The 1% Rule"
+    *   **Text:**
+        *   "Risk 1–2% of account per trade maximum"
+        *   "10 losses at 1% = account still 90% intact"
+        *   "10 losses at 10% = account destroyed"
+        *   "Never risking more than 1-2% keeps you in the game" (in black text).
+*   **Rule 2 (Top Right, Dark Green Box):**
+    *   **Title:** "Rule 2 — Position Sizing Formula"
+    *   **Text:**
+        *   "Position size ="
+        *   "(Account × Risk %) ÷ Stop distance"
+        *   "Wider stop = smaller position — never reverse this"
+        *   "Run this calculation before every single trade" (in black text).
+*   **Rule 3 (Bottom Left, Brown/Rust Box):**
+    *   **Title:** "Rule 3 — Break-Even + Partial Profits"
+    *   **Text:**
+        *   "① Move stop to break-even once first structural level is cleared with momentum"
+        *   "② Take 50% off at Target 1 (first DOL)"
+        *   "③ Let remaining 50% run to Target 2"
+        *   "Lock real profit early — run the rest risk-free" (in black text).
+*   **Rule 4 (Bottom Right, Dark Grey Box):**
+    *   **Title:** "Rule 4 — Daily Loss Limit"
+    *   **Text:**
+        *   "Set a hard daily cap: 3–5% of account"
+        *   "If cap is hit → STOP trading immediately"
+        *   "Do not re-enter until the next session"
+        *   "Prevents revenge trading and tilt"
+        *   "The circuit breaker that stops one bad day becoming a disaster" (in white text).
+
+*   **Bottom Section (Dark Grey Bar/Table):**
+    *   **Title:** "Drawdown maths — why capital preservation beats recovery"
+    *   The table has four columns: "Account loss", "Gain needed to recover", "Account loss", "Gain needed to recover".
+    *   **Row 1:** "10%" (green text) | "11.1%" (green text) | "40%" (orange text) | "66.7%" (orange text).
+    *   **Row 2:** "20%" (orange text) | "25%" (orange text) | "50%" (orange text) | "100%" (orange text).
+
+***
+
+### **"smc_and_ict_day18.png"**
+
+This image is a comparison table titled **"ICT & SMC across markets — what changes and what stays constant"** in a dark grey header. It compares three market types: Forex, Crypto, and Stocks/Indices across five categories.
+
+*   **Header Row:**
+    *   **Category:** Purple background.
+    *   **Forex (EUR/USD, GBP/USD):** Dark Green background.
+    *   **Crypto (BTC, ETH):** Brown/Rust background.
+    *   **Stocks & Indices:** Dark Grey background.
+
+*   **Row 1: Session structure** (Dark grey background for cells)
+    *   **Forex:** "24/5 with clear Asia/London/NY windows"
+    *   **Crypto:** "24/7 — no formal session boundaries"
+    *   **Stocks:** "9:30am–4:00pm EST regular session only"
+
+*   **Row 2: Primary kill zone** (Dark grey background for cells)
+    *   **Forex:** "London 2–5am EST / NY 7–10am EST"
+    *   **Crypto:** "US open 9:30–11:30am EST (NYSE anchor)"
+    *   **Stocks:** "Market open 9:30–11am EST (NAS100 / ES / SPX)"
+
+*   **Row 3: Manipulation reference** (Dark grey background for cells)
+    *   **Forex:** "Asian range highs/lows swept at London open"
+    *   **Crypto:** "Asian session range (8pm–4am EST) — less defined"
+    *   **Stocks:** "Pre-market range swept at 9:30am NYSE open"
+
+*   **Row 4: Core concepts** (Dark grey background for cells, text is dark green)
+    *   **Forex:** "✓ OB · FVG · BOS · CHoCH / Apply natively — full ICT"
+    *   **Crypto:** "✓ OB · FVG · BOS · CHoCH / Work well on BTC / ETH"
+    *   **Stocks:** "✓ OB · FVG · BOS · CHoCH / Best on indices / ETFs"
+
+*   **Row 5: Key caveat** (Dark grey background for cells)
+    *   **Forex:** "DST misalignments can shift kill zone times"
+    *   **Crypto:** "Low-liquidity altcoins show unreliable structure"
+    *   **Stocks:** "Earnings / news can instantly break structure"
+
+*   **Footer Bar (Purple Background):**
+    *   **Title:** "What stays constant across ALL markets"
+    *   **Text:** "Market structure · Liquidity logic · Order blocks · FVGs · BOS & CHoCH · Premium/discount · Risk management"
+
+### **smc_and_ict_day19.png"**
+
+This image displays a comparison table titled with two headers at the top. The left header is a brown rounded rectangle with white text reading **"The mistake"**. The right header is a dark green rounded rectangle with white text reading **"The fix"**. The table consists of 7 numbered rows (1 through 7 listed on the far left in light grey). Each row contains a faint, light-grey title line followed by a darker grey explanatory line.
+
+*   **Row 1:**
+    *   **The mistake:** (Faint text) "Overcomplicating the chart" followed by "Too many zones → paralysis, no clear trade"
+    *   **The fix:** (Faint text) "Use only 3 tools for 6 months" followed by "Structure + nearest OB/FVG + BSL/SSL only"
+*   **Row 2:**
+    *   **The mistake:** (Faint text) "Ignoring the higher timeframe bias" followed by "Trading counter-trend on the daily/weekly"
+    *   **The fix:** (Faint text) "Write daily bias before any LTF chart" followed by "Setup contradicts that sentence? Skip it."
+*   **Row 3:**
+    *   **The mistake:** (Faint text) "Trading outside Kill Zones" followed by "2pm EST FVG ≠ same trade at 2:30am London"
+    *   **The fix:** (Faint text) "Execute only in London / NY Kill Zones" followed by "No Kill Zone setup today = no trade today"
+*   **Row 4:**
+    *   **The mistake:** (Faint text) "Chasing price mid-move (FOMO)" followed by "Market entry mid-expansion, no structure"
+    *   **The fix:** (Faint text) "Missed entry = missed trade. Never chase." followed by "Wait for retracement into FVG/OB next setup"
+*   **Row 5:**
+    *   **The mistake:** (Faint text) "Compressing the stop to fit lot size" followed by "Tight stop at noise level → stopped out constantly"
+    *   **The fix:** (Faint text) "Stop set by chart — size adjusts to match" followed by "Never move stop inward to increase position size"
+*   **Row 6:**
+    *   **The mistake:** (Faint text) "No trading journal" followed by "Adjusting approach on feelings, not data"
+    *   **The fix:** (Faint text) "Record every trade with a screenshot" followed by "Review weekly — improvement comes from data"
+*   **Row 7:**
+    *   **The mistake:** (Faint text) "Strategy-hopping after losses" followed by "Switching before mastering any one setup"
+    *   **The fix:** (Faint text) "Commit to one setup for 90 journalled days" followed by "Losses in beginner phase = execution errors"
+
+***
+
+### **"smc_and_ict_day20.png"**
+
+This image is a vertical flowchart diagram illustrating a trading strategy that combines two methodologies: SMC (Smart Money Concepts) and ICT (Inner Circle Trader). The background is white. The chart is structured into a top header, three main colored "Layer" blocks stacked vertically, and a bottom footer.
+
+**1. Top Header**
+At the very top, there is a dark grey horizontal bar with rounded corners containing white text:
+*   **"The hybrid framework — SMC for structure, ICT for timing"**
+
+**2. Layer 1 (Dark Green Block)**
+Below the header is a large dark green rectangular block with rounded corners.
+*   **Title:** Centered at the top in white text: **"Layer 1 — SMC: weekly and daily narrative"**
+*   **Content:** Inside this block are three smaller rectangular boxes arranged horizontally.
+    *   **Left Box (Dark Grey):**
+        *   Top line: "Weekly chart"
+        *   Bottom line: "Structural bias + DOL"
+    *   **Middle Box (Dark Grey):**
+        *   Top line: "Daily chart"
+        *   Bottom line: "Confirm BOS + write narrative"
+    *   **Right Box (Green with a lighter green border):**
+        *   Top line: "Output: plain-language narrative"
+        *   Bottom line: "Daily bullish — looking for longs at Y"
+*   **Connector:** A grey arrow points downwards from the center of this block. To the right of the arrow, light grey text reads: "Know the direction".
+
+**3. Layer 2 (Dark Purple/Blue Block)**
+Below the first arrow is a large dark purple (indigo) rectangular block with rounded corners.
+*   **Title:** Centered at the top in white text: **"Layer 2 — SMC: POI zone identification (4H / 1H)"**
+*   **Content:** Inside this block are three smaller rectangular boxes.
+    *   **Left Box (Dark Grey):**
+        *   Top line: "Identify the POI"
+        *   Bottom line: "OB · FVG · Breaker"
+    *   **Middle Box (Dark Grey):**
+        *   Top line: "Grade using 4 criteria"
+        *   Bottom line: "BOS · liquidity · fresh · closest"
+    *   **Right Box (Purple with a lighter purple border):**
+        *   Top line: "Output: zone marked and graded"
+        *   Bottom line: "Entry · stop · target all defined"
+*   **Connector:** A grey arrow points downwards from the center of this block. To the right of the arrow, light grey text reads: "Know the zone".
+
+**4. Layer 3 (Dark Brown/Rust Block)**
+Below the second arrow is a large dark brown rectangular block with rounded corners.
+*   **Title:** Centered at the top in white text: **"Layer 3 — ICT: Kill Zone entry (London / New York)"**
+*   **Content:** Inside this block are three smaller rectangular boxes.
+    *   **Left Box (Dark Grey):**
+        *   Top line: "Wait for Kill Zone"
+        *   Bottom line: "London 2–5am or NY 7–10am EST"
+    *   **Middle Box (Dark Grey):**
+        *   Top line: "Judas Swing into SMC zone"
+        *   Bottom line: "Sweep below POI → MSS + FVG"
+    *   **Right Box (Brown with a lighter brown/orange border):**
+        *   Top line: "Enter at FVG · stop below sweep"
+        *   Bottom line: "Target = next SMC draw on liquidity"
+
+**5. Bottom Footer**
+At the very bottom, there is a dark grey horizontal bar with rounded corners (similar to the top header) containing white text:
+*   **"SMC structural quality filter + ICT time filter = highest-probability subset of setups from either methodology alone"**
+
+***
+
+### **"smc_and_ict_day21.png"**
+
+This infographic is divided into two main sections separated by a dark grey bar.
+
+**Top Section: "Choose your path"**
+A dark grey header bar at the top reads: **"Choose your path — then follow the same 90-day process"**. Below this are three colored boxes arranged horizontally:
+
+1.  **SMC (Dark Green Box):**
+    *   **Title:** "SMC"
+    *   **Subtitle:** "Start here if you:"
+    *   **List:**
+        *   "→ Are new to institutional concepts"
+        *   "→ Have irregular trading hours"
+        *   "→ Trade crypto / stocks / swing"
+        *   "→ Prefer contextual over rigid rules"
+        *   "→ Want setups within weeks"
+2.  **ICT (Purple Box):**
+    *   **Title:** "ICT"
+    *   **Subtitle:** "Start here if you:"
+    *   **List:**
+        *   "→ Can trade London / NY Kill Zones"
+        *   "→ Want a strict mechanical system"
+        *   "→ Trade forex / indices intraday"
+        *   "→ Have prior trading experience"
+        *   "→ Patient for 6–12 month study"
+3.  **Hybrid (Brown/Rust Box):**
+    *   **Title:** "Hybrid"
+    *   **Subtitle:** "Use this if you:"
+    *   **List:**
+        *   "→ Know both systems competently"
+        *   "→ Use SMC for HTF structure"
+        *   "→ Use ICT for Kill Zone entry"
+        *   "→ Apply both layers rigorously"
+        *   "→ Never use one to excuse the other"
+
+**Middle Divider:**
+A dark grey bar reads: **"All three paths share the same foundation — structure, liquidity, order flow, risk management, and patience"**. Below this bar, there is very faint text reading: "The 90-day action plan — same process regardless of methodology".
+
+**Bottom Section: "The 90-day action plan"**
+Three colored boxes correspond to the phases of learning:
+
+1.  **Days 1–30 (Dark Green Box):**
+    *   **Title:** "Days 1–30"
+    *   **Subtitle:** "Study + chart mark-up only"
+    *   **Italic text:** "No live trading"
+    *   **Content:**
+        *   "Mark up every previous session after the fact on TradingView"
+        *   "Label all BOS · CHoCH · OBs FVGs and liquidity sweeps"
+        *   "Write what you see in plain text"
+    *   **Footer:** "Goal: pattern recognition"
+2.  **Days 31–60 (Purple Box):**
+    *   **Title:** "Days 31–60"
+    *   **Subtitle:** "Backtesting — bar replay"
+    *   **Italic text:** "Still no live capital"
+    *   **Content:**
+        *   "Use TradingView bar replay"
+        *   "One model · one market · one TF"
+        *   "Record every replayed trade: entry · stop · target · outcome"
+        *   "Complete 50+ replayed sessions"
+    *   **Footer:** "Goal: positive expectancy data"
+3.  **Days 61–90 (Brown/Rust Box):**
+    *   **Title:** "Days 61–90"
+    *   **Subtitle:** "Demo trading — real-time"
+    *   **Italic text:** "Still no live capital"
+    *   **Content:**
+        *   "Same model · same journal rules"
+        *   "Real-time price — no peeking"
+        *   "Track results with same rigour as backtesting phase"
+        *   "Data decides: live or refine?"
+    *   **Footer:** "Goal: prove live execution"
+
+***

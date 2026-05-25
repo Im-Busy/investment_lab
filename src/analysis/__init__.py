@@ -1,19 +1,10 @@
 """Pattern Selection Improvement Pipeline.
 
-Exports all key classes from the pattern selection analysis modules:
-- StatisticalSignificanceFilter: t-tests and performance filtering
-- CorrelationAnalyzer: correlation matrices and cluster deduplication
-- ContributionAnalyzer: leave-one-out ablation analysis
-- WalkForwardValidator: walk-forward analysis with overfitting detection
-- SignalQualityFilter: signal quality scoring and filtering
-- PatternSelector: orchestrator for the full selection pipeline
-
-Phase 08 - Contribution & Attribution System (4-Layer Architecture):
-- SignalEventLog: per-bar signal capture with pattern/regime metadata (Layer 1)
-- TradeAttributor: P&L attribution to individual patterns (Layer 2)
-- AblationEngine: leave-one-out pattern ablation studies (Layer 3)
-- SynergyAnalyzer: pattern interaction effect analysis (Layer 4)
-- ContributionReport: aggregated contribution report generation
+Exports all key classes from the pattern selection analysis modules plus
+the Phase 25 post-backtest validation suite:
+  - Monte Carlo robustness (return reshuffling, replacement, param perturbation)
+  - Purged Walk-Forward Analysis (WFA with WFE, majority-pass, catastrophic veto)
+  - Regime Audit (per-regime Sharpe/DSR with VIX or SVM classification)
 """
 
 from .statistical_filter import (
@@ -57,7 +48,6 @@ from .pattern_selector import (
     SelectionResult,
 )
 
-# Phase 08 - Contribution & Attribution System
 from .signal_event_log import (
     SignalEvent,
     SignalEventLog,
@@ -89,6 +79,10 @@ from .contribution_charts import (
 from .deflated_sharpe import (
     PSRResult,
     FDRResult,
+    BootstrapCIResult,
+    PermutationResult,
+    SignificanceSummary,
+    _sharpe_ratio,
     compute_psr,
     compute_psr_from_returns,
     compute_dsr,
@@ -96,6 +90,10 @@ from .deflated_sharpe import (
     benjamini_hochberg,
     deflated_sharpe_batch,
     dsr_significance,
+    bootstrap_sharpe_ci,
+    permutation_test,
+    format_significance_summary,
+    print_significance_report,
 )
 
 from .dual_alpha_beta import (
@@ -104,37 +102,59 @@ from .dual_alpha_beta import (
     rolling_dual_alpha_beta,
 )
 
+from .monte_carlo_robustness import (
+    ReshuffleResult,
+    PerturbResult,
+    MonteCarloRobustnessReport,
+    return_reshuffling,
+    return_replacement,
+    parameter_perturbation,
+    parameter_perturbation_from_returns,
+    compute_combined_robustness_score,
+    run_full_robustness_check,
+    format_mc_report,
+)
+
+from .purged_walk_forward import (
+    PurgedWindowResult,
+    PurgedWFAReport,
+    PurgedWalkForwardValidator,
+)
+
+from .regime_audit import (
+    MarketRegime,
+    RegimeStats,
+    RegimeAuditReport,
+    classify_regimes_from_returns,
+    compute_per_regime_metrics,
+    audit_regimes,
+    format_regime_report,
+)
+
 __all__ = [
-    # Statistical Significance Filter
     "StatisticalSignificanceFilter",
     "SignificanceResult",
     "DEFAULT_P_VALUE_THRESHOLD",
     "DEFAULT_MIN_SHARPE",
     "DEFAULT_MIN_PROFIT_FACTOR",
-    # Correlation Analyzer
     "CorrelationAnalyzer",
     "DEFAULT_CORRELATION_THRESHOLD",
-    # Contribution Analyzer
     "ContributionAnalyzer",
     "DEFAULT_REDUNDANCY_THRESHOLD",
-    # Walk-Forward Validator
     "WalkForwardValidator",
     "WindowResult",
     "ValidationReport",
     "DEFAULT_TRAIN_DAYS",
     "DEFAULT_TEST_DAYS",
     "DEFAULT_OVERFITTING_DEGRADATION",
-    # Signal Quality Filter
     "SignalQualityFilter",
     "QualityMetrics",
     "QualityScore",
     "DEFAULT_MIN_WIN_RATE",
     "DEFAULT_MIN_SIGNALS",
-    # Pattern Selector Orchestrator
     "PatternSelector",
     "SelectionConfig",
     "SelectionResult",
-    # Phase 08 - Contribution & Attribution System
     "SignalEvent",
     "SignalEventLog",
     "AttributedTrade",
@@ -145,9 +165,12 @@ __all__ = [
     "SynergyResult",
     "ContributionReport",
     "create_contribution_charts",
-    # DSR/PSR/FDR
     "PSRResult",
     "FDRResult",
+    "BootstrapCIResult",
+    "PermutationResult",
+    "SignificanceSummary",
+    "_sharpe_ratio",
     "compute_psr",
     "compute_psr_from_returns",
     "compute_dsr",
@@ -155,8 +178,31 @@ __all__ = [
     "benjamini_hochberg",
     "deflated_sharpe_batch",
     "dsr_significance",
-    # Dual Alpha/Beta
+    "bootstrap_sharpe_ci",
+    "permutation_test",
+    "format_significance_summary",
+    "print_significance_report",
     "DualAlphaBetaResult",
     "compute_dual_alpha_beta",
     "rolling_dual_alpha_beta",
+    "ReshuffleResult",
+    "PerturbResult",
+    "MonteCarloRobustnessReport",
+    "return_reshuffling",
+    "return_replacement",
+    "parameter_perturbation",
+    "parameter_perturbation_from_returns",
+    "compute_combined_robustness_score",
+    "run_full_robustness_check",
+    "format_mc_report",
+    "PurgedWindowResult",
+    "PurgedWFAReport",
+    "PurgedWalkForwardValidator",
+    "MarketRegime",
+    "RegimeStats",
+    "RegimeAuditReport",
+    "classify_regimes_from_returns",
+    "compute_per_regime_metrics",
+    "audit_regimes",
+    "format_regime_report",
 ]

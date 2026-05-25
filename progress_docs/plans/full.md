@@ -1,15 +1,15 @@
 ---
 project: investment_trying
-last_updated: 2026-05-21 (Phase 25 IMPLEMENTED — per-instrument config, timezone registry, performance tracking, strategy dispatch)
+last_updated: 2026-05-25 (Phase 25 IMPLEMENTED, Phase 26 PLANNED — IS/OOS analysis, bear market validation, 18-instrument production basket)
   summary: |
     Rule-based multi-pattern trading system with 47+ chart pattern detectors, ML-enhanced
     regime detection, Numba-accelerated indicators, PPO/SAC/CQL RL trade execution, and
     event-driven backtesting engine. Phase 25: Per-instrument configuration & performance
-    tracking — single source of truth for 22-instrument production basket, 8 timezone sessions,
-    append-only JSONL ledger, strategy selector per asset class.
-  phases_total: 25
+    tracking. Phase 26: Bear market validation (IS=2016-2021, OOS=2022-2026) + paper
+    trading launch with 18-instrument 3-tier production basket.
+  phases_total: 26
   phases_complete: 25
-  phases_active: 0
+  phases_active: 1
   phases_deferred: 1
   enhancement_tracks: 5
 ---
@@ -30,6 +30,60 @@ last_updated: 2026-05-21 (Phase 25 IMPLEMENTED — per-instrument config, timezo
 | **P2** | P25-8 | Yaml production config | `config_files/production_basket.yaml` | 80 | 22-instrument basket with tier labels + allocations |
 
 **Total: 8 tasks, ~660 LOC new, ~40 LOC modified, 7 new files, 4 modified.**
+
+## Phase 26: Bear Market Validation & Paper Trading Launch (2026-05-25)
+
+**Source:** IS/OOS date range analysis (2026-05-25) with web research on market events 2022-2026. Current split (IS=2016-2024, OOS=2025-2026) is correct — IS covers a full cycle, OOS captured 3+ sub-regimes in 17 months. But we have never validated the 2022 bear market (-24.5%) as a clean OOS test — it's buried inside IS.
+
+### Market Events Background
+| Period | Event | SPY Impact |
+|--------|-------|-----------|
+| 2022 Jan-Oct | Fed tightening + inflation + Russia-Ukraine | **-24.5%** bear market |
+| 2023-2024 | AI boom, soft landing, all-time highs | +26.2%, +24.9% |
+| 2025 Feb-Apr | Tariffs imposed, -18.8% drawdown | Recovered by June |
+| 2025 Full Year | 3×25bps Fed rate cuts, ETFs +$1.47T inflows | +17.7% |
+| 2026 Q1 | US-Iran strikes, oil +55% in March, SPX -9.1% | Near correction |
+| 2026 Apr | Ceasefire → SP500 +10.4% (best month since Nov 2020) | New ATHs |
+| Now (May 2026) | Oil $94 (vs $67 pre-conflict), Fed 3.64%, no 2026 cuts | At ATHs |
+
+### IS/OOS Split Analysis
+| Split | IS | OOS | Purpose | Verdict |
+|-------|----|-----|---------|---------|
+| **Primary** | 2016-2024 | 2025-01-01→present | Clean temporal split, extensively tested | ✅ **Keep.** 122 instruments validated. IS→OOS corr = -0.226 confirms honesty. |
+| **Secondary (NEW)** | 2016-2021 | 2022-2026 | Bear market survival test (2022 = -24.5%) | 🔄 **Run now.** Only 4.5yr OOS, includes full bear + recovery + turbulence. |
+
+### Tasks
+
+| Priority | # | Task | File(s) | LOC | 1-sentence |
+|----------|---|------|---------|-----|-----------|
+| **P0** | P26-1 | Commit all pending changes | Git | — | Commit 25 phases of work before paper trading launch |
+| **P0** | P26-2 | Bear market backtest (IS=2016-2021, OOS=2022-2026) | `backtest_all_comprehensive.py` | 10 | Validate system survives 2022 bear market (-24.5% SPY) as clean OOS test |
+| **P0** | P26-3 | Production basket config update | `config_files/production_basket.yaml` | 20 | 18 instruments, 3 tiers (S/A/B) with 2026-05-25 calibrated allocations |
+| **P1** | P26-4 | Paper trading launch | `scripts/paper_trade_daily.py` | — | Daily signals for 18-instrument basket, 14-day protocol |
+| **P1** | P26-5 | Energy/MidCap-Steel bias verification | `backtest_all_comprehensive.py` | — | Confirm 89% Energy OOS pass rate + MidCap-Steel top-tier status |
+| **P2** | P26-6 | OOS quarterly re-run protocol | `docs/guide-is-oos-split.md` | 30 | Document re-run cadence, threshold checks, regime shift triggers |
+| **P2** | P26-7 | Update BESTS_INSIGHTS.md | `docs/BESTS_INSIGHTS.md` | 50 | Sync with 2026-05-25 comprehensive backtest findings, category tier list |
+
+**Total: 7 tasks, ~110 LOC, 3 new files, 2 modified. No new dependencies.**
+
+### Production Basket (2026-05-25)
+
+| Tier | Instruments | Allocation | Mean OOS Sharpe | Category |
+|------|------------|------------|-----------------|----------|
+| **S (60%)** | XLK, XLE, GLD, SPY, SLV, QQQ | 6×10% | +0.90 | Tech ETF, Energy ETF, Gold, Index, Silver, NASDAQ |
+| **A (25%)** | NUE, STLD, HAL, MPC, EOG | 5×5% | +1.36 | MidCap-Steel, Energy stocks |
+| **B (15%)** | INTC, AMD, LMT, JNJ, MRK, NEM, CN_CATL | 7×2% | +1.09 | Tech, Defense, Health, Gold miner, China EV |
+
+**Structural exclusions (NEVER deploy):** Financials (-0.48), REITs (-0.45), Hong Kong (-0.46), Utilities (-0.30), Bonds (-1.63), Forex (-1.49), MicroCap (-1.41).
+
+**Config:** mr=0.70, multi-TP=ON, quality-registry=ON, gates=OFF. Per-instrument best params from tuning sweep (already in `src/per_instrument/instrument_config.py`).
+
+### Validation Checklist (Phase 26 completion gates)
+- [ ] Bear market backtest shows positive OOS Sharpe on ≥60% of 18-instrument basket
+- [ ] Paper trade harness generates signals for all 18 instruments
+- [ ] Production config YAML matches basket table above
+- [ ] BESTS_INSIGHTS.md synced with 2026-05-25 findings
+- [ ] Git commit with message referencing Phase 26 completion
 
 # Master Plan
 
@@ -62,6 +116,7 @@ last_updated: 2026-05-21 (Phase 25 IMPLEMENTED — per-instrument config, timezo
 | **23** | **RulesFirst Production Improvements** | — | — | ✅ Complete — RF1/RF2/RF3/RF4 all done. |
 | **24** | **Paper-Derived Enhancements (66-Paper Comparison)** | [plan](24-paper-enhancements.md) | — | ✅ Complete — P0/P1/P2 done. P3 deferred. |
 | **25** | **Per-Instrument Config & Performance Tracking** | — | — | ✅ Complete — P25-1 through P25-8 all implemented (2026-05-21). |
+| **26** | **Bear Market Validation & Paper Trading Launch** | — | — | 🔄 Active — IS/OOS analysis complete. Bear market test + paper trading pending. |
 |  |  |  |  |  |
 ### Phase 24: Paper-Derived Enhancements (66-Paper Comparison) — NEW (2026-05-21)
 

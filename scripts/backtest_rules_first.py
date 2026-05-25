@@ -76,6 +76,10 @@ def run_single(
     options_sentiment_weight: float = 0.3,
     use_kelly_sizing: bool = False,
     kelly_fraction: float = 0.5,
+    use_vix_regime_sizing: bool = False,
+    vix_regime_size_penalty: float = 0.50,
+    vix_regime_high_vol_cap: float = 0.50,
+    vix_regime_crisis_cap: float = 0.25,
     use_order_book: bool = False,
     use_signal_strength_sizing: bool = False,
     use_voting_signal: bool = False,
@@ -133,6 +137,10 @@ def run_single(
         options_sentiment_weight=options_sentiment_weight,
         use_kelly_sizing=use_kelly_sizing,
         kelly_fraction=kelly_fraction,
+        use_vix_regime_sizing=use_vix_regime_sizing,
+        vix_regime_size_penalty=vix_regime_size_penalty,
+        vix_regime_high_vol_cap=vix_regime_high_vol_cap,
+        vix_regime_crisis_cap=vix_regime_crisis_cap,
         use_order_book=use_order_book,
         use_signal_strength_sizing=use_signal_strength_sizing,
         use_voting_signal=use_voting_signal,
@@ -403,6 +411,24 @@ def main() -> None:
     parser.add_argument(
         "--kelly-fraction", type=float, default=0.5, help="Kelly fraction (0.5=half-Kelly)"
     )
+    # P1.5: VIX regime-adaptive position sizing
+    parser.add_argument(
+        "--use-vix-regime-sizing",
+        action="store_true",
+        help="P1.5: Cap position size by VIX regime (50%% in HIGH_VOL, 25%% in CRISIS)",
+    )
+    parser.add_argument(
+        "--vix-size-high-vol-cap",
+        type=float,
+        default=0.50,
+        help="Max position size in ELEVATED VIX regime [default: 0.50]",
+    )
+    parser.add_argument(
+        "--vix-size-crisis-cap",
+        type=float,
+        default=0.25,
+        help="Max position size in STRESS VIX regime [default: 0.25]",
+    )
     # RF3.4: Order book
     parser.add_argument(
         "--use-order-book", action="store_true", help="RF3.4: Use order book microstructure signals"
@@ -490,6 +516,9 @@ def main() -> None:
         options_sentiment_weight=args.options_sentiment_weight,
         use_kelly_sizing=args.use_kelly_sizing,
         kelly_fraction=args.kelly_fraction,
+        use_vix_regime_sizing=args.use_vix_regime_sizing,
+        vix_regime_high_vol_cap=args.vix_size_high_vol_cap,
+        vix_regime_crisis_cap=args.vix_size_crisis_cap,
         use_order_book=args.use_order_book,
         use_signal_strength_sizing=args.use_signal_strength_sizing,
         use_voting_signal=args.use_voting_signal,

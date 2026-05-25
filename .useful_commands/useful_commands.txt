@@ -160,3 +160,36 @@ uv run python -c "from src.indicators.fvg_profile import compute_fvg_profile; fr
 
 # Full smoke test — all 8 indicators + 1 strategy on synthetic data
 uv run python -c "import numpy as np; np.random.seed(42); n=500; c=np.cumsum(np.random.randn(n)*0.02)+100; h=c+np.abs(np.random.randn(n)*0.3); l=c-np.abs(np.random.randn(n)*0.3); o=np.roll(c,1); o[0]=c[0]; v=np.abs(np.random.randn(n)*1000)+100; from src.indicators.fvg_profile import compute_fvg_profile; r=compute_fvg_profile(h,l,v); print(f'FVG: {r.total_gap_count} gaps'); from src.indicators.autotune_filter import auto_tune_filter; hp,mc,dc,bp=auto_tune_filter(c); print(f'AutoTune: dc={dc[-1]:.1f}'); from src.indicators.knn_pivots import compute_knn_pivots; res=compute_knn_pivots(h,l,c); sigs=[r for r in res if r.transition]; print(f'KNN: {len(sigs)} transitions'); from src.indicators.whale_profile import compute_whale_profile; w=compute_whale_profile(h,l,c,v,o); print(f'Whale: max_vol={w.max_bin_volume:.0f}'); from src.indicators.microstructure import compute_microstructure; ms=compute_microstructure(h,l,c,v,o); print(f'Micro: lsi={ms.lsi[-1]:.2f} {ms.regime_strs[-1]}'); from src.indicators.nwo import compute_nwo; osc,sig,hist,_=compute_nwo(h,l,c); print(f'NWO: osc={osc[-1]:.2f}'); from src.indicators.structure_volume import compute_structure_cvd; cvd,atr,profs=compute_structure_cvd(h,l,c,v); print(f'StructVol: {len(profs)} profiles'); from src.indicators.swing_forecast import forecast_next_swing; f=forecast_next_swing(h,l,c); print(f'SwingFcast: {f.projected_pct:.1f}%' if f else 'SwingFcast: not enough data'); print('All smoke tests passed')"
+
+==================================================================================
+         PHASE 25 — POST-BACKTEST STATISTICAL VALIDATION (2026-05-25)
+==================================================================================
+
+# Full comprehensive validation of backtest results (DSR + WFA + Regime Audit + Monte Carlo)
+uv run scripts/validate_strategy.py --json reports/batch/rules_first_OOS_2025_2026.json --symbol SPY --full
+
+# Quick validation (reduced sims, faster)
+uv run scripts/validate_strategy.py --json results.json --symbol SPY --quick
+
+# DSR/PBO only (fast significance check)
+uv run scripts/validate_strategy.py --json results.json --symbol SPY --dsr-only --n-trials 200
+
+# Purged Walk-Forward only
+uv run scripts/validate_strategy.py --json results.json --symbol SPY --wfa-only --is-days 1008 --oos-days 252 --purge-days 21
+
+# Regime audit with VIX data
+uv run scripts/validate_strategy.py --json results.json --symbol SPY --regime-only --vix data/vix.csv --spy data/spy.csv
+
+# Monte Carlo robustness only
+uv run scripts/validate_strategy.py --json results.json --symbol SPY --mc-only --mc-simulations 10000
+
+# Save full report to file
+uv run scripts/validate_strategy.py --json results.json --symbol SPY --full -o reports/validation/SPY_OOS_audit.md
+
+# Python API quick tests
+uv run python -c "import numpy as np; np.random.seed(42); r=np.random.randn(500)*0.015+0.001; from src.analysis.deflated_sharpe import compute_dsr_from_returns; dsr=compute_dsr_from_returns(r,n_trials=200); print(f'DSR={dsr.psr:.3f}')"
+uv run python -c "import numpy as np; np.random.seed(42); r=np.random.randn(500)*0.015+0.001; from src.analysis.purged_walk_forward import PurgedWalkForwardValidator; w=PurgedWalkForwardValidator(is_days=252,oos_days=63,purge_days=10,step_days=63); rep=w.validate(r); print(f'WFE={rep.mean_wfe:.3f} ChainedSR={rep.chained_oos_sharpe:.3f}')"
+uv run python -c "import numpy as np; np.random.seed(42); r=np.random.randn(500)*0.015+0.001; from src.analysis.monte_carlo_robustness import run_full_robustness_check; mc=run_full_robustness_check(r,n_simulations=1000,n_perturbations=50); print(f'MC={mc.combined_score:.0f}/100 Pass={mc.overall_pass}')"
+
+# P1.5 VIX regime-adaptive position sizing (use with backtest)
+uv run scripts/backtest_rules_first.py SPY --start 2025-01-01 --end 2026-05-16 --entry-threshold 0.55 --min-reliability 0.70 --use-vix-regime-sizing

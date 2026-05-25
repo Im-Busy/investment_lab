@@ -882,6 +882,102 @@ uv run scripts/backtest_rules_first.py SPY --start 2025-01-01 --end 2026-05-16 \
 | `--use-kelly-sizing` | False | Kelly-derived fraction-of-equity position sizing (RF3.3) |
 | `--kelly-fraction` | 0.5 | Kelly fraction: 0.5=half-Kelly, 0.25=quarter |
 | `--use-order-book` | False | Bid-ask imbalance signal modifier (RF3.4) |
+| `--use-vix-regime-sizing` | False | P1.5: Cap position size by VIX regime (50% HIGH_VOL, 25% CRISIS) |
+| `--vix-size-high-vol-cap` | 0.50 | Max size fraction in ELEVATED VIX regime |
+| `--vix-size-crisis-cap` | 0.25 | Max size fraction in STRESS VIX regime |
+
+---
+
+## Phase 25 — Post-Backtest Statistical Validation (2026-05-25)
+
+> **CRITICAL:** Run these validation gates before any deployment decision.
+> DSR, Purged WFA, Regime Audit, and Monte Carlo robustness all in one script.
+
+### Comprehensive Validation Suite
+```bash
+# Full validation of a backtest result (JSON)
+uv run scripts/validate_strategy.py --json reports/batch/rules_first_OOS_2025_2026.json --symbol SPY --full
+
+# Full validation from CSV returns column
+uv run scripts/validate_strategy.py --csv data/strategy_returns.csv --column daily_returns --full
+
+# Quick validation (reduced simulations for speed)
+uv run scripts/validate_strategy.py --json results.json --symbol SPY --quick
+
+# Save report to file
+uv run scripts/validate_strategy.py --json results.json --symbol SPY --full -o reports/validation/SPY_OOS.md
+```
+
+### Individual Validation Components
+```bash
+# DSR/PBO only (fast, < 1 second)
+uv run scripts/validate_strategy.py --json results.json --symbol SPY --dsr-only
+
+# Purged Walk-Forward only
+uv run scripts/validate_strategy.py --json results.json --symbol SPY --wfa-only --is-days 1008 --oos-days 252 --purge-days 21
+
+# Regime audit only (with VIX + SPY for regime classification)
+uv run scripts/validate_strategy.py --json results.json --symbol SPY --regime-only --vix data/vix.csv --spy data/spy.csv
+
+# Monte Carlo robustness only
+uv run scripts/validate_strategy.py --json results.json --symbol SPY --mc-only --mc-simulations 10000
+```
+
+### Python API
+```python
+from src.analysis.deflated_sharpe import compute_dsr_from_returns, format_significance_summary
+
+# DSR: Probability true Sharpe > expected max from multiple testing
+dsr = compute_dsr_from_returns(returns, n_trials=200)
+print(f"DSR: {dsr.psr:.3f} (1.0 = definitely not overfit)")
+
+# Full significance summary (DSR + bootstrap CI + permutation test)
+summary = format_significance_summary(returns, n_trials=200, n_trades=50)
+print(f"Significant: {summary.significant}")
+
+# Purged Walk-Forward Analysis
+from src.analysis.purged_walk_forward import PurgedWalkForwardValidator
+wfa = PurgedWalkForwardValidator(is_days=1008, oos_days=252, purge_days=21, step_days=126)
+report = wfa.validate(returns)
+print(f"WFE: {report.mean_wfe:.3f}, Chained OOS Sharpe: {report.chained_oos_sharpe:.3f}")
+
+# Regime Audit
+from src.analysis.regime_audit import audit_regimes, format_regime_report
+ra = audit_regimes(returns, vix=vix_array, spy_returns=spy_returns)
+print(format_regime_report(ra))
+
+# Monte Carlo Robustness
+from src.analysis.monte_carlo_robustness import run_full_robustness_check
+mc = run_full_robustness_check(returns, params={"entry_threshold": 0.55, "min_reliability": 0.70})
+print(f"Score: {mc.combined_score:.0f}/100, Pass: {mc.overall_pass}")
+```
+
+### Validation Flags Reference
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--n-trials` | 200 | Strategy variants for DSR multiple-testing correction |
+| `--is-days` | 1008 | WFA training window in bars (default: 4 years) |
+| `--oos-days` | 252 | WFA test window in bars (default: 1 year) |
+| `--purge-days` | 21 | Purge gap between IS and OOS (default: 1 month) |
+| `--step-days` | 126 | WFA rolling step size (default: 6 months) |
+| `--mc-simulations` | 5000 | Monte Carlo reshuffling iterations |
+| `--mc-perturbations` | 100 | Parameter perturbation draws per param |
+| `--vix` | None | Path to VIX CSV for regime classification |
+| `--spy` | None | Path to SPY CSV for bear/bull drawdown calculation |
+| `--use-svm-regime` | False | Use SVM classifier for regime labeling |
+| `--quick` | False | Reduced simulations (1000 MC, 30 perturbations) |
+
+### Acceptance Criteria
+| Gate | Threshold | What |
+|------|-----------|------|
+| DSR > 0.95 | P(SR > E[max SR]) | Statistically significant after multiple testing |
+| Bootstrap CI > 0 | 95% CI lower bound | Sharpe unlikely due to chance |
+| Permutation p < 0.05 | Empirical p-value | Strategy beats random return shuffling |
+| WFE > 0.50 | OOS/IS return ratio | Strategy stable across walk-forward windows |
+| Majority-Pass > 50% | Windows with OOS Sharpe > 0 | Sufficient robustness |
+| No Catastrophic Veto | No window < -30% return | Strategy has no hidden tail risk |
+| Per-regime Sharpe > 0 | All market regimes | Edge exists across conditions (or sizing issue) |
+| MC Score > 60/100 | Combined robustness | Passes return reshuffling + param perturbation |
 
 ---
 

@@ -169,6 +169,12 @@ class RulesFirstStrategy(Strategy):
     kelly_fraction: float = 0.5
     kelly_max_allocation: float = 0.25
 
+    # P1.5: VIX regime-adaptive position sizing
+    use_vix_regime_sizing: bool = False
+    vix_regime_size_penalty: float = 0.50
+    vix_regime_high_vol_cap: float = 0.50
+    vix_regime_crisis_cap: float = 0.25
+
     # RF3.4: Order book microstructure signals
     use_order_book: bool = False
     order_book_weight: float = 0.05
@@ -231,6 +237,10 @@ class RulesFirstStrategy(Strategy):
         self._vix_mults: np.ndarray | None = None
         if self.use_vix_gate:
             self._init_vix_gate()
+
+        self._vix_regime_sizes: np.ndarray | None = None
+        if self.use_vix_regime_sizing:
+            self._init_vix_regime_sizing()
 
         self._yield_curve_mults: np.ndarray | None = None
         if self.use_yield_curve_gate:
@@ -804,6 +814,7 @@ class RulesFirstStrategy(Strategy):
         else:
             kelly_size = self._compute_kelly_size(score) if self._kelly_alloc else 1.0
             kelly_size = self._compute_signal_strength_size(score, kelly_size)
+            kelly_size = self._apply_regime_size_penalty(idx, kelly_size)
             if score >= self.entry_threshold:
                 self.buy(size=kelly_size)
                 self._trail_high = current_close
@@ -850,3 +861,54 @@ class RulesFirstStrategy(Strategy):
                 base_size * multiplier, self.signal_strength_min_size, self.signal_strength_max_size
             )
         )
+
+    def _init_vix_regime_sizing(self) -> None:
+        """P1.5: Precompute VIX-regime-based position size caps for all bars.
+
+        Uses the existing VIX regime gate to determine regime per bar:
+          - COMPLACENT (VIX < 15): full size (1.0)
+          - NORMAL (15 <= VIX < 25): full size (1.0)
+          - ELEVATED (25 <= VIX < 35): cap at high_vol_cap (default 0.50)
+          - STRESS (VIX >= 35): cap at crisis_cap (default 0.25)
+
+        Source: arXiv:2601.19504 — ATR-based sizing + regime filter
+                arXiv:2509.01393 — volatility targeting + regime penalty overlay
+        """
+        self._vix_regime_sizes = np.ones(self._n_bars, dtype=np.float64)
+        try:
+            from src.signals.vix_regime_gate import VIXRegimeGate
+
+            gate = VIXRegimeGate()
+            dates = self._df.index
+            start_str = str(dates[0].date())
+            gate.fit(start=start_str)
+            for i, d in enumerate(dates):
+                regime = gate.classify(date=d)
+                if regime == "STRESS":
+                    self._vix_regime_sizes[i] = self.vix_regime_crisis_cap
+                elif regime == "ELEVATED":
+                    self._vix_regime_sizes[i] = self.vix_regime_high_vol_cap
+            num_capped = np.sum(self._vix_regime_sizes < 1.0)
+            logger.info(
+                "VIX regime sizing: %d/%d bars capped (%.1f%%)",
+                num_capped,
+                len(dates),
+                100 * num_capped / max(len(dates), 1),
+            )
+        except Exception:
+            logger.warning("VIX regime sizing init failed, disabling", exc_info=True)
+            self._vix_regime_sizes = np.ones(self._n_bars, dtype=np.float64)
+
+    def _apply_regime_size_penalty(self, idx: int, base_size: float) -> float:
+        """P1.5: Apply VIX regime-based position size cap.
+
+        Reduces position size when:
+          - VIX is elevated (25-35): max 50% of base size
+          - VIX is stressed (>35): max 25% of base size
+
+        In all other regimes, passes through unchanged.
+        """
+        if self._vix_regime_sizes is None or idx >= len(self._vix_regime_sizes):
+            return base_size
+        regime_cap = float(self._vix_regime_sizes[idx])
+        return min(base_size, regime_cap)

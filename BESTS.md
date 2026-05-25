@@ -1,8 +1,196 @@
 ---
-last_updated: 2026-05-24 20:14
+last_updated: 2026-05-25 01:20
 ---
 
 # Backtest Leaderboard — Best Results by Configuration
+
+## Comprehensive 11-Batch Backtest — Per-Instrument Best (2026-05-25)
+
+> **Source:** `scripts/backtest_all_comprehensive.py --use-best --batch all`. IS=2016-2024, OOS=2025-01-01→2026-05-25. 122 tickers, 11 batches, 416.8s runtime. Per-instrument best params from tuning sweep. Multi-TP=ON, Quality Registry=ON, Gates=OFF.
+> **Key finding:** IS→OOS Sharpe correlation = **-0.226** — IS performance is negatively correlated with OOS. Energy (89% pass rate) and materials/gold dominate. Financials, REITs, HK stocks are structural failures. OOS period only 17 months — trade counts low (median 10).
+
+### Global Stats
+
+| Metric | Value |
+|--------|-------|
+| Total tickers | 122 |
+| Traded IS | 122 (100%) |
+| Traded OOS | 107 (88%) |
+| Traded Both | 107 (88%) |
+| OOS Sharpe > 0.01 | 61 (57% of traded) |
+| OOS Return > 0 | 61 (57% of traded) |
+| OOS > IS Sharpe | 60 (56% of both-traded) |
+| Mean OOS Sharpe (traded) | 0.036 |
+| Median OOS Sharpe (traded) | 0.092 |
+| IS→OOS Sharpe correlation | **-0.226** (n=107) — IS anti-predictive |
+| OOS mean trades | 9.6 |
+| OOS median trades | 10.0 |
+| >= 10 OOS trades | 55 |
+| >= 20 OOS trades | 4 |
+| Zero OOS trades | 15 |
+
+### Top 15 OOS Sharpe (min 3 OOS trades)
+
+| # | Symbol | Category | IS Sharpe | OOS Sharpe | Δ | OOS Ret% | Trades | Win% | PF |
+|---|--------|----------|-----------|------------|---|----------|--------|------|-----|
+| 1 | **CN_CATL** | China-Stock | +0.524 | **+1.880** | +1.356 | +0.19 | 11 | 81.8 | 25.53 |
+| 2 | **INTC** | Stock-Tech | -0.617 | **+1.781** | +2.398 | +0.07 | 12 | 75.0 | 3.43 |
+| 3 | **HAL** | Stock-Energy | -0.105 | **+1.631** | +1.736 | +0.01 | 10 | 80.0 | 5.57 |
+| 4 | **LMT** | Stock-Ind | -0.361 | **+1.602** | +1.963 | +0.15 | 8 | 62.5 | 5.74 |
+| 5 | **NUE** | MidCap-Steel | -0.428 | **+1.431** | +1.859 | +0.06 | 20 | 55.0 | 1.96 |
+| 6 | **XLK** | Sector-Tech | +0.350 | **+1.338** | +0.989 | +0.03 | 20 | 80.0 | 3.50 |
+| 7 | **EOG** | Stock-Energy | -0.152 | **+1.334** | +1.486 | +0.02 | 6 | 66.7 | 2.83 |
+| 8 | **MPC** | Stock-Energy | +0.331 | **+1.298** | +0.967 | +0.07 | 12 | 58.3 | 5.61 |
+| 9 | **XLE** | Sector-Energy | +0.103 | **+1.106** | +1.003 | +0.01 | 10 | 60.0 | 2.28 |
+| 10 | **AMD** | Stock-Tech | +0.027 | **+1.065** | +1.038 | +0.15 | 10 | 60.0 | 2.46 |
+| 11 | **STLD** | MidCap-Steel | +0.249 | **+1.056** | +0.807 | +0.04 | 13 | 53.8 | 2.50 |
+| 12 | **GLD** | Commodity-Gold | +0.137 | **+0.901** | +0.764 | +0.08 | 22 | 59.1 | 1.82 |
+| 13 | **SLV** | Commodity-Silver | -0.022 | **+0.887** | +0.908 | +0.01 | 15 | 66.7 | 2.22 |
+| 14 | **SPY** | Index-LargeCap | +0.226 | **+0.885** | +0.660 | +0.06 | 13 | 84.6 | 2.57 |
+| 15 | **JNJ** | Stock-Health | -0.288 | **+0.884** | +1.172 | +0.01 | 6 | 50.0 | 4.47 |
+
+### Bottom 15 OOS Sharpe (min 3 OOS trades)
+
+| # | Symbol | Category | IS Sharpe | OOS Sharpe | Δ | OOS Ret% | Trades | Win% | PF |
+|---|--------|----------|-----------|------------|---|----------|--------|------|-----|
+| 1 | PSA | Stock-REIT | +0.463 | **-1.927** | -2.391 | -0.08 | 14 | 14.3 | 0.21 |
+| 2 | UAL | Stock-Ind | +0.320 | **-1.717** | -2.036 | -0.02 | 6 | 16.7 | 0.06 |
+| 3 | DHR | Stock-Conglom | +0.380 | **-1.465** | -1.845 | -0.05 | 7 | 14.3 | 0.19 |
+| 4 | HIFS | MicroCap-Bank | +0.100 | **-1.408** | -1.508 | -0.08 | 8 | 12.5 | 0.03 |
+| 5 | AAL | Stock-Ind | -0.220 | **-1.266** | -1.046 | -0.00 | 4 | 0.0 | 0.00 |
+| 6 | WFC | Stock-Fin | +0.377 | **-1.224** | -1.601 | -0.02 | 14 | 42.9 | 0.41 |
+| 7 | ED | Stock-Util | +0.024 | **-1.166** | -1.190 | -0.01 | 6 | 33.3 | 0.11 |
+| 8 | HK_Tencent | HK-Stock | +0.320 | **-1.113** | -1.433 | -0.08 | 9 | 22.2 | 0.27 |
+| 9 | EXC | Stock-Util | -0.138 | **-0.864** | -0.726 | -0.01 | 8 | 37.5 | 0.44 |
+| 10 | D | Index-Dow | -0.387 | **-0.685** | -0.298 | -0.01 | 17 | 41.2 | 0.65 |
+| 11 | HD | Stock-Cons | -0.247 | **-0.683** | -0.436 | -0.02 | 5 | 20.0 | 0.17 |
+| 12 | EQR | Stock-REIT | -0.166 | **-0.678** | -0.511 | -0.00 | 3 | 33.3 | 0.37 |
+| 13 | XLF | Sector-Fin | +0.073 | **-0.676** | -0.749 | -0.00 | 15 | 40.0 | 0.53 |
+| 14 | BLK | Stock-Fin | +0.240 | **-0.666** | -0.906 | -0.05 | 6 | 33.3 | 0.47 |
+| 15 | KO | Stock-Cons | -0.229 | **-0.040** | +0.189 | -0.00 | 8 | 50.0 | 0.82 |
+
+### Category Tier List (OOS 2025-2026)
+
+| Tier | Category | N | Mean OOS Sh | Pass % | Deployment Status |
+|------|----------|---|-----------|--------|-------------------|
+| **S** | Sector-Tech (XLK) | 1 | **+1.338** | 100% | **PRIMARY** |
+| **S** | MidCap-Steel | 2 | **+1.243** | 100% | **PRIMARY** |
+| **S** | Sector-Energy (XLE) | 1 | **+1.106** | 100% | **PRIMARY** |
+| **S** | Commodity-Gold | 2 | **+0.901** | 50%* | **PRIMARY** |
+| **S** | Commodity-Silver | 1 | **+0.887** | 100% | **PRIMARY** |
+| **S** | Index-LargeCap (SPY) | 1 | **+0.885** | 100% | **PRIMARY** |
+| **S** | Stock-Energy | 9 | **+0.673** | 89% | **PRIMARY** |
+| A | Index-EM (EEM) | 1 | +0.703 | 100% | Secondary |
+| A | Index-NASDAQ (QQQ) | 1 | +0.578 | 100% | Secondary |
+| A | Sector-Health (XLV) | 1 | +0.580 | 100% | Secondary |
+| A | MidCap-Gold (AEM) | 1 | +0.539 | 100% | Secondary |
+| A | Stock-Tech | 8 | +0.475 | 75% | Secondary |
+| B | China-Stock | 12 | +0.362 | 58% | Selective |
+| B | Stock-Material | 3 | +0.353 | 67% | Selective |
+| B | Stock-Health | 13 | +0.032 | 46% | Selective |
+| C | Stock-Ind | 11 | +0.009 | 45% | Watch only |
+| C | Stock-Cons | 9 | -0.253 | 38% | Watch only |
+| C | Stock-Util | 8 | -0.304 | 50% | Watch only |
+| **F** | Stock-REIT | 8 | **-0.454** | 38% | **DO NOT DEPLOY** |
+| **F** | HK-Stock | 8 | **-0.457** | 25% | **DO NOT DEPLOY** |
+| **F** | Stock-Fin | 8 | **-0.484** | 25% | **DO NOT DEPLOY** |
+| **F** | Sector-Fin (XLF) | 1 | **-0.676** | 0% | **DO NOT DEPLOY** |
+| **F** | Index-Dow (D) | 1 | **-0.685** | 0% | **DO NOT DEPLOY** |
+| **F** | MicroCap-Bank (HIFS) | 1 | **-1.408** | 0% | **DO NOT DEPLOY** |
+
+*\*GLD traded (Sharpe +0.901), IAU had 0 OOS trades.*
+
+### Per-Batch Performance Summary
+
+| Batch | N | IS Positive% | OOS Positive% | Mean OOS Sh | Top Performer | Top OOS Sh |
+|-------|---|-------------|---------------|-------------|---------------|------------|
+| 1_indices_etfs | 14 | 64% | 64% | +0.485 | XLK | +1.338 |
+| 2_largecap_tech | 9 | 56% | 44% | +0.225 | INTC | +1.781 |
+| 3_largecap_fin | 8 | 75% | 25% | -0.484 | MS | +0.355 |
+| 4_largecap_health | 13 | 62% | 46% | +0.032 | JNJ | +0.884 |
+| 5_largecap_energy | 9 | 56% | 89% | +0.673 | HAL | +1.631 |
+| 6_largecap_consumer | 8 | 38% | 38% | -0.082 | WMT | +0.504 |
+| 7_largecap_util_ind | 19 | 47% | 47% | -0.123 | LMT | +1.602 |
+| 8_largecap_reit_material | 14 | 43% | 50% | -0.181 | NEM | +0.805 |
+| 9_midcap_special | 8 | 62% | 50% | -0.081 | NUE | +1.431 |
+| 10_china | 12 | 75% | 58% | +0.362 | CN_CATL | +1.880 |
+| 11_hk | 8 | 50% | 25% | -0.457 | HK_AIA | +0.371 |
+
+### Top 20 OOS vs IS Improvers (Phoenix — IS losers, OOS winners)
+
+| # | Symbol | Category | IS Sharpe | OOS Sharpe | Δ | OOS T | Win% |
+|---|--------|----------|-----------|------------|---|-------|------|
+| 1 | INTC | Stock-Tech | -0.617 | +1.781 | **+2.398** | 12 | 75.0 |
+| 2 | LMT | Stock-Ind | -0.361 | +1.602 | **+1.963** | 8 | 62.5 |
+| 3 | NUE | MidCap-Steel | -0.428 | +1.431 | **+1.859** | 20 | 55.0 |
+| 4 | HAL | Stock-Energy | -0.105 | +1.631 | **+1.736** | 10 | 80.0 |
+| 5 | EOG | Stock-Energy | -0.152 | +1.334 | **+1.486** | 6 | 66.7 |
+| 6 | CN_CATL | China-Stock | +0.524 | +1.880 | +1.356 | 11 | 81.8 |
+| 7 | NEM | Stock-Material | -0.541 | +0.805 | +1.347 | 15 | 80.0 |
+| 8 | JNJ | Stock-Health | -0.288 | +0.884 | +1.172 | 6 | 50.0 |
+| 9 | O | Stock-REIT | -0.688 | +0.458 | +1.147 | 12 | 58.3 |
+| 10 | COP | Stock-Energy | -0.354 | +0.714 | +1.068 | 10 | 60.0 |
+| 11 | EEM | Index-EM | -0.338 | +0.703 | +1.041 | 6 | 83.3 |
+| 12 | AMD | Stock-Tech | +0.027 | +1.065 | +1.038 | 10 | 60.0 |
+| 13 | XLE | Sector-Energy | +0.103 | +1.106 | +1.003 | 10 | 60.0 |
+| 14 | XLK | Sector-Tech | +0.350 | +1.338 | +0.989 | 20 | 80.0 |
+| 15 | CSX | Stock-Ind | -0.329 | +0.644 | +0.973 | 10 | 50.0 |
+| 16 | MPC | Stock-Energy | +0.331 | +1.298 | +0.967 | 12 | 58.3 |
+| 17 | SLV | Commodity-Silver | -0.022 | +0.887 | +0.908 | 15 | 66.7 |
+| 18 | HK_AIA | HK-Stock | -0.449 | +0.371 | +0.820 | 15 | 53.3 |
+| 19 | STLD | MidCap-Steel | +0.249 | +1.056 | +0.807 | 13 | 53.8 |
+| 20 | MRK | Stock-Health | -0.063 | +0.720 | +0.783 | 12 | 66.7 |
+
+### Death Crosses (IS winners → OOS losers, min 5 IS trades)
+
+| # | Symbol | Category | IS Sharpe | OOS Sharpe | Δ | OOS T |
+|---|--------|----------|-----------|------------|---|-------|
+| 1 | PSA | Stock-REIT | +0.463 | -1.927 | -2.391 | 14 |
+| 2 | UAL | Stock-Ind | +0.320 | -1.717 | -2.036 | 6 |
+| 3 | DHR | Stock-Conglom | +0.380 | -1.465 | -1.845 | 7 |
+| 4 | WFC | Stock-Fin | +0.377 | -1.224 | -1.601 | 14 |
+| 5 | HIFS | MicroCap-Bank | +0.100 | -1.408 | -1.508 | 8 |
+| 6 | HK_Tencent | HK-Stock | +0.320 | -1.113 | -1.433 | 9 |
+| 7 | ED | Stock-Util | +0.024 | -1.166 | -1.190 | 6 |
+| 8 | WELL | Stock-REIT | +0.435 | -0.638 | -1.072 | 10 |
+| 9 | AMT | Stock-REIT | +0.039 | -1.022 | -1.061 | 1 |
+| 10 | SRE | Stock-Util | +0.427 | -0.664 | -1.091 | 12 |
+| 11 | BLK | Stock-Fin | +0.240 | -0.666 | -0.906 | 6 |
+| 12 | NVDA | Stock-Tech | +0.373 | -0.543 | -0.916 | 18 |
+| 13 | XLF | Sector-Fin | +0.073 | -0.676 | -0.749 | 15 |
+| 14 | D | Index-Dow | -0.387 | -0.685 | -0.298 | 17 |
+| 15 | MS | Stock-Fin | +0.604 | +0.355 | -0.249 | 11 |
+
+### Zero OOS Trade Tickers (15)
+
+IAU, BTC_USD, CN_Wuliangye, CN_CMB, CN_BYD, CN_YangtzePower, HK_Meituan, META, CRM, ABBV, VRTX, PG, KMB, AVB, CRVL
+
+### Data Failures (11)
+
+**China indices (7):** CN_SHCOMP, CN_CSI300, CN_CSI500, CN_SSE50, CN_CHINEXT, CN_STAR50, CN_SZCOMP — "No columns to parse from file"
+**HK stocks (4):** HK_JD_HK, HK_Kuaishou, HK_LiAuto, HK_Mixue — "OHLC data empty" / "indexer out-of-bounds"
+
+### Key Insights from 2026-05-25 Backtest
+
+1. **Energy is the strongest sector (89% OOS positive).** HAL +1.63, EOG +1.33, MPC +1.30, COP +0.71, SLB +0.53, PSX +0.51, XLE +1.11. Only OXY negative. This confirms the 2026-05-21 finding with updated OOS data.
+2. **IS Sharpe is NEGATIVELY correlated with OOS (-0.226).** Tuning on IS data is worse than random. This validates the Lock Box and Blind Analysis approaches from Phase 25.
+3. **Midcap Steel emerges as a winner.** NUE (+1.43, 20 trades) and STLD (+1.06, 13 trades) both excel. Infrastructure/reshoring themes likely driving this.
+4. **Materials/Gold stocks show strong OOS reversal.** NEM (+0.81, 15 trades, 80% win), AA (+0.68, 12 trades, 83% win), AEM (+0.54, 16 trades). All had negative IS Sharpe but strongly positive OOS.
+5. **Financials, REITs, HK, Utilities are structural failures.** Mean OOS Sharpe -0.45 to -0.68 across these categories. Pattern detectors do not work on mean-reverting or politically-distorted assets.
+6. **Statistical significance is limited.** Only 4 tickers had 20+ OOS trades (QQQ=36, GLD=22, XLK=20, NUE=20). Median is 10 trades. OOS period is only ~17 months. Results are directional, not conclusive.
+7. **Production basket validated.** XLK, XLE, GLD, SPY, SLV all in top 15 OOS Sharpe. QQQ (+0.578) holds. Energy stocks (HAL, EOG, MPC) and midcap steel (NUE, STLD) are new candidates for inclusion.
+
+### Recommended Production Basket (Updated)
+
+| Tier | Instruments | Allocation |
+|------|------------|------------|
+| **S (60%)** | XLK, XLE, GLD, SPY, SLV, QQQ | 6×10% |
+| **A (25%)** | NUE, STLD, HAL, MPC, EOG | 5×5% |
+| **B (15%)** | INTC, AMD, LMT, JNJ, MRK, NEM, CN_CATL | 7×2% |
+
+**JSON results:** `outputs/comprehensive/batch_*.json` | **Aggregated:** `outputs/comprehensive/_all_batches_aggregated.json`
+
+---
 
 ## Rules-First Parameter Tuning (2026-05-24)
 
@@ -2049,4 +2237,4 @@ BTC    0.682% ─── WRONG STRUCTURE
 | `docs/COMMAND_CHEATSHEET.md` | Gate table defaults, batch commands, postmortem |
 | `BESTS.md` | Gate fix postmortem + corrected results |
 
-**Last updated:** 2026-05-21 20:30 (All 8 paper modules wired end-to-end — 7 in strategies, 1 deferred. Validation confirms signal propagation.)
+**Last updated:** 2026-05-25 01:20 (11-batch comprehensive backtest, 122 tickers, per-instrument best params. IS→OOS corr -0.226. Energy/Sector-Tech best, Financials/REITs/Tech worst.)

@@ -1,15 +1,16 @@
 # Production Basket Configuration
-# Phase 25 — Per-Instrument Tuned Params + Allocation Weights
+# Phase 26 — Bear Market Validated (IS=2016-2021, OOS=2022-2026)
 #
-# Generated: 2026-05-21
-# Source: Comprehensive 108-instrument IS+OOS backtest (11 batches)
+# Generated: 2026-05-25
+# Source: 122-instrument comprehensive backtest + bear market OOS validation
 # Methodology: Per-instrument best configs from 60-combo tuning sweep (et × mr × tsa × cb)
+#              Bear market survival confirmed: 12/18 (67%) positive OOS Sharpe
 #
 # Tier assignments:
-#   S — Primary basket (Energy, ETFs, Indices, Commodities). Mean OOS Sharpe +0.46. 75-89% pass rate.
-#   A — Secondary basket (Select stocks, China industrial). Mean OOS Sharpe +0.12.
-#   B — Selective (Turnaround plays with strong OOS phoenix patterns).
-#   F — EXCLUDED (Financials, HK, Airlines, REITs, MicroCap, Bonds, Forex, Crypto).
+#   S — Primary basket (60% alloc). ETFs + Gold + Silver. Mean OOS Sharpe +0.90 (2025-2026).
+#   A — Secondary (25% alloc). Energy stocks + MidCap-Steel. Mean OOS Sharpe +1.36. Top alpha.
+#   B — Selective (15% alloc). Phoenix plays + defense + China. Mean OOS Sharpe +1.09.
+#   F — EXCLUDED (Financials, HK, REITs, Utilities, Bonds, Forex, MicroCap).
 #
 # Universal defaults (applied when not overridden):
 #   entry_threshold: 0.55
@@ -25,23 +26,16 @@
 #   use_short: false
 
 basket:
-  total_instruments: 22
+  total_instruments: 18
   total_alloc_sum: 1.00
-  description: "Production basket — Tier S + Tier A + Tier B instruments"
+  description: "Production basket v2 — 18 instruments, 3 tiers, bear-market validated"
+  is_period: "2016-2021"
+  oos_period: "2022-2026"
+  is_oos_correlation: -0.226
+  bear_market_oos_pass: "12/18 (67%) ≥60% gate"
 
 instruments:
-  # ── Tier S — Primary (70% allocation) ──
-  - symbol: SPY
-    tier: S
-    alloc: 0.14
-    params:
-      entry_threshold: 0.50
-      trail_stop_atr: 4.0
-      confluence_bonus: 0.05
-    oos_sharpe: 0.89
-    oos_win_rate: 84.6
-    category: Index-LargeCap
-
+  # ── Tier S — Core ETF + Gold/Silver (60% allocation) ──
   - symbol: XLK
     tier: S
     alloc: 0.10
@@ -49,8 +43,10 @@ instruments:
       entry_threshold: 0.55
       trail_stop_atr: 4.0
       confluence_bonus: 0.10
-    oos_sharpe: 1.34
-    oos_win_rate: 80.0
+    oos_2025_sharpe: 1.34
+    bear_oos_sharpe: 0.367
+    bear_oos_return: 0.3
+    bear_trades: 57
     category: Sector-Tech
 
   - symbol: XLE
@@ -60,8 +56,10 @@ instruments:
       entry_threshold: 0.60
       trail_stop_atr: 4.0
       confluence_bonus: 0.05
-    oos_sharpe: 1.11
-    oos_win_rate: 60.0
+    oos_2025_sharpe: 1.11
+    bear_oos_sharpe: -0.283
+    bear_oos_return: -0.1
+    bear_trades: 33
     category: Sector-Energy
 
   - symbol: GLD
@@ -71,156 +69,123 @@ instruments:
       entry_threshold: 0.50
       trail_stop_atr: 2.0
       confluence_bonus: 0.10
-    oos_sharpe: 0.90
-    oos_win_rate: 59.1
+    oos_2025_sharpe: 0.90
+    bear_oos_sharpe: 0.903
+    bear_oos_return: 1.6
+    bear_trades: 111
     category: Commodity-Gold
+    notes: "Bear market safe haven — best OOS (2022-2026). Sharpe 0.903, 60% WR."
+
+  - symbol: SPY
+    tier: S
+    alloc: 0.10
+    params:
+      entry_threshold: 0.50
+      trail_stop_atr: 4.0
+      confluence_bonus: 0.05
+    oos_2025_sharpe: 0.89
+    bear_oos_sharpe: 0.007
+    bear_oos_return: 0.0
+    bear_trades: 67
+    category: Index-LargeCap
+
+  - symbol: SLV
+    tier: S
+    alloc: 0.10
+    params:
+      entry_threshold: 0.50
+      trail_stop_atr: 2.0
+      confluence_bonus: 0.10
+    oos_2025_sharpe: 0.82
+    bear_oos_sharpe: 0.080
+    bear_oos_return: 0.0
+    bear_trades: 63
+    category: Commodity-Silver
 
   - symbol: QQQ
     tier: S
-    alloc: 0.08
+    alloc: 0.10
     params:
       entry_threshold: 0.60
       min_reliability: 0.40
       trail_stop_atr: 4.0
       confluence_bonus: 0.10
-    oos_sharpe: 0.58
-    oos_win_rate: 55.6
+    oos_2025_sharpe: 0.58
+    bear_oos_sharpe: -0.022
+    bear_oos_return: -0.1
+    bear_trades: 166
     category: Index-NASDAQ
 
-  - symbol: SLV
-    tier: S
-    alloc: 0.05
-    params:
-      entry_threshold: 0.50
-      trail_stop_atr: 2.0
-      confluence_bonus: 0.10
-    oos_sharpe: 0.82
-    oos_win_rate: 78.6
-    category: Commodity-Silver
-
-  - symbol: EEM
-    tier: S
-    alloc: 0.05
-    params:
-      entry_threshold: 0.55
-      trail_stop_atr: 4.0
-      confluence_bonus: 0.10
-    oos_sharpe: 1.00
-    oos_win_rate: 70.0
-    category: Index-EM
-
-  - symbol: MPC
-    tier: S
-    alloc: 0.04
-    params:
-      entry_threshold: 0.55
-      trail_stop_atr: 4.0
-      confluence_bonus: 0.10
-    oos_sharpe: 0.93
-    oos_win_rate: 57.1
-    category: Stock-Energy
-
-  - symbol: HAL
-    tier: S
-    alloc: 0.04
-    params:
-      entry_threshold: 0.55
-      trail_stop_atr: 4.0
-      confluence_bonus: 0.10
-    oos_sharpe: 1.63
-    oos_win_rate: 80.0
-    category: Stock-Energy
-
-  - symbol: EOG
-    tier: S
-    alloc: 0.04
-    params:
-      entry_threshold: 0.55
-      trail_stop_atr: 4.0
-      confluence_bonus: 0.10
-    oos_sharpe: 1.33
-    oos_win_rate: 66.7
-    category: Stock-Energy
-
-  - symbol: PSX
-    tier: S
-    alloc: 0.03
-    params:
-      entry_threshold: 0.55
-      trail_stop_atr: 4.0
-      confluence_bonus: 0.10
-    oos_sharpe: 0.94
-    oos_win_rate: 72.7
-    category: Stock-Energy
-
-  - symbol: XOM
-    tier: S
-    alloc: 0.03
-    params:
-      entry_threshold: 0.70
-      trail_stop_atr: 2.0
-      confluence_bonus: 0.05
-    oos_sharpe: 0.23
-    oos_win_rate: 44.4
-    category: Stock-Energy
-
-  # ── Tier A — Secondary (18% allocation) ──
-  - symbol: JNJ
-    tier: A
-    alloc: 0.04
-    params:
-      entry_threshold: 0.55
-      trail_stop_atr: 4.0
-      confluence_bonus: 0.10
-    oos_sharpe: 0.88
-    oos_win_rate: 50.0
-    category: Stock-Health
-
+  # ── Tier A — Energy + MidCap-Steel (25% allocation) ──
   - symbol: NUE
     tier: A
-    alloc: 0.03
+    alloc: 0.05
     params:
       entry_threshold: 0.55
       trail_stop_atr: 4.0
       confluence_bonus: 0.10
-    oos_sharpe: 1.26
-    oos_win_rate: 52.4
+    oos_2025_sharpe: 1.26
+    bear_oos_sharpe: -0.322
+    bear_oos_return: -0.4
+    bear_trades: 66
     category: MidCap-Steel
 
   - symbol: STLD
     tier: A
-    alloc: 0.03
+    alloc: 0.05
     params:
       entry_threshold: 0.55
       trail_stop_atr: 4.0
       confluence_bonus: 0.10
-    oos_sharpe: 1.06
-    oos_win_rate: 53.8
+    oos_2025_sharpe: 1.06
+    bear_oos_sharpe: 0.442
+    bear_oos_return: 0.5
+    bear_trades: 41
     category: MidCap-Steel
 
-  - symbol: CN_CATL
+  - symbol: HAL
     tier: A
-    alloc: 0.02
+    alloc: 0.05
     params:
       entry_threshold: 0.55
       trail_stop_atr: 4.0
       confluence_bonus: 0.10
-    oos_sharpe: 1.88
-    oos_win_rate: 81.8
-    category: China-EV
+    oos_2025_sharpe: 1.63
+    bear_oos_sharpe: 0.212
+    bear_oos_return: 0.1
+    bear_trades: 50
+    category: Stock-Energy
+    notes: "Phoenix — IS -0.93 → Bear OOS +0.21"
 
-  - symbol: XLV
+  - symbol: MPC
     tier: A
-    alloc: 0.02
+    alloc: 0.05
     params:
-      entry_threshold: 0.60
+      entry_threshold: 0.55
       trail_stop_atr: 4.0
-      confluence_bonus: 0.05
-    oos_sharpe: 0.58
-    oos_win_rate: 80.0
-    category: Sector-Health
+      confluence_bonus: 0.10
+    oos_2025_sharpe: 0.93
+    bear_oos_sharpe: 0.555
+    bear_oos_return: 0.8
+    bear_trades: 51
+    category: Stock-Energy
+    notes: "Phoenix — IS -0.21 → Bear OOS +0.56"
 
-  # ── Tier B — Selective (12% allocation) ──
+  - symbol: EOG
+    tier: A
+    alloc: 0.05
+    params:
+      entry_threshold: 0.55
+      trail_stop_atr: 4.0
+      confluence_bonus: 0.10
+    oos_2025_sharpe: 1.33
+    bear_oos_sharpe: -0.712
+    bear_oos_return: -0.5
+    bear_trades: 48
+    category: Stock-Energy
+    notes: "WARNING: Bear OOS -0.71. Monitor closely. 35% WR."
+
+  # ── Tier B — Phoenix Plays + Defense (15% allocation) ──
   - symbol: INTC
     tier: B
     alloc: 0.02
@@ -228,10 +193,12 @@ instruments:
       entry_threshold: 0.55
       trail_stop_atr: 4.0
       confluence_bonus: 0.10
-    oos_sharpe: 1.81
-    oos_win_rate: 75.0
+    oos_2025_sharpe: 1.81
+    bear_oos_sharpe: 0.704
+    bear_oos_return: 0.6
+    bear_trades: 66
     category: Stock-Tech
-    notes: "Phoenix — IS -0.63 → OOS +1.81"
+    notes: "Phoenix — IS -1.19 → Bear OOS +0.70 (+1.89 Δ)"
 
   - symbol: AMD
     tier: B
@@ -240,8 +207,10 @@ instruments:
       entry_threshold: 0.55
       trail_stop_atr: 4.0
       confluence_bonus: 0.10
-    oos_sharpe: 1.10
-    oos_win_rate: 60.0
+    oos_2025_sharpe: 1.10
+    bear_oos_sharpe: 0.498
+    bear_oos_return: 1.4
+    bear_trades: 32
     category: Stock-Tech
 
   - symbol: LMT
@@ -251,48 +220,85 @@ instruments:
       entry_threshold: 0.55
       trail_stop_atr: 4.0
       confluence_bonus: 0.10
-    oos_sharpe: 1.60
-    oos_win_rate: 62.5
-    category: Stock-Ind
+    oos_2025_sharpe: 1.60
+    bear_oos_sharpe: -0.162
+    bear_oos_return: -0.5
+    bear_trades: 59
+    category: Stock-Defense
+    notes: "WARNING: Bear OOS -0.16. Defense underperformed in wartime regime."
 
-  - symbol: REGN
+  - symbol: JNJ
     tier: B
-    alloc: 0.01
+    alloc: 0.02
     params:
       entry_threshold: 0.55
       trail_stop_atr: 4.0
       confluence_bonus: 0.10
-    oos_sharpe: 0.61
-    oos_win_rate: 70.0
+    oos_2025_sharpe: 0.88
+    bear_oos_sharpe: -0.715
+    bear_oos_return: -0.5
+    bear_trades: 51
     category: Stock-Health
+    notes: "WARNING: Negative both IS and bear OOS. Consider dropping."
 
   - symbol: MRK
     tier: B
-    alloc: 0.01
+    alloc: 0.02
     params:
       entry_threshold: 0.55
       trail_stop_atr: 4.0
       confluence_bonus: 0.10
-    oos_sharpe: 0.52
-    oos_win_rate: 61.5
+    oos_2025_sharpe: 0.52
+    bear_oos_sharpe: 0.392
+    bear_oos_return: 0.3
+    bear_trades: 61
     category: Stock-Health
+    notes: "Phoenix — IS -1.05 → Bear OOS +0.39 (+1.44 Δ)"
+
+  - symbol: NEM
+    tier: B
+    alloc: 0.02
+    params:
+      entry_threshold: 0.55
+      trail_stop_atr: 4.0
+      confluence_bonus: 0.10
+    oos_2025_sharpe: 1.23
+    bear_oos_sharpe: 0.378
+    bear_oos_return: 0.2
+    bear_trades: 43
+    category: Stock-GoldMiner
+    notes: "Phoenix — IS -0.48 → Bear OOS +0.38 (+0.85 Δ)"
+
+  - symbol: CN_CATL
+    tier: B
+    alloc: 0.03
+    params:
+      entry_threshold: 0.55
+      trail_stop_atr: 4.0
+      confluence_bonus: 0.10
+    oos_2025_sharpe: 1.88
+    bear_oos_sharpe: 0.805
+    bear_oos_return: 2.1
+    bear_trades: 53
+    category: China-EV
+    notes: "Best all-weather performer. IS 0.60 → Bear OOS 0.81."
 
 # ── Excluded Instruments (Tier F) ──
 # Documented for reference. These categories failed OOS conclusively:
 #   Financials: XLF, JPM, BAC, GS, MS, WFC, C, BLK, SCHW
 #   Hong Kong: HK_Tencent, HK_Xiaomi, HK_BYD_HK, HK_Alibaba_HK
-#   Airlines: UAL, AAL, DAL
 #   REITs: PSA, AMT, EQR, WELL, DHR
-#   MicroCap: HIFS, KODK, CAR
+#   Utilities: SO, DUK, NEE
 #   Bonds: TLT
 #   Forex: EURUSD_X, GBPJPY_X
+#   MicroCap: HIFS, KODK, CAR
 #   Crypto: BTC_USD (zero OOS trades — needs recalibrated registry)
 
 excluded:
   reason_financials: "Pattern detectors designed for trending/momentum markets. Financials mean-revert. Mean OOS Sharpe -0.48."
-  reason_hk: "China regulatory + property crisis broke HK trend patterns. Mean OOS Sharpe -0.46."
-  reason_airlines: "High beta + oil price shocks create false pattern breakouts."
+  reason_hk: "China regulatory + property crisis broke HK trend patterns."
   reason_reits: "Rate-sensitive; 2025 rate uncertainty killed trend signals."
-  reason_microcap: "Liquidity costs destroy edge. 0% OOS positive Sharpe."
+  reason_utilities: "Low vol, range-bound — antithetical to breakout patterns. Mean OOS Sharpe -0.30."
   reason_bonds_forex: "Pattern detectors are equity-native. TLT -0.73, EURUSD 0 trades."
-  reason_crypto: "BTC had IS +1.14 / 83 trades → OOS 0 trades. Quality registry rejects all crypto patterns. Needs crypto-specific calibration."
+  reason_microcap: "Liquidity costs destroy edge. 0% OOS positive Sharpe."
+  reason_crypto: "BTC had IS +1.14 / 83 trades → OOS 0 trades. Quality registry rejects all crypto patterns."

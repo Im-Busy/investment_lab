@@ -509,19 +509,17 @@ def main() -> None:
             mr = best["min_reliability"]
             tsa = best["trail_stop_atr"]
             cb = best.get("confluence_bonus", args.confluence_bonus)
-            # Remove overridden params from kwargs
-            run_kwargs = {
-                k: v
-                for k, v in kwargs.items()
-                if k
-                not in ("entry_threshold", "min_reliability", "trail_stop_atr", "confluence_bonus")
-            }
         else:
             et = args.entry_threshold
             mr = args.min_reliability
             tsa = args.trail_stop_atr
             cb = args.confluence_bonus
-            run_kwargs = kwargs
+        # Always strip explicit params from kwargs to avoid duplicates
+        run_kwargs = {
+            k: v
+            for k, v in kwargs.items()
+            if k not in ("entry_threshold", "min_reliability", "trail_stop_atr", "confluence_bonus")
+        }
 
         r = run_single(
             symbol,

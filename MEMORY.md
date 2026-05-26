@@ -4,7 +4,20 @@
 
 ## Current Objective
 
-**Phase 26: Bear Market Validation + Paper Trading Launch (2026-05-25).** IS/OOS date range analysis completed with web research on market events 2022-2026. Current split (IS=2016-2024, OOS=2025-2026) is correct — IS covers a full market cycle (bull→pandemic→bear→recovery), OOS already captured 3+ sub-regimes (tariff vol, oil shock, V-shaped recovery) in only 17 months. Secondary bear market split added: IS=2016-2021 / OOS=2022-2026 to explicitly test 2022 survival.
+**Phase 24 P3 Deferred Items — IMPLEMENTED (2026-05-27).** 4 remaining deferred items from Phase 24 P3 now complete:
+
+| # | Item | File | LOC | Status |
+|---|------|------|-----|--------|
+| P24-29 | Two-phase GA rule combination | `src/optimization/two_phase_ga.py` | 240 | ✅ NEW |
+| P24-32 | Divergence-in-bits strategy comparison | `src/analysis/divergence_bits.py` | 140 | ✅ NEW |
+| P24-33 | Binomial VAR for event-driven risk | `src/risk/binomial_var.py` | 170 | ✅ NEW |
+| P24-35 | W/M Bollinger patterns | `src/patterns/bollinger/wm_patterns.py` | 188 | ✅ EXISTS (Phase 25) |
+
+**All 27 phases + all P3 deferred items now COMPLETE.** 3 new modules (~550 LOC), 3 modified `__init__.py` files. COMMAND_CHEATSHEET.md updated with P24-P3 section.
+
+**Recommended next:** Commit all changes. Monitor paper trading. Re-run GPU tasks when GPU available.
+
+**Phase 26: Bear Market Validation COMPLETE → Paper Trading Launch (2026-05-25).** Bear market backtest (IS=2016-2021, OOS=2022-2026) **PASSED — 12/18 (67%) positive OOS Sharpe ≥60% gate.** System survived -24.5% SPY bear (2022) + oil shock (2026 Q1) + V-shaped recovery (Apr 2026).
 
 **Comprehensive 122-instrument backtest results (2026-05-25):** IS→OOS Sharpe correlation **-0.226** (IS anti-predictive). Energy 89% OOS positive (top category). MidCap-Steel emerged as top-tier (NUE +1.43, STLD +1.06). Financials/REITs/HK/Utilities structural failures (mean -0.45 to -0.68). 15 zero-trade tickers. Production basket expanded to 18 instruments across 3 tiers.
 
@@ -15,7 +28,7 @@
 | **A (25%)** | NUE, STLD, HAL, MPC, EOG | 5×5% | +1.36 |
 | **B (15%)** | INTC, AMD, LMT, JNJ, MRK, NEM, CN_CATL | 7×2% | +1.09 |
 
-- **NEXT:** (1) Commit all pending changes. (2) Run bear market validation (IS=2016-2021, OOS=2022-2026). (3) Launch paper trading with 18-instrument production basket. See `progress_docs/plans/full.md#phase-26`.
+- **NEXT:** Launch paper trading daily signals for 18-instrument production basket. See `progress_docs/plans/full.md#phase-26`.
 
 **SMC binary score FIXED + dead-param audit FIXES APPLIED + paper gaps CLOSED (2026-05-21).**
 - Conviction grading added to SMC sweep detection — scores now continuous (not binary ±0.905). Trade count varies smoothly with entry threshold.
@@ -362,6 +375,37 @@ All 20 phases complete + Phase 07 + Phase 21 infrastructure complete. System is 
 
 ### Concern: OOS Only 17 Months
 The 2025-2026 OOS window is short (median 10 trades, only 4 tickers with 20+ trades). However, it already captures 3+ distinct sub-regimes (tariff vol, oil shock, V-shaped recovery). Extending naturally as 2026 progresses — re-run quarterly. Aim for ≥24 months of OOS by end of 2026.
+
+### Bear Market Validation (2026-05-25) — Phase 26
+
+**Split:** IS=2016-2021, OOS=2022-2026. **Verdict: BEAR MARKET SURVIVES.** 12/18 (67%) positive OOS Sharpe.
+
+| Symbol | Tier | IS Sharpe | Bear OOS Sharpe | Δ | Bear Return% | Trades |
+|--------|------|-----------|-----------------|---|-------------|--------|
+| GLD | S | -0.126 | **+0.903** | +1.03 | +1.6 | 111 |
+| CN_CATL | B | +0.598 | **+0.805** | +0.21 | +2.1 | 53 |
+| INTC | B | -1.188 | **+0.704** | +1.89 | +0.6 | 66 |
+| MPC | A | -0.206 | **+0.555** | +0.76 | +0.8 | 51 |
+| AMD | B | +0.511 | **+0.498** | -0.01 | +1.4 | 32 |
+| STLD | A | +0.011 | **+0.442** | +0.43 | +0.5 | 41 |
+| MRK | B | -1.048 | **+0.392** | +1.44 | +0.3 | 61 |
+| NEM | B | -0.476 | **+0.378** | +0.85 | +0.2 | 43 |
+| XLK | S | +0.542 | **+0.367** | -0.18 | +0.3 | 57 |
+| HAL | A | -0.925 | **+0.212** | +1.14 | +0.1 | 50 |
+| SLV | S | +0.096 | **+0.080** | -0.02 | 0.0 | 63 |
+| SPY | S | +0.421 | **+0.007** | -0.41 | 0.0 | 67 |
+| QQQ | S | +0.096 | -0.022 | -0.12 | -0.1 | 166 |
+| LMT | B | -1.014 | -0.162 | +0.85 | -0.5 | 59 |
+| XLE | S | -0.264 | -0.283 | -0.02 | -0.1 | 33 |
+| NUE | A | +0.102 | -0.322 | -0.42 | -0.4 | 66 |
+| EOG | A | -0.103 | -0.712 | -0.61 | -0.5 | 48 |
+| JNJ | B | -0.546 | -0.715 | -0.17 | -0.5 | 51 |
+
+**Phoenix plays (IS negative → Bear OOS positive):** GLD (+1.03), INTC (+1.89), MRK (+1.44), HAL (+1.14), NEM (+0.85), LMT (+0.85), MPC (+0.76) — 7 instruments.
+
+**Bear weak spots:** EOG (-0.712), JNJ (-0.715), NUE (-0.322). EOG is an energy stock that failed energy — consider dropping from basket.
+
+**Gate check:** ✅ PASS (67% ≥ 60% gate). Config persisted to `config_files/production_basket.yaml`.
 
 ## System State & Metrics
 

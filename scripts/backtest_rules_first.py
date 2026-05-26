@@ -85,6 +85,9 @@ def run_single(
     use_voting_signal: bool = False,
     voting_signal_weight: float = 0.15,
     use_rules_catalog: bool = False,
+    use_tadgan_gate: bool = False,
+    tadgan_model_path: str = "",
+    tadgan_gate_threshold_pct: float = 95.0,
     rules_catalog_weight: float = 0.10,
     use_divergence: bool = False,
     divergence_weight: float = 0.20,
@@ -151,6 +154,9 @@ def run_single(
         divergence_weight=divergence_weight,
         use_wm_bollinger=use_wm_bollinger,
         wm_bollinger_weight=wm_bollinger_weight,
+        use_tadgan_gate=use_tadgan_gate,
+        tadgan_model_path=tadgan_model_path,
+        tadgan_gate_threshold_pct=tadgan_gate_threshold_pct,
     )
 
     # Buy & Hold comparison
@@ -434,6 +440,23 @@ def main() -> None:
         "--use-order-book", action="store_true", help="RF3.4: Use order book microstructure signals"
     )
     parser.add_argument(
+        "--use-tadgan-gate",
+        action="store_true",
+        help="Phase 27C: Block entries during TadGAN-detected anomaly bars",
+    )
+    parser.add_argument(
+        "--tadgan-model",
+        type=str,
+        default="",
+        help="Path to pre-trained TadGAN model (.pt) for anomaly gate",
+    )
+    parser.add_argument(
+        "--tadgan-threshold-pct",
+        type=float,
+        default=95.0,
+        help="Anomaly threshold percentile for TadGAN gate [default: 95]",
+    )
+    parser.add_argument(
         "--use-signal-strength-sizing",
         action="store_true",
         help="P24-17: Signal-strength dynamic position sizing (|score|>=0.45→3 lots, <0.15→2 lots, <0.05→1)",
@@ -529,6 +552,9 @@ def main() -> None:
         divergence_weight=args.divergence_weight,
         use_wm_bollinger=args.use_wm_bollinger,
         wm_bollinger_weight=args.wm_bollinger_weight,
+        use_tadgan_gate=args.use_tadgan_gate,
+        tadgan_model_path=args.tadgan_model,
+        tadgan_gate_threshold_pct=args.tadgan_threshold_pct,
     )
     all_results: list[dict] = []
 

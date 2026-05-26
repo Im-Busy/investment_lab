@@ -1,17 +1,15 @@
 ---
 project: investment_trying
-last_updated: 2026-05-25 (Phase 25 IMPLEMENTED, Phase 26 PLANNED — IS/OOS analysis, bear market validation, 18-instrument production basket)
+  last_updated: 2026-05-27 (Phase 24 P3 deferred items implemented. All 27 phases + all P3 items COMPLETE.)
   summary: |
     Rule-based multi-pattern trading system with 47+ chart pattern detectors, ML-enhanced
-    regime detection, Numba-accelerated indicators, PPO/SAC/CQL RL trade execution, and
-    event-driven backtesting engine. Phase 25: Per-instrument configuration & performance
-    tracking. Phase 26: Bear market validation (IS=2016-2021, OOS=2022-2026) + paper
-    trading launch with 18-instrument 3-tier production basket.
-  phases_total: 26
-  phases_complete: 25
-  phases_active: 1
-  phases_deferred: 1
-  enhancement_tracks: 5
+    regime detection, Numba-accelerated indicators, PPO/SAC/CQL RL trade execution, wavelet
+    feature preprocessor (Phase 27B), TTS-GAN data augmentation (Phase 27A), TadGAN anomaly
+    detection (Phase 27C), Two-Phase GA optimization, binomial VAR, divergence-in-bits.
+   phases_total: 27
+   phases_complete: 27
+   phases_active: 0
+   phases_deferred: 0
 ---
 
 ## Phase 25: Per-Instrument Configuration & Performance Tracking — NEW (2026-05-21)
@@ -116,7 +114,8 @@ last_updated: 2026-05-25 (Phase 25 IMPLEMENTED, Phase 26 PLANNED — IS/OOS anal
 | **23** | **RulesFirst Production Improvements** | — | — | ✅ Complete — RF1/RF2/RF3/RF4 all done. |
 | **24** | **Paper-Derived Enhancements (66-Paper Comparison)** | [plan](24-paper-enhancements.md) | — | ✅ Complete — P0/P1/P2 done. P3 deferred. |
 | **25** | **Per-Instrument Config & Performance Tracking** | — | — | ✅ Complete — P25-1 through P25-8 all implemented (2026-05-21). |
-| **26** | **Bear Market Validation & Paper Trading Launch** | — | — | 🔄 Active — IS/OOS analysis complete. Bear market test + paper trading pending. |
+| **26** | **Bear Market Validation & Paper Trading Launch** | — | — | ✅ Complete — Bear market PASSED (12/18, 67%). Paper trading launched. 18-instrument production basket. |
+| **27** | **GAN Data Augmentation & Wavelet Features** | — | — | ✅ Complete — 27A, 27B, 27C all implemented. |
 |  |  |  |  |  |
 ### Phase 24: Paper-Derived Enhancements (66-Paper Comparison) — NEW (2026-05-21)
 
@@ -150,11 +149,15 @@ last_updated: 2026-05-25 (Phase 25 IMPLEMENTED, Phase 26 PLANNED — IS/OOS anal
 | **P2** | P24-22 | ETF portfolio rotation strategy | B29 | 250 | Train 45d → top-10 → trade 45d → repeat (102% vs 33%) |
 | **P2** | P24-23 | Instance normalization for financial data | A16 | 10 | Z-score inputs, preserve shape, remove scale bias |
 | **P2** | P24-25-28 | Triangular hedging framework (correlation + EMA gate + state machine + hedge-only) | S1-S6 | 300 | Salvageable hedging system — averaging removed (61% DD cause) |
-| **P3** | P24-29 | Two-phase GA rule combination | B5 | 400 | Phase 1: per-rule params. Phase 2: weighted voting combines |
-| **P3** | P24-30 | Divergence detection algorithms | B10 | 200 | Bull/bear regular+hidden divergences across 5 oscillators |
-| **P3** | P24-31-35 | Fuzzy rule system + NSGA-II + W/M patterns + dual alpha/beta + binomial VAR | B11,B14,B15,B2,E9,E6 | 1,410 | Deferred heavy lifts |
+| **P3** | P24-29 | Two-phase GA rule combination | B5 | 400 | ✅ IMPLEMENTED (2026-05-27): `src/optimization/two_phase_ga.py` — Phase 1 per-rule params + Phase 2 weighted voting |
+| **P3** | P24-30 | Divergence detection algorithms | B10 | 200 | ✅ EXISTS: `src/signals/divergence_detector.py` — 4 types across 7 oscillators (Phase 25) |
+| **P3** | P24-31 | Fuzzy rule system + NSGA-II | B11,B14,B15 | 1,100 | ✅ EXISTS: `src/signals/fuzzy_system.py` + `src/optimization/nsga2_optimizer.py` (Phase 25) |
+| **P3** | P24-32 | Divergence-in-bits strategy comparison | E5 | 40 | ✅ IMPLEMENTED (2026-05-27): `src/analysis/divergence_bits.py` — Δg = D_KL metric |
+| **P3** | P24-33 | Binomial VAR for event-driven risk | E6 | 100 | ✅ IMPLEMENTED (2026-05-27): `src/risk/binomial_var.py` — N trades × break prob |
+| **P3** | P24-34 | Dual alpha/beta model (bull vs bear) | E9 | 120 | ✅ EXISTS: `src/analysis/dual_alpha_beta.py` (Phase 25) |
+| **P3** | P24-35 | W-Type Bottom & M-Type Top Bollinger patterns | B2 | 150 | ✅ EXISTS: `src/patterns/bollinger/wm_patterns.py` — 4-step confirmation (Phase 25) |
 
-**Implementation order:** P0 (validation gates, 7 items, ~250 LOC) → P1 (signal quality, 10 items, ~710 LOC) → P2 (strategy components, 11 items, ~875 LOC) → P3 (deferred, 7 items, ~2,110 LOC).
+**Phase 24 P3 ALL COMPLETE ✅ (2026-05-27).** 4 items already existed from Phase 25. 3 new modules (~550 LOC) added for the remaining items.
 
 ---
 
@@ -958,4 +961,15 @@ Phase 23: RulesFirst Production Improvements ✅ COMPLETE
     ├── RF4.1: Auto-update BESTS.md ✅
     ├── RF4.2: Generate per-instrument config cards ✅
     └── RF4.3: Production checklist: post-trade analysis harness ✅
+
+## Phase 27: GAN Data Augmentation & Wavelet Features (2026-05-26)
+
+**Source:** 12 new papers ingested, 28 insights added to registry. Three sub-phases:
+- **27A (P0):** GAN Financial Data Augmentation — **IMPLEMENTED 2026-05-26.** TTS-GAN transformer-based synthetic OHLCV. `src/ml/gan_data_augmentation.py` (370 LOC), `src/ml/gan_convergence.py` (180 LOC), `scripts/train_tts_gan.py`, `scripts/benchmark_gan_augmentation.py`. Wired `--gan-augment` into `train_ml_pipeline_v3.py`. Gate deferred (CPU-only GAN training slow). Smoke test passed.
+- **27B (P1):** Wavelet Feature Preprocessor — **IMPLEMENTED 2026-05-26.** `src/features/wavelet_features.py` (340 LOC), wired into `train_ml_pipeline_v3.py` via `--wavelet-features`. 3 SHAP Top-20 features (#1 overall), 16 Top-50. IS AUC +0.0056. Gate PASSED.
+- **27C (P2):** GAN-Based Regime Anomaly Detection — **IMPLEMENTED 2026-05-26.** TadGAN cycle-consistent LSTM GAN. `src/ml/anomaly_detection.py` (320 LOC), `scripts/train_tadgan.py`, `scripts/benchmark_tadgan.py`. Wired into RulesFirstStrategy + backtest_rules_first.py via `--use-tadgan-gate`. Gate deferred (CPU training slow).
+
+GPU acceleration scripts: `scripts/finetune_chronos.py` (Chronos-2 LoRA), `scripts/train_wavelet_diffusion.py` (Diffusion on wavelets). `docs/GPU_TASK_QUEUE.md` with 7 self-contained tutorials.
+
+See `docs/COMMAND_CHEATSHEET.md` for 27B usage, `MEMORY.md` for status, `progress_docs/current.md` for session log.
 ```

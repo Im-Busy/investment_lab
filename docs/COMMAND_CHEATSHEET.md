@@ -1115,6 +1115,106 @@ uv run python -c "from src.strategies.triangular_hedge import select_hedge_pairs
 uv run python -c "from src.strategies.triangular_hedge import run_hedge_only_backtest, HedgeOnlyConfig; import pandas as pd; import numpy as np; pa = pd.Series(np.cumsum(np.random.randn(300)*0.01)+100); pb = pd.Series(np.cumsum(np.random.randn(300)*(-0.008))+100); trades = run_hedge_only_backtest(pa, pb, HedgeOnlyConfig()); print(f'{len(trades)} trades')"
 ```
 
+## Phase 24 P3 — Deferred Heavy Lifts (2026-05-27)
+
+### P24-29: Two-Phase GA Rule Combination
+
+```python
+from src.optimization.two_phase_ga import TwoPhaseGA, RuleDef, TwoPhaseGAResult
+from src.optimization.nsga2_optimizer import ParamDef
+
+# Define rules with parameter bounds and evaluation functions
+rules = [
+    RuleDef(
+        name="double_bottom",
+        params=[ParamDef("lookback", 5, 50, is_integer=True),
+                ParamDef("threshold", 0.5, 0.95)],
+        eval_fn=lambda p: evaluate_double_bottom(**p),
+    ),
+    RuleDef(
+        name="head_shoulders",
+        params=[ParamDef("min_period", 10, 60, is_integer=True),
+                ParamDef("neckline_tolerance", 0.01, 0.05)],
+        eval_fn=lambda p: evaluate_head_shoulders(**p),
+    ),
+]
+
+two_phase = TwoPhaseGA(rules)
+result = two_phase.optimize()
+print(result.summary())
+```
+
+### P24-32: Divergence-in-Bits Strategy Comparison
+
+```bash
+# Compare two strategies using divergence-in-bits (unit-independent, more robust than Sharpe)
+uv run python -c "
+from src.analysis.divergence_bits import compute_divergence_bits, compare_vs_benchmark, compare_multiple
+import numpy as np
+r_a = np.random.randn(200)*0.01 + 0.001
+r_b = np.random.randn(200)*0.015 + 0.0005
+r_bench = np.random.randn(200)*0.01
+print(compare_vs_benchmark(r_a, r_bench, 'Strategy', 'SPY'))
+print(compare_vs_benchmark(r_b, r_bench, 'Strategy', 'SPY'))
+"
+
+# Multi-strategy pairwise comparison
+uv run python -c "
+from src.analysis.divergence_bits import compare_multiple
+import numpy as np
+strategies = {
+    'Rules-First': np.random.randn(200)*0.01 + 0.001,
+    'SMC/ICT': np.random.randn(200)*0.012 + 0.0003,
+    'Combined': np.random.randn(200)*0.011 + 0.0007,
+}
+for r in compare_multiple(strategies):
+    print(f'{r.strategy_a_name} vs {r.strategy_b_name}: Δg={r.delta_g_bits:.3f} bits → {r.winner} wins')
+"
+```
+
+### P24-33: Binomial VAR for Event-Driven Risk
+
+```bash
+# Compute binomial VaR for event-driven strategy (N trades × success probability)
+uv run python -c "
+from src.risk.binomial_var import compute_binomial_var, size_position_binomial
+result = compute_binomial_var(n_trades=50, success_prob=0.60, avg_win_pct=0.02, avg_loss_pct=0.015)
+print(f'95% VaR: {result.var_pct*100:.2f}%, CVaR: {result.cvar_pct*100:.2f}%')
+print(f'Breakeven: {result.loss_breakeven_k} losses out of {result.n_trades} trades')
+
+# Size position based on VaR constraint
+sizing = size_position_binomial(capital=100000, n_trades=10, success_prob=0.55, max_var_pct=0.05)
+print(f'Max size per trade: \${sizing[\"max_size_per_trade\"]:.0f}, Risk util: {sizing[\"risk_utilization\"]:.1%}')
+"
+```
+
+### P24-35: W-Type Bottom & M-Type Top Bollinger Patterns
+
+```bash
+# Detect W-Bottom and M-Top patterns (already in src/patterns/bollinger/wm_patterns.py)
+uv run python -c "
+from src.patterns.bollinger import detect_w_bottom, detect_m_top, detect_wm_bollinger
+import yfinance as yf
+df = yf.download('SPY', '2025-01-01', '2026-05-01', auto_adjust=False)
+result = detect_wm_bollinger(df)
+w_count = result['w_bottom'].sum()
+m_count = (result['m_top'] != 0).sum()
+print(f'W-Bottom signals: {w_count}, M-Top signals: {m_count}')
+"
+```
+
+### Phase 24 P3 File Changes
+
+| File | Change |
+|------|--------|
+| `src/optimization/two_phase_ga.py` | NEW — TwoPhaseGA, RuleDef, TwoPhaseGAResult, Phase1Result (Phase1 per-rule + Phase2 weighted voting) |
+| `src/analysis/divergence_bits.py` | NEW — compute_divergence_bits, compare_vs_benchmark, compare_multiple (Δg = D_KL divergence) |
+| `src/risk/binomial_var.py` | NEW — compute_binomial_var, size_position_binomial, BinomialVaRResult (forward-looking risk) |
+| `src/patterns/bollinger/wm_patterns.py` | EXISTING — detect_w_bottom, detect_m_top, detect_wm_bollinger (Phase 25) |
+| `src/optimization/__init__.py` | MODIFIED — +TwoPhaseGA, TwoPhaseGAResult, Phase1Result, RuleDef |
+| `src/analysis/__init__.py` | MODIFIED — +DivergenceBitsResult, compute_divergence_bits, compare_vs_benchmark, compare_multiple |
+| `src/risk/__init__.py` | MODIFIED — +compute_binomial_var, size_position_binomial, BinomialVaRResult |
+
 ## Phase 23 RF1 — Cross-Asset Tuning (2026-05-21)
 
 ```bash
@@ -1355,3 +1455,206 @@ uv run python -c "from src.per_instrument.timezone_registry import get_session_f
 | `docs/COMMAND_CHEATSHEET.md` | MODIFIED — Phase 25 section with all new commands |
 | `progress_docs/plans/full.md` | MODIFIED — Phase 25 added to master plan |
 | `progress_docs/current.md` | MODIFIED — Session log entry for 2026-05-21 |
+
+## Phase 27B — Wavelet Feature Preprocessor (2026-05-26)
+
+Multi-level Daubechies-4 wavelet decomposition as deterministic feature pipeline. Extracts 34-114 features per instrument series (per-level stats, cross-level correlation, volatility decomposition). Precomputed wavelet features can be joined with existing CatBoost/LSTM feature matrices.
+
+**Prerequisite:** `pywt` (PyWavelets) — already installed in project environment.
+
+### Training with Wavelet Features
+
+```bash
+# Train CatBoost with wavelet features enabled
+# Adds 114 wavelet features (Close+High+Low × 34 price-wavelet + 4 volatility-wavelet)
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --wavelet-features --fast
+
+# Basket training with wavelet features
+uv run scripts/train_ml_pipeline_v3.py --basket SPY,QQQ,GLD,XLK --wavelet-features --fast
+
+# With CPCV cross-validation
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --wavelet-features --cv-method cpcv --fast
+```
+
+### Benchmark Wavelet vs Baseline
+
+```bash
+# Single instrument benchmark (4 models: IS+OOS × baseline+wavelet)
+uv run scripts/benchmark_wavelet_features.py --symbol SPY --fast
+
+# Multi-instrument benchmark
+uv run scripts/benchmark_wavelet_features.py --basket SPY,QQQ,GLD,XLK --fast
+
+# Custom IS/OOS split
+uv run scripts/benchmark_wavelet_features.py --symbol SPY --is-start 2016-01-01 --is-end 2021-12-31 --oos-start 2022-01-01 --oos-end 2026-05-01
+```
+
+### SHAP Feature Importance Analysis
+
+```bash
+# Analyze which wavelet features rank highest
+uv run scripts/analyze_wavelet_importance.py --symbol SPY
+
+# Multi-instrument SHAP analysis (gate: ≥3/5 must have wavelet in top-20)
+uv run scripts/analyze_wavelet_importance.py --basket SPY,QQQ,GLD,XLK,SLV
+```
+
+### Wavelet Feature API
+
+```python
+from src.features.wavelet_features import (
+    WaveletFeatureExtractor,
+    compute_wavelet_features,
+    compute_wavelet_volatility_features,
+    compute_wavelet_price_volume_features,
+)
+
+# Extract wavelet features from OHLCV DataFrame
+wfx = compute_wavelet_price_volume_features(df)  # 114 features
+
+# Single-series wavelet decomposition (34 features)
+wf = compute_wavelet_features(df['Close'], window=128, levels=5)
+
+# Volatility decomposition (4 features: structural, micro, macro, regime shift ratio)
+vf = compute_wavelet_volatility_features(df['Close'])
+
+# Sklearn-compatible transformer
+extractor = WaveletFeatureExtractor(output='reduced')  # 20 most important
+features = extractor.transform(df)
+```
+
+### Phase 27B File Changes
+
+| File | Change |
+|------|--------|
+| `src/features/wavelet_features.py` | NEW — `WaveletFeatureExtractor`, `compute_wavelet_features`, `compute_wavelet_volatility_features`, `compute_wavelet_price_volume_features` |
+| `src/features/__init__.py` | MODIFIED — +4 exports |
+| `scripts/train_ml_pipeline_v3.py` | MODIFIED — `--wavelet-features` flag, `use_wavelet` param wires into `extract_features()` → CatBoost training |
+| `scripts/benchmark_wavelet_features.py` | NEW — 4-model IS/OOS comparison |
+| `scripts/analyze_wavelet_importance.py` | NEW — SHAP importance ranking + gate validation |
+
+## Phase 27A — TTS-GAN Financial Data Augmentation (2026-05-26)
+
+Transformer-based GAN for generating synthetic OHLCV data. Augments scarce
+financial training data to improve downstream forecasting model generalization.
+
+**Prerequisite:** `torch` (already installed). GPU recommended for full training.
+
+### Training TTS-GAN
+
+```bash
+# Train TTS-GAN on SPY IS data
+uv run scripts/train_tts_gan.py --symbol SPY --start 2016-01-01 --end 2021-12-31
+
+# Long sequence (paper: K=120)
+uv run scripts/train_tts_gan.py --symbol SPY --seq-len 120 --epochs 300
+
+# Fast smoke test
+uv run scripts/train_tts_gan.py --symbol SPY --fast --epochs 20
+```
+
+### GAN-Augmented ML Training
+
+```bash
+# Train CatBoost with TTS-GAN augmented data (inline GAN training)
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --gan-augment --gan-epochs 50 --fast
+
+# Use pre-trained GAN model (skip GAN training)
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --gan-augment --gan-model models/gan/tts_gan_SPY.pt
+```
+
+### Benchmark GAN Augmentation (Gate Validation)
+
+```bash
+# Full gate test: ≥10% LSTM directional error reduction on SPY 2022 bear
+uv run scripts/benchmark_gan_augmentation.py --symbol SPY --n-trials 3
+
+# Fast gate check
+uv run scripts/benchmark_gan_augmentation.py --symbol SPY --fast --n-trials 1
+```
+
+### TTS-GAN Paper Defaults
+
+| Param | Generator | Discriminator |
+|-------|-----------|---------------|
+| Layers (D) | 3 | 3 |
+| Heads (H) | 5 | 30 |
+| Embed dim (M) | 10 | 90 |
+| Patch size (P) | 15 | 15 |
+| LR | 1e-4 | 1e-4 |
+
+### Phase 27A File Changes
+
+| File | Change |
+|------|--------|
+| `src/ml/gan_convergence.py` | NEW — DTW DeD-iMs convergence metric, Wasserstein distance, GANConvergenceMonitor |
+| `src/ml/gan_data_augmentation.py` | NEW — TTSGAN, TTSGenerator, TTSDiscriminator, prepare_gan_samples, augment_dataset |
+| `src/ml/__init__.py` | MODIFIED — +8 exports |
+| `scripts/train_tts_gan.py` | NEW — CLI: train TTS-GAN, generate synthetic samples, save augmented data |
+| `scripts/benchmark_gan_augmentation.py` | NEW — Gate validation: LSTM directional error with/without GAN augmentation |
+| `scripts/train_ml_pipeline_v3.py` | MODIFIED — `--gan-augment`, `--gan-epochs`, `--gan-seq-len`, `--gan-aug-ratio`, `--gan-model` flags; `_gan_samples_to_dataframe()` helper; inline GAN training in Stage 1b |
+
+## Phase 27C — TadGAN Regime Anomaly Detection (2026-05-26)
+
+Cycle-consistent GAN for detecting market dislocations. Learns normal price
+behavior manifold, flags crisis events as anomalies. Integrated as optional
+risk gate in RulesFirstStrategy.
+
+**Prerequisite:** `torch` (already installed). GPU recommended.
+
+### Training TadGAN
+
+```bash
+# Train on pre-crisis data
+uv run scripts/train_tadgan.py --symbol SPY --start 2010-01-01 --end 2019-12-31
+
+# Fast smoke test
+uv run scripts/train_tadgan.py --symbol SPY --fast --epochs 20
+```
+
+### Crisis Detection Gate Validation
+
+```bash
+# Full gate test: detect ≥4/4 crisis events at ≤5 FP/year
+uv run scripts/benchmark_tadgan.py --symbol SPY --epochs 200
+
+# Fast check
+uv run scripts/benchmark_tadgan.py --symbol SPY --fast
+```
+
+### Anomaly Gate in Backtesting
+
+```bash
+# Block entries during TadGAN-detected anomalies
+uv run scripts/backtest_rules_first.py SPY --start 2020-01-01 --end 2026-06-01 \
+    --use-tadgan-gate --tadgan-model models/anomaly/tadgan_SPY.pt --fast
+```
+
+### GPU-Accelerated Commands (GPU Task Queue)
+
+```bash
+# Chronos-2 fine-tuning with LoRA
+uv run scripts/finetune_chronos.py --symbol SPY --model chronos-2-small --lora --device cuda
+
+# WaveletDiff generation model
+uv run scripts/train_wavelet_diffusion.py --symbol SPY --epochs 500 --device cuda
+
+# TTS-GAN full training (18 instruments)
+for SYM in SPY QQQ XLK XLE GLD SLV; do
+    uv run scripts/train_tts_gan.py --symbol $SYM --epochs 200 --device cuda
+done
+```
+
+### Phase 27C File Changes
+
+| File | Change |
+|------|--------|
+| `src/ml/anomaly_detection.py` | NEW — TadGAN (LSTM encoder/decoder + LSTM critic, cycle-consistent, α-calibrated anomaly scoring) |
+| `scripts/train_tadgan.py` | NEW — CLI: train TadGAN, save .pt model |
+| `scripts/benchmark_tadgan.py` | NEW — Gate validation: detect COVID/2022 bear/2025 tariff/2026 oil shock |
+| `scripts/finetune_chronos.py` | NEW — CLI: Chronos-2 LoRA fine-tuning + evaluation |
+| `scripts/train_wavelet_diffusion.py` | NEW — CLI: WaveletDiff training (DDIM sampling) |
+| `src/strategies/rules_first_strategy.py` | MODIFIED — +`use_tadgan_gate`, +`tadgan_model_path`, +`_init_tadgan_gate()`, gate blocks entries during anomalies |
+| `scripts/backtest_rules_first.py` | MODIFIED — +`--use-tadgan-gate`, +`--tadgan-model`, +`--tadgan-threshold-pct` flags |
+| `src/ml/__init__.py` | MODIFIED — +11 exports (GAN + TadGAN) |
+| `docs/GPU_TASK_QUEUE.md` | NEW — 7 GPU tasks with self-contained tutorials |

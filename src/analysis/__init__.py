@@ -131,6 +131,13 @@ from .regime_audit import (
     format_regime_report,
 )
 
+from .divergence_bits import (
+    DivergenceBitsResult,
+    compute_divergence_bits,
+    compare_vs_benchmark,
+    compare_multiple,
+)
+
 __all__ = [
     "StatisticalSignificanceFilter",
     "SignificanceResult",
@@ -205,4 +212,8 @@ __all__ = [
     "compute_per_regime_metrics",
     "audit_regimes",
     "format_regime_report",
+    "DivergenceBitsResult",
+    "compute_divergence_bits",
+    "compare_vs_benchmark",
+    "compare_multiple",
 ]

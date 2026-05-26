@@ -101,6 +101,59 @@ def _compute_atr(df: pd.DataFrame, period: int = 14) -> pd.Series:
     return tr.rolling(period).mean()
 
 
+def _gan_samples_to_dataframe(
+    synth_samples: "np.ndarray",
+    ref_df: pd.DataFrame,
+) -> pd.DataFrame:
+    """Convert TTS-GAN synthetic samples back to an OHLCV DataFrame.
+
+    Synthetic samples are MinMax-scaled, so they need to be rescaled
+    to realistic price ranges. Uses reference data's scale and adds
+    a synthetic datetime index after the reference data.
+
+    Args:
+        synth_samples: Synthetic samples of shape (N, seq_len, D).
+        ref_df: Reference OHLCV DataFrame for scale estimation.
+
+    Returns:
+        DataFrame with synthetic OHLCV bars.
+    """
+    import numpy as np
+
+    columns = [c for c in ["Open", "High", "Low", "Close", "Volume"] if c in ref_df.columns]
+    n_features = min(len(columns), synth_samples.shape[2])
+
+    ref_vals = ref_df[columns[:n_features]].values.astype(np.float64)
+    ref_min = ref_vals.min(axis=0)
+    ref_max = ref_vals.max(axis=0)
+    ref_denom = ref_max - ref_min
+    ref_denom[ref_denom == 0] = 1.0
+
+    synth_flat = synth_samples[:, :, :n_features].reshape(-1, n_features)
+    synth_rescaled = synth_flat * ref_denom + ref_min
+
+    synth_rescaled[:, :4] = np.abs(synth_rescaled[:, :4])
+    synth_rescaled = np.maximum(synth_rescaled, 0.0)
+
+    for col_idx in range(min(4, n_features)):
+        col_data = synth_rescaled[:, col_idx]
+        p01 = np.percentile(col_data, 1)
+        p99 = np.percentile(col_data, 99)
+        col_data = np.clip(col_data, p01, p99)
+        synth_rescaled[:, col_idx] = col_data
+
+    mask = np.all(np.isfinite(synth_rescaled), axis=1) & (synth_rescaled[:, 0] > 0)
+    synth_rescaled = synth_rescaled[mask]
+
+    last_date = ref_df.index[-1]
+    synth_idx = pd.date_range(
+        start=last_date + pd.Timedelta(days=1), periods=len(synth_rescaled), freq="B"
+    )
+
+    synth_df = pd.DataFrame(synth_rescaled, index=synth_idx, columns=columns[:n_features])
+    return synth_df
+
+
 # ═══════════════════════════════════════════════════════════════════════
 # Label Generation
 # ═══════════════════════════════════════════════════════════════════════
@@ -260,12 +313,14 @@ def blind_analysis_labels(y: pd.Series, random_state: int = 42) -> tuple[pd.Seri
 def extract_features(
     dfs: dict[str, pd.DataFrame],
     use_cross_asset: bool = True,
+    use_wavelet: bool = False,
 ) -> dict[str, pd.DataFrame]:
     """Extract features for all tickers in basket.
 
     Args:
         dfs: Dict of {ticker: OHLCV DataFrame}.
         use_cross_asset: Whether to add cross-asset features.
+        use_wavelet: Whether to add wavelet decomposition features (Phase 27B).
 
     Returns:
         Dict of {ticker: feature DataFrame}.
@@ -277,6 +332,21 @@ def extract_features(
         fx = extractor.extract_all_features(df, include_forward_returns=False)
         features[ticker] = fx
         logger.info(f"  {ticker}: {fx.shape[1]} instrument features, {fx.shape[0]} bars")
+
+    if use_wavelet:
+        from src.features.wavelet_features import compute_wavelet_price_volume_features
+
+        for ticker, fx in features.items():
+            try:
+                wfx = compute_wavelet_price_volume_features(dfs[ticker])
+                aligned = fx.join(wfx, how="left")
+                null_count = wfx.isna().all(axis=1).sum()
+                features[ticker] = aligned
+                logger.info(
+                    f"  {ticker}: +{wfx.shape[1]} wavelet = {aligned.shape[1]} total (NaN rows={null_count})"
+                )
+            except Exception as e:
+                logger.warning(f"  {ticker}: wavelet features failed ({e}), using instrument only")
 
     if use_cross_asset and "SPY" in dfs:
         market_data = load_market_data(list(dfs.values())[0])
@@ -1001,6 +1071,12 @@ def run_pipeline(
     horizon: int = DEFAULT_HORIZON,
     fast: bool = False,
     use_cross_asset: bool = True,
+    use_wavelet: bool = False,
+    use_gan_augment: bool = False,
+    gan_epochs: int = 100,
+    gan_seq_len: int = 90,
+    gan_aug_ratio: float = 1.0,
+    gan_model_path: str | None = None,
     skip_tuning: bool = False,
     skip_train: bool = False,
     run_walk_forward: bool = False,
@@ -1027,6 +1103,12 @@ def run_pipeline(
             or 'next_bar' (no look-ahead: 1 if tomorrow's close > today's, else 0)
             or 'three_value' (UP/DOWN/UNKNOWN tiers).
         fast: Skip ARO + GWO for fast iterations.
+        use_wavelet: Add wavelet decomposition features (Phase 27B).
+        use_gan_augment: Augment OHLCV data via TTS-GAN before feature extraction (Phase 27A).
+        gan_epochs: GAN training epochs when use_gan_augment is True.
+        gan_seq_len: GAN sequence length K (90 or 120).
+        gan_aug_ratio: Synthetic/real ratio (1.0 = double training data).
+        gan_model_path: Path to pre-trained TTS-GAN model (.pt) to skip training.
         use_cross_asset: Add cross-asset features.
         skip_tuning: Skip ARO + GWO even in non-fast mode.
         skip_train: Skip training, only run walk-forward (requires existing model).
@@ -1061,7 +1143,9 @@ def run_pipeline(
     logger.info("=" * 80)
     logger.info(f"ML Pipeline V3 — {run_id}")
     logger.info(f"Tickers: {tickers}")
-    logger.info(f"Horizon: {horizon}d | Cross-asset: {use_cross_asset} | CV: {cv_method}")
+    logger.info(
+        f"Horizon: {horizon}d | Cross-asset: {use_cross_asset} | Wavelet: {use_wavelet} | GAN: {use_gan_augment} | CV: {cv_method}"
+    )
     logger.info(f"Fast: {fast} | Walk-forward: {run_walk_forward}")
     logger.info("=" * 80)
 
@@ -1073,11 +1157,67 @@ def run_pipeline(
     for ticker in tickers:
         dfs[ticker] = load_data(ticker, start, end)
 
+    # ── Stage 1b: GAN Data Augmentation (Phase 27A) ──
+    if use_gan_augment:
+        logger.info("=" * 60)
+        logger.info("[GAN] TTS-GAN Data Augmentation")
+        logger.info("=" * 60)
+        from src.ml.gan_data_augmentation import TTSGAN, prepare_gan_samples, augment_dataset
+
+        if gan_model_path:
+            gan = TTSGAN.load(gan_model_path, seq_len=gan_seq_len)
+            logger.info(f"Loaded pre-trained TTS-GAN from {gan_model_path}")
+            for ticker, df in dfs.items():
+                samples = prepare_gan_samples(df, seq_len=gan_seq_len, step=5)
+                synth_samples = gan.generate(int(len(samples) * gan_aug_ratio))
+                synth_df = _gan_samples_to_dataframe(synth_samples, df)
+                original_len = len(df)
+                dfs[ticker] = pd.concat([df, synth_df]).sort_index()
+                logger.info(
+                    f"  {ticker}: {original_len} real + {len(synth_df)} synth = {len(dfs[ticker])} total bars"
+                )
+        else:
+            for ticker, df in dfs.items():
+                logger.info(f"  Training TTS-GAN for {ticker}...")
+                samples = prepare_gan_samples(df, seq_len=gan_seq_len, step=5)
+                if len(samples) < 50:
+                    logger.warning(f"  {ticker}: only {len(samples)} samples, skipping GAN")
+                    continue
+                n_train = int(len(samples) * 0.8)
+                gan = TTSGAN(
+                    seq_len=gan_seq_len,
+                    data_dim=samples.shape[2],
+                    latent_dim=32,
+                    g_embed_dim=8 if fast else 10,
+                    g_n_heads=4 if fast else 5,
+                    g_n_layers=2 if fast else 3,
+                    d_embed_dim=32 if fast else 90,
+                    d_n_heads=8 if fast else 30,
+                    d_n_layers=2 if fast else 3,
+                )
+                gan.fit(
+                    train_data=samples[:n_train],
+                    val_data=samples[n_train:],
+                    epochs=gan_epochs,
+                    batch_size=min(32, n_train),
+                    convergence_patience=15,
+                    verbose=gan_epochs >= 50,
+                )
+                n_synth = int(n_train * gan_aug_ratio)
+                synth_samples = gan.generate(n_synth)
+                synth_df = _gan_samples_to_dataframe(synth_samples, df)
+                original_len = len(df)
+                dfs[ticker] = pd.concat([df, synth_df]).sort_index()
+                logger.info(
+                    f"  {ticker}: {original_len} real + {len(synth_df)} synth = {len(dfs[ticker])} total "
+                    f"(DTW-DeD-iMs={gan.monitor.best_dtw_dedims:.4f})"
+                )
+
     # ── Stage 2+3: Feature Engineering + Cross-Asset ──
     logger.info("=" * 60)
     logger.info("[2/9] Feature Engineering")
     logger.info("=" * 60)
-    features = extract_features(dfs, use_cross_asset=use_cross_asset)
+    features = extract_features(dfs, use_cross_asset=use_cross_asset, use_wavelet=use_wavelet)
     if not use_cross_asset:
         logger.info("[3/9] Cross-asset features: SKIPPED")
 
@@ -1822,6 +1962,40 @@ def main():
         default="Logloss",
         help="CatBoost loss function (default Logloss).",
     )
+    parser.add_argument(
+        "--wavelet-features",
+        action="store_true",
+        help="Add wavelet decomposition features (Phase 27B — db4, 5 levels, 38 features).",
+    )
+    parser.add_argument(
+        "--gan-augment",
+        action="store_true",
+        help="Augment OHLCV data with TTS-GAN generated samples before training (Phase 27A).",
+    )
+    parser.add_argument(
+        "--gan-epochs",
+        type=int,
+        default=100,
+        help="GAN training epochs when --gan-augment is set (default: 100).",
+    )
+    parser.add_argument(
+        "--gan-seq-len",
+        type=int,
+        default=90,
+        help="GAN sequence length K (default: 90, paper also uses 120).",
+    )
+    parser.add_argument(
+        "--gan-aug-ratio",
+        type=float,
+        default=1.0,
+        help="Synthetic/real ratio (default: 1.0 = double training data).",
+    )
+    parser.add_argument(
+        "--gan-model",
+        type=str,
+        default=None,
+        help="Path to pre-trained TTS-GAN model (.pt) to skip GAN training.",
+    )
 
     args = parser.parse_args()
 
@@ -1840,6 +2014,12 @@ def main():
                 horizon=args.horizon,
                 fast=args.fast,
                 use_cross_asset=not args.skip_cross_asset,
+                use_wavelet=args.wavelet_features,
+                use_gan_augment=args.gan_augment,
+                gan_epochs=args.gan_epochs,
+                gan_seq_len=args.gan_seq_len,
+                gan_aug_ratio=args.gan_aug_ratio,
+                gan_model_path=args.gan_model,
                 skip_tuning=args.skip_tuning,
                 run_walk_forward=args.walk_forward,
                 walk_forward_initial=args.wf_initial,
@@ -1862,6 +2042,12 @@ def main():
             horizon=args.horizon,
             fast=args.fast,
             use_cross_asset=not args.skip_cross_asset,
+            use_wavelet=args.wavelet_features,
+            use_gan_augment=args.gan_augment,
+            gan_epochs=args.gan_epochs,
+            gan_seq_len=args.gan_seq_len,
+            gan_aug_ratio=args.gan_aug_ratio,
+            gan_model_path=args.gan_model,
             skip_tuning=args.skip_tuning,
             run_walk_forward=args.walk_forward,
             walk_forward_initial=args.wf_initial,

@@ -182,6 +182,11 @@ class RulesFirstStrategy(Strategy):
     # P24-17: Signal-strength dynamic position sizing
     use_signal_strength_sizing: bool = False
     use_voting_signal: bool = False
+
+    # Phase 27C: TadGAN regime anomaly gate
+    use_tadgan_gate: bool = False
+    tadgan_model_path: str = ""
+    tadgan_gate_threshold_pct: float = 95.0
     voting_signal_weight: float = 0.15
     use_rules_catalog: bool = False
     rules_catalog_weight: float = 0.10
@@ -261,6 +266,10 @@ class RulesFirstStrategy(Strategy):
         self._order_book_mult: float | np.ndarray = 1.0
         if self.use_order_book:
             self._init_order_book()
+
+        self._tadgan_mults: np.ndarray | None = None
+        if self.use_tadgan_gate:
+            self._init_tadgan_gate()
 
         self._trail_high: float = 0.0
         self._trail_low: float = float("inf")
@@ -815,6 +824,9 @@ class RulesFirstStrategy(Strategy):
             kelly_size = self._compute_kelly_size(score) if self._kelly_alloc else 1.0
             kelly_size = self._compute_signal_strength_size(score, kelly_size)
             kelly_size = self._apply_regime_size_penalty(idx, kelly_size)
+            if self._tadgan_mults is not None and idx < len(self._tadgan_mults):
+                if self._tadgan_mults[idx] < 0.5:
+                    return
             if score >= self.entry_threshold:
                 self.buy(size=kelly_size)
                 self._trail_high = current_close
@@ -898,6 +910,45 @@ class RulesFirstStrategy(Strategy):
         except Exception:
             logger.warning("VIX regime sizing init failed, disabling", exc_info=True)
             self._vix_regime_sizes = np.ones(self._n_bars, dtype=np.float64)
+
+    def _init_tadgan_gate(self) -> None:
+        """Phase 27C: Load TadGAN model and precompute anomaly mask for all bars.
+
+        TadGAN detects regime anomalies (crisis events). When active,
+        entries are blocked during anomalous bars to avoid trading
+        during market dislocations.
+        """
+        try:
+            from src.ml.anomaly_detection import TadGAN, prepare_tadgan_samples
+
+            dates = self._df.index
+            tadgan = TadGAN.load(self.tadgan_model_path, seq_len=100)
+            samples = prepare_tadgan_samples(self._df, seq_len=100, step=1)
+            if len(samples) == 0:
+                logger.warning("TadGAN: no samples, disabling")
+                self._tadgan_mults = np.ones(self._n_bars, dtype=np.float64)
+                return
+
+            scores = tadgan.compute_anomaly_scores(samples)
+            threshold = np.percentile(scores, self.tadgan_gate_threshold_pct)
+            anomaly_mask = scores > threshold
+
+            self._tadgan_mults = np.ones(self._n_bars, dtype=np.float64)
+            for i in range(len(samples)):
+                bar_idx = min(99 + i, self._n_bars - 1)
+                if anomaly_mask[i]:
+                    self._tadgan_mults[bar_idx] = 0.0
+
+            n_blocked = np.sum(self._tadgan_mults < 0.5)
+            logger.info(
+                "TadGAN gate initialized: %d/%d bars blocked (%.1f%%)",
+                n_blocked,
+                self._n_bars,
+                100 * n_blocked / max(self._n_bars, 1),
+            )
+        except Exception:
+            logger.warning("TadGAN gate init failed, disabling", exc_info=True)
+            self._tadgan_mults = np.ones(self._n_bars, dtype=np.float64)
 
     def _apply_regime_size_penalty(self, idx: int, base_size: float) -> float:
         """P1.5: Apply VIX regime-based position size cap.

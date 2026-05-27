@@ -471,24 +471,50 @@ All 5 items are additive (~200 lines total, 2 files) — no architectural change
 
 **Source:** Analysis of retrained model state post B9-B14. 15 items identified across 4 priority tiers covering validation, signal quality, architecture, and new signal sources. [Full plan](post_retrain_next_steps.md).
 
-| Priority | # | Task | Category | Notes |
-|----------|---|------|----------|-------|
-| **P0** | P0-1 | 2022 Bear Market Backtest | Validation | Gates all subsequent work. Does the strategy protect capital in a real bear market? |
-| **P1** | P1-1 | Probability Calibration Audit | Signal Quality | Run `model_calibration.py` on retrained model. Apply Platt/Isotonic if overconfident. |
-| **P1** | P1-2 | DSR Investigation | Validation | Is DSR=0.946 a signal failure or sample-size artifact? MC simulation of Sharpe=1.01 with N=19. |
-| **P1** | P1-3 | Simpler-Than-ML Baseline | Validation | Compare CatBoost vs RSI(14) / 50-200 MA crossover on same engine. |
-| **P1** | P1-4 | Regime-Conditional Returns | Signal Quality | Decompose backtest returns by Trending/Ranging/Bull/Bear regimes. |
-| **P2** | P2-1 | Flipped Feature Analysis | Features | Which 3 features flipped correlation? Structural or noise? |
-| **P2** | P2-2 | Feature Importance Comparison | Features | Stability-selected vs SHAP-important — do they agree? |
-| **P2** | P2-3 | Dynamic Ensemble Fix | Architecture | Investigate why 5-model EGD ensemble produced Sharpe 0.26. |
-| **P2** | P2-4 | Walk-Forward Cadence | Production | Simulate retraining at 6mo/12mo/24mo intervals. Find optimal cadence. |
-| **P2** | P2-5 | Entry Threshold Sweep | Signal Quality | Sweep 0.35-0.55 on retrained model. Is 0.45 still optimal? |
-| **P3** | P3-1 | Paper-Trading Harness | Production | Daily signal generation script for 2026-05-15 onward. Zero-risk OOS accumulation. |
-| **P3** | P3-2 | Kelly Position Sizing | Portfolio | Compute Kelly fraction. Half-Kelly allocation. Minimum capital estimate. |
-| **P3** | P3-3 | Survival Analysis | New Signal | scikit-survival Cox/RandomSurvivalForest for time-to-exit prediction. |
-| **P3** | P3-4 | Regression Labels | New Signal | Predict 5-day forward return instead of binary TP/SL. CatBoostRegressor. |
-| **P3** | P3-5 | HMM Regime Detection | New Signal | hmmlearn GaussianHMM for latent regime detection vs rule-based ADX/ATR. |
-
+| Phase/Priority | Task ID | Task / Topic | Dependencies / Context | Implementation Details / Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **P2** | T5 | Ensemble methods (Stacking, Voting, Blending) | T1b (tuned base models) | Combines CatBoost + LightGBM + RF |
+| **P2** | T6 | Monte Carlo VaR + CVaR risk modeling | Risk module ✅ | Replace binomial with proper VaR |
+| **P2** | T8 | SHAP visualization dashboard | SHAP already integrated | Waterfall, beeswarm, force plots |
+| **P2** | QW2 | Stop-loss optimization | Trade history data | GBDT predicts optimal stop distance |
+| **P2** | RS1 | EBM shape function alpha research pipeline | T2 (EBM) ✅ | Extract per-feature contribution curves → quantifiable alpha signals. Run on all 34 pattern detectors |
+| **P2** | RS2 | Dream team stacking ensemble (CatBoost + LightGBM) | T1b (GWO) ✅, T0 (unified) ✅ | Literature-validated: R² 0.815 vs 0.788 single-model. 3-5% accuracy gain |
+| **P2** | FS1 | Survival Analysis for Time-to-Target | scikit-survival (skill), existing multi-horizon labels | Predicts when TP/SL hits via censored regression. Requires FS4 completion. |
+| **P2** | FS2 | Historical Analog Matching (k-NN) | sklearn.NearestNeighbors or faiss | "When did market look like this before?" Trader-facing confidence tool. |
+| **P2** | FS3 | MAE/Drawdown as Primary Target | Existing max_drawdown_N computation | Predict worst-case drawdown → dynamic stops instead of fixed ATR. |
+| **P2** | FS5 | GMM Soft Regime Assignments | sklearn.mixture.GaussianMixture | Swap KMeans→GMM. Feed regime_proba to PatternClassifier. |
+| **P2** | FS8 | Volatility Forecasting Model | catboost (existing) | Predict realized vol over N bars → dynamic position sizing. |
+| **P2** | FS11 | Fractional Differentiation | statsmodels (installed) | Apply fracdiff(d≈0.3-0.5) to price features. Replace leaking StandardScaler. |
+| **P3** | T7 | Black-Litterman portfolio optimization | Portfolio module ✅ | ✅ Done — `src/portfolio/black_litterman.py` |
+| **P3** | T9 | Signal meta-labeling (kept as broader research task) | Signals module ✅ | López de Prado triple-barrier research task. Implementation now tracked as FS4. |
+| **P3** | RS3 | TabNet evaluation for regime detection | T2 (EBM) ✅ | Evaluate TabNet on high-dimensional feature sets. Only if >10K samples and GPU available |
+| **P3** | FS7 | Change-Point Detection for Regimes | ruptures (pure Python) | Real-time regime shift detection. Plugs into RegimeDetectorBase. |
+| **P3** | FS9 | Volume-Price Profile Clustering | sklearn.cluster | Accumulation vs distribution detection from volume-at-price. |
+| **P3** | FS10 | HDBSCAN Anomaly Detection | hdbscan | Auto-detect flash crashes, gaps. Feed anomaly_score → circuit breakers. |
+| **P3** | FS12 | Cross-Symbol Dynamic Clustering | sklearn + CrossAssetFeatures | Lead-lag relationships, correlation regime shifts. |
+| **P3** | FS13 | Breakout Probability ML | catboost + Donchian detector | ML score on breakouts: true breakout vs false one. |
+| **KG1** | KG-H1 | Training-history overfitting detection | 5520 paper (training history), existing ML pipeline | Monitor loss curves for overfit in PurgedKFold. Source: Knowledge Graph Insights #1. |
+| **KG1** | KG-H2 | Synthetic OOS comparison framework | Backtest Overfitting paper, src/ml/ | Comprehensive OOS testing: combinatorial CV + synthetic controls. Source: KG Insights #1. |
+| **KG1** | KG-H3 | Sentiment scores as signal weight modifier | 4+ sentiment papers, src/signals/ | Feed Twitter/news sentiment into EventWeightedAggregator. Source: KG Insights #3. |
+| **KG1** | KG-H4 | Event-driven pattern category | Building Calendar paper, Event-Based Trading paper, src/patterns/ | New pattern category for event-based signals. Source: KG Insights #5. |
+| **KG2** | KG-M1 | `src/rl/` module with trade execution env | OOM-RL paper, Adaptive RL paper, Deep Portfolio RL paper | New module: RL environment for trade execution + portfolio optimization. Source: KG Insights #2. |
+| **KG2** | KG-M2 | Kelly criterion allocator | Investing Is Compression paper, src/portfolio/ | Entropy/divergence-based position sizing. Source: KG Insights #4. |
+| **KG2** | KG-M3 | AutoAlpha factor mining pipeline | AutoAlpha paper, src/ml/ | Hierarchical evolutionary algorithm for formulaic alpha generation. Source: KG Insights #6. |
+| **KG2** | KG-M4 | Circuit-based overfitting detection | Circuit Intrinsic Methods paper, src/ml/ | Perturb rare patterns through model circuits. Source: KG Insights #1. |
+| **KG2** | KG-M5 | Behavioral crash regime detection | Crash-based trading paper, src/risk/ | Herding/overconfidence indicators for crash timing. Source: KG Insights #7. |
+| **KG3** | KG-L1 | Adversarial overfitting detection | advrisk_neurips2019 paper, src/ml/ | Use adversarial examples to expose overfit boundaries. Source: KG Insights #1. |
+| **KG3** | KG-L2 | Financial event calendar database | 2 event papers, src/data_ingestion/ | Build event DB from price spikes + news. Source: KG Insights #5. |
+| **KG3** | KG-L3 | Defensive backtesting with time-reversal | Against Universal Trading paper, src/backtest/ | Time-reversal heuristic for strategy validation. Source: KG Insights #7. |
+| **Research** | T9 | Signal Meta-Labeling | LGBM default (CatBoost if ≥10% win) | Phase 6b Tier 1. "Should I take this signal?" |
+| **Research** | FS19 | Gap-Fill Prediction | LGBM default | Phase 6b Tier 1. Predict gap fill within N bars. |
+| **Research** | Ablation | Pattern Detector Audit | Backtest engine | Phase 6b Tier 1. Which 34 patterns produce edge? |
+| **Research** | FS16 | Shapelets Discovery | aeon (CPU) | Phase 6b Tier 2. Learn discriminative price subsequences. |
+| **Research** | FS15-lite | VAE Latent Embeddings [CPU] | torch (CPU, 32GB RAM ok) | Phase 6b Tier 2. Small VAE discovers market structure. |
+| **Research** | FS20 | Heikin-Ashi Bars | Custom converter | Phase 6b Tier 2. Test smoothed bars on detectors. |
+| **Research** | FS14 | Volume/Dollar/Tick Bars | Custom bar builder | Phase 6b Tier 3. Gate on Tier 1/2 positive results. |
+| **Deferred** | FS17 | Volume Anomaly Forecasting | catboost | Absorbed into FS10 (HDBSCAN). |
+| **Deferred** | FS18 | Synthetic OHLCV via GANs | torch (GPU) | GANs unstable. Defer indefinitely. |
+| **Deferred** | FS21 | Sparse PCA | sklearn.decomposition | Feature selector more effective. |
 ### Implementation Order
 
 ```

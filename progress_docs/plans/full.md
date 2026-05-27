@@ -524,22 +524,21 @@ Phase 12c: Architecture Improvements (P2-3 → P2-4 → P3-1 → P3-2)
 Phase 12d: New Signal Sources (P3-3 || P3-4 || P3-5)  # parallelizable
 ```
 
- |
-
-
+| Priority | Task ID | Task Name | Dependencies / Tools | Description / Notes |
+| :--- | :--- | :--- | :--- | :--- |
 | P2 | T5 | Ensemble methods (Stacking, Voting, Blending) | T1b (tuned base models) | Combines CatBoost + LightGBM + RF |
 | P2 | T6 | Monte Carlo VaR + CVaR risk modeling | Risk module ✅ | Replace binomial with proper VaR |
 | P2 | T8 | SHAP visualization dashboard | SHAP already integrated | Waterfall, beeswarm, force plots |
 | P2 | QW2 | Stop-loss optimization | Trade history data | GBDT predicts optimal stop distance |
 | P2 | RS1 | EBM shape function alpha research pipeline | T2 (EBM) ✅ | Extract per-feature contribution curves → quantifiable alpha signals. Run on all 34 pattern detectors |
 | P2 | RS2 | Dream team stacking ensemble (CatBoost + LightGBM) | T1b (GWO) ✅, T0 (unified) ✅ | Literature-validated: R² 0.815 vs 0.788 single-model. 3-5% accuracy gain |
-| P2 | FS1 | Survival Analysis for Time-to-Target | scikit-survival (skill), existing multi-horizon labels | Predicts *when* TP/SL hits via censored regression. Requires FS4 completion. |
+| P2 | FS1 | Survival Analysis for Time-to-Target | scikit-survival (skill), existing multi-horizon labels | Predicts when TP/SL hits via censored regression. Requires FS4 completion. |
 | P2 | FS2 | Historical Analog Matching (k-NN) | sklearn.NearestNeighbors or faiss | "When did market look like this before?" Trader-facing confidence tool. |
 | P2 | FS3 | MAE/Drawdown as Primary Target | Existing max_drawdown_N computation | Predict worst-case drawdown → dynamic stops instead of fixed ATR. |
 | P2 | FS5 | GMM Soft Regime Assignments | sklearn.mixture.GaussianMixture | Swap KMeans→GMM. Feed regime_proba to PatternClassifier. |
 | P2 | FS8 | Volatility Forecasting Model | catboost (existing) | Predict realized vol over N bars → dynamic position sizing. |
 | P2 | FS11 | Fractional Differentiation | statsmodels (installed) | Apply fracdiff(d≈0.3-0.5) to price features. Replace leaking StandardScaler. |
-| P3 | T7 | Black-Litterman portfolio optimization | Portfolio module ✅ | ✅ Done — `src/portfolio/black_litterman.py` |
+| P3 | T7 | Black-Litterman portfolio optimization | Portfolio module ✅ | ✅ Done — src/portfolio/black_litterman.py |
 | P3 | T9 | Signal meta-labeling (kept as broader research task) | Signals module ✅ | López de Prado triple-barrier research task. Implementation now tracked as FS4. |
 | P3 | RS3 | TabNet evaluation for regime detection | T2 (EBM) ✅ | Evaluate TabNet on high-dimensional feature sets. Only if >10K samples and GPU available |
 | P3 | FS7 | Change-Point Detection for Regimes | ruptures (pure Python) | Real-time regime shift detection. Plugs into RegimeDetectorBase. |
@@ -547,18 +546,18 @@ Phase 12d: New Signal Sources (P3-3 || P3-4 || P3-5)  # parallelizable
 | P3 | FS10 | HDBSCAN Anomaly Detection | hdbscan | Auto-detect flash crashes, gaps. Feed anomaly_score → circuit breakers. |
 | P3 | FS12 | Cross-Symbol Dynamic Clustering | sklearn + CrossAssetFeatures | Lead-lag relationships, correlation regime shifts. |
 | P3 | FS13 | Breakout Probability ML | catboost + Donchian detector | ML score on breakouts: true breakout vs false one. |
-| **KG1** | KG-H1 | Training-history overfitting detection | 5520 paper (training history), existing ML pipeline | Monitor loss curves for overfit in PurgedKFold. Source: Knowledge Graph Insights #1. |
-| **KG1** | KG-H2 | Synthetic OOS comparison framework | Backtest Overfitting paper, `src/ml/` | Comprehensive OOS testing: combinatorial CV + synthetic controls. Source: KG Insights #1. |
-| **KG1** | KG-H3 | Sentiment scores as signal weight modifier | 4+ sentiment papers, `src/signals/` | Feed Twitter/news sentiment into `EventWeightedAggregator`. Source: KG Insights #3. |
-| **KG1** | KG-H4 | Event-driven pattern category | Building Calendar paper, Event-Based Trading paper, `src/patterns/` | New pattern category for event-based signals. Source: KG Insights #5. |
-| **KG2** | KG-M1 | `src/rl/` module with trade execution env | OOM-RL paper, Adaptive RL paper, Deep Portfolio RL paper | New module: RL environment for trade execution + portfolio optimization. Source: KG Insights #2. |
-| **KG2** | KG-M2 | Kelly criterion allocator | Investing Is Compression paper, `src/portfolio/` | Entropy/divergence-based position sizing. Source: KG Insights #4. |
-| **KG2** | KG-M3 | AutoAlpha factor mining pipeline | AutoAlpha paper, `src/ml/` | Hierarchical evolutionary algorithm for formulaic alpha generation. Source: KG Insights #6. |
-| **KG2** | KG-M4 | Circuit-based overfitting detection | Circuit Intrinsic Methods paper, `src/ml/` | Perturb rare patterns through model circuits. Source: KG Insights #1. |
-| **KG2** | KG-M5 | Behavioral crash regime detection | Crash-based trading paper, `src/risk/` | Herding/overconfidence indicators for crash timing. Source: KG Insights #7. |
-| **KG3** | KG-L1 | Adversarial overfitting detection | advrisk_neurips2019 paper, `src/ml/` | Use adversarial examples to expose overfit boundaries. Source: KG Insights #1. |
-| **KG3** | KG-L2 | Financial event calendar database | 2 event papers, `src/data_ingestion/` | Build event DB from price spikes + news. Source: KG Insights #5. |
-| **KG3** | KG-L3 | Defensive backtesting with time-reversal | Against Universal Trading paper, `src/backtest/` | Time-reversal heuristic for strategy validation. Source: KG Insights #7. |
+| KG1 | KG-H1 | Training-history overfitting detection | 5520 paper (training history), existing ML pipeline | Monitor loss curves for overfit in PurgedKFold. Source: Knowledge Graph Insights #1. |
+| KG1 | KG-H2 | Synthetic OOS comparison framework | Backtest Overfitting paper, src/ml/ | Comprehensive OOS testing: combinatorial CV + synthetic controls. Source: KG Insights #1. |
+| KG1 | KG-H3 | Sentiment scores as signal weight modifier | 4+ sentiment papers, src/signals/ | Feed Twitter/news sentiment into EventWeightedAggregator. Source: KG Insights #3. |
+| KG1 | KG-H4 | Event-driven pattern category | Building Calendar paper, Event-Based Trading paper, src/patterns/ | New pattern category for event-based signals. Source: KG Insights #5. |
+| KG2 | KG-M1 | src/rl/ module with trade execution env | OOM-RL paper, Adaptive RL paper, Deep Portfolio RL paper | New module: RL environment for trade execution + portfolio optimization. Source: KG Insights #2. |
+| KG2 | KG-M2 | Kelly criterion allocator | Investing Is Compression paper, src/portfolio/ | Entropy/divergence-based position sizing. Source: KG Insights #4. |
+| KG2 | KG-M3 | AutoAlpha factor mining pipeline | AutoAlpha paper, src/ml/ | Hierarchical evolutionary algorithm for formulaic alpha generation. Source: KG Insights #6. |
+| KG2 | KG-M4 | Circuit-based overfitting detection | Circuit Intrinsic Methods paper, src/ml/ | Perturb rare patterns through model circuits. Source: KG Insights #1. |
+| KG2 | KG-M5 | Behavioral crash regime detection | Crash-based trading paper, src/risk/ | Herding/overconfidence indicators for crash timing. Source: KG Insights #7. |
+| KG3 | KG-L1 | Adversarial overfitting detection | advrisk_neurips2019 paper, src/ml/ | Use adversarial examples to expose overfit boundaries. Source: KG Insights #1. |
+| KG3 | KG-L2 | Financial event calendar database | 2 event papers, src/data_ingestion/ | Build event DB from price spikes + news. Source: KG Insights #5. |
+| KG3 | KG-L3 | Defensive backtesting with time-reversal | Against Universal Trading paper, src/backtest/ | Time-reversal heuristic for strategy validation. Source: KG Insights #7. |
 | Research | T9 | Signal Meta-Labeling | LGBM default (CatBoost if ≥10% win) | Phase 6b Tier 1. "Should I take this signal?" |
 | Research | FS19 | Gap-Fill Prediction | LGBM default | Phase 6b Tier 1. Predict gap fill within N bars. |
 | Research | Ablation | Pattern Detector Audit | Backtest engine | Phase 6b Tier 1. Which 34 patterns produce edge? |

@@ -292,7 +292,9 @@ NOW ─────────────────────────�
 | P1 | T4 | Advanced backtest validation (DSR, PSR, FDR) | Phase 04 ✅, Phase 08 ✅ | ✅ Done — `src/analysis/deflated_sharpe.py`, 43 tests |
 | P1 | QW1 | Pattern confidence scoring | PatternClassifier exists | ✅ Done — `src/ml/pattern_scorer.py`, 6 tests |
 
-| **MR0** | C1 | Paper trade re-run with fixed drawdown (12 tickers) | PatternClassifier V3 model, paper_trade_v3.py ✅ | ✅ Done — `reports/paper_trading/20260511_044647/` |
+| Milestone | Component | Description | Depends On | Status |
+|-----------|-----------|-------------|------------|--------|
+| **MR0** | C1 | Paper trade re-run with fixed drawdown (12 tickers) | | ✅ Done — `reports/paper_trading/20260511_044647/` |
 | **MR0** | C2 | Walk-forward chronological validation (per-ticker) | C1 | ✅ Done — 15 bugs fixed, 5/12 pass (XLK/QQQ/SPY/KODK/GLD) |
 | **MR1** | C3 | Basket vs single-ticker ablation study | C2 | ✅ Done — 5-winner model = worse IC everywhere (-0.107→-0.02). 12-all model = +0.048→+0.112 across winners. Adding diverse tickers IMPROVES generalization. GATE OPEN. |
 | **MR1** | C4 | Model prediction correlation decomposition | C2 | ✅ Done — SPY/QQQ/XLK r>0.82 (tech cluster, concentrated). KODK r≈0.27, GLD r≈0.30 vs tech (independent). 3 distinct signals, not 1. |

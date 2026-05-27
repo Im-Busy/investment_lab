@@ -188,6 +188,7 @@ def run_single(
         "bh_return_pct": round(bh_return, 2),
         "bh_sharpe": round(bh_sharpe, 3),
         "bh_max_dd_pct": round(bh_max_dd, 2),
+        "_equity_curve": stats._equity_curve if hasattr(stats, "_equity_curve") else None,
     }
     return result
 
@@ -295,6 +296,85 @@ def print_table(results: list[dict]) -> None:
             else:
                 vals.append(str(v))
         print(fmt.format(*vals))
+
+
+def _print_dual_alpha_beta(result: dict, symbol: str, start: str | None, end: str | None) -> None:
+    """Compute and print dual alpha/beta decomposition vs SPY."""
+    from src.analysis.dual_alpha_beta import compute_dual_alpha_beta
+
+    equity_curve = result.get("_equity_curve")
+    if equity_curve is None or len(equity_curve) < 2:
+        print("\n  Dual α/β: skipped (no equity curve data)")
+        return
+
+    market_path = Path("data/raw/SPY_daily.csv")
+    if not market_path.exists():
+        print("\n  Dual α/β: skipped (no SPY data)")
+        return
+
+    market_df = pd.read_csv(market_path, index_col=0)
+    market_df.index = pd.to_datetime(market_df.index)
+    market_df = market_df.dropna()
+    if start:
+        market_df = market_df.loc[market_df.index >= start]
+    if end:
+        market_df = market_df.loc[market_df.index <= end]
+
+    if isinstance(equity_curve, pd.DataFrame):
+        eq_col = equity_curve.iloc[:, 0]
+    else:
+        eq_col = equity_curve
+
+    try:
+        strategy_rets = eq_col.pct_change().dropna()
+    except Exception:
+        print("\n  Dual α/β: skipped (could not compute returns from equity curve)")
+        return
+
+    close_col = "Close" if "Close" in market_df.columns else market_df.columns[0]
+    market_rets = market_df[close_col].pct_change().dropna()
+
+    common_idx = strategy_rets.index.intersection(market_rets.index)
+    if len(common_idx) < 20:
+        print(f"\n  Dual α/β: skipped (only {len(common_idx)} overlapping dates)")
+        return
+
+    strategy_aligned = strategy_rets.loc[common_idx]
+    market_aligned = market_rets.loc[common_idx]
+
+    db_result = compute_dual_alpha_beta(strategy_aligned, market_aligned)
+
+    print("\n" + "─" * 60)
+    print("DUAL ALPHA/BETA DECOMPOSITION")
+    print("─" * 60)
+    print(db_result.summary())
+
+    out_path = Path(f"reports/dual_alpha_beta_{symbol}.json")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    serializable = {
+        "symbol": symbol,
+        "single_alpha": db_result.single_alpha,
+        "single_beta": db_result.single_beta,
+        "single_r2": db_result.single_r2,
+        "bull_alpha": db_result.bull_alpha,
+        "bull_beta": db_result.bull_beta,
+        "bull_n": db_result.bull_n,
+        "bear_alpha": db_result.bear_alpha,
+        "bear_beta": db_result.bear_beta,
+        "bear_n": db_result.bear_n,
+        "beta_asymmetry": db_result.beta_asymmetry,
+        "alpha_gap": db_result.alpha_gap,
+        "phantom_alpha": db_result.phantom_alpha,
+        "chow_statistic": db_result.chow_statistic,
+        "chow_pvalue": db_result.chow_pvalue,
+        "is_structural_break": db_result.is_structural_break,
+        "is_convex": db_result.is_convex,
+        "is_concave": db_result.is_concave,
+        "warnings": db_result.warnings,
+    }
+    out_path.write_text(json.dumps(serializable, indent=2))
+    print(f"\nSaved to {out_path}")
 
 
 def main() -> None:
@@ -607,10 +687,13 @@ def main() -> None:
             f"ir={args.ir_weights} short={args.use_short} multi_tp={args.use_multi_tp}"
         )
 
+        _print_dual_alpha_beta(result, args.symbol, args.start, args.end)
+
     if args.json_output:
         output_path = Path(args.json_output)
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text(json.dumps(all_results, indent=2))
+        clean_results = [{k: v for k, v in r.items() if k != "_equity_curve"} for r in all_results]
+        output_path.write_text(json.dumps(clean_results, indent=2))
         print(f"\nResults saved to {args.json_output}")
 
 

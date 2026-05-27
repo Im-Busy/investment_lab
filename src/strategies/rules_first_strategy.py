@@ -888,18 +888,24 @@ class RulesFirstStrategy(Strategy):
         """
         self._vix_regime_sizes = np.ones(self._n_bars, dtype=np.float64)
         try:
-            from src.signals.vix_regime_gate import VIXRegimeGate
+            from src.signals.vix_regime_gate import VixRegimeGate
 
-            gate = VIXRegimeGate()
+            gate = VixRegimeGate(
+                stress_mult=self.vix_regime_crisis_cap,
+                elevated_mult=self.vix_regime_high_vol_cap,
+            )
             dates = self._df.index
             start_str = str(dates[0].date())
             gate.fit(start=start_str)
             for i, d in enumerate(dates):
-                regime = gate.classify(date=d)
+                regime = gate.regime(date=d)
+                multiplier = gate.multiplier(date=d)
                 if regime == "STRESS":
-                    self._vix_regime_sizes[i] = self.vix_regime_crisis_cap
+                    self._vix_regime_sizes[i] = multiplier
                 elif regime == "ELEVATED":
-                    self._vix_regime_sizes[i] = self.vix_regime_high_vol_cap
+                    self._vix_regime_sizes[i] = multiplier
+                else:
+                    self._vix_regime_sizes[i] = 1.0
             num_capped = np.sum(self._vix_regime_sizes < 1.0)
             logger.info(
                 "VIX regime sizing: %d/%d bars capped (%.1f%%)",

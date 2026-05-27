@@ -78,3 +78,49 @@ Before marking a script/command change as complete, verify:
 # Lower threshold = more trades, higher threshold = more selective.
 uv run scripts/run_ml_backtest.py SPY --start 2016-05-12 --trail-stop --entry-threshold 0.45
 ```
+
+## End-to-End Wiring Protocol (CRITICAL — MANDATORY CHECK BEFORE MARKING COMPLETE)
+
+**Every new parameter, feature flag, detector, indicator, risk module, or CLI argument MUST be wired end-to-end into the execution path.** A feature that compiles but doesn't affect scoring/entry/exit is invisible debt.
+
+### The Rule: Trace Every Parameter
+
+After implementing any new feature, you MUST trace its parameter from declaration → init → scoring → entry/exit gates. Use this checklist:
+
+| Check | Question |
+|-------|----------|
+| **Declaration** | Is the param on the class with a default? |
+| **Init gate** | Does `init()` conditionally precompute based on this param? |
+| **Scoring** | Does `_compute_score()` or equivalent read this param or its arrays? |
+| **Entry/Exit** | Does `next()` conditionally gate on this param's value? |
+| **CLI exposure** | Is there an argparse flag that passes to this param? |
+| **CLI-in-kwargs** | Does the script's kwargs dict include the flag? |
+
+### Anti-Patterns That Passed Code Review But Were Dead
+
+| Anti-Pattern | Real Example (2026-05-21 audit) | Consequence |
+|-------------|------|-------------|
+| Param declared but never read in scoring | `min_confluence=3` in SMC | Users think they're gating entries but zero effect |
+| Feature precomputes data but never scored | `use_smc_phl=True` computes 4 arrays, none read | Wasted CPU + user confusion |
+| Function exists but never called | `_calculate_size()` | Positions stay hardcoded 0.95 |
+| CLI flag not in kwargs dict | `--no-volume-pressure` flag declared but not mapped | Flag silently ignored |
+| Toggle gates precompute but not scoring | `use_breaker_blocks` blocks init but scoring always reads arrays | Misleading — appears wired when it's not |
+
+### Mandatory End-to-End Validation Script
+
+After implementing any new parameter, run this audit (or equivalent):
+
+```bash
+# Check if param is referenced in scoring
+uv run python -c "
+import inspect
+from src.strategies.smc_strategy import SMCStrategy
+# For each param with default, grep for usage in _compute_score and next()
+# Any param not found is a wiring gap
+"
+
+# Verify CLI flag maps into kwargs dict
+grep -n 'my_new_flag' scripts/backtest_smc.py  # should appear in BOTH argparse AND kwargs dict
+```
+
+**A feature is NOT complete until it produces a documented, measurable change in backtest output when toggled ON vs OFF.** If `--my-feature` and its absence produce identical backtest metrics, the feature is either dead or not contributing signal — fix or remove it.

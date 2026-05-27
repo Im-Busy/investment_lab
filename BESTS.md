@@ -1,8 +1,64 @@
 ---
-last_updated: 2026-05-25 16:52 (Phase 26 bear market validation)
+last_updated: 2026-05-27 02:12 (production basket ALL OPTIONS ON)
 ---
 
 # Backtest Leaderboard — Best Results by Configuration
+
+## Production Basket ALL OPTIONS ON (2026-05-27)
+
+> **Source:** `scripts/_temp_production_basket_all_on.py`. IS=2016-2024, OOS=2025-01-01→now. 18-instrument production basket. et=0.55, mr=0.70, Multi-TP=ON, Quality Registry=ON.
+> **Flags:** GARCH_ATR=ON, OptionsSentiment=ON, Kelly=ON, OrderBook=ON, SigStrength=ON, Voting=ON, RulesCatalog=ON, Divergence=ON, WM_Bollinger=ON, VIXRegimeSizing=ON (gracefully disabled — import error).
+> **Verdict: 11/18 (61%) OOS positive.** All-on config boosts B-tier phoenix plays dramatically (+0.5 Δ for INTC/SPY/MRK/NEM) but hurts CN_CATL (-1.15 Δ).
+
+### OOS (2025→now) — All Options ON
+
+| Symbol | Tier | Sharpe | Return% | Trades | Win% | PF | MaxDD% |
+|--------|------|--------|---------|--------|------|-----|--------|
+| **INTC** | B | **+1.245** | +35.6 | 43 | 62.8 | 3.43 | -8.4 |
+| **MRK** | B | **+0.918** | +7.2 | 31 | 61.3 | 2.67 | -5.7 |
+| **NEM** | B | **+0.889** | +11.9 | 28 | 71.4 | 2.28 | -10.1 |
+| MPC | A | **+0.593** | +5.1 | 33 | 42.4 | 1.56 | -4.7 |
+| HAL | A | **+0.585** | +5.4 | 39 | 59.0 | 1.65 | -3.9 |
+| SPY | S | **+0.530** | +1.9 | 34 | 70.6 | 2.41 | -2.8 |
+| AMD | B | **+0.453** | +9.8 | 36 | 50.0 | 1.77 | -18.0 |
+| STLD | A | **+0.272** | +3.1 | 41 | 63.4 | 1.80 | -11.5 |
+| XLE | S | **+0.173** | +1.0 | 38 | 52.6 | 1.21 | -3.2 |
+| XLK | S | **+0.169** | +1.1 | 39 | 56.4 | 1.70 | -6.9 |
+| EOG | A | **+0.120** | +0.5 | 15 | 46.7 | 1.12 | -2.9 |
+| SLV | S | -0.047 | -0.7 | 24 | 45.8 | 1.60 | -12.9 |
+| QQQ | S | -0.091 | -0.5 | 43 | 58.1 | 1.52 | -5.3 |
+| GLD | S | -0.176 | -1.5 | 33 | 57.6 | 1.40 | -9.8 |
+| NUE | A | -0.298 | -2.7 | 44 | 52.3 | 1.13 | -9.4 |
+| CN_CATL | B | -0.344 | -3.8 | 30 | 50.0 | 1.46 | -15.5 |
+| LMT | B | -0.469 | -2.9 | 26 | 38.5 | 0.96 | -5.5 |
+| JNJ | B | -0.564 | -2.2 | 29 | 48.3 | 1.03 | -5.0 |
+
+### Tier Averages (OOS)
+
+| Tier | Instruments | Sharpe | OOS Positive |
+|------|-------------|--------|-------------|
+| S | 6 | +0.093 | 3/6 (50%) |
+| A | 5 | +0.254 | 4/5 (80%) |
+| B | 7 | +0.304 | 4/7 (57%) |
+| **All** | **18** | **+0.195** | **11/18 (61%)** |
+
+### Δ vs Baseline (All-On vs Per-Instrument Best)
+
+| Symbol | Baseline OOS | All-On OOS | Δ | Notes |
+|--------|-------------|-----------|-----|-------|
+| INTC | +0.704 | +1.245 | **+0.54** | All signals combine powerfully |
+| MRK | +0.392 | +0.918 | **+0.53** | Divergence+voting boost |
+| NEM | +0.378 | +0.889 | **+0.51** | W/M Bollinger helps miners |
+| SPY | +0.007 | +0.530 | **+0.52** | Kelly+signal-strength synergy |
+| EOG | -0.712 | +0.120 | **+0.83** | Saved from negative territory |
+| JNJ | -0.715 | -0.564 | +0.15 | Still negative but improving |
+| CN_CATL | +0.805 | -0.344 | **-1.15** ⚠️ | China EV hates all-on; simpler=better |
+| QQQ | -0.022 | -0.091 | -0.07 | Minor degradation |
+| GLD | +0.903 | -0.176 | -1.08 ⚠️ | Bear market gold play broken by all-on |
+
+> **Recommendation:** Tier B allocation (15%) benefits most from all-on. Consider all-on as default for B-tier, keep simpler config for S/A-tier.
+
+---
 
 ## Bear Market Validation (2026-05-25) — Phase 26
 

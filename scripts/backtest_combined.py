@@ -66,6 +66,11 @@ def run_single(
     tp1_atr: float = 1.5,
     tp1_size: float = 0.5,
     volume_confirm: bool = True,
+    use_fuzzy: bool = False,
+    fuzzy_weight: float = 0.30,
+    use_svm_regime: bool = False,
+    svm_regime_window: int = 100,
+    svm_regime_down_skip: bool = True,
 ) -> dict:
     from backtesting import Backtest
 
@@ -103,6 +108,11 @@ def run_single(
         tp1_atr=tp1_atr,
         tp1_size=tp1_size,
         volume_confirm=volume_confirm,
+        use_fuzzy=use_fuzzy,
+        fuzzy_weight=fuzzy_weight,
+        use_svm_regime=use_svm_regime,
+        svm_regime_window=svm_regime_window,
+        svm_regime_down_skip=svm_regime_down_skip,
     )
 
     result = {
@@ -276,6 +286,21 @@ def main() -> None:
     parser.add_argument(
         "--no-volume-confirm", action="store_true", help="Disable volume confirmation"
     )
+    parser.add_argument("--use-fuzzy", action="store_true", help="Enable fuzzy logic scoring")
+    parser.add_argument(
+        "--fuzzy-weight", type=float, default=0.30, help="Fuzzy score blend weight (0-1)"
+    )
+    parser.add_argument(
+        "--use-svm-regime", action="store_true", help="Enable SVM regime classification"
+    )
+    parser.add_argument(
+        "--svm-regime-window", type=int, default=100, help="SVM regime lookback window"
+    )
+    parser.add_argument(
+        "--no-svm-down-skip",
+        action="store_true",
+        help="Don't skip entries when SVM predicts down regime",
+    )
     parser.add_argument("--json-output", help="Path to save JSON results")
     args = parser.parse_args()
 
@@ -296,6 +321,11 @@ def main() -> None:
         tp1_atr=args.tp1_atr,
         tp1_size=args.tp1_size,
         volume_confirm=not args.no_volume_confirm,
+        use_fuzzy=args.use_fuzzy,
+        fuzzy_weight=args.fuzzy_weight,
+        use_svm_regime=args.use_svm_regime,
+        svm_regime_window=args.svm_regime_window,
+        svm_regime_down_skip=not args.no_svm_down_skip,
     )
 
     all_results: list[dict] = []

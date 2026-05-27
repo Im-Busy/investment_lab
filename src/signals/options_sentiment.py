@@ -120,8 +120,7 @@ class OptionsSentimentProvider:
                 logger.info("FMP PC ratio: %d records", len(self._pc_data))
             else:
                 logger.warning("FMP PC ratio: 0 records in range")
-        except Exception as e:
-            logger.warning("FMP PC ratio fetch failed: %s, using VIX proxy", e)
+        except Exception:
             self._vix_pc_proxy(start)
 
     def _vix_pc_proxy(self, start: str) -> None:

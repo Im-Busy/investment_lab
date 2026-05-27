@@ -4,6 +4,24 @@
 
 ## Current Objective
 
+**Production Basket ALL OPTIONS ON backtest (2026-05-27).** 18 instruments, IS=2016-2024 + OOS=2025→now, all 10 advanced signal flags enabled.
+
+| Tier | OOS Sharpe | OOS Pos |
+|------|-----------|---------|
+| S (6) | +0.093 | 3/6 (50%) |
+| A (5) | +0.254 | 4/5 (80%) |
+| B (7) | +0.304 | 4/7 (57%) |
+| **All (18)** | **+0.195** | **11/18 (61%)** |
+
+**Key insights:**
+- B-tier phoenix plays (INTC +1.245, MRK +0.918, NEM +0.889, SPY +0.530) get +0.5 Δ from all-on
+- CN_CATL (-1.15 Δ) and GLD (-1.08 Δ) broken by all-on — simpler is better for China/Gold
+- EOG saved from -0.712 baseline to +0.120 OOS
+- VIXRegimeGate import bug — gracefully disables (non-blocking)
+- GARCH convergence issues on several tickers — manageable
+
+**Recommended:** Use all-on for B-tier (15% of basket), keep simpler config for S/A-tier.
+
 **Phase 24 P3 Deferred Items — IMPLEMENTED (2026-05-27).** 4 remaining deferred items from Phase 24 P3 now complete:
 
 | # | Item | File | LOC | Status |

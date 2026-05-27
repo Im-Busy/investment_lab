@@ -130,6 +130,16 @@ uv run scripts/train_ml_pipeline_v3.py --symbol SPY --fast --cv-method cpcv
 
 # CPCV with per-sector model (bagged ensemble)
 uv run scripts/train_ml_pipeline_v3.py --sector tech --fast --cv-method cpcv
+
+# Phase 25 Anti-Overfitting gates (LockBox, BlindAnalysis, LabelShuffling, NestedCV, DTW)
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --use-lock-box
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --blind-analysis
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --label-shuffling
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --use-phase25-cv
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --dtw-overfit-detect
+
+# Full anti-overfitting suite (all gates)
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --use-lock-box --blind-analysis --label-shuffling --use-phase25-cv --dtw-overfit-detect
 ```
 
 ### Autonomous Training Loop (Orchestration Layer)
@@ -1658,3 +1668,73 @@ done
 | `scripts/backtest_rules_first.py` | MODIFIED — +`--use-tadgan-gate`, +`--tadgan-model`, +`--tadgan-threshold-pct` flags |
 | `src/ml/__init__.py` | MODIFIED — +11 exports (GAN + TadGAN) |
 | `docs/GPU_TASK_QUEUE.md` | NEW — 7 GPU tasks with self-contained tutorials |
+
+---
+
+## Phase 25 — Component Wiring & End-to-End Integration (2026-05-27)
+
+### NSGA2 Multi-Objective Optimizer
+```bash
+# Pareto-optimal parameter search via NSGA2
+uv run scripts/run_nsga2_optimizer.py --ticker SPY --start 2018-01-01 --end 2024-12-31
+
+# Custom population and generations
+uv run scripts/run_nsga2_optimizer.py --ticker QQQ --population 50 --generations 30
+```
+
+### Dynamic GA Optimizer (Regime-Adaptive)
+```bash
+# Regime-adaptive GA with associative memory
+uv run scripts/run_dynamic_ga.py --ticker SPY --window 252 --step 21
+
+# Custom memory size
+uv run scripts/run_dynamic_ga.py --ticker GLD --memory-size 20
+```
+
+### NLP Sentiment Pipeline
+```bash
+# Train SVM sentiment model on :) / :( distant supervision
+uv run scripts/run_sentiment_pipeline.py --model svm --train
+
+# Train BiLSTM sentiment model
+uv run scripts/run_sentiment_pipeline.py --model bilstm --train
+
+# Train ensemble model
+uv run scripts/run_sentiment_pipeline.py --model ensemble --train
+
+# Predict sentiment on text
+uv run scripts/run_sentiment_pipeline.py --model svm --predict "Bullish quarter ahead"
+```
+
+### Fuzzy Logic + SVM Regime in Combined Strategy
+```bash
+# Backtest with fuzzy logic scoring blended at 30% weight
+uv run scripts/backtest_combined.py SPY --start 2018-01-01 --use-fuzzy --fuzzy-weight 0.30
+
+# Backtest with SVM regime detection gating entries
+uv run scripts/backtest_combined.py SPY --start 2018-01-01 --use-svm-regime --svm-regime-window 100
+
+# Skip entries during SVM-classified down markets
+uv run scripts/backtest_combined.py SPY --start 2018-01-01 --use-svm-regime --no-svm-down-skip
+
+# Full integration: fuzzy + SVM regime
+uv run scripts/backtest_combined.py SPY --start 2018-01-01 --use-fuzzy --fuzzy-weight 0.25 --use-svm-regime
+```
+
+### Dual Alpha/Beta (Auto-Reported)
+Dual alpha/beta decomposition runs automatically after every `run_ml_backtest.py` and `backtest_rules_first.py` backtest. Results saved to `reports/ml_backtest/dual_alpha_beta_{ticker}.json`.
+
+### Anti-Overfitting Wiring Status
+| Module | Wired To | Gate | CLI Flag |
+|--------|----------|------|----------|
+| `lock_box.py` | `train_ml_pipeline_v3.py` | Blind holdout, one-time access | `--use-lock-box` |
+| `blind_analysis.py` | `train_ml_pipeline_v3.py` | Tune on scrambled labels | `--blind-analysis` |
+| `label_shuffling.py` | `train_ml_pipeline_v3.py` | Verify model beats random | `--label-shuffling` |
+| `nested_cv.py` | `train_ml_pipeline_v3.py` | Nested PurgedKFold CV | `--use-phase25-cv` |
+| `overfitting_detector.py` | `train_ml_pipeline_v3.py` | KNN-DTW loss curve detection | `--dtw-overfit-detect` |
+| `dual_alpha_beta.py` | `run_ml_backtest.py`, `backtest_rules_first.py` | Bull/bear alpha-beta + Chow test | *auto* |
+| `fuzzy_system.py` | `combined_strategy.py` | 5-state Mamdani fuzzy logic | `--use-fuzzy` |
+| `svm_regime.py` | `combined_strategy.py` | SVM regime gating entries | `--use-svm-regime` |
+| `nsga2_optimizer.py` | `scripts/run_nsga2_optimizer.py` | Pareto multi-objective optimizer | *CLI script* |
+| `dynamic_ga.py` | `scripts/run_dynamic_ga.py` | Regime-adaptive GA | *CLI script* |
+| `sentiment_pipeline.py` | `scripts/run_sentiment_pipeline.py` | NLP sentiment ensemble | *CLI script* |

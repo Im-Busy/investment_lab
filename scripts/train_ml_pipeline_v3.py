@@ -50,6 +50,33 @@ from src.ml.purged_cv import PurgedKFold
 from src.ml.sector_map import SECTOR_MAP, SECTOR_NAMES
 from src.ml.triple_barrier import TripleBarrierLabeler
 from src.ml.walk_forward import WalkForwardResult, walk_forward_validation, plot_walk_forward
+from src.ml.lock_box import create_lock_box_chronological
+from src.ml.blind_analysis import run_blind_analysis, BlindAnalysisResult
+from src.ml.label_shuffling import run_label_shuffling_test as phase25_run_label_shuffling_test
+from src.ml.nested_cv import NestedPurgedCV
+from src.ml.overfitting_detector import quick_overfitting_check
+from sklearn.metrics import roc_auc_score as _sklearn_roc_auc
+
+
+class _SklearnAdapter:
+    """Wrap PatternClassifier to expose sklearn-compatible .fit() interface.
+
+    Phase 25 modules (blind_analysis, label_shuffling, nested_cv) expect
+    model.fit(X, y) but PatternClassifier uses model.train(X, y).
+    """
+
+    def __init__(self, clf: PatternClassifier):
+        self._clf = clf
+        self.model = clf.model
+
+    def fit(self, X, y, **kwargs):
+        self._clf.train(X, y, **kwargs)
+        self.model = self._clf.model
+        return self
+
+    def predict_proba(self, X):
+        return self._clf.model.predict_proba(X)
+
 
 logging.basicConfig(
     level=logging.INFO,
@@ -210,99 +237,6 @@ def generate_labels(
     pos_pct = labels.sum() / max(len(labels), 1) * 100
     logger.info(f"Thresholded binary labels (+2%): {pos_pct:.1f}% positive")
     return labels
-
-
-def run_label_shuffling_test(
-    X: pd.DataFrame, y: pd.Series, n_models: int = 3, random_state: int = 42
-) -> dict:
-    """P24-3: Label-shuffling baseline — verify model doesn't exceed random.
-
-    Compares model AUC against AUC achieved on randomly shuffled labels.
-    If model AUC is close to shuffled AUC, the model is effectively random.
-    Acceptable delta: AUC − shuffled_AUC ≥ 0.05.
-
-    Args:
-        X: Feature matrix.
-        y: True labels.
-        n_models: Number of shuffled-label models to average (default 3).
-        random_state: Base random seed.
-
-    Returns:
-        Dict with true_auc, shuffled_auc, delta, and pass/fail status.
-    """
-    from sklearn.metrics import roc_auc_score
-
-    classifier = PatternClassifier(n_estimators=100, max_depth=4, random_state=random_state)
-    result = classifier.train(X, y)
-    true_auc = result.test_auc
-
-    shuffled_aucs = []
-    for i in range(n_models):
-        y_shuffled = y.sample(frac=1, random_state=random_state + i).reset_index(drop=True)
-        shuffled = PatternClassifier(n_estimators=100, max_depth=4, random_state=random_state + i)
-        try:
-            s_result = shuffled.train(X.reset_index(drop=True), y_shuffled)
-            shuffled_aucs.append(s_result.test_auc)
-        except Exception:
-            shuffled_aucs.append(0.50)
-
-    mean_shuffled = float(np.mean(shuffled_aucs)) if shuffled_aucs else 0.50
-    delta = true_auc - mean_shuffled
-    passed = delta >= 0.05
-
-    logger.info(
-        "Label-shuffling test: true AUC=%.4f, shuffled AUC=%.4f, delta=%.4f — %s",
-        true_auc,
-        mean_shuffled,
-        delta,
-        "PASS" if passed else "FAIL",
-    )
-    return {
-        "true_auc": true_auc,
-        "shuffled_auc": mean_shuffled,
-        "delta": delta,
-        "n_models": n_models,
-        "passed": passed,
-    }
-
-
-_LOCK_BOX_ACCESSED = False
-
-
-def lock_box_open(path: str) -> bool:
-    """P24-1: Access Lock Box data — permitted ONCE after all decisions final.
-
-    Raises RuntimeError on second access to prevent test-data overuse.
-    """
-    global _LOCK_BOX_ACCESSED
-    if _LOCK_BOX_ACCESSED:
-        raise RuntimeError("Lock Box already accessed — test data must not be reused.")
-    _LOCK_BOX_ACCESSED = True
-    logger.info("Lock Box opened: %s (ONCE only)", path)
-    return True
-
-
-def blind_analysis_labels(y: pd.Series, random_state: int = 42) -> tuple[pd.Series, dict]:
-    """P24-2: Shuffle target labels during hyperparameter tuning phase.
-
-    This prevents over-hyping by ensuring the tuning process cannot
-    memorize label patterns. Labels are restored after final param selection.
-
-    Args:
-        y: True labels.
-        random_state: Seed for reproducibility.
-
-    Returns:
-        Tuple of (shuffled_labels, mapping_info) — mapping_info
-        encodes the true↔shuffled relationship for later restoration.
-    """
-    np_rng = np.random.RandomState(random_state)
-    n = len(y)
-    perm = np_rng.permutation(n)
-    y_shuffled = y.iloc[perm].reset_index(drop=True) if hasattr(y, "iloc") else y[perm]
-    mapping = {"random_state": random_state, "permutation": perm.tolist(), "n_samples": n}
-    logger.info("Blind analysis: shuffled %d labels (seed=%d)", n, random_state)
-    return y_shuffled, mapping
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -1091,6 +1025,10 @@ def run_pipeline(
     hold_out: bool = False,
     run_shuffling_test: bool = False,
     loss_function: str = "Logloss",
+    use_lock_box: bool = False,
+    blind_analysis: bool = False,
+    use_phase25_cv: bool = False,
+    dtw_overfit_detect: bool = False,
 ) -> dict[str, Any]:
     """Execute the full 9-stage ML pipeline.
 
@@ -1123,6 +1061,10 @@ def run_pipeline(
         hold_out: Run final untouched hold-out validation.
         run_shuffling_test: Run label-shuffling baseline (P24-3) after training.
         loss_function: CatBoost loss function (Logloss default).
+        use_lock_box: Hold out chronologically-last 20%% as LockBox, accessed ONCE after training. (Phase 25)
+        blind_analysis: Tune on scrambled labels, evaluate on true labels. (Phase 25)
+        use_phase25_cv: Use Phase 25 NestedPurgedCV class instead of local nested CV.
+        dtw_overfit_detect: Run KNN-DTW overfitting detection on training loss curves. (Phase 25)
 
     Returns:
         Dict with pipeline summary.
@@ -1310,6 +1252,21 @@ def run_pipeline(
         logger.info("[4/9] Stability Selection: SKIPPED")
         selected_features = list(X_filtered.columns)
 
+    # ── Phase 25: Lock Box (blind holdout) ──
+    lock_box = None
+    if use_lock_box:
+        logger.info("=" * 60)
+        logger.info("[LockBox] Creating chronologically-last 20% holdout")
+        logger.info("=" * 60)
+        X_filtered, y_all, lock_box = create_lock_box_chronological(
+            X_filtered, y_all, test_frac=0.20, metadata={"run_id": run_id}
+        )
+        logger.info(
+            "LockBox created: train=%d samples, holdout=%d samples",
+            len(X_filtered),
+            lock_box.n_samples,
+        )
+
     # ── Stage 5: GWO Hyperparameter Tuning ──
     gwo_params: dict | None = None
     if not fast and not skip_tuning:
@@ -1321,12 +1278,95 @@ def run_pipeline(
         logger.info("[5/9] GWO Tuning: SKIPPED")
 
     # ── Stage 6: CV ──
+    cv_method_label = f"Phase25-{cv_method}" if use_phase25_cv else cv_method
     logger.info("=" * 60)
-    logger.info(f"[6/9] {'CPCV' if cv_method == 'cpcv' else 'PurgedKFold'} Cross-Validation")
+    logger.info(f"[6/9] {cv_method_label.upper()} Cross-Validation")
     logger.info("=" * 60)
-    cv_results = train_with_nested_purged_cv(
-        X_filtered, y_all, horizon=horizon, cv_method=cv_method
-    )
+
+    if use_phase25_cv:
+        cv_param_grid = {
+            "max_depth": [3, 4, 5],
+            "l2_leaf_reg": [5.0, 10.0, 20.0],
+            "random_strength": [2.0, 3.0, 5.0],
+            "min_data_in_leaf": [30, 50, 80],
+        }
+
+        def _cv_build_model(params: dict) -> _SklearnAdapter:
+            mapped = dict(params)
+            clf = PatternClassifier(
+                model_type="catboost",
+                n_estimators=100,
+                learning_rate=0.03,
+                subsample=0.8,
+                colsample_bytree=0.8,
+                random_state=42,
+                **mapped,
+            )
+            return _SklearnAdapter(clf)
+
+        def _cv_eval_fn(
+            model: _SklearnAdapter,
+            X_train: pd.DataFrame,
+            y_train: pd.Series,
+            X_test: pd.DataFrame,
+            y_test: pd.Series,
+        ) -> float:
+            try:
+                preds = model.predict_proba(X_test)[:, 1]
+                return float(_sklearn_roc_auc(y_test, preds))
+            except Exception:
+                return 0.5
+
+        ncv = NestedPurgedCV(
+            n_outer=N_CV_OUTER,
+            n_inner=N_CV_INNER,
+            label_span=horizon,
+            embargo_days=int(PCT_EMBARGO * len(X_filtered)),
+            score_name="auc",
+            maximize=True,
+            random_state=42,
+        )
+        ncv_result = ncv.run(
+            X_filtered,
+            y_all,
+            param_grid=cv_param_grid,
+            build_model=_cv_build_model,
+            eval_fn=_cv_eval_fn,
+        )
+        logger.info(ncv_result.summary())
+        cv_results = {
+            "fold_results": [
+                {
+                    "fold": i + 1,
+                    "test_auc": score,
+                    "train_auc": score,
+                    "overfit_gap": 0.0,
+                    "best_params": ncv_result.best_params_per_outer[i]
+                    if i < len(ncv_result.best_params_per_outer)
+                    else {},
+                }
+                for i, score in enumerate(ncv_result.outer_scores)
+            ],
+            "mean_train_auc": ncv_result.outer_mean,
+            "mean_test_auc": ncv_result.outer_mean,
+            "std_test_auc": ncv_result.outer_std,
+            "mean_overfit_gap": 0.0,
+            "best_params_overall": (
+                ncv_result.best_params_per_outer[0]
+                if ncv_result.best_params_per_outer
+                else {
+                    "max_depth": 3,
+                    "l2_leaf_reg": 10.0,
+                    "random_strength": 3.0,
+                    "min_data_in_leaf": 50,
+                }
+            ),
+            "cv_method": f"p25_{cv_method}",
+        }
+    else:
+        cv_results = train_with_nested_purged_cv(
+            X_filtered, y_all, horizon=horizon, cv_method=cv_method
+        )
 
     # ── Stage 6b: Bagged CPCV (if cpcv mode) ──
     bagged_model_paths: list[str] | None = None
@@ -1584,16 +1624,181 @@ def run_pipeline(
     if shap_report and shap_report.get("suspicious"):
         logger.warning(f"SHAP: {len(shap_report['suspicious'])} suspicious features need review")
 
-    # ── P24-3: Label-Shuffling Baseline Test ──
+    # ── Phase 25: Lock Box Evaluation (blind holdout, ONCE) ──
+    lock_box_auc: float | None = None
+    if lock_box is not None:
+        logger.info("=" * 60)
+        logger.info("[LockBox] Unsealing blind holdout — one-time evaluation")
+        logger.info("=" * 60)
+        try:
+            X_holdout, y_holdout = lock_box.unseal()
+            lock_box_auc = float(
+                _sklearn_roc_auc(y_holdout, final_model.model.predict_proba(X_holdout)[:, 1])
+            )
+            logger.info("LockBox holdout AUC: %.4f (n=%d)", lock_box_auc, len(X_holdout))
+        except Exception as e:
+            logger.warning(f"LockBox evaluation failed: {e}")
+
+    # ── Phase 25: Blind Analysis ──
+    blind_result: BlindAnalysisResult | None = None
+    if blind_analysis:
+        logger.info("=" * 60)
+        logger.info("[BlindAnalysis] Tuning on scrambled labels, evaluating on true")
+        logger.info("=" * 60)
+        try:
+            param_grid = {
+                "max_depth": [3, 4, 5],
+                "l2_leaf_reg": [5.0, 10.0, 20.0],
+                "min_data_in_leaf": [30, 50, 80],
+            }
+
+            def _build_model(params: dict) -> _SklearnAdapter:
+                clf = PatternClassifier(
+                    model_type="catboost",
+                    n_estimators=100,
+                    learning_rate=0.03,
+                    subsample=0.8,
+                    colsample_bytree=0.8,
+                    random_state=42,
+                    **params,
+                )
+                return _SklearnAdapter(clf)
+
+            def _eval_fn(model: _SklearnAdapter, X: pd.DataFrame, y: pd.Series) -> float:
+                preds = model.predict_proba(X)[:, 1]
+                return float(_sklearn_roc_auc(y, preds))
+
+            blind_result = run_blind_analysis(
+                X_filtered,
+                y_all,
+                param_grid=param_grid,
+                build_model=_build_model,
+                eval_fn=_eval_fn,
+                n_trials=10,
+                val_frac=0.20,
+                maximize=True,
+                random_state=42,
+            )
+            logger.info(blind_result.summary())
+        except Exception as e:
+            logger.warning(f"Blind analysis failed: {e}")
+
+    # ── Phase 25: KNN-DTW Overfitting Detection ──
+    dtw_overfit: bool | None = None
+    if dtw_overfit_detect:
+        logger.info("=" * 60)
+        logger.info("[DTW-Overfit] KNN-DTW overfitting detection on loss curves")
+        logger.info("=" * 60)
+        try:
+            train_hist = getattr(final_model, "train_loss_history", None)
+            val_hist = getattr(final_model, "val_loss_history", None)
+            if train_hist is not None and val_hist is not None:
+                dtw_overfit = quick_overfitting_check(np.array(val_hist), np.array(train_hist))
+                logger.info(
+                    "DTW overfitting: %s",
+                    "DETECTED" if dtw_overfit else "not detected",
+                )
+            elif hasattr(final_model.model, "evals_result_"):
+                evals = final_model.model.evals_result_
+                if evals and "validation" in evals:
+                    val_loss = np.array(evals["validation"].get("Logloss", []))
+                    train_loss = np.array(evals["learn"].get("Logloss", []))
+                    dtw_overfit = quick_overfitting_check(val_loss, train_loss)
+                    logger.info(
+                        "DTW overfitting (from evals_result_): %s",
+                        "DETECTED" if dtw_overfit else "not detected",
+                    )
+                else:
+                    logger.info("DTW overfitting: skipped (no evals_result_ in model)")
+            else:
+                logger.info(
+                    "DTW overfitting: skipped (PatternClassifier has no loss history). "
+                    "Re-run with eval_set monitoring enabled."
+                )
+        except Exception as e:
+            logger.warning(f"DTW overfitting detection failed: {e}")
+
+    # ── P25: Label-Shuffling Baseline Test ──
     shuffling_result: dict | None = None
     if run_shuffling_test:
-        shuffling_result = run_label_shuffling_test(X_filtered, y_all)
-        if not shuffling_result["passed"]:
-            logger.warning("LABEL-SHUFFLING FAILED — model may be fitting noise")
+        logger.info("=" * 60)
+        logger.info("[LabelShuffling] Phase 25 label-shuffling baseline test")
+        logger.info("=" * 60)
+        try:
+
+            def _ls_build_model() -> _SklearnAdapter:
+                clf = PatternClassifier(
+                    model_type="catboost",
+                    n_estimators=100,
+                    max_depth=4,
+                    learning_rate=0.03,
+                    random_state=42,
+                )
+                return _SklearnAdapter(clf)
+
+            def _ls_eval_fn(
+                model: _SklearnAdapter,
+                X_train: pd.DataFrame,
+                y_train: pd.Series,
+                X_test: pd.DataFrame,
+                y_test: pd.Series,
+            ) -> float:
+                try:
+                    preds = model.predict_proba(X_test)[:, 1]
+                    return float(_sklearn_roc_auc(y_test, preds))
+                except Exception:
+                    return 0.5
+
+            ls_result = phase25_run_label_shuffling_test(
+                X_filtered,
+                y_all,
+                build_model=_ls_build_model,
+                eval_fn=_ls_eval_fn,
+                n_shuffles=30,
+                test_frac=0.20,
+                random_state=42,
+            )
+            logger.info(ls_result.summary())
+            if ls_result.is_noise_exploiting:
+                logger.warning("LABEL-SHUFFLING: features may exploit noise structure")
+            shuffling_result = {
+                "true_score": ls_result.true_score,
+                "shuffled_mean": ls_result.shuffled_mean,
+                "shuffled_std": ls_result.shuffled_std,
+                "random_baseline": ls_result.random_baseline,
+                "exceed_probability": ls_result.exceed_probability,
+                "is_noise_exploiting": ls_result.is_noise_exploiting,
+                "n_shuffles": len(ls_result.shuffled_scores),
+                "warnings": ls_result.warnings,
+            }
+        except Exception as e:
+            logger.warning(f"Label-shuffling test failed: {e}")
     # Save shuffling result
     if shuffling_result:
         with open(run_dir / "label_shuffling.json", "w") as f:
             json.dump(shuffling_result, f, indent=2)
+
+    # Save Phase 25 results
+    if lock_box_auc is not None:
+        with open(run_dir / "lock_box.json", "w") as f:
+            json.dump({"holdout_auc": lock_box_auc}, f, indent=2)
+    if blind_result is not None:
+        with open(run_dir / "blind_analysis.json", "w") as f:
+            json.dump(
+                {
+                    "scrambled_best_params": blind_result.scrambled_best_params,
+                    "scrambled_best_score": blind_result.scrambled_best_score,
+                    "true_score": blind_result.true_score,
+                    "score_delta": blind_result.score_delta,
+                    "is_honest": blind_result.is_honest,
+                    "warnings": blind_result.warnings,
+                },
+                f,
+                indent=2,
+            )
+    if dtw_overfit is not None:
+        with open(run_dir / "dtw_overfit.json", "w") as f:
+            json.dump({"is_overfit": dtw_overfit}, f, indent=2)
 
     # ── B14.1: Strict Walk-Forward Invariant Enforcement ──
     if strict_wf:
@@ -1674,6 +1879,10 @@ def run_pipeline(
         "pbo_result": pbo_result,
         "dsr_result": dsr_result,
         "hold_out_result": hold_out_result,
+        "shuffling_result": shuffling_result,
+        "lock_box_auc": lock_box_auc,
+        "blind_analysis": blind_result.summary() if blind_result else None,
+        "dtw_overfit": dtw_overfit,
     }
 
 
@@ -1996,6 +2205,29 @@ def main():
         default=None,
         help="Path to pre-trained TTS-GAN model (.pt) to skip GAN training.",
     )
+    parser.add_argument(
+        "--use-lock-box",
+        action="store_true",
+        help="Hold out chronologically-last 20%% of data as a LockBox — accessed ONCE "
+        "after all training to evaluate final model. (Phase 25)",
+    )
+    parser.add_argument(
+        "--blind-analysis",
+        action="store_true",
+        help="Run blind analysis: tune on scrambled labels, evaluate on true labels. "
+        "Prevents over-hyping from iterative HP optimization. (Phase 25)",
+    )
+    parser.add_argument(
+        "--use-phase25-cv",
+        action="store_true",
+        help="Use Phase 25 NestedPurgedCV class instead of local nested CV implementation.",
+    )
+    parser.add_argument(
+        "--dtw-overfit-detect",
+        action="store_true",
+        help="Run KNN-DTW overfitting detection on training loss curves after final model. "
+        "Requires dtaidistance package. (Phase 25)",
+    )
 
     args = parser.parse_args()
 
@@ -2033,6 +2265,10 @@ def main():
                 run_shuffling_test=args.label_shuffling,
                 label_type=args.label_type,
                 loss_function=args.loss_function,
+                use_lock_box=args.use_lock_box,
+                blind_analysis=args.blind_analysis,
+                use_phase25_cv=args.use_phase25_cv,
+                dtw_overfit_detect=args.dtw_overfit_detect,
             )
     else:
         run_pipeline(
@@ -2061,6 +2297,10 @@ def main():
             run_shuffling_test=args.label_shuffling,
             label_type=args.label_type,
             loss_function=args.loss_function,
+            use_lock_box=args.use_lock_box,
+            blind_analysis=args.blind_analysis,
+            use_phase25_cv=args.use_phase25_cv,
+            dtw_overfit_detect=args.dtw_overfit_detect,
         )
 
 

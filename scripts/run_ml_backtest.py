@@ -643,6 +643,75 @@ def main() -> None:
             for k, v in r["defensive"].items():
                 print(f"  {k}: {v}")
 
+        # ── Dual Alpha/Beta Analysis ──
+        _print_dual_alpha_beta(full_stats, ticker, df)
+
+
+def _print_dual_alpha_beta(full_stats, ticker: str, market_df: pd.DataFrame) -> None:
+    """Compute and print dual alpha/beta decomposition vs market."""
+    from src.analysis.dual_alpha_beta import compute_dual_alpha_beta
+
+    equity_curve = getattr(full_stats, "_equity_curve", None)
+    if equity_curve is None or len(equity_curve) < 2:
+        print("\n  Dual α/β: skipped (no equity curve data)")
+        return
+
+    if isinstance(equity_curve, pd.DataFrame):
+        eq_col = equity_curve.iloc[:, 0]
+    else:
+        eq_col = equity_curve
+
+    try:
+        strategy_rets = eq_col.pct_change().dropna()
+    except Exception:
+        print("\n  Dual α/β: skipped (could not compute returns from equity curve)")
+        return
+
+    close_col = "Close" if "Close" in market_df.columns else market_df.columns[0]
+    market_rets = market_df[close_col].pct_change().dropna()
+    common_idx = strategy_rets.index.intersection(market_rets.index)
+    if len(common_idx) < 20:
+        print(f"\n  Dual α/β: skipped (only {len(common_idx)} overlapping dates)")
+        return
+
+    strategy_aligned = strategy_rets.loc[common_idx]
+    market_aligned = market_rets.loc[common_idx]
+
+    result = compute_dual_alpha_beta(strategy_aligned, market_aligned)
+
+    print("\n" + "─" * 60)
+    print("DUAL ALPHA/BETA DECOMPOSITION")
+    print("─" * 60)
+    print(result.summary())
+
+    out_path = Path(f"reports/ml_backtest/dual_alpha_beta_{ticker}.json")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    import json
+
+    serializable = {
+        "ticker": ticker,
+        "single_alpha": result.single_alpha,
+        "single_beta": result.single_beta,
+        "single_r2": result.single_r2,
+        "bull_alpha": result.bull_alpha,
+        "bull_beta": result.bull_beta,
+        "bull_n": result.bull_n,
+        "bear_alpha": result.bear_alpha,
+        "bear_beta": result.bear_beta,
+        "bear_n": result.bear_n,
+        "beta_asymmetry": result.beta_asymmetry,
+        "alpha_gap": result.alpha_gap,
+        "phantom_alpha": result.phantom_alpha,
+        "chow_statistic": result.chow_statistic,
+        "chow_pvalue": result.chow_pvalue,
+        "is_structural_break": result.is_structural_break,
+        "is_convex": result.is_convex,
+        "is_concave": result.is_concave,
+        "warnings": result.warnings,
+    }
+    out_path.write_text(json.dumps(serializable, indent=2))
+    print(f"\nSaved to {out_path}")
+
 
 if __name__ == "__main__":
     main()

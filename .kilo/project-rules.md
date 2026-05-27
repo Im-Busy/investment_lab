@@ -17,6 +17,9 @@
 - Risk management (position sizing, loss limits, circuit breakers) is in `src/risk/`.
 - PineScript→Python conversion helpers in `src/indicators/pinescript_helpers.py` (17 functions: supertrend, sar, dmi, macd, qqe, vwap_simple, etc.).
 - Research insights tracked in `docs/research_logic_map/insight_registry.md` (77 insights from 21 sources).
+- **Stock/instrument selection criteria** centralized in `docs/stock_selection_criteria.md`. All ticker
+  selection decisions — for training baskets, backtests, or live trading — MUST reference this document.
+  11 hard filters (F1-F11), 9 desirability scorecard dimensions (D1-D9), 3 context tiers.
 
 ## Backtesting Standards
 - Every strategy must produce valid signal logs before being considered complete.

@@ -167,6 +167,95 @@ grep -n 'my_new_flag' scripts/backtest_smc.py  # should appear in BOTH argparse 
 
 **A feature is NOT complete until it produces a documented, measurable change in backtest output when toggled ON vs OFF.** If `--my-feature` and its absence produce identical backtest metrics, the feature is either dead or not contributing signal — fix or remove it.
 
+---
+
+## Source Attribution Protocol (CRITICAL — MANDATORY FOR ALL EXTERNAL CONCEPTS)
+
+**Every implementation, design, algorithm, or pattern borrowed from an external source MUST carry an attribution tag.** This includes papers, web articles, blog posts, tutorials, forum posts, YouTube videos, reference repos, and documentation.
+
+### The Rule: Cite Everything Borrowed
+
+| Check | Question |
+|-------|----------|
+| **Module docstring** | Does the file have a `Source:` or `Reference:` line naming the external source? |
+| **Inherited code** | Does the docstring note `Adapted from:` with URL and what was changed? |
+| **Registry entry** | Is the source listed in `SOURCE_MANIFEST.md` with all files referencing it? |
+| **Web source** | Is it in `docs/research_logic_map/web_source_registry.md` (W-ID assigned)? |
+| **Paper source** | Is it in `docs/research_logic_map/insight_registry.md` (P-ID assigned)? |
+
+### Standardized Docstring Format
+
+Every Python file that borrows external concepts MUST include one of these at the top of the module docstring:
+
+```python
+"""
+<brief description of what this module does>
+
+Source: <name>, <URL/DOI>, <section/§ if applicable>
+"""
+```
+
+For papers:
+```python
+"""
+<brief description>
+
+Paper: "<title>" (<author(s)>, <year>), <reference ID if in insight_registry.md>
+"""
+```
+
+For adapted code:
+```python
+"""
+<brief description>
+
+Adapted from: <source name>, <URL>, <license if applicable>
+Changes: <what was modified and why>
+"""
+```
+
+### Aggregation Rules
+
+| Scenario | Format |
+|----------|--------|
+| Multiple sources | List each on a separate `Source:` line |
+| Web article | `Source: <title>, <URL>` |
+| Paper with registry ID | `Paper: PXX — "<title>"` |
+| Paper without registry ID | `Paper: "<title>" (<author>, <year>), <DOI>` |
+| Reference implementation | `Reference: <repo name>, <URL>` |
+| ICT/SMC concept | `Reference: ICT <concept name> methodology` |
+| Library wrapping | `Source: <library name>, <URL>` |
+
+### Source Registry Files
+
+| File | Purpose | Public? |
+|------|---------|---------|
+| `SOURCE_MANIFEST.md` (root) | **Master ledger** — every source, every file, status. Private. | No |
+| `docs/research_logic_map/insight_registry.md` | Papers only, with insight tracking | Yes |
+| `docs/research_logic_map/web_source_registry.md` | Non-paper web sources, with W-IDs | Yes |
+
+### Sync Protocol — Removing Sources
+
+When a source should no longer be referenced:
+
+1. Mark it `~~strikethrough~~` in `SOURCE_MANIFEST.md`
+2. User invokes `/sync-attributions`
+3. Agent removes all `Source:`/`Reference:` lines from listed files
+4. Agent removes entries from registry files
+5. Agent strips strikethrough entries from SOURCE_MANIFEST.md
+
+### Anti-Patterns
+
+| Don't | Because |
+|-------|----------|
+| Implement a paper concept without citing it | Traceability gap — future sessions can't verify origin |
+| Copy code from a blog without attribution | License violation + makes auditing impossible |
+| Use `Source:` without listing in SOURCE_MANIFEST.md | Manifest becomes stale; attribution drift |
+| Leave orphaned references after removing code | Litters codebase with dead citations |
+| Assume internal-only code doesn't need sources | All borrowed ideas need attribution, regardless of visibility |
+
+---
+
 This project includes a paper summarization workflow using the **paper2md** tool:
 
 ### Location
@@ -312,11 +401,14 @@ The agent updates `MEMORY.md` continuously during the session. At session end, t
 
 ### When to Add Tasks to the Queue
 
+**CRITICAL — MANDATORY TASKIFICATION RULE:** Whenever you encounter, design, implement, or identify code that requires GPU (GANs, diffusion, transformers, large RL, SHAP, deep learning training) or runs >5 min/epoch on CPU, you MUST immediately add it to `docs/GPU_TASK_QUEUE.md` with a self-contained tutorial. Do NOT skip this step and do NOT defer it — even if the code hasn't been built yet. A stub task entry with planned files and estimated tutorial is sufficient. This ensures no GPU-bound work is lost across sessions.
+
 Add a task whenever:
 - Code is implemented but gate validation requires GPU training
 - A model was trained on CPU with reduced parameters (note what full params would be)
 - A paper's method requires GPU (GANs, diffusion, transformers, large SHAP)
 - You encounter OOM or >5 min/epoch training times on CPU
+- A feature requires LLM inference at scale (multi-agent frameworks, adversarial debate, LLM stress-testing) that is deferred
 
 ### Task Entry Template
 
@@ -339,7 +431,10 @@ Add a task whenever:
 
 **Expected runtime on GPU:** X-Y minutes/hours
 **Paper reference:** (if applicable)
+**Source:** (plan ref, awesome-ai-in-finance, paper, etc.)
 ```
+
+**IMPORTANT: Even for unimplemented features** (files not yet created), add a stub task with `files to create:` and a tutorial showing planned CLI commands. The `⏳ Not started — files not built` status tag indicates the task entry is a placeholder for future implementation.
 
 ## Progress Documentation — CRITICAL FOR ALL SESSIONS
 
@@ -465,6 +560,7 @@ The project exposes six primary workflows as Kilo agents and slash commands. The
 | **housekeeper** | `.kilo/agent/housekeeper.md` | Audits file system, flags misplaced files and duplicate dirs, produces safe migration plan. |
 | **researcher** | `.kilo/agent/researcher.md` | Searches Google Scholar, ArXiv, GitHub for papers, reference implementations, and benchmarks. Cross-references findings with project modules. Auto-activates when designing new algorithms or encountering unfamiliar methods. |
 | **batch-tuner** | `.kilo/agent/batch-tuner.md` | Runs parameter sweeps and backtests in parallelized batches across multiple instruments. Tunes Rules-First params, finds universal best config, auto-generates comparison reports. Use for any multi-instrument parameter optimization. |
+| **sync-attributions** | `.kilo/agent/sync-attributions.md` | Purges sources marked `~~strikethrough~~` in SOURCE_MANIFEST.md from code and registries. |
 
 ### Slash Commands
 
@@ -477,6 +573,7 @@ The project exposes six primary workflows as Kilo agents and slash commands. The
 | `/housekeeper` | housekeeper | Audit file system, produce migration plan. |
 | `/research` | researcher | Search for papers, repos, benchmarks. `/research regime-switching HMM` |
 | `/batch-tune` | batch-tuner | Tune Rules-First params across instruments. `/batch-tune --fast` |
+| `/sync-attributions` | sync-attributions | Purge strikethrough-marked sources from code. No arguments. |
 
 ### When to Use Slash Commands vs Direct CLI
 
@@ -603,6 +700,7 @@ This project is indexed by GitNexus as **investment_trying_lab_private** (35,906
 
 ## Always Do
 
+- **MUST consult `docs/stock_selection_criteria.md` whenever tasked with choosing tickers, instruments, or assembling training baskets.** The document defines 11 hard filters (F1-F11), 9 desirability scorecard dimensions (D1-D9), and context-specific override rules. Any ticker that fails hard filters must not enter the training universe or backtest pipeline.
 - **MUST run impact analysis before editing any symbol.** Before modifying a function, class, or method, run `gitnexus_impact({target: "symbolName", direction: "upstream"})` and report the blast radius (direct callers, affected processes, risk level) to the user.
 - **MUST run `gitnexus_detect_changes()` before committing** to verify your changes only affect expected symbols and execution flows.
 - **MUST warn the user** if impact analysis returns HIGH or CRITICAL risk before proceeding with edits.

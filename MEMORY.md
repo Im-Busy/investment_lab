@@ -4,7 +4,44 @@
 
 ## Current Objective
 
-**Production Basket ALL OPTIONS ON backtest (2026-05-27).** 18 instruments, IS=2016-2024 + OOS=2025→now, all 10 advanced signal flags enabled.
+**10 New Ticker Screen + Backtest (2026-05-27).** 10 fresh candidates screened against 11 hard filters, data downloaded, Rules-First all-on backtests run (IS=2016-2024, OOS=2025-2026). 5/10 positive OOS Sharpe. 2 S-tier, 2 A-tier, 1 B-tier, 5 C-tier.
+
+**Phase 28 implementation — NEAR COMPLETE (2026-05-27).** 33 insights from 4 external repos. 22/27 tasks complete (81%).
+
+| # | Item | File | LOC | Status |
+|---|------|------|-----|--------|
+| P28-1 | Survivorship-free universe | `src/data/historical_universe.py` | 160 | ✅ delisted retention, `universe_on(date)` |
+| P28-2 | Hierarchical symbol filter pipeline | `src/data/symbol_filter.py` | 80 | ✅ `filter_hierarchical()`, `filter_pipeline()`, `FilterResult` |
+| P28-3 | CRNG fat-tail RNG → label shuffling | `src/ml/label_shuffling.py` (modify) | 90 | ✅ `generate_crng_labels()` + `run_crng_baseline_test()` |
+| P28-4 | show_options() CLI pattern | `src/cli/option_discovery.py` | 175 | ✅ `show_options()`, FinanceDatabase schema query |
+| P28-5 | Batch loader + progress | `src/data/batch_loader.py` | 50 | ✅ `load_batch()`, ThreadPoolExecutor, `BatchProgress` callback |
+| P28-6 | FinanceDatabase symbol layer | `src/data/financedb_layer.py` | 50 | ✅ `get_universe()`, `search_symbols()`, `count_by_sector()`, lru_cache |
+| P28-7 | Fundamental analysis pipeline | `src/data/fundamental_pipe.py` | 210 | ✅ `to_toolkit()`, `fundamental_features_for_ml()`, `pipe_sector_fundamentals()` |
+| P28-8 | US stock symbols auto-update | `src/data/symbol_sync.py` | 190 | ✅ `fetch_all_us_symbols()`, `sync_with_diff()`, `diff_symbols()` |
+| P28-9 | Adanos sentiment API | `src/nlp/adanos_sentiment.py` | 135 | ✅ REST, zero deps, batch fetch, cache TTL |
+| P28-10 | Congressional trade signals | `src/data/congressional_signals.py` | 250 | ✅ `fetch_congress_trades()`, `aggregate_trades_by_ticker()`, `get_congress_signals()` |
+| P28-11 | Faiss chart pattern similarity search | `src/patterns/similarity_search.py` | 200 | ✅ `search_similar_patterns()`, `search_rolling()`, `format_result_table()` |
+| P28-12 | Patternity chart pattern wrapper | `src/patterns/patternity_wrapper.py` | 170 | ✅ `PatternityWrapper.detect()`, `compare_with_internal()` |
+| P28-13 | Fund flow / order flow signals | `src/signals/fund_flow.py` | 330 | ✅ MFM/OBV/A/D/EoM + large-order detector, `fund_flow_to_ml_features()` |
+| P28-14 | Futures inventory alt data signals | `src/data/futures_inventory.py` | 195 | ✅ `FuturesInventory.get_signals()`, supply/demand bias, commodity exchange map |
+| P28-18 | skfolio portfolio optimization | `src/optimization/skfolio_optimizer.py` | 280 | ✅ `compare_methods()`, MV/CVaR/HRP/RiskBudget/InvVol |
+| P28-19 | Indicator computation reference | `docs/reference_phase28_external_tools.md` | 0 | ✅ 9 indicators (MA/MACD/BOLL/RSI/WR/CCI/ATR + KDJ/BIAS gaps) |
+| P28-20 | Options data & Greeks | `src/data/options_data.py` | 305 | ✅ `compute_greeks()`, `OptionsChain`, `get_options_sentiment()`, unusual activity |
+| P28-21 | MCP stock data server | `src/mcp/stock_server.py` | 195 | ✅ `StockDataTools`, 3 MCP tools, stdio server |
+| P28-22 | Daily backtest report agent | `scripts/daily_report_agent.py` | 210 | ✅ `generate_daily_report()`, TickerStatus, regime check |
+| P28-23 | Web dashboard architecture ref | `docs/reference_phase28_external_tools.md` | 0 | ✅ Next.js 15 + shadcn/ui + TradingView + MongoDB |
+| P28-24 | Docker Compose production | `docker-compose.prod.yml` | 70 | ✅ App + MongoDB + 5 volumes + healthchecks |
+| P28-25 | Risk-profiling onboarding | `scripts/user_profile.py` | 265 | ✅ `build_profile()`, `generate_recommendation()`, interactive CLI |
+| P28-26 | WFGY LLM agent stress-test | `docs/reference_phase28_external_tools.md` | 0 | ✅ 16-mode failure map for LLM trading agents |
+| P28-27 | tf-quant-finance evaluation | `docs/reference_phase28_external_tools.md` | 0 | ✅ PDE/HW/MC/quasi-random — not worth adopting |
+
+**New deps:** `financedatabase` (v2.3.1), `faiss-cpu` (1.14.2), `skfolio` (0.20.1), `patternity` (0.1.0) + transitive deps (`cvxpy-base`, `pycryptodome`, `python-binance`, `qdldl`, `sparsediffpy`).
+
+**Phase 28 remaining (deferred):** P28-15 (MarS — GPU), P28-16 (FinRL — GPU), P28-17 (Multi-agent — LLM+GPU). 3 GPU/LLM-gated tasks.
+
+**Q2 2026 OOS Re-Run (2026-05-27):** 17/17 (100%) OOS positive. Mean Sharpe 1.135, median 1.065. IS→OOS correlation -0.388. Market regime BULLISH (71% above MA50, RSI 59.0). CN_CATL excluded (yfinance 404). Paper trading: 3 BUY (XLK/NUE/STLD), 14 HOLD. GPU tasks skipped (torch 2.9.1+cpu). Results in BESTS.md §Q2 2026.
+
+**Recommended next:** Commit results. Continue paper trading daily. Re-check GPU availability for TTS-GAN P0 gate. Re-run OOS quarterly at end of Q3/Q4 2026.
 
 | Tier | OOS Sharpe | OOS Pos |
 |------|-----------|---------|
@@ -31,22 +68,40 @@
 | P24-33 | Binomial VAR for event-driven risk | `src/risk/binomial_var.py` | 170 | ✅ NEW |
 | P24-35 | W/M Bollinger patterns | `src/patterns/bollinger/wm_patterns.py` | 188 | ✅ EXISTS (Phase 25) |
 
-**All 27 phases + all P3 deferred items now COMPLETE.** 3 new modules (~550 LOC), 3 modified `__init__.py` files. COMMAND_CHEATSHEET.md updated with P24-P3 section.
+**All 27 phases + all P3 deferred items now COMPLETE. Phase 28 (Resource Extraction) ACTIVE — 33 insights, 4 P0 items ready to implement.**
 
-**Recommended next:** Commit all changes. Monitor paper trading. Re-run GPU tasks when GPU available.
+**Recommended next:** Continue Phase 28 — P28-2 (symbol filter pipeline, 80 loc), P28-5 (batch loader, 50 loc), P28-6 (FinanceDatabase layer, 50 loc) — remaining P0 data infra items.
 
 **Phase 26: Bear Market Validation COMPLETE → Paper Trading Launch (2026-05-25).** Bear market backtest (IS=2016-2021, OOS=2022-2026) **PASSED — 12/18 (67%) positive OOS Sharpe ≥60% gate.** System survived -24.5% SPY bear (2022) + oil shock (2026 Q1) + V-shaped recovery (Apr 2026).
 
 **Comprehensive 122-instrument backtest results (2026-05-25):** IS→OOS Sharpe correlation **-0.226** (IS anti-predictive). Energy 89% OOS positive (top category). MidCap-Steel emerged as top-tier (NUE +1.43, STLD +1.06). Financials/REITs/HK/Utilities structural failures (mean -0.45 to -0.68). 15 zero-trade tickers. Production basket expanded to 18 instruments across 3 tiers.
 
-**Production basket (updated 2026-05-25):**
-| Tier | Instruments | Allocation | Mean OOS Sharpe |
-|------|------------|------------|-----------------|
-| **S (60%)** | XLK, XLE, GLD, SPY, SLV, QQQ | 6×10% | +0.90 |
-| **A (25%)** | NUE, STLD, HAL, MPC, EOG | 5×5% | +1.36 |
-| **B (15%)** | INTC, AMD, LMT, JNJ, MRK, NEM, CN_CATL | 7×2% | +1.09 |
+**Production basket (updated 2026-05-25, OOS verified 2026-05-27):**
+| Tier | Instruments | Allocation | Mean OOS Sharpe (Q2 2026) |
+|------|------------|------------|---------------------------|
+| **S (60%)** | XLK, XLE, GLD, SPY, SLV, QQQ | 6×10% | **+0.949** |
+| **A (25%)** | NUE, STLD, HAL, MPC, EOG | 5×5% | **+1.350** |
+| **B (15%)** | INTC, AMD, LMT, JNJ, MRK, NEM | 6×2% | **+1.143** |
+| **All (17)** | (CN_CATL excluded — yfinance 404) | 100% | **+1.135** |
 
-- **NEXT:** Launch paper trading daily signals for 18-instrument production basket. See `progress_docs/plans/full.md#phase-26`.
+**New Ticker Candidates (2026-05-27):** 10 screened, 10 passed, 5/10 positive OOS Sharpe.
+
+| Tier | Tickers | N | Mean OOS Sharpe | Notes |
+|------|---------|---|-----------------|-------|
+| **S-NEW** | CHTR (+1.11), LRCX (+0.90) | 2 | **+1.00** | Phoenix plays. CHTR -59% BH, +1.22 delta. Add to S-tier expansion. |
+| **A-NEW** | GD (+0.75), ABT (+0.70) | 2 | **+0.73** | Defense + healthcare phoenix. Both IS negative → OOS positive. |
+| **B-NEW** | NOC (+0.23) | 1 | +0.23 | Marginal. Defense sector. 62% WR on 16 trades. |
+| **C-SKIP** | DHI, URI, CTVA, APH, GE | 5 | -0.81 | Low trades or bad WR. Skip. |
+| **All-new** | — | 10 | **+0.01** | 5/10 (50%) positive. |
+
+**Key findings:**
+- CHTR anti-correlated to market (BH -59%, strategy +1.1% OOS) — telecom/media patterns work
+- LRCX 69% WR, 2.67 PF with 13 trades — semiconductors work
+- GE/APH/URI fail from insufficient trades (3 OOS each with production config)
+- CTVA structural fail — agriculture doesn't produce chart patterns
+- All 5 winners have IS→OOS delta >= +0.77 (phoenix pattern consistent)
+
+**Paper Trading Signals (2026-05-27):** 3 BUY (XLK +0.554, NUE +0.555, STLD +0.556), 14 HOLD, 1 FAIL (CN_CATL). Bullish market — sector rotation favoring MidCap-Steel + Tech.
 
 **SMC binary score FIXED + dead-param audit FIXES APPLIED + paper gaps CLOSED (2026-05-21).**
 - Conviction grading added to SMC sweep detection — scores now continuous (not binary ±0.905). Trade count varies smoothly with entry threshold.

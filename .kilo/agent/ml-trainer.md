@@ -95,8 +95,12 @@ subsample=0.8, colsample_bytree=0.8
 ## Basket Rules
 
 - Minimum 5 tickers. Single-ticker = guaranteed overfit.
+- **MUST consult `docs/stock_selection_criteria.md` before assembling any basket.**
+  All tickers must pass all 11 hard filters (F1-F11). Target alpha stocks must additionally
+  satisfy Tier 3 criteria: $500M-$5B market cap, >500K avg daily volume, <5 analysts.
 - Diverse sectors improve generalization (proven in C3 ablation study)
-- Volatility 12-25% annual is the sweet spot
+- Financials and Utilities are excluded by default (F10, F11) — incompatible accounting
+- Volatility 12-55% annual (operational range; efficiency sweet spot 25-60%)
 - Skip cross-asset features for large baskets (becomes noise)
 
 ## Post-Training Steps

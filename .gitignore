@@ -178,6 +178,9 @@ logs/
 /scripts/_archived/
 /scripts/archive/
 
+# Private source attribution manifest (do NOT sync to public)
+/SOURCE_MANIFEST.md
+
 # Cloned reference repos and papers (exclude everything except knowledge-graph files)
 /useful_resources/papers/
 /useful_resources/papers_md/

@@ -26,6 +26,17 @@ from src.optimization.two_phase_ga import (
     Phase1Result,
     RuleDef,
 )
+from src.optimization.skfolio_optimizer import (
+    OptWeights,
+    OptComparison,
+    compare_methods,
+    optimize_cvar,
+    optimize_hrp,
+    optimize_inverse_vol,
+    optimize_mean_variance,
+    optimize_risk_budgeting,
+    weights_to_dataframe,
+)
 
 __all__ = [
     "HuataiPipeline",
@@ -43,4 +54,13 @@ __all__ = [
     "TwoPhaseGAResult",
     "Phase1Result",
     "RuleDef",
+    "OptWeights",
+    "OptComparison",
+    "compare_methods",
+    "optimize_cvar",
+    "optimize_hrp",
+    "optimize_inverse_vol",
+    "optimize_mean_variance",
+    "optimize_risk_budgeting",
+    "weights_to_dataframe",
 ]

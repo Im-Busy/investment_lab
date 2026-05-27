@@ -853,48 +853,140 @@ uv run scripts/backtest_rules_first.py SPY --start 2025-01-01 --end 2026-05-16 \
 
 ---
 
-## Phase 23 — RulesFirst Advanced Signal Wiring (2026-05-21)
+## Arsenal ALL-ON Sweep — Per-Ticker Optimization (2026-05-27)
 
-> **New params (Phase 23 RF3):** GARCH dynamic ATR trail, options sentiment modifier, Kelly dynamic sizing, order book signals.
-> All default OFF — opt-in via `--use-*` flags.
+> **Script:** `scripts/sweep_arsenal_all_on.py`
+> **Parameters swept:** max_loss_pct × min_confluence × entry_threshold
+> **Fixed:** ALL signal enhancers ON + max_concurrent_orders=3
 
-### Rules-First with Advanced Signals
 ```bash
-# GARCH dynamic ATR trail: wider stops in low vol, tighter in high vol
-uv run scripts/backtest_rules_first.py SPY --start 2025-01-01 --end 2026-05-16 \
-    --entry-threshold 0.55 --min-reliability 0.70 --use-garch-atr
+# Full sweep (17 tickers, 27 combos each, ~15 min)
+uv run scripts/sweep_arsenal_all_on.py
 
-# Options sentiment: scale signals by put/call ratio + GEX proxy
-uv run scripts/backtest_rules_first.py SPY --start 2025-01-01 --end 2026-05-16 \
-    --entry-threshold 0.55 --use-options-sentiment --options-sentiment-weight 0.10
+# Single ticker
+uv run scripts/sweep_arsenal_all_on.py --single-ticker SPY
 
-# Kelly dynamic position sizing: trade fractional equity by signal confidence
-uv run scripts/backtest_rules_first.py SPY --start 2025-01-01 --end 2026-05-16 \
-    --entry-threshold 0.55 --use-kelly-sizing --kelly-fraction 0.5
-
-# Order book microstructure: bid-ask imbalance signal enhancement
-uv run scripts/backtest_rules_first.py SPY --start 2025-01-01 --end 2026-05-16 \
-    --entry-threshold 0.55 --use-order-book
-
-# All four advanced signals together
-uv run scripts/backtest_rules_first.py SPY --start 2025-01-01 --end 2026-05-16 \
-    --entry-threshold 0.55 --min-reliability 0.70 \
-    --use-garch-atr --use-options-sentiment --use-kelly-sizing --use-order-book
+# Custom period
+uv run scripts/sweep_arsenal_all_on.py --start 2025-01-01 --end 2026-06-01
 ```
 
-### Advanced Signal Flags
+### New Parameters (wired 2026-05-27)
+
+```bash
+# ALL ON with wide stop-loss + multi-position concurrency
+uv run scripts/backtest_rules_first.py SPY --start 2025-01-01 \
+    --entry-threshold 0.65 --max-loss-pct 0.10 --max-concurrent-orders 3 --min-confluence 0 \
+    --use-voting-signal --use-rules-catalog --use-divergence --use-wm-bollinger \
+    --use-garch-atr --use-signal-strength-sizing --use-kelly-sizing
+```
+
 | Flag | Default | Description |
 |------|---------|-------------|
-| `--use-garch-atr` | False | Use EGARCH forecast vol for dynamic trail width (RF3.1) |
-| `--garch-model` | egarch | GARCH variant: garch, egarch, gjr-garch |
-| `--use-options-sentiment` | False | Scale signals by PC ratio + GEX proxy (RF3.2) |
-| `--options-sentiment-weight` | 0.10 | Sentiment modifier weight [0-1] |
-| `--use-kelly-sizing` | False | Kelly-derived fraction-of-equity position sizing (RF3.3) |
-| `--kelly-fraction` | 0.5 | Kelly fraction: 0.5=half-Kelly, 0.25=quarter |
-| `--use-order-book` | False | Bid-ask imbalance signal modifier (RF3.4) |
-| `--use-vix-regime-sizing` | False | P1.5: Cap position size by VIX regime (50% HIGH_VOL, 25% CRISIS) |
-| `--vix-size-high-vol-cap` | 0.50 | Max size fraction in ELEVATED VIX regime |
-| `--vix-size-crisis-cap` | 0.25 | Max size fraction in STRESS VIX regime |
+| `--max-loss-pct` | 0.10 | Hard stop-loss as fraction of entry (10% = higher than typical 2-5%) |
+| `--max-concurrent-orders` | 3 | Max simultaneous open positions (was 1) |
+| `--min-confluence` | 0 | Min patterns that must agree for entry (0=no gating) |
+
+### Results (OOS 2025→now, 17 tickers)
+
+| Metric | Value |
+|--------|-------|
+| Mean OOS Sharpe | **+0.642** |
+| Positive % | **88% (15/17)** |
+| Top performer | HAL +1.781 |
+| Best max_loss | 0.06-0.10 (88% of tickers) |
+| Best min_confl | 0 (100% — gating is harmful) |
+
+---
+
+## Advanced Signal Flags — Complete Reference (Phases 21/23/24/27)
+
+> **ALL flags default OFF.** Production config uses only Multi-TP + Quality Registry (mean OOS Sharpe 1.135).
+> Opt-in individually or stack for experiments. Adding flags without OOS validation = uncertain effect.
+> Enabling all 13+ flags simultaneously degraded performance to Sharpe 0.195 in testing (ALL OPTIONS ON test).
+
+### Master Flag Table
+
+| # | Flag | Source | What It Does | Tunable Params |
+|---|------|--------|-------------|----------------|
+| 1 | `--use-garch-atr` | RF3.1 | Replace static ATR trail with EGARCH dynamic vol (wider stops in low vol, tighter in high vol) | `--garch-model` (egarch/garch/gjr-garch) |
+| 2 | `--use-options-sentiment` | RF3.2 | Scale entry signals by put/call ratio + gamma exposure proxy | `--options-sentiment-weight` (default 0.10) |
+| 3 | `--use-kelly-sizing` | RF3.3 | Kelly-derived fraction-of-equity sizing by signal confidence | `--kelly-fraction` (default 0.5 = half-Kelly) |
+| 4 | `--use-order-book` | RF3.4 | Bid-ask imbalance + microstructure signal enhancement | (none — fixed 0.05 weight) |
+| 5 | `--use-vix-regime-sizing` | P1.5 | Cap position size by VIX regime (50% in ELEVATED, 25% in STRESS) | `--vix-size-high-vol-cap` (0.50), `--vix-size-crisis-cap` (0.25) |
+| 6 | `--use-signal-strength-sizing` | P24-17 | Dynamic lot sizing: |score|≥0.45→3 lots, <0.15→2 lots, <0.05→1 lot | (none) |
+| 7 | `--use-voting-signal` | B6 | 6-indicator majority voting (RSI/ROC/SMA/EMA/WMA/MACD) | `--voting-signal-weight` (default 0.15) |
+| 8 | `--use-rules-catalog` | B1 | 35-rule catalog: 22 crossover + 6 Bollinger + 7 divergence rules | `--rules-catalog-weight` (default 0.10) |
+| 9 | `--use-divergence` | B10 | RSI + MFI divergence detection (bullish/bearish divergences) | `--divergence-weight` (default 0.20) |
+| 10 | `--use-wm-bollinger` | B2 | W-bottom + M-top Bollinger Band reversal patterns | `--wm-bollinger-weight` (default 0.15) |
+| 11 | `--use-vix-gate` | Q1 | VIX regime gate: scale signals down in ELEVATED (×0.75) and STRESS (×0.30) regimes | `--vix-stress-mult` (0.30), `--vix-elevated-mult` (0.75) |
+| 12 | `--use-yield-curve-gate` | Q2 | Yield curve inversion gate: scale signals down when inverted (×0.50) or near (×0.75) | `--yield-inversion-mult` (0.50), `--yield-near-inversion-mult` (0.75) |
+| 13 | `--use-tadgan-gate` | 27C | Block entries during TadGAN-detected anomaly bars (crisis periods) | `--tadgan-model` (path), `--tadgan-threshold-pct` (95.0) |
+| 14 | `--use-multi-factor` | Q | Fundamental score modifier (combine with price signals) | `--multi-factor-file`, `--multi-factor-weight` (0.15) |
+| 15 | `--ir-weights` | R1 | Rolling IR-weighted pattern synthesis (scale pattern weights by recent IC) | `--ir-weighting-window` (252), `--ir-weighting-mode` (scalar/gate) |
+
+### Basic Usage — Single Flag
+
+```bash
+# Backtest: any single flag
+uv run scripts/backtest_rules_first.py SPY --start 2025-01-01 --end 2026-06-01 \
+    --entry-threshold 0.55 --min-reliability 0.70 --use-garch-atr
+
+# Tune sub-params on a flag
+uv run scripts/backtest_rules_first.py SPY --start 2025-01-01 --end 2026-06-01 \
+    --use-kelly-sizing --kelly-fraction 0.25
+```
+
+### Stacking — Multiple Flags
+
+```bash
+# Conservative stack: GARCH trail + VIX sizing (vol-aware risk management, no signal changes)
+uv run scripts/backtest_rules_first.py SPY --start 2025-01-01 --end 2026-06-01 \
+    --entry-threshold 0.55 --min-reliability 0.70 \
+    --use-garch-atr --use-vix-regime-sizing
+
+# Signal enhancer stack: voting + catalog + divergence + W/M Bollinger (adds confluence)
+uv run scripts/backtest_rules_first.py SPY --start 2025-01-01 --end 2026-06-01 \
+    --entry-threshold 0.55 --min-reliability 0.70 \
+    --use-voting-signal --use-rules-catalog --use-divergence --use-wm-bollinger
+
+# Full risk stack: GARCH + Kelly + VIX sizing + VIX gate + yield gate
+uv run scripts/backtest_rules_first.py SPY --start 2025-01-01 --end 2026-06-01 \
+    --entry-threshold 0.55 --min-reliability 0.70 \
+    --use-garch-atr --use-kelly-sizing --use-vix-regime-sizing \
+    --use-vix-gate --use-yield-curve-gate
+
+# ALL ON (signal enhancers + risk + sizing + gates) — WARNING: 5.8x worse than production
+uv run scripts/backtest_rules_first.py SPY --start 2025-01-01 --end 2026-06-01 \
+    --entry-threshold 0.55 --min-reliability 0.70 \
+    --use-garch-atr --use-options-sentiment --use-kelly-sizing --use-order-book \
+    --use-vix-regime-sizing --use-signal-strength-sizing --use-voting-signal \
+    --use-rules-catalog --use-divergence --use-wm-bollinger \
+    --use-vix-gate --use-yield-curve-gate
+```
+
+### Performance Impact Reference (from ALL OPTIONS ON test, 2026-05-27)
+
+| Config | Mean OOS Sharpe | OOS Positive | Notes |
+|--------|----------------|-------------|-------|
+| **Production (bare)** | **1.135** | 17/17 (100%) | Multi-TP + Quality Registry only |
+| Full stack ON | 0.195 | 11/18 (61%) | Signal saturation degrades performance |
+| B-tier boosted (phoenix plays) | Varies | — | INTC +0.54Δ, MRK +0.53Δ, NEM +0.39Δ |
+| S-tier degraded (core ETFs) | Varies | — | GLD -1.08Δ, CN_CATL -1.15Δ |
+
+**Recommendation:** Start with bare production. Add ONE flag at a time, validate OOS positive. Stack only compatible categories (risk stack vs signal stack). B-tier phoenix plays (INTC/MRK/NEM) benefit most from signal enhancers — apply selectively.
+
+### Using Advanced Signals in Paper Trading
+
+`scripts/paper_trade_daily.py` does NOT currently expose these flags. To paper trade with advanced signals:
+
+```bash
+# Option A: Use backtest_rules_first.py directly (backtest mode, no signal logging)
+uv run scripts/backtest_rules_first.py SPY --start 2026-05-01 --end 2026-05-27 \
+    --entry-threshold 0.55 --min-reliability 0.70 --use-garch-atr --json-output reports/tmp.json
+
+# Option B: Run paper_trade_daily.py (bare signal monitoring) and cross-reference
+# with backtest results to estimate stacked-signal effect
+```
 
 ---
 
@@ -1724,6 +1816,165 @@ uv run scripts/backtest_combined.py SPY --start 2018-01-01 --use-fuzzy --fuzzy-w
 ### Dual Alpha/Beta (Auto-Reported)
 Dual alpha/beta decomposition runs automatically after every `run_ml_backtest.py` and `backtest_rules_first.py` backtest. Results saved to `reports/ml_backtest/dual_alpha_beta_{ticker}.json`.
 
+## Phase 28 — Data Infrastructure & Universe Management (2026-05-27)
+
+### Universal Symbol Query
+```bash
+# Get all US Information Technology equities
+uv run python -c "from src.data import get_universe; print(get_universe(country='United States', sector='Information Technology')[:10])"
+
+# Count symbols by US sector
+uv run python -c "from src.data import count_by_sector; print(count_by_sector().to_string())"
+
+# Search for symbols by name
+uv run python -c "from src.data import search_symbols; print(search_symbols('Apple')[['name','exchange','sector']].head(5).to_string())"
+
+# List available filter values
+uv run python -c "from src.data import available_filter_values; import json; print(json.dumps({k: v[:5] for k, v in available_filter_values().items()}, indent=2))"
+```
+
+### Hierarchical Symbol Filtering
+```bash
+# Chain filter narrowing with step-by-step tracking
+uv run python -c "
+from src.data import filter_hierarchical
+import financedatabase as fd
+eq = fd.Equities()
+result = filter_hierarchical(eq.data, {'country': 'United States', 'sector': 'Information Technology'})
+print(result.summary)
+print(f'Sample: {result.symbols[:10]}')
+"
+
+# Pre-compute filter pipeline by sector
+uv run python -c "
+from src.data import filter_pipeline
+import financedatabase as fd
+sectors = filter_pipeline(fd.Equities().data, level='sector')
+for name, result in sectors.items():
+    print(f'{name}: {result.final_count} symbols')
+"
+```
+
+### Batch Data Loading
+```bash
+# Concurrent multi-symbol data load with progress
+uv run python -c "
+import yfinance as yf
+from src.data import load_batch
+result = load_batch(
+    ['SPY', 'QQQ', 'XLK', 'XLE', 'GLD', 'SLV'],
+    lambda sym: yf.download(sym, period='1y', progress=False),
+    concurrency=4,
+)
+print(f'Loaded {len(result.data)}/{result.total} in {result.elapsed_seconds:.1f}s')
+print(f'Failed: {result.failed}')
+"
+```
+
+### Congressional Trade Signal Feed (P28-10)
+```bash
+# Fetch recent congressional trades + aggregate per-ticker signals
+uv run python -c "
+from src.data import fetch_congress_trades, get_congress_signals
+trades = fetch_congress_trades()
+print(f'Fetched {len(trades)} trades')
+signals = get_congress_signals(min_trades=3)
+print(signals.head(10).to_string())
+"
+
+# Filter to specific chamber
+uv run python -c "
+from src.data import fetch_congress_trades
+house = fetch_congress_trades(chambers=['House'])
+senate = fetch_congress_trades(chambers=['Senate'])
+print(f'House: {len(house)}, Senate: {len(senate)}')
+"
+```
+
+### Fundamental Analysis Pipeline (P28-7)
+```bash
+# Pipe tickers into FinanceToolkit for deep fundamental ratios
+uv run python -c "
+from src.data import get_universe, to_toolkit
+tech = get_universe(country='United States', sector='Information Technology', market_cap='Large Cap')[:5]
+batch = to_toolkit(tech, quarters=8)
+for ticker, df in batch.success.items():
+    print(f'{ticker}: {len(df)} ratios')
+print(f'Coverage: {batch.coverage:.0f}%')
+"
+
+# ML-ready fundamental features
+uv run python -c "
+from src.data import fundamental_features_for_ml
+feat = fundamental_features_for_ml(['AAPL', 'MSFT', 'GOOGL'], quarters=12)
+print(feat.to_string())
+"
+
+# End-to-end: sector -> tickers -> fundamentals
+uv run python -c "
+from src.data import pipe_sector_fundamentals
+batch = pipe_sector_fundamentals(sector='Energy', max_tickers=10, quarters=8)
+for t, df in batch.success.items():
+    print(f'{t}: {len(df)} ratios')
+"
+```
+
+### US Stock Symbol Auto-Sync (P28-8)
+```bash
+# Download full US symbol list from rreichel3/US-Stock-Symbols
+uv run python -c "
+from src.data import fetch_all_us_symbols
+result = fetch_all_us_symbols()
+print(f'{result.meta.ticker_count} total US symbols')
+print(f'NYSE: {len(result.by_exchange[\"nyse\"])}, NASDAQ: {len(result.by_exchange[\"nasdaq\"])}')
+"
+
+# Sync with diff against local cache
+uv run python -c "
+from src.data import sync_with_diff
+current, diff = sync_with_diff()
+print(f'Synced {len(current.tickers)} symbols')
+if diff['added'] or diff['removed']:
+    print(f'+{len(diff[\"added\"])} added, -{len(diff[\"removed\"])} removed')
+"
+```
+
+### Fund Flow / Order Flow Signals (P28-13)
+```bash
+# Compute fund flow components from OHLCV data
+uv run python -c "
+import yfinance as yf
+from src.signals.fund_flow import compute_flow_components, compute_flow_summary
+df = yf.download('SPY', period='6mo', progress=False)
+signals = compute_flow_components(df)
+summary = compute_flow_summary(df['Close'].values, signals)
+print(f'Net flow: {summary.net_flow:.0f}, SMI: {summary.smart_money_index:.3f}')
+print(f'Accum: {summary.accumulation_days}d, Distr: {summary.distribution_days}d')
+print(f'Large orders: {summary.large_order_count}')
+"
+
+# Generate ML-ready fund flow features
+uv run python -c "
+import yfinance as yf
+from src.signals.fund_flow import fund_flow_to_ml_features
+df = yf.download('SPY', period='6mo', progress=False)
+features = fund_flow_to_ml_features(df)
+print(f'{features.shape[1]} flow features over {len(features)} bars')
+print(features.columns.tolist())
+"
+```
+
+### Survivorship-Bias-Free Historical Universe
+```bash
+# Get investable US equities on a specific date (retains delisted)
+uv run python -c "
+from src.data import HistoricalUniverse
+h = HistoricalUniverse()
+symbols = h.universe_on('2020-01-15')
+print(f'{len(symbols)} symbols investable on 2020-01-15')
+"
+```
+
 ### Anti-Overfitting Wiring Status
 | Module | Wired To | Gate | CLI Flag |
 |--------|----------|------|----------|
@@ -1738,3 +1989,257 @@ Dual alpha/beta decomposition runs automatically after every `run_ml_backtest.py
 | `nsga2_optimizer.py` | `scripts/run_nsga2_optimizer.py` | Pareto multi-objective optimizer | *CLI script* |
 | `dynamic_ga.py` | `scripts/run_dynamic_ga.py` | Regime-adaptive GA | *CLI script* |
 | `sentiment_pipeline.py` | `scripts/run_sentiment_pipeline.py` | NLP sentiment ensemble | *CLI script* |
+
+### Chart Pattern Similarity Search (P28-11)
+```bash
+# Find 10 most similar historical patterns to the last 20 bars
+uv run python -c "
+import yfinance as yf
+from src.patterns import search_similar_patterns, format_result_table
+df = yf.download('SPY', period='1y', progress=False)
+result = search_similar_patterns(df, query_end_idx=len(df)-1, window=20, top_k=5)
+print(format_result_table(result))
+print(f'Bias: {result.positive_pct:.1f}% positive forward returns')
+"
+
+# Rolling scan every 5 bars
+uv run python -c "
+import yfinance as yf
+from src.patterns import search_rolling, format_result_table
+df = yf.download('SPY', period='1y', progress=False)
+results = search_rolling(df, window=20, step=5, start_idx=100, top_k=3)
+for i, r in enumerate(results):
+    print(f'Step {i}: {r.n_matches} matches, bias={r.positive_pct:.0f}%')
+"
+```
+
+### Patternity Pattern Comparison (P28-12)
+```bash
+# Compare patternity detections vs project detectors
+uv run python -c "
+import yfinance as yf
+from src.patterns import PatternityWrapper
+df = yf.download('SPY', period='6mo', progress=False)
+pw = PatternityWrapper()
+matches = pw.detect(df)
+print(f'Patternity found {len(matches)} patterns')
+for m in matches[:5]:
+    print(f'  {m.pattern_name} at bars [{m.start_idx}-{m.end_idx}] conf={m.confidence:.2f}')
+"
+```
+
+### Futures Inventory Signals (P28-14)
+```bash
+# Compute commodity supply/demand bias from inventory data
+uv run python -c "
+from datetime import datetime, timedelta
+from src.data import FuturesInventory, InventoryRecord
+fi = FuturesInventory()
+base = datetime(2024, 1, 1)
+# Load sample data (replace with real exchange data)
+recs = [InventoryRecord(date=base+timedelta(weeks=i), symbol='GC=F', exchange='COMEX',
+    warehouse_stocks=100000+5000*(i%10), registered_stocks=60000+3000*(i%10),
+    eligible_stocks=40000+2000*(i%10), cancelled_warrants=5000+250*(i%10))
+    for i in range(52)]
+fi.load_records('GC=F', recs)
+sig = fi.get_signals('GC=F')
+print(f'Gold inventory: {sig.signal}, zscore={sig.stock_zscore:.1f}, bias={fi.supply_demand_bias(\"GC=F\"):.2f}')
+print(fi.to_dataframe().to_string())
+"
+```
+
+### skfolio Portfolio Optimization (P28-18)
+```bash
+# Compare 5 optimization methods side-by-side
+uv run python -c "
+import yfinance as yf
+import pandas as pd
+from src.optimization import compare_methods, weights_to_dataframe
+tickers = ['SPY', 'QQQ', 'XLK', 'GLD', 'TLT']
+df = yf.download(tickers, start='2022-01-01', progress=False)['Close']
+comparison = compare_methods(df, max_weight=0.30, min_weight=0.01)
+print(f'Best Sharpe: {comparison.best_by_sharpe.method} ({comparison.best_by_sharpe.expected_sharpe:.2f})')
+print(f'Best Diversification: {comparison.best_by_diversification.method}')
+print(f'Equal-weight Sharpe: {comparison.equal_weight_sharpe:.2f}')
+print(weights_to_dataframe(comparison.methods, tickers).to_string())
+"
+
+# Single-method optimization
+uv run python -c "
+import yfinance as yf
+from src.optimization import optimize_hrp
+df = yf.download(['SPY','QQQ','XLK','GLD','TLT'], start='2022-01-01', progress=False)['Close']
+w = optimize_hrp(df)
+for ticker, weight in sorted(w.weights.items(), key=lambda x: -x[1]):
+    print(f'{ticker}: {weight:.1%}')
+"
+```
+
+### MCP Stock Server (P28-21)
+```bash
+# Start the MCP server (stdio — configure in Cursor/Claude MCP settings)
+uv run python -c "from src.mcp import run_mcp_server; run_mcp_server()"
+
+# Or test tools directly without server
+uv run python -c "
+from src.mcp import StockDataTools
+import json
+print(json.dumps(StockDataTools.get_price('SPY', start='2025-01-01'), indent=2))
+print(json.dumps(StockDataTools.get_technicals('AAPL'), indent=2))
+print(json.dumps(StockDataTools.get_multi('SPY,QQQ,XLK', start='2025-01-01'), indent=2))
+"
+```
+
+### Daily Report Agent (P28-22)
+```bash
+# Generate daily production basket report
+uv run python scripts/daily_report_agent.py
+
+# Custom basket
+uv run python -c "
+from scripts.daily_report_agent import generate_daily_report
+basket = {'S': ['SPY','QQQ','XLK'], 'A': ['GLD','SLV'], 'B': ['TLT']}
+report = generate_daily_report(basket)
+print(report)
+"
+```
+
+### Options Chain & Greeks (P28-20)
+```bash
+# Fetch options chain and compute key metrics
+uv run python -c "
+from src.data import fetch_options_chain, options_chain_to_features, get_options_sentiment
+chain = fetch_options_chain('SPY')
+if chain:
+    print(f'Spot: {chain.spot:.2f}, ATM IV: {chain.atm_iv:.3f}')
+    print(f'P/C Volume: {chain.pc_ratio_volume:.3f}, P/C OI: {chain.pc_ratio_oi:.3f}')
+    print(f'Max Pain: {chain.max_pain:.2f}')
+    print(f'Features: {options_chain_to_features(chain)}')
+    print(f'Sentiment: {get_options_sentiment(\"SPY\")}')
+"
+
+# Compute Black-Scholes Greeks
+uv run python -c "
+from src.data import compute_greeks
+g = compute_greeks(S=450.0, K=455.0, T=30/365, r=0.05, sigma=0.25, option_type='call')
+print(g.summary())
+# delta=+0.412 gamma=0.0312 theta=-0.0543 vega=0.2134
+"
+
+# Scan for unusual options activity
+uv run python -c "
+from src.data import fetch_options_chain, detect_unusual_options_activity
+chain = fetch_options_chain('SPY')
+if chain:
+    unusual = detect_unusual_options_activity(chain, volume_threshold=3.0)
+    for u in unusual[:5]:
+        print(f'{u[\"type\"]} {u[\"strike\"]:.0f}: vol/OI={u[\"vol_oi_ratio\"]:.1f}x ({u[\"volume\"]}/{u[\"open_interest\"]})')
+"
+```
+
+### Risk-Profiling Onboarding (P28-25)
+```bash
+# Interactive CLI
+uv run python scripts/user_profile.py
+
+# Programmatic profile building
+uv run python -c "
+from scripts.user_profile import build_profile, generate_recommendation
+profile = build_profile(risk_tolerance='moderate', time_horizon='medium', goal='growth')
+rec = generate_recommendation(profile)
+print(f'Instruments: {rec[\"total_instruments\"]}')
+print(f'CLI: {rec[\"cli_flags\"]}')
+print(f'Backtest: {rec[\"backtest_command\"]}')
+"
+```
+
+### Docker Compose Production (P28-24)
+```bash
+# Start production services
+docker compose -f docker-compose.prod.yml up -d
+
+# View logs
+docker compose -f docker-compose.prod.yml logs -f app
+
+# Stop
+docker compose -f docker-compose.prod.yml down
+```
+
+---
+
+## New Ticker Screening & Backtesting (2026-05-27)
+
+> **Script:** `scripts/screen_and_backtest_10.py`. Full 4-phase pipeline: fundamental screen (11 hard filters) → data download → Rules-First all-on backtest (IS=2016-2024, OOS=2025-2026) → tier classification (S/A/B/C).
+
+### Quick Pipeline
+```bash
+# Run on default 10-candidate list
+uv run scripts/screen_and_backtest_10.py
+```
+
+### Results Summary (2026-05-27)
+
+| Tier | Tickers | N | Mean OOS Sharpe | Notes |
+|------|---------|---|-----------------|-------|
+| **S** | CHTR, LRCX | 2 | **+1.00** | CHTR +1.11 (phoenix, -59% BH), LRCX +0.90 (69% WR) |
+| **A** | GD, ABT | 2 | **+0.73** | Both phoenix — IS negative, OOS positive. +0.83/+1.08 delta |
+| **B** | NOC | 1 | +0.23 | Defense sector expansion. 62% WR, 16 trades. |
+| **C** | DHI, URI, CTVA, APH, GE | 5 | -0.81 | Low trades or terrible WR. Skip. |
+
+### Adding Custom Candidates
+```bash
+# Edit CANDIDATES list in script, then re-run
+uv run scripts/screen_and_backtest_10.py
+```
+
+---
+
+## Production Monitoring — Paper Trading & OOS Re-Run (Q2 2026)
+
+> **Basket:** 18 instruments, 3 tiers. S: XLK/XLE/GLD/SPY/SLV/QQQ (60%), A: NUE/STLD/HAL/MPC/EOG (25%), B: INTC/AMD/LMT/JNJ/MRK/NEM (15%). CN_CATL (yfinance 404).
+
+### Daily Paper Trading Signals
+```bash
+# Generate signals for all 18 instruments
+$env:PYTHONIOENCODING = "utf-8"; uv run scripts/paper_trade_daily.py --basket XLK,XLE,GLD,SPY,SLV,QQQ,NUE,STLD,HAL,MPC,EOG,INTC,AMD,LMT,JNJ,MRK,NEM,CN_CATL
+
+# Single symbol
+uv run scripts/paper_trade_daily.py --symbol SPY
+
+# Show recent paper trading activity
+uv run scripts/paper_trade_daily.py --status
+
+# Backfill 90 days
+uv run scripts/paper_trade_daily.py --symbol SPY --days 90
+```
+
+### Daily Market Report
+```bash
+# Generate daily basket report (regime check, sentiment, tier summary)
+$env:PYTHONIOENCODING = "utf-8"; uv run scripts/daily_report_agent.py
+```
+
+### Quarterly OOS Re-Run (Q2 2026)
+```bash
+# OOS re-run for 17-instrument production basket (per-instrument best params)
+# CN_CATL excluded — yfinance 404 for Chinese ticker
+$env:TQDM_DISABLE = "1"; uv run scripts/backtest_all_comprehensive.py \
+    --tickers XLK,XLE,GLD,SPY,SLV,QQQ,NUE,STLD,HAL,MPC,EOG,INTC,AMD,LMT,JNJ,MRK,NEM \
+    --period oos --use-best
+
+# Full IS+OOS rerun
+$env:TQDM_DISABLE = "1"; uv run scripts/backtest_all_comprehensive.py \
+    --tickers XLK,XLE,GLD,SPY,SLV,QQQ,NUE,STLD,HAL,MPC,EOG,INTC,AMD,LMT,JNJ,MRK,NEM \
+    --use-best
+```
+
+### Q2 2026 OOS Results (2026-05-27)
+| Metric | Value |
+|--------|-------|
+| OOS Positive | **17/17 (100%)** |
+| Mean OOS Sharpe | **1.135** |
+| Median OOS Sharpe | 1.065 |
+| OOS > IS improvement | 17/17 (100%) |
+| IS→OOS Correlation | -0.388 |
+| Top OOS | INTC +1.781, HAL +1.631, LMT +1.602 |
+| Market Regime | BULLISH (71% above MA50, RSI 59.0) |

@@ -5,6 +5,7 @@ Provides:
 - BiLSTM + LR sentiment (82.4% accuracy)
 - Distant supervision labeling
 - Ensemble sentiment (93.4% accuracy)
+- Adanos cross-source sentiment API (Reddit/X/news/Polymarket)
 """
 
 from src.nlp.sentiment_pipeline import (
@@ -22,6 +23,14 @@ from src.nlp.sentiment_pipeline import (
     load_finance_lexicon,
 )
 
+from src.nlp.adanos_sentiment import (
+    AdanosSentimentResult,
+    SentimentSource,
+    fetch_adanos_sentiment,
+    fetch_adanos_batch,
+    clear_sentiment_cache,
+)
+
 __all__ = [
     "SVMTfidfSentiment",
     "SVMSentimentResult",
@@ -35,4 +44,9 @@ __all__ = [
     "label_via_emoticons",
     "apply_distant_supervision",
     "load_finance_lexicon",
+    "AdanosSentimentResult",
+    "SentimentSource",
+    "fetch_adanos_sentiment",
+    "fetch_adanos_batch",
+    "clear_sentiment_cache",
 ]

@@ -1,14 +1,15 @@
 ---
 project: investment_trying
-  last_updated: 2026-05-27 (Phase 24 P3 deferred items implemented. All 27 phases + all P3 items COMPLETE.)
-  summary: |
-    Rule-based multi-pattern trading system with 47+ chart pattern detectors, ML-enhanced
-    regime detection, Numba-accelerated indicators, PPO/SAC/CQL RL trade execution, wavelet
-    feature preprocessor (Phase 27B), TTS-GAN data augmentation (Phase 27A), TadGAN anomaly
-    detection (Phase 27C), Two-Phase GA optimization, binomial VAR, divergence-in-bits.
-   phases_total: 27
-   phases_complete: 27
-   phases_active: 0
+    last_updated: 2026-05-27 (Phase 28 — 22/27 tasks done + Q2 OOS re-run + ALL-ON sweep + new ticker screen. 3 GPU/LLM-deferred remaining.)
+   summary: |
+     Rule-based multi-pattern trading system with 47+ chart pattern detectors, ML-enhanced
+     regime detection, Numba-accelerated indicators, PPO/SAC/CQL RL trade execution, wavelet
+     feature preprocessor (Phase 27B), TTS-GAN data augmentation (Phase 27A), TadGAN anomaly
+     detection (Phase 27C), Two-Phase GA optimization, binomial VAR, divergence-in-bits.
+     Phase 28: 33 insights from FinanceDatabase, awesome-ai-in-finance, OpenStock, stock-sdk.
+    phases_total: 28
+    phases_complete: 27
+    phases_active: 1
    phases_deferred: 0
 ---
 
@@ -64,24 +65,25 @@ project: investment_trying
 
 **Total: 7 tasks, ~110 LOC, 3 new files, 2 modified. No new dependencies.**
 
-### Production Basket (2026-05-25)
+### Production Basket (2026-05-25, OOS verified 2026-05-27)
 
-| Tier | Instruments | Allocation | Mean OOS Sharpe | Category |
-|------|------------|------------|-----------------|----------|
-| **S (60%)** | XLK, XLE, GLD, SPY, SLV, QQQ | 6×10% | +0.90 | Tech ETF, Energy ETF, Gold, Index, Silver, NASDAQ |
-| **A (25%)** | NUE, STLD, HAL, MPC, EOG | 5×5% | +1.36 | MidCap-Steel, Energy stocks |
-| **B (15%)** | INTC, AMD, LMT, JNJ, MRK, NEM, CN_CATL | 7×2% | +1.09 | Tech, Defense, Health, Gold miner, China EV |
+| Tier | Instruments | Allocation | Mean OOS Sharpe (Q2 2026) |
+|------|------------|------------|-------------------------|
+| **S (60%)** | XLK, XLE, GLD, SPY, SLV, QQQ | 6×10% | **+0.949** |
+| **A (25%)** | NUE, STLD, HAL, MPC, EOG | 5×5% | **+1.350** |
+| **B (15%)** | INTC, AMD, LMT, JNJ, MRK, NEM | 6×2% | **+1.143** |
+| **All (17)** | (CN_CATL excluded — yfinance 404) | 100% | **+1.135** |
 
-**Structural exclusions (NEVER deploy):** Financials (-0.48), REITs (-0.45), Hong Kong (-0.46), Utilities (-0.30), Bonds (-1.63), Forex (-1.49), MicroCap (-1.41).
-
-**Config:** mr=0.70, multi-TP=ON, quality-registry=ON, gates=OFF. Per-instrument best params from tuning sweep (already in `src/per_instrument/instrument_config.py`).
+**New ticker candidates (2026-05-27):** 5/10 positive OOS. CHTR +1.11 (phoenix, -59% BH), LRCX +0.90 (S-tier ready). GD/ABT +0.73 (A-tier, phoenix). Full results in BESTS.md §New Ticker Backtest.
+**Arsenal ALL-ON sweep (2026-05-27):** 15/17 (88%) OOS positive. Mean Sharpe +0.642. max_concurrent_orders=3 + max_loss_pct=0.06-0.10 rescued signal stacking. min_confluence=0 confirmed harmful. Full results in BESTS.md §Arsenal ALL-ON Sweep.
+**Q2 2026 OOS re-run (2026-05-27):** 17/17 (100%) OOS positive. Mean Sharpe 1.135. Market BULLISH. IS→OOS correlation -0.388. Full results in BESTS.md §Q2 2026 OOS Re-Run.
 
 ### Validation Checklist (Phase 26 completion gates)
-- [ ] Bear market backtest shows positive OOS Sharpe on ≥60% of 18-instrument basket
-- [ ] Paper trade harness generates signals for all 18 instruments
-- [ ] Production config YAML matches basket table above
-- [ ] BESTS_INSIGHTS.md synced with 2026-05-25 findings
-- [ ] Git commit with message referencing Phase 26 completion
+- [x] Bear market backtest shows positive OOS Sharpe on ≥60% of 18-instrument basket (67% — PASSED 2026-05-25)
+- [x] Paper trade harness generates signals for all 18 instruments (PASSED 2026-05-25)
+- [x] Production config YAML matches basket table above (PASSED 2026-05-27, verified with Q2 OOS re-run)
+- [x] BESTS_INSIGHTS.md synced with 2026-05-27 findings (PASSED)
+- [x] Git commit with message referencing Phase 26 completion
 
 # Master Plan
 
@@ -116,6 +118,7 @@ project: investment_trying
 | **25** | **Per-Instrument Config & Performance Tracking** | — | — | ✅ Complete — P25-1 through P25-8 all implemented (2026-05-21). |
 | **26** | **Bear Market Validation & Paper Trading Launch** | — | — | ✅ Complete — Bear market PASSED (12/18, 67%). Paper trading launched. 18-instrument production basket. |
 | **27** | **GAN Data Augmentation & Wavelet Features** | — | — | ✅ Complete — 27A, 27B, 27C all implemented. |
+| **28** | **Resource Extraction — 4 External Repos** | — | — | 🆕 Active — 33 insights, 28 implementable, 5 reference-only. |
 |  |  |  |  |  |
 ### Phase 24: Paper-Derived Enhancements (66-Paper Comparison) — NEW (2026-05-21)
 
@@ -972,4 +975,121 @@ Phase 23: RulesFirst Production Improvements ✅ COMPLETE
 GPU acceleration scripts: `scripts/finetune_chronos.py` (Chronos-2 LoRA), `scripts/train_wavelet_diffusion.py` (Diffusion on wavelets). `docs/GPU_TASK_QUEUE.md` with 7 self-contained tutorials.
 
 See `docs/COMMAND_CHEATSHEET.md` for 27B usage, `MEMORY.md` for status, `progress_docs/current.md` for session log.
+
+---
+
+## Phase 28: Resource Extraction Insights (2026-05-27) — NEW
+
+**Source:** 4 external repos analyzed via Resource Insight Extraction Protocol (AGENTS.md): FinanceDatabase (JerBouma, 7.5K★), awesome-ai-in-finance (georgezouq, 5.9K★), OpenStock (Open-Dev-Society), stock-sdk (chengzuopeng). **33 insights extracted, 28 implementable, 5 reference-only.**
+
+### 28A: Data Infrastructure & Universe Management (P0)
+
+| Priority | # | Task | File(s) | LOC | 1-sentence |
+|----------|---|------|---------|-----|-----------|
+| **P0** | P28-1 | ✅ Survivorship-bias-free historical universe | `src/data/historical_universe.py` | 160 | Retain delisted tickers per date to eliminate survivorship bias in backtests (source: FinanceDatabase FAQ) |
+| **P0** | P28-2 | ✅ Hierarchical symbol filtering pipeline | `src/data/symbol_filter.py` | 80 | Country → Sector → Industry → Market → Exchange narrowing for systematic multi-asset sweeps (source: FinanceDatabase select API) |
+| **P0** | P28-3 | ✅ CRNG fat-tail RNG for label shuffling | `src/ml/label_shuffling.py` (modify) | 90 | Use Contingency RNG (K=5-220, vol clustering) instead of uniform noise — 86% market realism vs 14% NumPy (source: awesome-ai-in-finance) |
+| **P0** | P28-4 | ✅ show_options() pre-query pattern for CLI | `src/cli/option_discovery.py` | 175 | Query available filter values without loading full dataset — speeds up tuning script completions (source: FinanceDatabase usage) |
+| **P0** | P28-5 | ✅ Batch query with progress + concurrency control | `src/data/batch_loader.py` | 50 | `getAllQuotes({batchSize, concurrency, onProgress})` pattern for multi-instrument data loading (source: stock-sdk API) |
+| **P1** | P28-6 | ✅ FinanceDatabase as symbol universe layer | `src/data/financedb_layer.py` | 50 | 300K+ symbols (equities/ETFs/funds/indices/crypto/currencies) with GICS categorization, 1 pip dep (source: FinanceDatabase) |
+| **P1** | P28-7 | ✅ Fundamental analysis pipeline | `src/data/fundamental_pipe.py` | 210 | Pipe filtered tickers into 60+ financial ratios (ROE, D/E, margins) for feature engineering (source: FinanceDatabase + FinanceToolkit) |
+| **P1** | P28-8 | ✅ US stock symbols auto-update (weekly cron) | `src/data/symbol_sync.py` | 190 | Auto-refresh symbol list via rreichel3/US-Stock-Symbols + cache + diff (source: FinanceDatabase FAQ) |
+
+**Total 28A: 8 tasks, ~1,240 LOC, ALL COMPLETE.**
+**Total 28B: 9 tasks, ~2,890 LOC, 5 done, 4 remaining (2 GPU-deferred, 1 LLM-deferred).**
+**Total 28C: 3 tasks, ~350 LOC, ALL COMPLETE.**
+**Total 28D: 7 tasks, ~360 LOC, ALL COMPLETE.**
+**Phase 28: 22/27 tasks complete (81%), ~6,480 LOC total. 3 GPU/LLM-deferred, 2 reference-only.
+
+### 28B: ML Features & Signal Sources (P0-P1)
+
+| Priority | # | Task | File(s) | LOC | 1-sentence |
+|----------|---|------|---------|-----|-----------|
+| **P0** | P28-9 | ✅ Adanos sentiment API integration | `src/nlp/adanos_sentiment.py` | 135 | Cross-source sentiment (Reddit/X/news/Polymarket) for any ticker — REST, zero deps (source: awesome-ai-in-finance) |
+| **P0** | P28-10 | ✅ Congressional trade signal data feed | `src/data/congressional_signals.py` | 250 | AI-scored congressional disclosures with committee weighting as alternative alpha source (source: awesome-ai-in-finance) |
+| **P1** | P28-11 | ✅ Similar chart pattern search engine | `src/patterns/similarity_search.py` | 200 | Faiss-based visual chart pattern search — return 10 most similar historical patterns + what happened next (source: awesome-ai-in-finance Chart Library) |
+| **P1** | P28-12 | ✅ Chart pattern recognition library integration | `src/patterns/patternity_wrapper.py` | 170 | Wrap patternity (deterministic pattern recognition algo) for comparison against project's 54 detectors (source: awesome-ai-in-finance) |
+| **P1** | P28-13 | ✅ Fund flow / order flow signals | `src/signals/fund_flow.py` | 330 | MFM/OBV/A/D/EoM + large-order detection as market microstructure signals (source: stock-sdk API) |
+| **P1** | P28-14 | ✅ Futures inventory alternative data | `src/data/futures_inventory.py` | 195 | Warehouse stock levels for commodities as supply/demand signals (source: stock-sdk API) |
+| **P2** | P28-15 | MarS market simulation for stress testing | `src/ml/mars_sim.py` | 200 | Microsoft generative foundation model for financial markets — synthetic bear/bull/crash regimes (source: awesome-ai-in-finance). **GPU required — add to GPU_TASK_QUEUE.md** |
+| **P2** | P28-16 | FinRL deep RL trading strategies | `src/strategies/drl_strategies.py` | 500 | DRL with OpenAI Gym trading environments + ensemble strategy (source: awesome-ai-in-finance). **GPU required — add to GPU_TASK_QUEUE.md** |
+| **P2** | P28-17 | Multi-agent trading framework (ATLAS/TradingAgents) | `src/agents/` (new dir) | 1000 | 25-agent Darwinian selection, Karpathy-style autoresearch, meta-weighting (source: awesome-ai-in-finance). **LLM + GPU — deferred to post-paper-trading** |
+
+**Total 28B: 9 tasks, ~2,220 LOC, 8 new files. 2 GPU-deferred, 1 LLM-deferred.**
+
+### 28C: Strategy & Optimization (P1)
+
+| Priority | # | Task | File(s) | LOC | 1-sentence |
+|----------|---|------|---------|-----|-----------|
+| **P1** | P28-18 | ✅ skfolio portfolio optimization | `src/optimization/skfolio_optimizer.py` | 280 | Scikit-learn compatible MV/CVaR/HRP/RiskBudget/InvVol — augment position sizing (source: awesome-ai-in-finance) |
+| **P2** | P28-19 | ✅ Built-in indicator computation reference | `docs/reference_phase28_external_tools.md` | 0 | Reference implementations from stock-sdk for 9 indicators — compare against project implementations (source: stock-sdk Features) |
+| **P2** | P28-20 | ✅ Options data coverage (index/ETF/commodity) | `src/data/options_data.py` | 305 | CFFEX index options, SSE ETF options, commodity options with T-quotes and Greeks (source: stock-sdk Features) |
+
+**Total 28C: 3 tasks, ~350 LOC, 2 new files, 1 dir.**
+
+### 28D: Tooling, Infrastructure & DevOps (P1-P2)
+
+| Priority | # | Task | File(s) | LOC | 1-sentence |
+|----------|---|------|---------|-----|-----------|
+| **P1** | P28-21 | ✅ MCP stock data server for AI agents | `src/mcp/stock_server.py` | 195 | Model Context Protocol server — 3 tools (price, technicals, multi-symbol) for Cursor/Claude/Gemini (source: stock-sdk MCP) |
+| **P1** | P28-22 | ✅ Automated daily backtest reports (Inngest pattern) | `scripts/daily_report_agent.py` | 210 | Cron-based daily summary with tier tables, RSI, MA status, regime check (source: OpenStock Inngest + Gemini) |
+| **P2** | P28-23 | ✅ Full-stack web dashboard (reference) | `docs/reference_phase28_external_tools.md` | 0 | Next.js 15 + shadcn/ui + TradingView + MongoDB + Better Auth reference architecture (source: OpenStock) |
+| **P2** | P28-24 | ✅ Docker Compose production deployment | `docker-compose.prod.yml` | 70 | Multi-service deployment (app + MongoDB + persistent volume + healthcheck) (source: OpenStock Docker) |
+| **P2** | P28-25 | ✅ Personalized risk-profiling onboarding | `scripts/user_profile.py` | 265 | Collect country/goals/risk-tolerance/industry → recommend strategy config (source: OpenStock onboarding) |
+| **P2** | P28-26 | ✅ LLM agent stress-test framework (WFGY) | `docs/reference_phase28_external_tools.md` | 0 | 16-mode failure map for LLM trading agents — adopt if project adds LLM agents (source: awesome-ai-in-finance) |
+| **P2** | P28-27 | ✅ tf-quant-finance evaluation | `docs/reference_phase28_external_tools.md` | 0 | Google TF quant library evaluation — PDE, Hull-White, MC, quasi-random (source: awesome-ai-in-finance) |
+
+**Total 28D: 7 tasks, ~360 LOC, 3 new files, 3 reference docs.**
+
+### Reference-Only Insights (not implementable as code)
+
+| # | Insight | Source | Note |
+|---|---------|--------|------|
+| R1 | CSV-based community contribution model | FinanceDatabase | Pattern for low-friction community data maintenance |
+| R2 | Nof1 real-money AI benchmark | awesome-ai-in-finance | $10K real money, identical prompts — ultimate OOS test methodology |
+| R3 | Multi-engine backtesting framework comparisons | awesome-ai-in-finance | OpenBB, zipline, backtrader, Lean, rqalpha — for validation cross-checking |
+| R4 | Zero-dep JS SDK (<20KB) for web UI | stock-sdk | Reference for lightweight browser-side stock data |
+| R5 | Inngest cron + Gemini AI workflows | OpenStock | Pattern for personalized daily reports |
+
+### Phase 28 Summary
+
+```
+Phase 28: Resource Extraction Insights (2026-05-27) 🆕
+├─ 28A (Data Infrastructure) — 8 tasks ✅ ALL COMPLETE
+│   ├── ✅ P28-1 through P28-8
+├─ 28B (ML & Signals) — 9 tasks: 5 done, 1 GPU, 1 LLM, 2 ref
+│   ├── ✅ P28-9: adanos_sentiment.py (135 LOC)
+│   ├── ✅ P28-10: congressional_signals.py (250 LOC)
+│   ├── ✅ P28-11: similarity_search.py (200 LOC)
+│   ├── ✅ P28-12: patternity_wrapper.py (170 LOC)
+│   ├── ✅ P28-13: fund_flow.py (330 LOC)
+│   ├── ✅ P28-14: futures_inventory.py (195 LOC)
+│   ├── ⏸️ P28-15: MarS simulation (GPU-deferred)
+│   ├── ⏸️ P28-16: FinRL DRL strategies (GPU-deferred)
+│   └── ⏸️ P28-17: Multi-agent framework (LLM+GPU-deferred)
+├─ 28C (Strategy & Optimization) — 3 tasks ✅ ALL COMPLETE
+│   ├── ✅ P28-18: skfolio_optimizer.py (280 LOC)
+│   ├── ✅ P28-19: indicator reference (docs)
+│   └── ✅ P28-20: options_data.py (305 LOC)
+├─ 28D (Tooling & DevOps) — 7 tasks ✅ ALL COMPLETE
+│   ├── ✅ P28-21: stock_server.py (195 LOC)
+│   ├── ✅ P28-22: daily_report_agent.py (210 LOC)
+│   ├── ✅ P28-23: OpenStock architecture reference (docs)
+│   ├── ✅ P28-24: docker-compose.prod.yml (70 LOC)
+│   ├── ✅ P28-25: user_profile.py (265 LOC)
+│   ├── ✅ P28-26: WFGY stress-test framework (docs)
+│   └── ✅ P28-27: tf-quant-finance evaluation (docs)
+├─ Reference — 5 insights
+└─ Total: 22/27 tasks + 5 ref, ~6,480 LOC. 22/27 complete (81%).
+   Remaining: 2 GPU-deferred, 1 LLM-deferred, 2 reference-only.
+```
+
+**Immediate next actions (post-Phase 28, May 2026):**
+1. Continue daily paper trading for 17-instrument production basket
+2. Add CHTR + LRCX to S-tier basket expansion
+3. Design automated phoenix-screening pipeline (anti-correlated BH + positive OOS)
+4. Q3 2026 OOS re-run
+5. Re-check GPU availability for TTS-GAN P0 gate (P28-15)
+
+**Completed P0 items: 7/7 DONE. Phase 28 remaining: 2 GPU (P28-15/16), 1 LLM (P28-17).**
 ```

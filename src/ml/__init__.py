@@ -332,7 +332,12 @@ from src.ml.profit_mirage import (
 from src.ml.lock_box import LockBox, create_lock_box, create_lock_box_chronological
 from src.ml.nested_cv import NestedPurgedCV, NestedCVResult, leave_one_group_out_cv
 from src.ml.blind_analysis import BlindAnalysisResult, run_blind_analysis
-from src.ml.label_shuffling import LabelShufflingResult, run_label_shuffling_test
+from src.ml.label_shuffling import (
+    LabelShufflingResult,
+    run_label_shuffling_test,
+    generate_crng_labels,
+    run_crng_baseline_test,
+)
 
 # Phase 25: SVM Regime Classifier (B34)
 from src.ml.svm_regime import SVMRegimeClassifier, SVMRegimeResult
@@ -610,6 +615,8 @@ __all__ = [
     "run_blind_analysis",
     "LabelShufflingResult",
     "run_label_shuffling_test",
+    "generate_crng_labels",
+    "run_crng_baseline_test",
     # Phase 25: SVM Regime Classifier (B34)
     "SVMRegimeClassifier",
     "SVMRegimeResult",

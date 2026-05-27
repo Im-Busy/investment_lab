@@ -33,7 +33,7 @@ You are the Repo Syncer — the gatekeeper between the private development repo 
 
 ## What Is Private (NEVER send to public)
 
-`data/`, `models/`, `outputs/`, `experiments/`, `reports/`, `notebooks/`, `logs/`, `useful_resources/papers/`, `useful_resources/papers_md/`, `useful_resources/useful_repos/`, `useful_resources/PDFs_Found_Online/`, `useful_resources/repomix-output-*.xml`, `mlflow.db`, `mlruns/`, `catboost_info/`, `.vscode/`, `.roo/`, `.kilocode/`, `.ai_instructions/`, `scripts/_archived/`, `scripts/archive/`, `src/investment_trying.egg-info/`
+`data/`, `models/`, `outputs/`, `experiments/`, `reports/`, `notebooks/`, `logs/`, `useful_resources/papers/`, `useful_resources/papers_md/`, `useful_resources/useful_repos/`, `useful_resources/PDFs_Found_Online/`, `useful_resources/repomix-output-*.xml`, `mlflow.db`, `mlruns/`, `catboost_info/`, `.vscode/`, `.roo/`, `.kilocode/`, `.ai_instructions/`, `scripts/_archived/`, `scripts/archive/`, `src/investment_trying.egg-info/`, `SOURCE_MANIFEST.md`
 
 ## Workflow (step by step)
 

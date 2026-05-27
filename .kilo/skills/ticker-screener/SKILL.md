@@ -4,6 +4,17 @@
 
 Autonomous pipeline that screens candidate tickers for basket training inclusion. Runs fundamental checks + downloads data + walk-forward IC test + correlation check. Logs everything to `docs/ticker-test-log.md`.
 
+## Master Criteria Document
+
+⚠️ **MANDATORY:** All ticker screening decisions are governed by `docs/stock_selection_criteria.md`.
+This skill is the **operational implementation** of the master criteria. Any changes to screening
+thresholds or filter logic must be reflected in **both** this file AND the master document.
+
+The master document defines:
+- **11 hard filters** (F1-F11) including ROCE, sector exclusions
+- **9 desirability dimensions** (D1-D9) including earnings yield score
+- **3 context tiers**: operational screener, alpha targets, ETFs
+
 ## When to Use
 
 - User provides a list of candidate tickers
@@ -23,12 +34,24 @@ Autonomous pipeline that screens candidate tickers for basket training inclusion
 
 | Criterion | Threshold | Check |
 |-----------|-----------|-------|
-| Market cap | > $200M | `yf.Ticker(t).info['marketCap']` |
-| Daily notional volume | > $5M | `avgVolume * price > 5e6` |
+| Market cap | > $200M (operational) / > $300M (efficiency) | `yf.Ticker(t).info['marketCap']` |
+| Daily notional volume | > $5M (operational) / > $10M (efficiency) | `avgVolume * price > 5e6` |
 | Institutional ownership | > 25% | `yf.Ticker(t).info['heldPercentInstitutions']` |
 | Data history | > 5 years | `len(yf.download(t, start='2010-01-01')) / 252` |
 | Annualized volatility | 12-55% | `df.Close.pct_change().std() * sqrt(252)` |
 | Exchange | NYSE/NASDAQ only | `info['exchange']` in ['NYQ', 'NMS', 'NCM', 'NGM'] |
+| **ROCE** | **> 5% (positive)** | **`yf.Ticker(t).financials`** |
+| **Sector: Financials** | **Exclude** | **`info['sector']` == 'Financial Services'** |
+| **Sector: Utilities** | **Exclude** | **`info['sector']` == 'Utilities'** |
+
+### Tier 1.5: Magic Formula Quality/Value (NEW)
+
+After passing Tier 1, compute:
+- **ROCE** (Return on Capital Employed): reject if negative or < 5%
+- **Earnings Yield**: log for scorecard but don't reject
+- **Sector check**: exclude Financial Services and Utilities (incompatible accounting)
+
+These are implemented as hard filters F9, F10, F11 in `docs/stock_selection_criteria.md`.
 
 ### Tier 2: Walk-Forward IC Test
 

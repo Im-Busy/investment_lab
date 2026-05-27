@@ -71,7 +71,7 @@ def run_single(
     yield_curve_inversion_mult: float = 0.50,
     yield_curve_near_inversion_mult: float = 0.75,
     use_garch_atr: bool = False,
-    garch_model: str = "GARCH",
+    garch_model: str = "egarch",
     use_options_sentiment: bool = False,
     options_sentiment_weight: float = 0.3,
     use_kelly_sizing: bool = False,
@@ -93,6 +93,9 @@ def run_single(
     divergence_weight: float = 0.20,
     use_wm_bollinger: bool = False,
     wm_bollinger_weight: float = 0.15,
+    max_loss_pct: float = 0.10,
+    max_concurrent_orders: int = 3,
+    min_confluence: int = 0,
 ) -> dict:
     from backtesting import Backtest
 
@@ -107,7 +110,7 @@ def run_single(
         RulesFirstStrategy,
         cash=cash,
         commission=0.001,
-        exclusive_orders=True,
+        exclusive_orders=(max_concurrent_orders <= 1),
         finalize_trades=True,
     )
 
@@ -157,6 +160,9 @@ def run_single(
         use_tadgan_gate=use_tadgan_gate,
         tadgan_model_path=tadgan_model_path,
         tadgan_gate_threshold_pct=tadgan_gate_threshold_pct,
+        max_loss_pct=max_loss_pct,
+        max_concurrent_orders=max_concurrent_orders,
+        min_confluence=min_confluence,
     )
 
     # Buy & Hold comparison
@@ -585,6 +591,24 @@ def main() -> None:
         default=0.15,
         help="B2: Weight of W/M Bollinger signals (default 0.15)",
     )
+    parser.add_argument(
+        "--max-loss-pct",
+        type=float,
+        default=0.10,
+        help="Hard stop-loss as fraction of entry price (default 0.10 = 10%%)",
+    )
+    parser.add_argument(
+        "--max-concurrent-orders",
+        type=int,
+        default=3,
+        help="Maximum simultaneous open positions (default 3)",
+    )
+    parser.add_argument(
+        "--min-confluence",
+        type=int,
+        default=0,
+        help="Minimum patterns that must agree for entry (0=no gating, default 0)",
+    )
     parser.add_argument("--sweep-entry", help="Comma-separated entry thresholds to sweep")
     parser.add_argument(
         "--sweep-reliability", help="Comma-separated min reliability values to sweep"
@@ -635,6 +659,9 @@ def main() -> None:
         use_tadgan_gate=args.use_tadgan_gate,
         tadgan_model_path=args.tadgan_model,
         tadgan_gate_threshold_pct=args.tadgan_threshold_pct,
+        max_loss_pct=args.max_loss_pct,
+        max_concurrent_orders=args.max_concurrent_orders,
+        min_confluence=args.min_confluence,
     )
     all_results: list[dict] = []
 

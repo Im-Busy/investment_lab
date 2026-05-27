@@ -197,7 +197,13 @@ class RulesFirstStrategy(Strategy):
     signal_strength_min_size: float = 0.5
     signal_strength_max_size: float = 1.0
 
+    max_loss_pct: float = 0.10
+    max_concurrent_orders: int = 3
+    min_confluence: int = 0
+
     _strategy_ref: Optional[list] = None
+    _active_count: int = 0
+    _had_position_prev: bool = False
 
     def init(self) -> None:
         """Precompute pattern signals and indicators for all bars."""
@@ -769,7 +775,26 @@ class RulesFirstStrategy(Strategy):
         if self._garch_trail_mults is not None and idx < len(self._garch_trail_mults):
             trail_atr_mult = float(self._garch_trail_mults[idx])
 
+        # Track active position count
+        has_pos = self.position is not None
+        if self._had_position_prev and not has_pos:
+            self._active_count = 0
+        elif has_pos and not self._had_position_prev:
+            self._active_count += 1
+        self._had_position_prev = has_pos
+
         if self.position:
+            loss_pct = (
+                abs(current_close - self._entry_price) / self._entry_price
+                if self._entry_price > 0
+                else 0.0
+            )
+            if self.max_loss_pct > 0 and loss_pct >= self.max_loss_pct:
+                self.position.close()
+                self._trail_high = 0.0
+                self._trail_low = float("inf")
+                return
+
             if self.position.is_long:
                 self._trail_high = max(self._trail_high, current_close)
                 trail_sl = self._trail_high - trail_atr_mult * atr
@@ -821,6 +846,20 @@ class RulesFirstStrategy(Strategy):
                         self.position.close()
                         self._trail_low = float("inf")
         else:
+            if self.max_concurrent_orders > 0 and self._active_count >= self.max_concurrent_orders:
+                return
+
+            total_patterns = int(
+                np.sum(np.abs(np.concatenate([s for s in self._signals_cache.values()])))
+                if self._signals_cache
+                else 0
+            )
+            active_patterns = sum(
+                1 for _name, sig in self._signals_cache.items() if int(sig[idx]) != 0
+            )
+            if self.min_confluence > 0 and active_patterns < self.min_confluence:
+                return
+
             kelly_size = self._compute_kelly_size(score) if self._kelly_alloc else 1.0
             kelly_size = self._compute_signal_strength_size(score, kelly_size)
             kelly_size = self._apply_regime_size_penalty(idx, kelly_size)

@@ -97,6 +97,10 @@ dependencies = [
     "stable-baselines3>=2.9.0a2",
     "smartmoneyconcepts>=0.0.27",
     "dtaidistance>=2.4.0",
+    "financedatabase>=2.3.1",
+    "faiss-cpu>=1.14.2",
+    "skfolio>=0.20.1",
+    "patternity>=0.1.0",
 ]
 
 [dependency-groups]

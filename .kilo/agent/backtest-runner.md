@@ -60,6 +60,14 @@ Default model: `models/pattern_classifier_v3_SPY_20260511_224704.pkl` (37-ticker
 
 ⚠️ Model probabilities cluster in 0.25-0.65 band (mean 0.454, std 0.069). Thresholds above 0.50 may produce too few trades.
 
+## Ticker Verification (MANDATORY)
+
+Before backtesting a ticker not already in the active universe:
+1. **Consult `docs/stock_selection_criteria.md`** — verify all 11 hard filters (F1-F11)
+2. If the ticker fails any hard filter, flag it and report which filter it failed
+3. For new alpha target candidates, also verify Tier 3 criteria (MC $500M-$5B, volume >500K, analysts <5)
+4. Do NOT add unverified tickers to BESTS.md — results from structurally invalid instruments are noise
+
 ## C7 Strategy Toggles
 
 These are proven/marginal refinements in `ml_strategy.py`:

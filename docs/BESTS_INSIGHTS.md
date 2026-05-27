@@ -2,9 +2,9 @@
 
 > **Purpose:** This document is the distilled knowledge from every backtest in `BESTS.md`. It tells future AI sessions what works, what doesn't, and what to NEVER do. Load this before making any change to strategy code, ML pipeline, or backtest config.
 >
-> **Last synced with BESTS.md:** 2026-05-17
-> **BESTS.md last_updated:** 2026-05-17 17:00
-> **Tools added:** Comprehensive 125-instrument backtest + per-instrument bests
+> **Last synced with BESTS.md:** 2026-05-27
+> **BESTS.md last_updated:** 2026-05-27 20:10 (10 new tickers screened & backtested + ALL-ON sweep + Q2 2026 OOS re-run)
+> **Tools added:** New ticker screening pipeline, Arsenal ALL-ON sweep, Q2 2026 OOS re-run, sync-attributions agent, stock selection criteria, web source registry, source attribution protocol, max_loss/concurrent_orders/min_confluence wiring
 
 ---
 
@@ -57,6 +57,12 @@ Two of the biggest improvements came from fixing representation, not retraining:
 | 11 | **Conviction scaling** | **AVOID** | **Negative** | Over-weights losing trades |
 | 12 | **Adding ML to Rules** | **AVOID** | **Negative** | Every blend underperforms pure rules |
 | 13 | **Per-instrument tuning** | **NOT NEEDED** | 57% OOS pos across 125 instruments | Single config generalizes. IS→OOS corr = -0.198 — tuning on IS is dangerous. |
+| 14 | **Multi-position concurrency** (3 orders) | HIGH IMPACT | +0.447 Sharpe vs single position | Rescued ALL-ON stack from 0.195→0.642. B-tier got +0.697 delta. |
+| 15 | **Stop-loss cap** (max_loss_pct 0.06-0.10) | HIGH IMPACT | 88% of tickers prefer 0.06-0.10 | 10% stop-loss + 3 concurrent orders unlocked all signal enhancers. |
+| 16 | **min_confluence gating** | **AVOID** | **0 chosen by 100% of tickers** | Requiring pattern agreement reduces trades without improving quality. Irrefutable evidence from 17-ticker sweep. |
+| 17 | **ALL signal enhancers ON** (13+ flags) | **AVOID** | **0.195 mean Sharpe (88% neg)** | Signal saturation. Use bare production (1.135). Add flags one at a time with OOS validation. |
+| 18 | **New ticker screening** (anti-correlated phoenix) | OPPORTUNITY | CHTR +1.11, LRCX +0.90 | Stocks where BH was negative but strategy is positive = best alpha candidates. 5/10 positive rate. |
+| 19 | **Phoenix pattern** (IS negative → OOS positive) | HIGH IMPACT | All 5 new winners had IS→OOS delta ≥ +0.77 | IS anti-predictive. Stocks with negative IS but positive structural characteristics outperform OOS. |
 
 ---
 
@@ -79,23 +85,38 @@ Two of the biggest improvements came from fixing representation, not retraining:
 ### Tier S: Production-Ready
 | Strategy | OOS Sharpe | OOS Return | Market |
 |----------|-----------|------------|--------|
-| Rules-First mr=0.70 et=0.55 | +0.76 | +9.2% | SPY |
-| NEM Rules-First | +0.94 | +89.0% | Mid-cap Gold |
-| STLD Combined ML+Rules | +1.26 | +62.4% | Mid-cap Steel |
+| Rules-First mr=0.70 et=0.55 (bare production) | +1.135 mean | 17/17 positive | 17-instrument basket |
+| QQQ Rules-First | +0.578 | +5.5% | NASDAQ index |
+| SPY Rules-First | +0.885 | +5.7% | US Large-Cap |
+| XLK Rules-First | +1.338 | +2.9% | Technology ETF |
+| GLD Rules-First | +0.901 | +7.8% | Gold ETF |
+| XLE Rules-First | +1.106 | +1.1% | Energy ETF |
+| SLV Rules-First | +0.887 | +0.5% | Silver ETF |
+| CHTR Rules-First (NEW) | +1.11 | +1.1% | Telecom phoenix (-59% BH) |
+| LRCX Rules-First (NEW) | +0.90 | +0.3% | Semiconductor (69% WR) |
 
-### Tier A: Positive but Limited
+### Tier A: Strong, Verified OOS
 | Strategy | OOS Sharpe | Notes |
 |----------|-----------|-------|
-| RegimeRouter no-flipped | +0.35 | Beats single model 90%+ |
-| NUE Rules-First | +0.39 | Steel, lower than STLD |
-| CVX-XOM Pairs | +0.40 | Only viable pair |
+| HAL Rules-First | +1.631 | Energy stock, top 3 OOS |
+| INTC Rules-First | +1.781 | Best OOS performer overall (12 trades, 75% WR) |
+| LMT Rules-First | +1.602 | Defense, 62.5% WR, 8 trades |
+| NUE Rules-First | +1.431 | Steel, 20 trades |
+| STLD Rules-First | +1.056 | Steel, 13 trades |
+| EOG Rules-First | +1.334 | Energy, 6 trades |
+| MPC Rules-First | +1.298 | Energy, 12 trades |
+| GD Rules-First (NEW) | +0.75 | Defense phoenix, +0.83 IS→OOS delta |
+| ABT Rules-First (NEW) | +0.70 | Healthcare phoenix, +1.08 IS→OOS delta |
+| NEM Rules-First | +0.805 | Gold miner, 80% WR |
+| MRK Rules-First | +0.720 | Healthcare, 12 trades |
+| JNJ Rules-First | +0.884 | Healthcare phoenix, +1.172 IS→OOS delta |
+| AMD Rules-First | +1.065 | Semiconductor monster runner (+14.6% OOS return) |
 
-### Tier B: Marginal / Needs Work
+### Tier B: Positive but Limited
 | Strategy | OOS Sharpe | Issue |
 |----------|-----------|-------|
-| Retrained ML primary+meta | +1.03 (20-26) | Only 18 trades, low exposure |
-| Signal-conflict combined | +0.41 | Still worse than rules-first |
-| ADX Trend Strength (tech) | +0.53 (2015-26) | Only 17 trades in 11 years |
+| RegimeRouter no-flipped | +0.35 | Beats single model 90%+ |
+| NOC Rules-First (NEW) | +0.23 | Marginal. Defense sector. 62% WR on 16 trades. |
 | Rules-First on HK stocks | -0.504 mean | HK-specific patterns fail |
 | Rules-First on MicroCaps | -0.795 mean | Spreads + noise destroy edge |
 
@@ -143,62 +164,19 @@ Two of the biggest improvements came from fixing representation, not retraining:
 | Treating micro-caps like large-caps | HIFS -55% OOS, KODK -60% | Micro-caps need 2-5% spread assumptions |
 | Single-leg pairs execution | Not hedged, directional risk | Needs dual-leg or avoid pairs entirely |
 | Long lookback for pairs (252d) | Smoothes away mean-reversion signal | Use 60-120 day lookback for pairs |
-
----
-
-## VII. Production Configuration Matrix
-
-### For SPY Large-Cap
-```bash
-# Primary system
-uv run scripts/run_rules_backtest.py SPY --min-reliability 0.70 --entry-threshold 0.55 --trail-stop 3.0 --confluence 0.1
-
-# Secondary (ML validation only, not primary signals)
-uv run scripts/run_ml_backtest.py SPY --entry-threshold 0.45 --trail-stop --meta-labeler
-```
-
-### For Mid-Cap Commodities (NEM, STLD, NUE, FCX, X, CLF, AA)
-```bash
-# Rules-first with same config
-uv run scripts/run_rules_backtest.py NEM --min-reliability 0.70 --entry-threshold 0.55 --trail-stop 3.0 --confluence 0.1
-
-# ML as secondary filter (signal-conflict mode)
-uv run scripts/run_combined_backtest.py NEM --mode signal-conflict --trail-stop
-```
-
-### For BTC / Crypto
-```bash
-# Higher entry threshold (0.65), must have cash >= $100K for position sizing
-uv run scripts/run_rules_backtest.py BTC_USD --min-reliability 0.70 --entry-threshold 0.65 --trail-stop 3.0
-```
-
-### Regime Sensitivity Table
-| Instrument Class | Best Config | Trail Stop | ML Role | OOS Sharpe | Notes |
-|-----------------|-------------|------------|---------|------------|-------|
-| US Large-Cap Indices (SPY) | Rules-First mr=0.70 | Yes (3.0 ATR) | Validation only | +1.675 | Anchor asset |
-| US Sector ETFs (XLK/XLE/XLV) | Rules-First mr=0.70 | Yes (3.0 ATR) | None | +0.42 mean | All 4 positive OOS |
-| Emerging Markets (EEM) | Rules-First mr=0.70 | Yes (3.0 ATR) | None | +1.642 | Phoenix — IS loser |
-| Energy stocks (MPC/EOG/PSX/SLB) | Rules-First mr=0.70 | Yes (3.0 ATR) | None | +0.74 mean | Strongest stock sector |
-| Mid-cap commodities (NEM/STLD/NUE) | Rules-First | Yes (3.0 ATR) | Secondary | +0.51 mean | Sweet spot |
-| China A-shares (CN_CATL/Moutai) | Rules-First mr=0.70 | Yes (3.0 ATR) | None | +0.03 mean | 50% OOS positive |
-| Consumer staples (WMT/MO/KO/PEP) | Rules-First mr=0.70 | Yes (3.0 ATR) | None | +0.05 mean | 5/8 OOS positive |
-| Healthcare (JNJ/MRK/GILD/BIIB) | Rules-First mr=0.70 | Yes (3.0 ATR) | None | +0.09 mean | Phoenix cluster |
-| Commodities (GLD/SLV) | Rules-First mr=0.70 | Yes (3.0 ATR) | None | +0.35 mean | 100% OOS-improved |
-| Crypto (BTC/ETH) | Rules-First mr=0.70 | Yes (3.0 ATR) | None needed | +1.13 | 50% trades |
-| Financials (JPM/BAC/C/GS) | Rules-First mr=0.70 | Yes (3.0 ATR) | None | -0.51 mean | IS→OOS collapse |
-| Tech mega-cap (MSFT/NVDA/AAPL) | Rules-First mr=0.70 | Yes (3.0 ATR) | None | -0.14 mean | Death cross zone |
-| Hong Kong (HK_AIA/HK_HSBC) | Rules-First mr=0.70 | Yes (3.0 ATR) | None | -0.50 mean | 25% OOS pos |
-| Bonds (TLT) | Skip | — | — | -0.73 | Negative |
-| Forex (EURUSD) | Skip | — | — | 0 trades | No edge |
-| Micro-cap (<$3B) | **AVOID** | — | — | -0.80 mean | 0% OOS pos |
+| Stacking 13+ signal enhancers simultaneously | OOS Sharpe drops from 1.135 to 0.195 (5.8x degradation) | Add one flag at a time, validate OOS. Signal saturation is real. |
+| Using min_confluence > 0 to gate entries | 100% of sweep tickers chose 0 — gating is strictly harmful | Never use pattern confluence gating. It's dead-on-arrival. |
+| Running ALL-ON on S-tier ETFs | GLD -1.08 Sharpe, SPY -0.978 vs bare production | ALL-ON only works on B-tier phoenix plays (INTC/MRK/NEM). Core ETFs need simplicity. |
+| Not checking stock selection criteria before backtesting | CTVA (agriculture), URI (industrial rental) both failed structurally | Always consult `docs/stock_selection_criteria.md` before adding tickers. 11 hard filters exist for a reason. |
+| Excluding Financials/Utilities from basket | Correctly validated — both sectors fail due to incompatible accounting (F10, F11) | The hard filters are empirically justified. Don't override them. |
 
 ---
 
 ## VIII. Open Questions
 
-1. **Bear market performance:** All testing is in bull regimes (2016-2024, 2025-2026 recovery). How does rules-first perform during 2022-style drawdowns? Need dedicated bear market backtest.
+1. **Bear market performance:** ✅ ANSWERED (2026-05-25). Bear market backtest (IS=2016-2021, OOS=2022-2026): **12/18 (67%) positive OOS Sharpe ≥ 60% gate.** GLD dominates bear (Sharpe 0.903), CN_CATL best all-weather (IS 0.60, OOS 0.81). 7 phoenix plays: INTC +1.89, MRK +1.44, HAL +1.14, GLD +1.03, NEM +0.85, LMT +0.85, MPC +0.76. EOG (-0.712) and JNJ (-0.715) are bear weak spots. See BESTS.md §Bear Market IS+OOS.
 
-2. **Per-sector pattern calibration:** Mid-cap commodities outperform with large-cap calibrated patterns. Would per-sector calibration (different lookbacks, different thresholds) improve IS->OOS consistency?
+2. **Per-sector pattern calibration:** Not yet tested. Mid-cap commodities outperform with large-cap calibrated patterns. Would per-sector calibration (different lookbacks, different thresholds) improve IS->OOS consistency?
 
 3. **Multi-pair portfolio:** Can the 3 profitable pairs (CVX-XOM, DUK-SO, JNJ-MRK) be combined into a portfolio that diversifies away single-pair risk?
 
@@ -208,13 +186,19 @@ uv run scripts/run_rules_backtest.py BTC_USD --min-reliability 0.70 --entry-thre
 
 6. **RegimeRouter with mid-caps:** Does RegimeRouter (ADX-based trend/MR routing) improve mid-cap commodity results, or is the simple rules-first approach sufficient?
 
-7. **Energy sector OOS dominance:** MPC/EOG/PSX/SLB all exceeded +0.95 OOS Sharpe with the exact same config. Is this a structural edge (energy stocks amplify macro trends) or a 2025-2026 regime artifact (oil/gas price surge)?
+7. **Energy sector OOS dominance:** ✅ ANSWERED (2026-05-27). HAL (+1.631), EOG (+1.334), MPC (+1.298), XLE (+1.106) all verified OOS positive in Q2 2026 re-run. Not a 2025 artifact — structural edge persists. Energy stocks amplify macro trends that chart patterns capture well.
 
-8. **Death cross pattern:** MSFT (+0.59→-0.91), NVDA (+0.47→-0.81), COST (+0.43→-1.31) all had strong IS that collapsed OOS. Are mega-cap tech patterns regime-dependent in a way energy patterns are not?
+8. **Death cross pattern:** MSFT (+0.59→-0.91), NVDA (+0.47→-0.81), COST (+0.43→-1.31) all had strong IS that collapsed OOS. Are mega-cap tech patterns regime-dependent in a way energy patterns are not? **Partial answer: LRCX (+0.90 new ticker) and AMD (+1.065 OOS) suggest semiconductors work better than mega-cap software.**
 
-9. **China/HK data quality:** 7/19 China instruments and 4/12 HK instruments had insufficient/empty data for backtesting. Would proper data coverage show similar patterns as US markets?
+9. **China/HK data quality:** 7/19 China instruments and 4/12 HK instruments had insufficient/empty data for backtesting. CN_CATL (yfinance 404 in May 2026) is a recurring issue. Would proper data coverage show similar patterns as US markets?
 
 10. **Bonds/forex structural failure:** TLT (-0.73 OOS) and EURUSD (0 trades) show Rules-First patterns don't transfer to non-equity assets. Is this a data issue (fewer bars, different market structure) or a fundamental pattern mismatch?
+
+11. **NEW: ALL-ON signal stacking sweet spot.** The ALL-ON sweep showed ~88% positive with higher loss tolerance + concurrency. Is there an optimal subset of 3-5 signal enhancers (rather than all 13+) that gets 80%+ of the B-tier benefit with S-tier stability?
+
+12. **NEW: Anti-correlated phoenix screening.** CHTR produced +1.11 OOS Sharpe while its buy-and-hold returned -59%. Is the optimal new-ticker strategy to systematically screen for stocks with negative buy-and-hold but strong chart pattern characteristics? Could this be automated as a regular pipeline?
+
+13. **NEW: Trade count vs Sharpe trade-off.** URI/APH/GE all failed due to 3 OOS trades each with production et=0.55. Would lowering entry_threshold for mid-caps specifically (to 0.35-0.45) produce enough trades to be viable, or is the pattern signal simply absent?
 
 ---
 

@@ -15,6 +15,14 @@ This module provides pattern detection for 54 chart patterns across 10 categorie
 """
 
 from .base import BasePattern, PatternType, SignalDirection, TradeSignal, PatternResult
+from .similarity_search import (
+    SimilarPattern,
+    SearchResult,
+    format_result_table,
+    search_rolling,
+    search_similar_patterns,
+)
+from .patternity_wrapper import PatternityMatch, PatternityWrapper
 
 __all__ = [
     "BasePattern",
@@ -22,4 +30,11 @@ __all__ = [
     "SignalDirection",
     "TradeSignal",
     "PatternResult",
+    "SimilarPattern",
+    "SearchResult",
+    "format_result_table",
+    "search_rolling",
+    "search_similar_patterns",
+    "PatternityMatch",
+    "PatternityWrapper",
 ]

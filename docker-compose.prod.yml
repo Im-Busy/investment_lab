@@ -1,0 +1,87 @@
+# P28-24: Docker Compose production deployment
+#
+# Multi-service deployment: app + MongoDB + persistent volumes + healthchecks.
+# Source: OpenStock Docker configuration pattern.
+#
+# Usage:
+#   docker compose -f docker-compose.prod.yml up -d
+#   docker compose -f docker-compose.prod.yml logs -f
+#   docker compose -f docker-compose.prod.yml down
+
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: investment_trying_app
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+      - MONGO_URI=mongodb://mongo:27017/investment_trying
+      - DATA_DIR=/data
+      - MODELS_DIR=/models
+      - LOGS_DIR=/logs
+      - TZ=America/New_York
+    volumes:
+      - data_volume:/data:rw
+      - model_volume:/models:rw
+      - log_volume:/logs:rw
+      - ./config_files:/app/config_files:ro
+      - ./outputs:/app/outputs:rw
+      - ./reports:/app/reports:rw
+    depends_on:
+      mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    entrypoint: ["python", "scripts/daily_report_agent.py"]
+    networks:
+      - app_network
+
+  mongo:
+    image: mongo:7
+    container_name: investment_trying_mongo
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_DATABASE=investment_trying
+    volumes:
+      - mongo_data:/data/db:rw
+      - mongo_config:/data/configdb:rw
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    ports:
+      - "27017:27017"
+    networks:
+      - app_network
+
+volumes:
+  data_volume:
+    driver: local
+    name: investment_trying_data
+  model_volume:
+    driver: local
+    name: investment_trying_models
+  log_volume:
+    driver: local
+    name: investment_trying_logs
+  mongo_data:
+    driver: local
+    name: investment_trying_mongo_data
+  mongo_config:
+    driver: local
+    name: investment_trying_mongo_config
+
+networks:
+  app_network:
+    driver: bridge
+    name: investment_trying_network

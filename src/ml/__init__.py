@@ -337,6 +337,23 @@ from src.ml.label_shuffling import LabelShufflingResult, run_label_shuffling_tes
 # Phase 25: SVM Regime Classifier (B34)
 from src.ml.svm_regime import SVMRegimeClassifier, SVMRegimeResult
 
+# Phase 27A: GAN Data Augmentation
+from src.ml.gan_data_augmentation import (
+    TTSGAN,
+    TTSGenerator,
+    TTSDiscriminator,
+    augment_dataset,
+    prepare_gan_samples,
+)
+from src.ml.gan_convergence import (
+    GANConvergenceMonitor,
+    compute_dtw_dedims,
+    compute_wasserstein_distance,
+)
+
+# Phase 27C: TadGAN Anomaly Detection
+from src.ml.anomaly_detection import TadGAN, prepare_tadgan_samples
+
 __all__ = [
     # Part A infrastructure
     "ExperimentLogger",
@@ -596,4 +613,16 @@ __all__ = [
     # Phase 25: SVM Regime Classifier (B34)
     "SVMRegimeClassifier",
     "SVMRegimeResult",
+    # Phase 27A: TTS-GAN Data Augmentation
+    "TTSGAN",
+    "TTSGenerator",
+    "TTSDiscriminator",
+    "prepare_gan_samples",
+    "augment_dataset",
+    "GANConvergenceMonitor",
+    "compute_dtw_dedims",
+    "compute_wasserstein_distance",
+    # Phase 27C: TadGAN Anomaly Detection
+    "TadGAN",
+    "prepare_tadgan_samples",
 ]

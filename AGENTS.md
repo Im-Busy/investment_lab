@@ -278,13 +278,68 @@ This produces:
 3. **`progress_docs/current.md`** — Session log with timestamps and detailed action history.
 4. **`docs/research_logic_map/insight_registry.md`** — All research insights (88 from 22 sources), tagged by topic/impact/status. Source of truth for what is known and what remains to implement.
 5. **`docs/BESTS_INSIGHTS.md`** — Distilled knowledge from every backtest in BESTS.md. Factor rankings, strategy tier list, anti-patterns, production configs. The "what works and what to never do" file.
-6. **Verify indexes**: `npx gitnexus status` + `cgc stats` — reindex if stale. Ensure CGC watcher is running (`Get-Job -Name "CGCWatcher"`).
+6. **`docs/GPU_TASK_QUEUE.md`** — Registry of GPU-blocked tasks with tutorials. **CRITICAL: Check GPU availability immediately after reading this file.** If `torch.cuda.is_available()`, attempt highest-priority pending task. See §GPU Task Protocol below.
+7. **Verify indexes**: `npx gitnexus status` + `cgc stats` — reindex if stale. Ensure CGC watcher is running (`Get-Job -Name "CGCWatcher"`).
 
 **IMPORTANT: After reading `BESTS_INSIGHTS.md`, check `BESTS.md` for its `last_updated` timestamp.** If BESTS.md changed significantly since BESTS_INSIGHTS.md was last synced (new top-3 results, new strategy categories, regime shift detected), re-evaluate the insights and update both files.
 
 After reading state, consult `.kilo/project-loop.md` for the DEEPEN/BROADEN/PIVOT/CONCLUDE decision framework. Every phase or significant experiment must end with an explicit direction decision.
 
 The agent updates `MEMORY.md` continuously during the session. At session end, the agent writes a detailed handover to `progress_docs/handovers/` and updates both `MEMORY.md` and `progress_docs/current.md`.
+
+## GPU Task Protocol — MANDATORY
+
+**Every session MUST check `docs/GPU_TASK_QUEUE.md` for pending GPU tasks.** This is step 6 of the Session Start Protocol above.
+
+### Protocol
+
+1. **Check GPU availability** immediately after reading the queue:
+   ```bash
+   uv run python -c "import torch; print('GPU:', torch.cuda.is_available()); print('Device:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU only')"
+   ```
+
+2. **If GPU is available:**
+   a. Open `docs/GPU_TASK_QUEUE.md` and find the highest-priority pending (⏳ or ⏸️) task.
+   b. Follow the **tutorial** in that task's entry exactly — do NOT re-research the paper or redesign the approach.
+   c. Run the command(s) specified in the tutorial.
+   d. If task completes successfully: update status to ✅, record results/metrics in the task entry, update MEMORY.md.
+   e. If task is aborted (OOM, timeout, dependency error): update status to ⏸️ with reason, move to next task.
+   f. Continue until all P0/P1 tasks are attempted or GPU time is exhausted.
+
+3. **If GPU is NOT available:**
+   a. Skip GPU tasks — continue with CPU-safe work.
+   b. If implementing new GPU-dependent code, add it to `docs/GPU_TASK_QUEUE.md` with a self-contained tutorial.
+
+### When to Add Tasks to the Queue
+
+Add a task whenever:
+- Code is implemented but gate validation requires GPU training
+- A model was trained on CPU with reduced parameters (note what full params would be)
+- A paper's method requires GPU (GANs, diffusion, transformers, large SHAP)
+- You encounter OOM or >5 min/epoch training times on CPU
+
+### Task Entry Template
+
+```markdown
+### N. Task Name (Phase Reference)
+
+**Status:** ⏳ Not started
+
+**What:** 1-2 sentence description.
+
+**Why:** 1-2 sentence justification.
+
+**Files involved:** (list existing files, files to create)
+
+**Tutorial:**
+\`\`\`bash
+# Step-by-step commands with realistic flags
+# Include expected output and success criteria
+\`\`\`
+
+**Expected runtime on GPU:** X-Y minutes/hours
+**Paper reference:** (if applicable)
+```
 
 ## Progress Documentation — CRITICAL FOR ALL SESSIONS
 
@@ -761,7 +816,7 @@ Every commit must now pass these additional checks:
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **investment_trying_lab_private** (35906 symbols, 54953 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **investment_trying_lab_private** (36973 symbols, 56490 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 

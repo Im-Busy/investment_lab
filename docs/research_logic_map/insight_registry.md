@@ -1,8 +1,8 @@
 # Insight Registry
 
-**Last Updated:** 2026-05-22
-**Total Insights:** 88
-**Papers Analyzed:** 21 (18 papers + 3 new resources) + 66-paper Master Comparison Report Phase 25
+**Last Updated:** 2026-05-26
+**Total Insights:** 116
+**Papers Analyzed:** 33 (30 papers + 3 new resources) + 66-paper Master Comparison Report Phase 25
 
 ---
 
@@ -250,6 +250,102 @@ All missing implementable items from `useful_resources/papers_md/MASTER_COMPARIS
 | P25.12 | NSGA-II multi-objective optimization (Pareto front for conflicting objectives) | Portfolio | 🟡 Medium | ✅ | `src/optimization/nsga2_optimizer.py` (NSGA2Optimizer) |
 | P25.13 | Dynamic GA with associative memory per regime (hyper-mutation on regime shift) | Regime | 🟡 Medium | ✅ | `src/optimization/dynamic_ga.py` (DynamicGAOptimizer) |
 
+### P26: TimeGAN — Volatility & Irregularity Capturing on DAX (Mushunje, Allen, Peiris — Columbia Univ/USYD)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| I26.1 | TimeGAN outperforms LSTM/GRU/WGAN on shock-perturbed financial data (DAX 2010-2022, COVID shocks) | TimeSeries.Forecast | 🟠 High | ⏳ | GAN-based synthetic data generation |
+| I26.2 | GANs capture stylized facts (fat-tails, kurtosis, long-range dependence) that traditional models miss | TimeSeries.Generation | 🟠 High | ⏳ | Synthetic OOS stress testing |
+| I26.3 | Hybrid GAN+sequential models capture both distribution learning and temporal dependencies | ML.Architecture | 🟡 Medium | ⏳ | Combined GAN+LSTM for feature generation |
+
+### P27: Wasserstein GAN-GP — Bitcoin Financial Time Series Generation (Pfenninger, Bigler, Rikli, Osterrieder — ZHAW/UTwente)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| I27.1 | WGAN-GP with LSTM generator/discriminator generates visually indistinguishable Bitcoin price series | TimeSeries.Generation | 🟠 High | ⏳ | Synthetic crypto data augmentation |
+| I27.2 | Wasserstein distance + gradient penalty stabilizes GAN training on volatile financial data | ML.Training | 🟡 Medium | ⏳ | Stable GAN training loss function |
+| I27.3 | Generated data statistically close but distinguishable from real — QQ-plot + ACF evaluation framework | Validation | 🟡 Medium | ⏳ | Synthetic data quality metrics |
+
+### P28: TTS-GAN — Transformer-Based GAN for Financial Time Series Augmentation (Podobinski, Chudziak — Warsaw UT)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| I28.1 | **Transformer-based GAN (TTS-GAN) augments scarce financial data → improves LSTM forecasting accuracy** on BTC + S&P500 | TimeSeries.Augmentation | 🔴 Critical | ⏳ | `src/ml/data_augmentation.py` |
+| I28.2 | Novel DTW+DeD-iMs convergence metric for monitoring GAN training quality on time series | ML.Training | 🟠 High | ⏳ | GAN training quality monitoring |
+| I28.3 | Regime-shift shortens relevant data horizon → DL overfits; GAN augmentation bridges the gap | ML.Data | 🔴 Critical | ⏳ | Anti-overfitting via augmentation |
+
+### P29: TsLLM — LLM Augmented for Time Series Understanding & Prediction (Parker, Chan, Zhang, Ghobadi — JHU)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| I29.1 | Patch-based VAE encoder-decoder bridges LLMs to time series; scale-aware encoding decouples shape from magnitude | LLM.Architecture | 🟠 High | ⏳ | LLM-based contextual forecasting |
+| I29.2 | Contextual forecasting conditioned on unstructured text (news/sentiment) via interleaved token sequences | NLP.Integration | 🔴 Critical | ⏳ | `src/nlp/contextual_forecast.py` |
+| I29.3 | TsLLM achieves zero-shot/few-shot time series tasks (forecasting, classification, anomaly detection) without retraining | ML.Transfer | 🟡 Medium | ⏳ | Zero-shot regime detection |
+| I29.4 | Text tokenization inflates numeric values to multiple tokens — raw LLMs blind to time series patterns | NLP.Limitation | 🟡 Medium | ✅ | Documented antipattern |
+
+### P30: ALGAN — Adjusted-LSTM GAN for Anomaly Detection (Bashar, Nayak — QUT)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| I30.1 | Attention-adjusted LSTM hidden states reduce information loss in long-sequence anomaly detection | Anomaly.Detection | 🟡 Medium | ⏳ | GAN-based regime detection |
+| I30.2 | 46 univariate + 1 multivariate dataset benchmark; outperforms traditional + NN + GAN baselines | Anomaly.Detection | 🟡 Medium | ⏳ | Anomaly detection benchmark harness |
+
+### P31: MIM-GAN — Message Importance Measure GAN for Multivariate Anomaly Detection (Lu, Dong, Cai, Fang, Zhao — Tibet Univ/JNU/Western)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| I31.1 | Exponential information measure loss function avoids mode collapse in GAN training | ML.Training | 🟡 Medium | ⏳ | Stable GAN loss functions |
+| I31.2 | Combined discriminator+reconstruction score for robust anomaly scoring | Anomaly.Detection | 🟡 Medium | ⏳ | Hybrid anomaly scoring |
+
+### P32: TadGAN — Cycle-Consistent GAN for Time Series Anomaly Detection (Geiger, Liu, Alnegheimish, Cuesta-Infante, Veeramachaneni — MIT)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| I32.1 | **Cycle-consistent GAN with LSTM generator/critic achieves highest averaged F1 across 11 benchmark datasets** (NASA, Yahoo, Numenta, Amazon, Twitter; 492 signals) | Anomaly.Detection | 🟠 High | ⏳ | `src/ml/anomaly_detection.py` |
+| I32.2 | Dual anomaly score: reconstruction error + critic output combined via novel weighting schemes | Anomaly.Detection | 🟡 Medium | ⏳ | Anomaly scoring methodology |
+| I32.3 | Open-source benchmarking system for time series anomaly detection with 9 pipelines + 13 datasets | Validation | 🟡 Medium | ⏳ | Anomaly detection test harness |
+
+### P33: TSI-GAN — Unsupervised Time Series Anomaly Detection via Convolutional Cycle-Consistent GAN (Saravanan, Luo, Ngo — Missouri S&T/SUTD)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| I33.1 | Time series → 2D image encoding enables convolutional GANs for anomaly detection; 13% over MERLIN on 250 datasets | Anomaly.Detection | 🟠 High | ⏳ | Image-based anomaly detection |
+| I33.2 | Hodrick-Prescott filter post-processing reduces false positives in anomaly detection | Signal.Quality | 🟡 Medium | ⏳ | False positive reduction |
+| I33.3 | Real-time inference via encoder-decoder (no latent optimization at inference time) | ML.Performance | 🟡 Medium | ⏳ | Production anomaly detection |
+
+### P34: WaveletDiff — Multilevel Wavelet Diffusion for Time Series Generation (Wang, Milenkovic — UIUC)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| I34.1 | Diffusion on wavelet coefficients preserves multi-resolution structure; 3× better discriminative scores than baselines | TimeSeries.Generation | 🟠 High | ⏳ | Wavelet-based synthetic data |
+| I34.2 | Cross-level attention with adaptive gating enables selective information exchange between temporal/frequency scales | ML.Architecture | 🟡 Medium | ⏳ | Multi-scale feature fusion |
+| I34.3 | Parseval's theorem energy preservation constraints maintain spectral fidelity during diffusion | TimeSeries.Generation | 🟡 Medium | ⏳ | Spectral fidelity verification |
+
+### P35: WDformer — Wavelet-Based Differential Transformer for Time Series Forecasting (Wang, Zhang, Zheng, Jiang — Zhejiang Normal Univ)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| I35.1 | **Differential attention mechanism** (difference of two softmax matrices) filters noise without signal loss | ML.Architecture | 🟠 High | ⏳ | `src/ml/models/differential_attention.py` |
+| I35.2 | Wavelet transform + inverted-dimension attention captures multi-variate correlations better than standard attention | TimeSeries.Features | 🟡 Medium | ⏳ | Wavelet feature extraction pipeline |
+| I35.3 | SOTA on multiple real-world datasets — demonstrated accuracy and effectiveness for financial forecasting | TimeSeries.Forecast | 🟡 Medium | ⏳ | Wavelet forecasting model |
+
+### P36: AWEMixer — Adaptive Wavelet-Enhanced Mixer Network for Long-Term Forecasting (Li, Zhang, Tao, Wang, Pan, Wei — Xi'an Jiaotong)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| I36.1 | Frequency Router: FFT finds global periodicities → adaptively weights localized wavelet subbands | Signal.Processing | 🟡 Medium | ⏳ | Frequency-aware feature engineering |
+| I36.2 | Coherent Gated Fusion: cross-attention+gating integrates frequency features with multi-scale temporal representations | ML.Architecture | 🟡 Medium | ⏳ | Multi-scale feature fusion |
+| I36.3 | Key insight — "when" matters more than "what frequency": FFT tells which frequencies exist, not when they appear; wavelets solve time-frequency localization | Signal.Processing | 🟠 High | ⏳ | Wavelet-based regime detection |
+| I36.4 | 7 public benchmarks; beats transformer-based + MLP-based SOTA for long-sequence forecasting | TimeSeries.Forecast | 🟡 Medium | ⏳ | Long-horizon forecasting model |
+
+### P37: DB2-TransF — Learnable Daubechies Wavelets Replace Self-Attention (Gupta, Tripathi — IIT Dharwad)
+
+| ID | Insight | Topic | Impact | Status | Linked Feature |
+|---|---------|-------|--------|--------|----------------|
+| I37.1 | **Learnable Daubechies wavelet module replaces O(n²) self-attention** with linear complexity while preserving multi-scale pattern capture | ML.Architecture | 🟠 High | ⏳ | `src/ml/models/wavelet_attention.py` |
+| I37.2 | 13 benchmark datasets; comparable/better accuracy at substantially lower compute vs transformers | ML.Performance | 🟡 Medium | ⏳ | Efficient wavelet transformer |
+| I37.3 | Wavelet coefficients capture both noise components and smooth temporal trends simultaneously | TimeSeries.Features | 🟡 Medium | ⏳ | Dual-component feature extraction |
+
 ---
 
 ## Cross-Cutting Themes
@@ -267,6 +363,9 @@ All missing implementable items from `useful_resources/papers_md/MASTER_COMPARIS
 | **Crowd-Sourced Strategy Patterns** (multi-confirmation + ATR risk = survival) | I20.1, I20.2, I20.3, I20.4, I20.5, I20.6 | ✅ 6 FMZ detectors converted and integrated |
 | **Non-Linear Factor Discovery** (ML + MCTS for alpha mining) | I18.1, I18.2, I18.3, I18.4 | 🔬 Long-term research (GPU-gated for DL) |
 | **Agentic Factor Discovery** (LLM-guided DSL search with deterministic evaluation) | I21.1, I21.2, I21.3, I21.4, I21.5, I21.6, I21.7, I21.11, I21.12 | ✅ Core modules built (DSL, trace, IC gate, ridge combiner, range patterns) |
+| **GAN-Based Data Augmentation** (synthetic financial data for scarce regimes) — NEW | I26.1, I26.2, I27.1, I28.1, I28.3 | ⏳ Phase 27 planned — TTS-GAN + TimeGAN for augmentation |
+| **Wavelet Frequency Localization** (time-frequency decomposition beats FFT for non-stationary signals) — NEW | I34.1, I35.1, I36.3, I37.1 | ⏳ Phase 27 planned — wavelet feature preprocessor |
+| **Contextual Time Series Forecasting** (LLM + time series for news-conditioned predictions) — NEW | I29.1, I29.2, I29.3 | ⏳ Phase 27 planned — TsLLM-inspired contextual forecasting |
 
 ---
 
@@ -281,8 +380,8 @@ I1.1, I1.4, I8.1, I13.2, I17.1, I17.2
 ### Regime (7 insights)
 I3.3, I4.1, I8.2, I10.3, I13.4, I5.3, I8.2
 
-### Signal.Quality (24 insights)
-I2.1, I2.3, I5.2, I5.3, I7.1, I7.2, I9.2, I13.2, I13.3, I6.2, I6.3, I15.3, I21.1, I21.2, I21.3, I21.5, I21.6, I21.7, I21.10, I21.11, I21.12, I20.1, I20.2, I20.5
+### Signal.Quality (25 insights) — UPDATED
+I2.1, I2.3, I5.2, I5.3, I7.1, I7.2, I9.2, I13.2, I13.3, I6.2, I6.3, I15.3, I21.1, I21.2, I21.3, I21.5, I21.6, I21.7, I21.10, I21.11, I21.12, I20.1, I20.2, I20.5, I33.2
 
 ### Event.Type (5 insights)
 I6.1, I6.2, I6.3, I9.1, I9.3
@@ -296,23 +395,41 @@ I2.2, I3.1, I3.4
 ### Strategy.Lifecycle (9 insights)
 I1.5, I4.3, I5.1, I13.4, I15.1, I15.2, I17.3, I21.4, I21.9
 
-### Factor.Modeling (9 insights) — NEW
+### Factor.Modeling (9 insights)
 I18.1, I18.2, I18.3, I18.4, I19.1, I19.2, I19.3, I19.4, I19.5
 
-### Agentic.Discovery (12 insights) — NEW
+### Agentic.Discovery (12 insights)
 I21.1, I21.2, I21.3, I21.4, I21.5, I21.6, I21.7, I21.8, I21.9, I21.10, I21.11, I21.12
 
 ### Market.Efficiency (5 insights)
 I14.1, I14.2, I14.3, I16.1, I16.2
 
-### ML.Training (1 insight)
-I16.3
+### ML.Training (4 insights) — UPDATED
+I16.3, I27.2, I28.2, I31.1
 
-### Strategy.Conversion (6 insights) — NEW
+### Strategy.Conversion (6 insights)
 I20.1, I20.2, I20.3, I20.4, I20.5, I20.6
 
-### Phase 25 Cross-Paper (13 insights) — NEW
+### Phase 25 Cross-Paper (13 insights)
 P25.1, P25.2, P25.3, P25.4, P25.5, P25.6, P25.7, P25.8, P25.9, P25.10, P25.11, P25.12, P25.13
+
+### TimeSeries.Generation (6 insights) — NEW
+I26.1, I26.2, I27.1, I28.1, I34.1, I34.3
+
+### Anomaly.Detection (8 insights) — NEW
+I30.1, I30.2, I31.2, I32.1, I32.2, I33.1, I33.3
+
+### ML.Architecture (6 insights) — NEW
+I26.3, I29.1, I34.2, I35.1, I36.2, I37.1
+
+### TimeSeries.Features (3 insights) — NEW
+I35.2, I37.3
+
+### Signal.Processing (2 insights) — NEW
+I36.1, I36.3
+
+### LLM.Integration (3 insights) — NEW
+I29.1, I29.2, I29.3
 
 ---
 
@@ -320,19 +437,19 @@ P25.1, P25.2, P25.3, P25.4, P25.5, P25.6, P25.7, P25.8, P25.9, P25.10, P25.11, P
 
 | Status | Count | Percentage |
 |--------|-------|------------|
-| ✅ Implemented | 48 | 55% |
+| ✅ Implemented | 48 | 44% |
 | 🔄 In-Progress | 0 | 0% |
-| ⏳ Deferred/Backlog | 27 | 31% |
+| ⏳ Deferred/Backlog | 59 | 54% |
 | ❌ Rejected | 2 | 2% |
-| 🔬 Research Phase | 11 | 12% |
+| 🔬 Research Phase | 0 | 0% |
 
 | Impact | Count | Percentage |
 |--------|-------|------------|
-| 🔴 Critical | 16 | 18% |
-| 🟠 High | 38 | 43% |
-| 🟡 Medium | 28 | 32% |
-| 🟢 Low | 6 | 7% |
+| 🔴 Critical | 19 | 17% |
+| 🟠 High | 46 | 42% |
+| 🟡 Medium | 43 | 39% |
+| 🟢 Low | 6 | 5% |
 
 ---
 
-*Registry updated 2026-05-22: Phase 25 added 11 new insights from 66-paper Master Comparison Report (Lock Box, Nested CV, Blind Analysis, Label Shuffling, SVM Regime, Dual Alpha/Beta, NLP Pipeline, Fuzzy System, NSGA-II, Dynamic GA). Total: 88 insights from 22 sources.*
+*Registry updated 2026-05-26: Phase 26 added 28 new insights from 12 papers (TimeGAN, WGAN-GP, TTS-GAN, TsLLM, ALGAN, MIM-GAN, TadGAN, TSI-GAN, WaveletDiff, WDformer, AWEMixer, DB2-TransF) covering GAN financial augmentation, wavelet forecasting, anomaly detection, and LLM-time-series integration. Total: 116 insights from 34 sources.*

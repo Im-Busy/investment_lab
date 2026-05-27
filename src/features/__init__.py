@@ -19,6 +19,12 @@ from .technical_indicators import (
     compute_macd,
     compute_all_talib,
 )
+from .wavelet_features import (
+    WaveletFeatureExtractor,
+    compute_wavelet_features,
+    compute_wavelet_volatility_features,
+    compute_wavelet_price_volume_features,
+)
 
 __all__ = [
     "compute_returns",
@@ -36,4 +42,8 @@ __all__ = [
     "compute_rsi",
     "compute_macd",
     "compute_all_talib",
+    "WaveletFeatureExtractor",
+    "compute_wavelet_features",
+    "compute_wavelet_volatility_features",
+    "compute_wavelet_price_volume_features",
 ]

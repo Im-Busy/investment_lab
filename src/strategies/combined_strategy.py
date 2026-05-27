@@ -142,6 +142,15 @@ class CombinedStrategy(Strategy):
     yield_curve_inversion_mult: float = 0.50
     yield_curve_near_inversion_mult: float = 0.75
 
+    # ── Phase 25: Fuzzy logic system ──
+    use_fuzzy: bool = False
+    fuzzy_weight: float = 0.30
+
+    # ── Phase 25: SVM regime classifier ──
+    use_svm_regime: bool = False
+    svm_regime_window: int = 100
+    svm_regime_down_skip: bool = True
+
     # ── Internal state ──
     _ml_probs: np.ndarray | None = None
     _rules_scores: np.ndarray | None = None
@@ -157,6 +166,9 @@ class CombinedStrategy(Strategy):
     _entry_price: float = 0.0
     _vix_mults: np.ndarray | None = None
     _yield_curve_mults: np.ndarray | None = None
+    _fuzzy_scores: np.ndarray | None = None
+    _svm_regime_classifier: object | None = None
+    _svm_regimes: np.ndarray | None = None
 
     def init(self) -> None:
         """Precompute all signals: ML probabilities, rules scores, ATR, regime."""
@@ -167,6 +179,8 @@ class CombinedStrategy(Strategy):
         self._precompute_atr()
         self._detect_regime()
         self._precompute_combined_scores()
+        self._precompute_fuzzy_scores()
+        self._init_svm_regime()
         self._init_new_tech_gates()
 
     # ── DataFrame construction ──
@@ -420,6 +434,82 @@ class CombinedStrategy(Strategy):
                     w_rules * self._rules_scores[i] + (1 - w_rules) * self._ml_probs[i]
                 )
 
+    # ── Phase 25: Fuzzy scoring ──
+
+    def _precompute_fuzzy_scores(self) -> None:
+        """Precompute fuzzy logic scores and blend into combined scores."""
+        if not self.use_fuzzy:
+            self._fuzzy_scores = None
+            return
+
+        from src.signals.fuzzy_scoring import compute_fuzzy_indicators, compute_fuzzy_score
+
+        try:
+            df_fuzzy = compute_fuzzy_indicators(self._df)
+            fuzzy_series = compute_fuzzy_score(df_fuzzy)
+            self._fuzzy_scores = fuzzy_series.to_numpy()
+            self._combined_scores = (
+                1 - self.fuzzy_weight
+            ) * self._combined_scores + self.fuzzy_weight * self._fuzzy_scores
+            logger.info(
+                "CombinedStrategy: fuzzy scores blended (weight=%.2f), range=[%.3f, %.3f]",
+                self.fuzzy_weight,
+                float(self._fuzzy_scores.min()),
+                float(self._fuzzy_scores.max()),
+            )
+        except Exception:
+            logger.debug("Fuzzy scoring failed, continuing without it", exc_info=True)
+            self._fuzzy_scores = None
+
+    # ── Phase 25: SVM regime classifier ──
+
+    def _init_svm_regime(self) -> None:
+        """Train SVM regime classifier on training window and precompute regimes."""
+        if not self.use_svm_regime:
+            self._svm_regime_classifier = None
+            self._svm_regimes = None
+            return
+
+        from src.ml.svm_regime import SVMRegimeClassifier
+
+        try:
+            train_end = len(self._df) // 2
+            df_train = self._df.iloc[:train_end].copy()
+            df_all = self._df.copy()
+
+            df_train.columns = [c.lower() for c in df_train.columns]
+            df_all.columns = [c.lower() for c in df_all.columns]
+
+            svm = SVMRegimeClassifier(window=self.svm_regime_window)
+            svm.fit(df_train)
+
+            X_all = svm._extract_sequences(df_all, self.svm_regime_window)
+            regimes_df = svm.predict_batch(X_all)
+
+            n = len(self._df)
+            self._svm_regimes = np.full(n, "unknown", dtype=object)
+            regime_map_idx = {
+                idx: regimes_df["regime"].iloc[i] for i, idx in enumerate(regimes_df.index)
+            }
+
+            for i in range(n):
+                df_idx = self._df.index[i]
+                if df_idx in regime_map_idx:
+                    val = regime_map_idx[df_idx]
+                    self._svm_regimes[i] = val
+
+            self._svm_regime_classifier = svm
+            unique, counts = np.unique(self._svm_regimes, return_counts=True)
+            dist = dict(zip(unique, [int(c) for c in counts]))
+            logger.info(
+                "CombinedStrategy: SVM regime classifier trained, regime distribution=%s",
+                dist,
+            )
+        except Exception:
+            logger.debug("SVM regime classifier init failed", exc_info=True)
+            self._svm_regime_classifier = None
+            self._svm_regimes = None
+
     def _regime_weight(self, idx: int) -> float:
         """Regime-adaptive: Bull → weight ML more (lower w_rules), Bear → weight Rules more."""
         if self._regime is None or idx >= len(self._regime):
@@ -552,6 +642,10 @@ class CombinedStrategy(Strategy):
             score *= self._vix_mults[idx]
         if self._yield_curve_mults is not None and idx < len(self._yield_curve_mults):
             score *= self._yield_curve_mults[idx]
+        # ── Phase 25: Apply SVM regime gating ──
+        svm_regime = None
+        if self._svm_regimes is not None and idx < len(self._svm_regimes):
+            svm_regime = self._svm_regimes[idx]
         current_close = float(self.data.Close[-1])
         atr = float(self._atr[idx]) if idx < len(self._atr) else 0.0
         if atr <= 0:
@@ -583,7 +677,16 @@ class CombinedStrategy(Strategy):
                 self._trail_high = 0.0
         else:
             if score >= self.entry_threshold:
-                self.buy()
-                self._trail_high = current_close
-                self._entry_price = current_close
-                self._tp1_hit = False
+                if self._should_enter_svm(svm_regime):
+                    self.buy()
+                    self._trail_high = current_close
+                    self._entry_price = current_close
+                    self._tp1_hit = False
+
+    def _should_enter_svm(self, regime: str | None) -> bool:
+        """Check SVM regime gate: skip entries in down markets, allow in up/side."""
+        if regime is None:
+            return True
+        if regime == "down" and self.svm_regime_down_skip:
+            return False
+        return True

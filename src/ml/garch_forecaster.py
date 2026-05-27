@@ -31,6 +31,7 @@ Usage:
 from __future__ import annotations
 
 import logging
+import warnings
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
 
@@ -140,22 +141,25 @@ class GARCHForecaster:
                 am = arch_model(scaled, vol="GARCH", p=1, o=1, q=1, dist=self.dist)
             else:
                 am = arch_model(scaled, vol="GARCH", p=1, q=1, dist=self.dist)
-            res = am.fit(disp="off")
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                res = am.fit(disp="off", options={"maxiter": 2000})
             self._last_model = res
             self._params = {k: float(v) for k, v in res.params.items()}
             self._converged = bool(res.convergence_flag == 0)
             if not self._converged:
-                logger.debug("GARCH model did not converge, falling back to GARCH(1,1)")
                 self._fallback_fit(scaled)
         except Exception as e:
-            logger.warning("GARCH fit failed: %s, falling back", e)
+            logger.debug("GARCH fit failed: %s, falling back", e)
             self._fallback_fit(scaled)
 
     def _fallback_fit(self, scaled: np.ndarray) -> None:
         """Fall back to standard GARCH(1,1) if model-specific fit fails."""
         try:
             am = arch_model(scaled, vol="GARCH", p=1, q=1, dist="normal")
-            res = am.fit(disp="off")
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                res = am.fit(disp="off", options={"maxiter": 2000})
             self._last_model = res
             self._params = {k: float(v) for k, v in res.params.items()}
             self._converged = bool(res.convergence_flag == 0)

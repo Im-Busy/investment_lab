@@ -56,6 +56,7 @@ from .delta_hedging import (
 )  # A11
 from .vol_trading import VolTradeAnalyzer, VolTradeResult, VolArbitrageResult  # A13
 from .vol_no_trade import VolNoTradeSwitch, NoTradeDecision  # P24-14
+from .binomial_var import compute_binomial_var, size_position_binomial, BinomialVaRResult  # P24-33
 
 __all__ = [
     # Position Sizing
@@ -123,4 +124,8 @@ __all__ = [
     # P24-14: Volatility No-Trade Switch
     "VolNoTradeSwitch",
     "NoTradeDecision",
+    # P24-33: Binomial VAR for Event-Driven Risk
+    "compute_binomial_var",
+    "size_position_binomial",
+    "BinomialVaRResult",
 ]

@@ -68,7 +68,7 @@ class DualAlphaBetaResult:
             )
         for w in self.warnings:
             lines.append(f"  WARNING: {w}")
-        return "\n".join(__name__)
+        return "\n".join(lines)
 
 
 BETA_ASYMMETRY_THRESHOLD = 0.15

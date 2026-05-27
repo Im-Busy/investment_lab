@@ -216,7 +216,7 @@ class PatternClassifier:
         self.feature_names_ = list(X_train.columns)
 
         self.model = self._create_model()
-        self.model.fit(X_train, y_train)
+        self.model.fit(X_train, y_train, eval_set=(X_test, y_test), silent=True)
 
         train_proba = self.model.predict_proba(X_train)[:, 1]
         test_proba = self.model.predict_proba(X_test)[:, 1]

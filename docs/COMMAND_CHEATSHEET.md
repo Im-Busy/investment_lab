@@ -130,6 +130,16 @@ uv run scripts/train_ml_pipeline_v3.py --symbol SPY --fast --cv-method cpcv
 
 # CPCV with per-sector model (bagged ensemble)
 uv run scripts/train_ml_pipeline_v3.py --sector tech --fast --cv-method cpcv
+
+# Phase 25 Anti-Overfitting gates (LockBox, BlindAnalysis, LabelShuffling, NestedCV, DTW)
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --use-lock-box
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --blind-analysis
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --label-shuffling
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --use-phase25-cv
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --dtw-overfit-detect
+
+# Full anti-overfitting suite (all gates)
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --use-lock-box --blind-analysis --label-shuffling --use-phase25-cv --dtw-overfit-detect
 ```
 
 ### Autonomous Training Loop (Orchestration Layer)
@@ -882,6 +892,102 @@ uv run scripts/backtest_rules_first.py SPY --start 2025-01-01 --end 2026-05-16 \
 | `--use-kelly-sizing` | False | Kelly-derived fraction-of-equity position sizing (RF3.3) |
 | `--kelly-fraction` | 0.5 | Kelly fraction: 0.5=half-Kelly, 0.25=quarter |
 | `--use-order-book` | False | Bid-ask imbalance signal modifier (RF3.4) |
+| `--use-vix-regime-sizing` | False | P1.5: Cap position size by VIX regime (50% HIGH_VOL, 25% CRISIS) |
+| `--vix-size-high-vol-cap` | 0.50 | Max size fraction in ELEVATED VIX regime |
+| `--vix-size-crisis-cap` | 0.25 | Max size fraction in STRESS VIX regime |
+
+---
+
+## Phase 25 — Post-Backtest Statistical Validation (2026-05-25)
+
+> **CRITICAL:** Run these validation gates before any deployment decision.
+> DSR, Purged WFA, Regime Audit, and Monte Carlo robustness all in one script.
+
+### Comprehensive Validation Suite
+```bash
+# Full validation of a backtest result (JSON)
+uv run scripts/validate_strategy.py --json reports/batch/rules_first_OOS_2025_2026.json --symbol SPY --full
+
+# Full validation from CSV returns column
+uv run scripts/validate_strategy.py --csv data/strategy_returns.csv --column daily_returns --full
+
+# Quick validation (reduced simulations for speed)
+uv run scripts/validate_strategy.py --json results.json --symbol SPY --quick
+
+# Save report to file
+uv run scripts/validate_strategy.py --json results.json --symbol SPY --full -o reports/validation/SPY_OOS.md
+```
+
+### Individual Validation Components
+```bash
+# DSR/PBO only (fast, < 1 second)
+uv run scripts/validate_strategy.py --json results.json --symbol SPY --dsr-only
+
+# Purged Walk-Forward only
+uv run scripts/validate_strategy.py --json results.json --symbol SPY --wfa-only --is-days 1008 --oos-days 252 --purge-days 21
+
+# Regime audit only (with VIX + SPY for regime classification)
+uv run scripts/validate_strategy.py --json results.json --symbol SPY --regime-only --vix data/vix.csv --spy data/spy.csv
+
+# Monte Carlo robustness only
+uv run scripts/validate_strategy.py --json results.json --symbol SPY --mc-only --mc-simulations 10000
+```
+
+### Python API
+```python
+from src.analysis.deflated_sharpe import compute_dsr_from_returns, format_significance_summary
+
+# DSR: Probability true Sharpe > expected max from multiple testing
+dsr = compute_dsr_from_returns(returns, n_trials=200)
+print(f"DSR: {dsr.psr:.3f} (1.0 = definitely not overfit)")
+
+# Full significance summary (DSR + bootstrap CI + permutation test)
+summary = format_significance_summary(returns, n_trials=200, n_trades=50)
+print(f"Significant: {summary.significant}")
+
+# Purged Walk-Forward Analysis
+from src.analysis.purged_walk_forward import PurgedWalkForwardValidator
+wfa = PurgedWalkForwardValidator(is_days=1008, oos_days=252, purge_days=21, step_days=126)
+report = wfa.validate(returns)
+print(f"WFE: {report.mean_wfe:.3f}, Chained OOS Sharpe: {report.chained_oos_sharpe:.3f}")
+
+# Regime Audit
+from src.analysis.regime_audit import audit_regimes, format_regime_report
+ra = audit_regimes(returns, vix=vix_array, spy_returns=spy_returns)
+print(format_regime_report(ra))
+
+# Monte Carlo Robustness
+from src.analysis.monte_carlo_robustness import run_full_robustness_check
+mc = run_full_robustness_check(returns, params={"entry_threshold": 0.55, "min_reliability": 0.70})
+print(f"Score: {mc.combined_score:.0f}/100, Pass: {mc.overall_pass}")
+```
+
+### Validation Flags Reference
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--n-trials` | 200 | Strategy variants for DSR multiple-testing correction |
+| `--is-days` | 1008 | WFA training window in bars (default: 4 years) |
+| `--oos-days` | 252 | WFA test window in bars (default: 1 year) |
+| `--purge-days` | 21 | Purge gap between IS and OOS (default: 1 month) |
+| `--step-days` | 126 | WFA rolling step size (default: 6 months) |
+| `--mc-simulations` | 5000 | Monte Carlo reshuffling iterations |
+| `--mc-perturbations` | 100 | Parameter perturbation draws per param |
+| `--vix` | None | Path to VIX CSV for regime classification |
+| `--spy` | None | Path to SPY CSV for bear/bull drawdown calculation |
+| `--use-svm-regime` | False | Use SVM classifier for regime labeling |
+| `--quick` | False | Reduced simulations (1000 MC, 30 perturbations) |
+
+### Acceptance Criteria
+| Gate | Threshold | What |
+|------|-----------|------|
+| DSR > 0.95 | P(SR > E[max SR]) | Statistically significant after multiple testing |
+| Bootstrap CI > 0 | 95% CI lower bound | Sharpe unlikely due to chance |
+| Permutation p < 0.05 | Empirical p-value | Strategy beats random return shuffling |
+| WFE > 0.50 | OOS/IS return ratio | Strategy stable across walk-forward windows |
+| Majority-Pass > 50% | Windows with OOS Sharpe > 0 | Sufficient robustness |
+| No Catastrophic Veto | No window < -30% return | Strategy has no hidden tail risk |
+| Per-regime Sharpe > 0 | All market regimes | Edge exists across conditions (or sizing issue) |
+| MC Score > 60/100 | Combined robustness | Passes return reshuffling + param perturbation |
 
 ---
 
@@ -1018,6 +1124,106 @@ uv run python -c "from src.strategies.triangular_hedge import select_hedge_pairs
 # Hedge-only triangular variant (no averaging/martingale) (P24-28)
 uv run python -c "from src.strategies.triangular_hedge import run_hedge_only_backtest, HedgeOnlyConfig; import pandas as pd; import numpy as np; pa = pd.Series(np.cumsum(np.random.randn(300)*0.01)+100); pb = pd.Series(np.cumsum(np.random.randn(300)*(-0.008))+100); trades = run_hedge_only_backtest(pa, pb, HedgeOnlyConfig()); print(f'{len(trades)} trades')"
 ```
+
+## Phase 24 P3 — Deferred Heavy Lifts (2026-05-27)
+
+### P24-29: Two-Phase GA Rule Combination
+
+```python
+from src.optimization.two_phase_ga import TwoPhaseGA, RuleDef, TwoPhaseGAResult
+from src.optimization.nsga2_optimizer import ParamDef
+
+# Define rules with parameter bounds and evaluation functions
+rules = [
+    RuleDef(
+        name="double_bottom",
+        params=[ParamDef("lookback", 5, 50, is_integer=True),
+                ParamDef("threshold", 0.5, 0.95)],
+        eval_fn=lambda p: evaluate_double_bottom(**p),
+    ),
+    RuleDef(
+        name="head_shoulders",
+        params=[ParamDef("min_period", 10, 60, is_integer=True),
+                ParamDef("neckline_tolerance", 0.01, 0.05)],
+        eval_fn=lambda p: evaluate_head_shoulders(**p),
+    ),
+]
+
+two_phase = TwoPhaseGA(rules)
+result = two_phase.optimize()
+print(result.summary())
+```
+
+### P24-32: Divergence-in-Bits Strategy Comparison
+
+```bash
+# Compare two strategies using divergence-in-bits (unit-independent, more robust than Sharpe)
+uv run python -c "
+from src.analysis.divergence_bits import compute_divergence_bits, compare_vs_benchmark, compare_multiple
+import numpy as np
+r_a = np.random.randn(200)*0.01 + 0.001
+r_b = np.random.randn(200)*0.015 + 0.0005
+r_bench = np.random.randn(200)*0.01
+print(compare_vs_benchmark(r_a, r_bench, 'Strategy', 'SPY'))
+print(compare_vs_benchmark(r_b, r_bench, 'Strategy', 'SPY'))
+"
+
+# Multi-strategy pairwise comparison
+uv run python -c "
+from src.analysis.divergence_bits import compare_multiple
+import numpy as np
+strategies = {
+    'Rules-First': np.random.randn(200)*0.01 + 0.001,
+    'SMC/ICT': np.random.randn(200)*0.012 + 0.0003,
+    'Combined': np.random.randn(200)*0.011 + 0.0007,
+}
+for r in compare_multiple(strategies):
+    print(f'{r.strategy_a_name} vs {r.strategy_b_name}: Δg={r.delta_g_bits:.3f} bits → {r.winner} wins')
+"
+```
+
+### P24-33: Binomial VAR for Event-Driven Risk
+
+```bash
+# Compute binomial VaR for event-driven strategy (N trades × success probability)
+uv run python -c "
+from src.risk.binomial_var import compute_binomial_var, size_position_binomial
+result = compute_binomial_var(n_trades=50, success_prob=0.60, avg_win_pct=0.02, avg_loss_pct=0.015)
+print(f'95% VaR: {result.var_pct*100:.2f}%, CVaR: {result.cvar_pct*100:.2f}%')
+print(f'Breakeven: {result.loss_breakeven_k} losses out of {result.n_trades} trades')
+
+# Size position based on VaR constraint
+sizing = size_position_binomial(capital=100000, n_trades=10, success_prob=0.55, max_var_pct=0.05)
+print(f'Max size per trade: \${sizing[\"max_size_per_trade\"]:.0f}, Risk util: {sizing[\"risk_utilization\"]:.1%}')
+"
+```
+
+### P24-35: W-Type Bottom & M-Type Top Bollinger Patterns
+
+```bash
+# Detect W-Bottom and M-Top patterns (already in src/patterns/bollinger/wm_patterns.py)
+uv run python -c "
+from src.patterns.bollinger import detect_w_bottom, detect_m_top, detect_wm_bollinger
+import yfinance as yf
+df = yf.download('SPY', '2025-01-01', '2026-05-01', auto_adjust=False)
+result = detect_wm_bollinger(df)
+w_count = result['w_bottom'].sum()
+m_count = (result['m_top'] != 0).sum()
+print(f'W-Bottom signals: {w_count}, M-Top signals: {m_count}')
+"
+```
+
+### Phase 24 P3 File Changes
+
+| File | Change |
+|------|--------|
+| `src/optimization/two_phase_ga.py` | NEW — TwoPhaseGA, RuleDef, TwoPhaseGAResult, Phase1Result (Phase1 per-rule + Phase2 weighted voting) |
+| `src/analysis/divergence_bits.py` | NEW — compute_divergence_bits, compare_vs_benchmark, compare_multiple (Δg = D_KL divergence) |
+| `src/risk/binomial_var.py` | NEW — compute_binomial_var, size_position_binomial, BinomialVaRResult (forward-looking risk) |
+| `src/patterns/bollinger/wm_patterns.py` | EXISTING — detect_w_bottom, detect_m_top, detect_wm_bollinger (Phase 25) |
+| `src/optimization/__init__.py` | MODIFIED — +TwoPhaseGA, TwoPhaseGAResult, Phase1Result, RuleDef |
+| `src/analysis/__init__.py` | MODIFIED — +DivergenceBitsResult, compute_divergence_bits, compare_vs_benchmark, compare_multiple |
+| `src/risk/__init__.py` | MODIFIED — +compute_binomial_var, size_position_binomial, BinomialVaRResult |
 
 ## Phase 23 RF1 — Cross-Asset Tuning (2026-05-21)
 
@@ -1259,3 +1465,276 @@ uv run python -c "from src.per_instrument.timezone_registry import get_session_f
 | `docs/COMMAND_CHEATSHEET.md` | MODIFIED — Phase 25 section with all new commands |
 | `progress_docs/plans/full.md` | MODIFIED — Phase 25 added to master plan |
 | `progress_docs/current.md` | MODIFIED — Session log entry for 2026-05-21 |
+
+## Phase 27B — Wavelet Feature Preprocessor (2026-05-26)
+
+Multi-level Daubechies-4 wavelet decomposition as deterministic feature pipeline. Extracts 34-114 features per instrument series (per-level stats, cross-level correlation, volatility decomposition). Precomputed wavelet features can be joined with existing CatBoost/LSTM feature matrices.
+
+**Prerequisite:** `pywt` (PyWavelets) — already installed in project environment.
+
+### Training with Wavelet Features
+
+```bash
+# Train CatBoost with wavelet features enabled
+# Adds 114 wavelet features (Close+High+Low × 34 price-wavelet + 4 volatility-wavelet)
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --wavelet-features --fast
+
+# Basket training with wavelet features
+uv run scripts/train_ml_pipeline_v3.py --basket SPY,QQQ,GLD,XLK --wavelet-features --fast
+
+# With CPCV cross-validation
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --wavelet-features --cv-method cpcv --fast
+```
+
+### Benchmark Wavelet vs Baseline
+
+```bash
+# Single instrument benchmark (4 models: IS+OOS × baseline+wavelet)
+uv run scripts/benchmark_wavelet_features.py --symbol SPY --fast
+
+# Multi-instrument benchmark
+uv run scripts/benchmark_wavelet_features.py --basket SPY,QQQ,GLD,XLK --fast
+
+# Custom IS/OOS split
+uv run scripts/benchmark_wavelet_features.py --symbol SPY --is-start 2016-01-01 --is-end 2021-12-31 --oos-start 2022-01-01 --oos-end 2026-05-01
+```
+
+### SHAP Feature Importance Analysis
+
+```bash
+# Analyze which wavelet features rank highest
+uv run scripts/analyze_wavelet_importance.py --symbol SPY
+
+# Multi-instrument SHAP analysis (gate: ≥3/5 must have wavelet in top-20)
+uv run scripts/analyze_wavelet_importance.py --basket SPY,QQQ,GLD,XLK,SLV
+```
+
+### Wavelet Feature API
+
+```python
+from src.features.wavelet_features import (
+    WaveletFeatureExtractor,
+    compute_wavelet_features,
+    compute_wavelet_volatility_features,
+    compute_wavelet_price_volume_features,
+)
+
+# Extract wavelet features from OHLCV DataFrame
+wfx = compute_wavelet_price_volume_features(df)  # 114 features
+
+# Single-series wavelet decomposition (34 features)
+wf = compute_wavelet_features(df['Close'], window=128, levels=5)
+
+# Volatility decomposition (4 features: structural, micro, macro, regime shift ratio)
+vf = compute_wavelet_volatility_features(df['Close'])
+
+# Sklearn-compatible transformer
+extractor = WaveletFeatureExtractor(output='reduced')  # 20 most important
+features = extractor.transform(df)
+```
+
+### Phase 27B File Changes
+
+| File | Change |
+|------|--------|
+| `src/features/wavelet_features.py` | NEW — `WaveletFeatureExtractor`, `compute_wavelet_features`, `compute_wavelet_volatility_features`, `compute_wavelet_price_volume_features` |
+| `src/features/__init__.py` | MODIFIED — +4 exports |
+| `scripts/train_ml_pipeline_v3.py` | MODIFIED — `--wavelet-features` flag, `use_wavelet` param wires into `extract_features()` → CatBoost training |
+| `scripts/benchmark_wavelet_features.py` | NEW — 4-model IS/OOS comparison |
+| `scripts/analyze_wavelet_importance.py` | NEW — SHAP importance ranking + gate validation |
+
+## Phase 27A — TTS-GAN Financial Data Augmentation (2026-05-26)
+
+Transformer-based GAN for generating synthetic OHLCV data. Augments scarce
+financial training data to improve downstream forecasting model generalization.
+
+**Prerequisite:** `torch` (already installed). GPU recommended for full training.
+
+### Training TTS-GAN
+
+```bash
+# Train TTS-GAN on SPY IS data
+uv run scripts/train_tts_gan.py --symbol SPY --start 2016-01-01 --end 2021-12-31
+
+# Long sequence (paper: K=120)
+uv run scripts/train_tts_gan.py --symbol SPY --seq-len 120 --epochs 300
+
+# Fast smoke test
+uv run scripts/train_tts_gan.py --symbol SPY --fast --epochs 20
+```
+
+### GAN-Augmented ML Training
+
+```bash
+# Train CatBoost with TTS-GAN augmented data (inline GAN training)
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --gan-augment --gan-epochs 50 --fast
+
+# Use pre-trained GAN model (skip GAN training)
+uv run scripts/train_ml_pipeline_v3.py --symbol SPY --gan-augment --gan-model models/gan/tts_gan_SPY.pt
+```
+
+### Benchmark GAN Augmentation (Gate Validation)
+
+```bash
+# Full gate test: ≥10% LSTM directional error reduction on SPY 2022 bear
+uv run scripts/benchmark_gan_augmentation.py --symbol SPY --n-trials 3
+
+# Fast gate check
+uv run scripts/benchmark_gan_augmentation.py --symbol SPY --fast --n-trials 1
+```
+
+### TTS-GAN Paper Defaults
+
+| Param | Generator | Discriminator |
+|-------|-----------|---------------|
+| Layers (D) | 3 | 3 |
+| Heads (H) | 5 | 30 |
+| Embed dim (M) | 10 | 90 |
+| Patch size (P) | 15 | 15 |
+| LR | 1e-4 | 1e-4 |
+
+### Phase 27A File Changes
+
+| File | Change |
+|------|--------|
+| `src/ml/gan_convergence.py` | NEW — DTW DeD-iMs convergence metric, Wasserstein distance, GANConvergenceMonitor |
+| `src/ml/gan_data_augmentation.py` | NEW — TTSGAN, TTSGenerator, TTSDiscriminator, prepare_gan_samples, augment_dataset |
+| `src/ml/__init__.py` | MODIFIED — +8 exports |
+| `scripts/train_tts_gan.py` | NEW — CLI: train TTS-GAN, generate synthetic samples, save augmented data |
+| `scripts/benchmark_gan_augmentation.py` | NEW — Gate validation: LSTM directional error with/without GAN augmentation |
+| `scripts/train_ml_pipeline_v3.py` | MODIFIED — `--gan-augment`, `--gan-epochs`, `--gan-seq-len`, `--gan-aug-ratio`, `--gan-model` flags; `_gan_samples_to_dataframe()` helper; inline GAN training in Stage 1b |
+
+## Phase 27C — TadGAN Regime Anomaly Detection (2026-05-26)
+
+Cycle-consistent GAN for detecting market dislocations. Learns normal price
+behavior manifold, flags crisis events as anomalies. Integrated as optional
+risk gate in RulesFirstStrategy.
+
+**Prerequisite:** `torch` (already installed). GPU recommended.
+
+### Training TadGAN
+
+```bash
+# Train on pre-crisis data
+uv run scripts/train_tadgan.py --symbol SPY --start 2010-01-01 --end 2019-12-31
+
+# Fast smoke test
+uv run scripts/train_tadgan.py --symbol SPY --fast --epochs 20
+```
+
+### Crisis Detection Gate Validation
+
+```bash
+# Full gate test: detect ≥4/4 crisis events at ≤5 FP/year
+uv run scripts/benchmark_tadgan.py --symbol SPY --epochs 200
+
+# Fast check
+uv run scripts/benchmark_tadgan.py --symbol SPY --fast
+```
+
+### Anomaly Gate in Backtesting
+
+```bash
+# Block entries during TadGAN-detected anomalies
+uv run scripts/backtest_rules_first.py SPY --start 2020-01-01 --end 2026-06-01 \
+    --use-tadgan-gate --tadgan-model models/anomaly/tadgan_SPY.pt --fast
+```
+
+### GPU-Accelerated Commands (GPU Task Queue)
+
+```bash
+# Chronos-2 fine-tuning with LoRA
+uv run scripts/finetune_chronos.py --symbol SPY --model chronos-2-small --lora --device cuda
+
+# WaveletDiff generation model
+uv run scripts/train_wavelet_diffusion.py --symbol SPY --epochs 500 --device cuda
+
+# TTS-GAN full training (18 instruments)
+for SYM in SPY QQQ XLK XLE GLD SLV; do
+    uv run scripts/train_tts_gan.py --symbol $SYM --epochs 200 --device cuda
+done
+```
+
+### Phase 27C File Changes
+
+| File | Change |
+|------|--------|
+| `src/ml/anomaly_detection.py` | NEW — TadGAN (LSTM encoder/decoder + LSTM critic, cycle-consistent, α-calibrated anomaly scoring) |
+| `scripts/train_tadgan.py` | NEW — CLI: train TadGAN, save .pt model |
+| `scripts/benchmark_tadgan.py` | NEW — Gate validation: detect COVID/2022 bear/2025 tariff/2026 oil shock |
+| `scripts/finetune_chronos.py` | NEW — CLI: Chronos-2 LoRA fine-tuning + evaluation |
+| `scripts/train_wavelet_diffusion.py` | NEW — CLI: WaveletDiff training (DDIM sampling) |
+| `src/strategies/rules_first_strategy.py` | MODIFIED — +`use_tadgan_gate`, +`tadgan_model_path`, +`_init_tadgan_gate()`, gate blocks entries during anomalies |
+| `scripts/backtest_rules_first.py` | MODIFIED — +`--use-tadgan-gate`, +`--tadgan-model`, +`--tadgan-threshold-pct` flags |
+| `src/ml/__init__.py` | MODIFIED — +11 exports (GAN + TadGAN) |
+| `docs/GPU_TASK_QUEUE.md` | NEW — 7 GPU tasks with self-contained tutorials |
+
+---
+
+## Phase 25 — Component Wiring & End-to-End Integration (2026-05-27)
+
+### NSGA2 Multi-Objective Optimizer
+```bash
+# Pareto-optimal parameter search via NSGA2
+uv run scripts/run_nsga2_optimizer.py --ticker SPY --start 2018-01-01 --end 2024-12-31
+
+# Custom population and generations
+uv run scripts/run_nsga2_optimizer.py --ticker QQQ --population 50 --generations 30
+```
+
+### Dynamic GA Optimizer (Regime-Adaptive)
+```bash
+# Regime-adaptive GA with associative memory
+uv run scripts/run_dynamic_ga.py --ticker SPY --window 252 --step 21
+
+# Custom memory size
+uv run scripts/run_dynamic_ga.py --ticker GLD --memory-size 20
+```
+
+### NLP Sentiment Pipeline
+```bash
+# Train SVM sentiment model on :) / :( distant supervision
+uv run scripts/run_sentiment_pipeline.py --model svm --train
+
+# Train BiLSTM sentiment model
+uv run scripts/run_sentiment_pipeline.py --model bilstm --train
+
+# Train ensemble model
+uv run scripts/run_sentiment_pipeline.py --model ensemble --train
+
+# Predict sentiment on text
+uv run scripts/run_sentiment_pipeline.py --model svm --predict "Bullish quarter ahead"
+```
+
+### Fuzzy Logic + SVM Regime in Combined Strategy
+```bash
+# Backtest with fuzzy logic scoring blended at 30% weight
+uv run scripts/backtest_combined.py SPY --start 2018-01-01 --use-fuzzy --fuzzy-weight 0.30
+
+# Backtest with SVM regime detection gating entries
+uv run scripts/backtest_combined.py SPY --start 2018-01-01 --use-svm-regime --svm-regime-window 100
+
+# Skip entries during SVM-classified down markets
+uv run scripts/backtest_combined.py SPY --start 2018-01-01 --use-svm-regime --no-svm-down-skip
+
+# Full integration: fuzzy + SVM regime
+uv run scripts/backtest_combined.py SPY --start 2018-01-01 --use-fuzzy --fuzzy-weight 0.25 --use-svm-regime
+```
+
+### Dual Alpha/Beta (Auto-Reported)
+Dual alpha/beta decomposition runs automatically after every `run_ml_backtest.py` and `backtest_rules_first.py` backtest. Results saved to `reports/ml_backtest/dual_alpha_beta_{ticker}.json`.
+
+### Anti-Overfitting Wiring Status
+| Module | Wired To | Gate | CLI Flag |
+|--------|----------|------|----------|
+| `lock_box.py` | `train_ml_pipeline_v3.py` | Blind holdout, one-time access | `--use-lock-box` |
+| `blind_analysis.py` | `train_ml_pipeline_v3.py` | Tune on scrambled labels | `--blind-analysis` |
+| `label_shuffling.py` | `train_ml_pipeline_v3.py` | Verify model beats random | `--label-shuffling` |
+| `nested_cv.py` | `train_ml_pipeline_v3.py` | Nested PurgedKFold CV | `--use-phase25-cv` |
+| `overfitting_detector.py` | `train_ml_pipeline_v3.py` | KNN-DTW loss curve detection | `--dtw-overfit-detect` |
+| `dual_alpha_beta.py` | `run_ml_backtest.py`, `backtest_rules_first.py` | Bull/bear alpha-beta + Chow test | *auto* |
+| `fuzzy_system.py` | `combined_strategy.py` | 5-state Mamdani fuzzy logic | `--use-fuzzy` |
+| `svm_regime.py` | `combined_strategy.py` | SVM regime gating entries | `--use-svm-regime` |
+| `nsga2_optimizer.py` | `scripts/run_nsga2_optimizer.py` | Pareto multi-objective optimizer | *CLI script* |
+| `dynamic_ga.py` | `scripts/run_dynamic_ga.py` | Regime-adaptive GA | *CLI script* |
+| `sentiment_pipeline.py` | `scripts/run_sentiment_pipeline.py` | NLP sentiment ensemble | *CLI script* |

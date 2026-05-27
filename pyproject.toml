@@ -96,6 +96,7 @@ dependencies = [
     "arch>=8.0.0",
     "stable-baselines3>=2.9.0a2",
     "smartmoneyconcepts>=0.0.27",
+    "dtaidistance>=2.4.0",
 ]
 
 [dependency-groups]

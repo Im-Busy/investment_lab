@@ -1,4 +1,4 @@
-# Investment Trying Lab
+# Investment Trying Lab (QuantSteps)
 
 **Production-grade, rule-first multi-pattern trading system.** 17-instrument verified basket, 100% OOS positive (mean Sharpe 1.135), Q2 2026. 27 completed phases, 300+ files, 35K+ GitNexus-indexed symbols.
 
